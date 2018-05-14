@@ -14,7 +14,7 @@ apply plugin: "us.ihmc.ihmc-build"
 
 ihmc {
    group = "us.ihmc"
-   version = "0.12.1"
+   version = "0.12.2"
    vcsUrl = "https://github.com/ihmcrobotics/simulation-construction-set"
    openSource = true
    
@@ -52,10 +52,10 @@ mainDependencies {
    compile group: "us.ihmc", name: "ihmc-commons", version: "0.19.1"
    compile group: "us.ihmc", name: "ihmc-jmonkey-engine-toolkit", version: "0.12.0"
    compile group: "us.ihmc", name: "ihmc-robot-description", version: "0.12.0"
-   compile group: "us.ihmc", name: "ihmc-graphics-description", version: "0.12.1"
+   compile group: "us.ihmc", name: "ihmc-graphics-description", version: "0.12.2"
    compile group: "us.ihmc", name: "ihmc-javafx-toolkit", version: "0.12.1"
    compile group: "us.ihmc", name: "ihmc-swing-plotting", version: "0.12.0"
-   compile group: "us.ihmc", name: "ihmc-geometry", version: "0.12.0"
+   compile group: "us.ihmc", name: "ihmc-geometry", version: "0.12.1"
    compile ihmc.sourceSetProject("utilities")
 }
 
