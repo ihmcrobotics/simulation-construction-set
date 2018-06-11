@@ -78,8 +78,8 @@ distributions {
 }
 
 test {
-   minHeapSize="1g"
-   maxHeapSize="3g"
+   minHeapSize="4g"
+   maxHeapSize="16g"
 
    doFirst {
       testLogging {
