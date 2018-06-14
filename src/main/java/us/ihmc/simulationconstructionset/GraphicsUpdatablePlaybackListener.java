@@ -1,14 +1,14 @@
 package us.ihmc.simulationconstructionset;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 
 public class GraphicsUpdatablePlaybackListener implements PlaybackListener
 {
-   private final ArrayList<GraphicsUpdatable> graphicsUpdatableList;
+   private final List<? extends GraphicsUpdatable> graphicsUpdatableList;
 
-   public GraphicsUpdatablePlaybackListener(ArrayList<GraphicsUpdatable> graphicsUpdatableList)
+   public GraphicsUpdatablePlaybackListener(List<? extends GraphicsUpdatable> graphicsUpdatableList)
    {
       this.graphicsUpdatableList = graphicsUpdatableList;
    }
