@@ -19,7 +19,7 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 /**
  * Tests simulation against closed-form dynamics
  */
-@ContinuousIntegrationAnnotations.ContinuousIntegrationPlan(categories = IntegrationCategory.IN_DEVELOPMENT)
+@ContinuousIntegrationAnnotations.ContinuousIntegrationPlan(categories = IntegrationCategory.EXCLUDE)
 public class FeatherstoneAlgorithmTest
 {
    @Before

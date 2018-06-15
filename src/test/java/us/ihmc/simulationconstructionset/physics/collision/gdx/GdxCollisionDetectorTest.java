@@ -8,7 +8,7 @@ import us.ihmc.continuousIntegration.IntegrationCategory;
 import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
 import us.ihmc.simulationconstructionset.physics.collision.SCSCollisionDetectorTest;
 
-@ContinuousIntegrationPlan(categories = IntegrationCategory.IN_DEVELOPMENT)
+@ContinuousIntegrationPlan(categories = IntegrationCategory.EXCLUDE)
 public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
 {
    @Override
