@@ -34,6 +34,8 @@ public class RobotTest
    private static final double COORDINATE_SYSTEM_LENGTH = 0.3;
    private static final boolean SHOW_GUI = false;
 
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    @AfterClass
    public static void finishedAllTestsMessage()
    {
@@ -974,7 +976,7 @@ public class RobotTest
       SimulationConstructionSet scs = null;
       if (SHOW_GUI)
       {
-         scs = new SimulationConstructionSet(robot);
+         scs = new SimulationConstructionSet(robot, parameters);
          int recordFrequency = 1;
          scs.setDT(simulateDT, recordFrequency);
          scs.startOnAThread();

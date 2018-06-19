@@ -15,6 +15,7 @@ import us.ihmc.simulationconstructionset.gui.SplashPanel;
 @ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
 public class SimulationConstructionSetSetupTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
    private static final int pauseTimeForGUIs = 5000;
 
 	@ContinuousIntegrationTest(estimatedDuration = 5.0)
@@ -39,7 +40,7 @@ public class SimulationConstructionSetSetupTest
 	@Test(timeout = 30000)
    public void testSimulationConstructionSetWithoutARobot()
    {
-      SimulationConstructionSet scs = new SimulationConstructionSet();
+      SimulationConstructionSet scs = new SimulationConstructionSet(parameters);
       Thread thread = new Thread(scs);
       thread.start();
 
@@ -52,7 +53,7 @@ public class SimulationConstructionSetSetupTest
    public void testSimulationConstructionSetWithARobot()
    {
       Robot robot = new Robot("NullRobot");
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       Thread thread = new Thread(scs);
       thread.start();
 

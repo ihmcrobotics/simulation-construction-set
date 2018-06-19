@@ -16,6 +16,7 @@ import us.ihmc.commons.thread.ThreadTools;
 
 public class LinkTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
 
 	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
@@ -66,7 +67,7 @@ public class LinkTest
       
       if (visualize)
       {
-         SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+         SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
          scs.startOnAThread();
          
          scs.setSimulateDuration(1.0);

@@ -16,16 +16,14 @@ import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.GroundContactPoint;
-import us.ihmc.simulationconstructionset.GroundContactPointsHolder;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
+import us.ihmc.simulationconstructionset.*;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.simulationconstructionset.util.ground.SlopedPlaneGroundProfile;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 
 public class LinearStickSlipGroundContactModelTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
 
    @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
@@ -38,7 +36,7 @@ public class LinearStickSlipGroundContactModelTest
 
       if (visualize)
       {
-         scs = new SimulationConstructionSet(new Robot("TestZForce"));
+         scs = new SimulationConstructionSet(new Robot("TestZForce"), parameters);
          registry = scs.getRootRegistry();
       }
       else

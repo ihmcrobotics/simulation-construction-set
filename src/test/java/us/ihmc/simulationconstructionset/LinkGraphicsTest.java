@@ -20,6 +20,8 @@ import us.ihmc.commons.thread.ThreadTools;
 @ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
 public class LinkGraphicsTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    private SimulationConstructionSet sim;
 
    private static final double
@@ -98,7 +100,7 @@ public class LinkGraphicsTest
    private void startSimAndDisplayLink(Link linkToDisplay)
    {
 //    Robot nullRobot = new Robot("Null");
-      sim = new SimulationConstructionSet();
+      sim = new SimulationConstructionSet(parameters);
 
       sim.addStaticLink(linkToDisplay);
 

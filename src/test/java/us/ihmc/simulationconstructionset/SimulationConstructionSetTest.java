@@ -16,6 +16,8 @@ import us.ihmc.commons.thread.ThreadTools;
 @ContinuousIntegrationPlan(categories = IntegrationCategory.MANUAL)
 public class SimulationConstructionSetTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    private boolean isGradleBuild()
    {
       String property = System.getProperty("bamboo.gradle");
@@ -34,7 +36,7 @@ public class SimulationConstructionSetTest
       Assume.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.0001, 100);
       scs.setFrameMaximized();
       scs.startOnAThread();
@@ -64,7 +66,7 @@ public class SimulationConstructionSetTest
       Assume.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.0001, 100);
       scs.setFrameMaximized();
       scs.startOnAThread();

@@ -86,6 +86,7 @@ import us.ihmc.commons.thread.ThreadTools;
 @ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
 public class SimulationConstructionSetUsingDirectCallsTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
    // Note: some of the tests assume that:
    // - the simpleRobot has been used to create the SimulationConstructionSet instance
    // - the registry "simpleRegistry" is empty
@@ -232,7 +233,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       yoGraphicsListRegistry = createYoGraphicsListRegistryWithObject();
       yoGraphicMenuManager = new YoGraphicMenuManager();
 
-      scs = new SimulationConstructionSet(simpleRobot);
+      scs = new SimulationConstructionSet(simpleRobot, parameters);
       simpleScsPhysics = createScsPhysics();
       scs.setFrameMaximized();
       scs.startOnAThread();
@@ -1523,7 +1524,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private SimulationConstructionSet createNewSCSWithEmptyRobot(String robotName)
    {
-      return new SimulationConstructionSet(new Robot(robotName));
+      return new SimulationConstructionSet(new Robot(robotName), parameters);
    }
 
    private void closeGivenSCSAndDeleteFile(SimulationConstructionSet scs, File file)

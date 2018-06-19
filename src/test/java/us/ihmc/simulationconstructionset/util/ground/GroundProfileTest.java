@@ -27,12 +27,15 @@ import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
+import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.util.LinearStickSlipGroundContactModel;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
 public abstract class GroundProfileTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    private boolean VISUALIZE = false;
    private boolean DEBUG = false;
    
@@ -74,7 +77,7 @@ public abstract class GroundProfileTest
           
          yoGraphicsListRegistry.registerYoGraphic("Viz", surfaceNormalGraphicVector);
          
-         scs = new SimulationConstructionSet(robot);
+         scs = new SimulationConstructionSet(robot, parameters);
          scs.setGroundVisible(true);
          scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
 
