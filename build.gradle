@@ -77,46 +77,57 @@ distributions {
    }
 }
 
-test {
-   minHeapSize="4g"
-   maxHeapSize="16g"
+def testProject = ihmc.sourceSetProject("test")
 
-   doFirst {
-      testLogging {
-         if (logLevel == "verbose")
-         {
-            events "passed", "skipped", "failed", "standardOut", "standardError"
-         } else
-         {
-            events "standardError"
+def void setJavaProperty(String propertyName, String value)
+{
+   def testProject = ihmc.sourceSetProject("test")
+   println propertyName + ": " + value
+   testProject.test.systemProperty propertyName, value
+}
+
+testProject.test {
+
+      minHeapSize="4g"
+      maxHeapSize="16g"
+
+      doFirst {
+         testLogging {
+            if (logLevel == "verbose")
+            {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+            } else
+            {
+               events "standardError"
+            }
+
+            exceptionFormat "full"
          }
 
-         exceptionFormat "full"
-      }
-
-      ignoreFailures true
+         ignoreFailures true
 //      forkEvery = 1
 
-      println "Setting system properties."
+         println "Setting system properties."
 
-      setJavaProperty("keep.scs.up", keepScsUp)
-      setJavaProperty("show.scs.windows", showScsWindows)
-      setJavaProperty("show.splash.screen", "false")
-      setJavaProperty("scs.dataBuffer.size", scsDataBufferSize)
-      setJavaProperty("show.scs.yographics", showScsYoGraphics)
-      setJavaProperty("java.awt.headless", awtHeadless)
-      setJavaProperty("create.videos", createVideos)
-      setJavaProperty("create.scs.videos", createVideos)
-      setJavaProperty("create.scs.gui", createScsGui)
-      setJavaProperty("openh264.license", "accept")
-      setJavaProperty("runningOnCIServer", "true")
-      setJavaProperty("disable.joint.subsystem.publisher", "true")
+         setJavaProperty("keep.scs.up", keepScsUp)
+         setJavaProperty("show.scs.windows", showScsWindows)
+         setJavaProperty("show.splash.screen", showSplashScreen)
+         setJavaProperty("scs.dataBuffer.size", scsDataBufferSize)
+         setJavaProperty("show.scs.yographics", showScsYoGraphics)
+         setJavaProperty("java.awt.headless", awtHeadless)
+         setJavaProperty("create.videos", createVideos)
+         setJavaProperty("create.scs.videos", createVideos)
+         setJavaProperty("create.scs.gui", createScsGui)
+         setJavaProperty("openh264.license", "accept")
+         setJavaProperty("runningOnCIServer", runningOnCIServer)
+         setJavaProperty("disable.joint.subsystem.publisher", "true")
 
-      if (createVideos == "true")
-      {
-         setJavaProperty("create.scs.gui", createVideos)
-         setJavaProperty("create.videos.dir", videoDir)
+         if (createVideos == "true")
+         {
+            setJavaProperty("create.scs.gui", createVideos)
+            setJavaProperty("create.videos.dir", videoDir)
+         }
+
       }
-
    }
-}
+
