@@ -32,7 +32,7 @@ public class SimulationConstructionSetRootRegistryTest
       robot.getRobotsYoVariableRegistry().addChild(registryOne);
       YoDouble variableOne = new YoDouble("variableOne", registryOne);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       sleep(1000);
@@ -80,7 +80,7 @@ public class SimulationConstructionSetRootRegistryTest
       robot.getRobotsYoVariableRegistry().addChild(registryOne);
       robot.getRobotsYoVariableRegistry().addChild(registryTwo);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setupVarGroup("VarGroupToTest", new String[]{"variableOneA", "variableTwoB"});
@@ -123,7 +123,7 @@ public class SimulationConstructionSetRootRegistryTest
       registryBeforeConstructionOne.addChild(registryBeforeConstructionOneOne);
       YoDouble variableBeforeConstructionOneOne = new YoDouble("variableBeforeConstructionOneOne", registryBeforeConstructionOneOne);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       

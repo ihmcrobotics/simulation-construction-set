@@ -22,7 +22,7 @@ public class SimulationConstructionSetProcessDataCallTest
    public void testForwardCount()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -80,7 +80,7 @@ public class SimulationConstructionSetProcessDataCallTest
    public void testBackwardCount()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -139,7 +139,7 @@ public class SimulationConstructionSetProcessDataCallTest
    public void testForwardCopy()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -197,7 +197,7 @@ public class SimulationConstructionSetProcessDataCallTest
    public void testBackwardCopy()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);

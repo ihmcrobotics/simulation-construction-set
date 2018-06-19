@@ -133,7 +133,7 @@ public class RobotTest
       assertEquals(pin1.getQDDYoVariable().getDoubleValue(), pin1.getQDDYoVariable().getDoubleValue(), 1e-8);
 
       double simulateTime = 1.0;
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       
       SimulationConstructionSet scs = new SimulationConstructionSet(new Robot[] {robot1, robot2}, parameters);
@@ -208,7 +208,7 @@ public class RobotTest
       Vector3D linearMomentum0 = computeLinearMomentum(robot);
 
       double dt = 1e-8;
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(1e-10, 10);

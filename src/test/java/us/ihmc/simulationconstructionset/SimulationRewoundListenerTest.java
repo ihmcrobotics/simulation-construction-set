@@ -30,7 +30,7 @@ public class SimulationRewoundListenerTest
       SimpleSimulationRewoundListener simulationRewoundListener = new SimpleSimulationRewoundListener();
 
       Robot robot = new Robot("Test");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(showGUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.001, 10);

@@ -30,7 +30,7 @@ public class DataProcessingFunctionTest
 
       robot.addYoVariableRegistry(registry);
 
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.001, 1);

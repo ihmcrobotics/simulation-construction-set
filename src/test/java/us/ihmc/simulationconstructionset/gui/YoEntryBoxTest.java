@@ -201,7 +201,7 @@ public class YoEntryBoxTest
       assertFalse(controller.getYoVariableRegistry() == null);
       robot.setController(controller);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(showGUI);
       parameters.setDataBufferSize(2000);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);

@@ -146,7 +146,7 @@ public class SimulationRewindabilityVerifierTest
    
    private SimulationConstructionSet constructSimulationConstructionSet(Robot robot, RobotController controller)
    {
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters); 
       scs.setDT(DT, 1);

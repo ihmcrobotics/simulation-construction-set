@@ -39,7 +39,7 @@ public class DynamicGraphicObjectEvaluation
    {
       Robot robot = new Robot("null");
 
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setDataBufferSize(100);
 
       final SimulationConstructionSet scs = new SimulationConstructionSet(robot, graphicsAdapter, parameters);

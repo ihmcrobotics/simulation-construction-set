@@ -142,13 +142,13 @@ public class SimulationConstructionSetMemoryReclamationTest
 
          robot.addYoVariableRegistry(registry);
          
-         SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+         SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
          parameters.setDataBufferSize(5000);
          scs = new SimulationConstructionSet(robot, parameters);
       }
       else
       {
-         SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+         SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
          parameters.setCreateGUI(true);
          parameters.setDataBufferSize(5000);
          scs = new SimulationConstructionSet(parameters);
