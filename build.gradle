@@ -101,6 +101,7 @@ test {
 
       setJavaProperty("keep.scs.up", keepScsUp)
       setJavaProperty("show.scs.windows", showScsWindows)
+      setJavaProperty("show.splash.screen", "false")
       setJavaProperty("scs.dataBuffer.size", scsDataBufferSize)
       setJavaProperty("show.scs.yographics", showScsYoGraphics)
       setJavaProperty("java.awt.headless", awtHeadless)
