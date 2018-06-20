@@ -1,13 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 import org.junit.Test;
-
 import us.ihmc.commons.MutationTestFacilitator;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
@@ -15,15 +9,11 @@ import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.Joint;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.OneDegreeOfFreedomJoint;
-import us.ihmc.simulationconstructionset.PinJoint;
-import us.ihmc.simulationconstructionset.RigidJoint;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SliderJoint;
-import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.RigidJointPhysics;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
 
 public class RigidJointTest
 {

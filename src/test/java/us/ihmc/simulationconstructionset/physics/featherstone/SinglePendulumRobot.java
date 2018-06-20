@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
+import us.ihmc.commons.MathTools;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.commons.MathTools;
 import us.ihmc.simulationconstructionset.Link;
 import us.ihmc.simulationconstructionset.PinJoint;
 

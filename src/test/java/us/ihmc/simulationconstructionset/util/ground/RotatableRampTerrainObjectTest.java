@@ -1,19 +1,13 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.util.ground.RotatableRampTerrainObject;
 
-@ContinuousIntegrationPlan(categories = IntegrationCategory.FAST)
+import static org.junit.Assert.assertEquals;
+
 public class RotatableRampTerrainObjectTest
 {
    private RotatableRampTerrainObject simpleRamp, simpleRampDown, ramp90;

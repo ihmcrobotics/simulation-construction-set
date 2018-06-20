@@ -1,9 +1,5 @@
 package us.ihmc.simulationconstructionset.physics.collision;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -11,14 +7,12 @@ import us.ihmc.simulationconstructionset.ContactingExternalForcePoint;
 import us.ihmc.simulationconstructionset.FloatingJoint;
 import us.ihmc.simulationconstructionset.Link;
 import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.physics.CollisionHandler;
-import us.ihmc.simulationconstructionset.physics.CollisionShape;
-import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
-import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
-import us.ihmc.simulationconstructionset.physics.Contacts;
-import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
-import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionResult;
-import us.ihmc.simulationconstructionset.physics.collision.CollisionHandlerListener;
+import us.ihmc.simulationconstructionset.physics.*;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests compliance to the {@link us.ihmc.simulationconstructionset.physics.ScsCollisionDetector}

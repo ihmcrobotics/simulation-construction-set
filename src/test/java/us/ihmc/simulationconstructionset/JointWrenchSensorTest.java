@@ -1,23 +1,17 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
-import java.util.Random;
-
 import org.junit.Test;
-
 import us.ihmc.commons.RandomNumbers;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
-import us.ihmc.simulationconstructionset.JointWrenchSensor;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.PinJoint;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
 import us.ihmc.yoVariables.variable.YoDouble;
+
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class JointWrenchSensorTest
 {

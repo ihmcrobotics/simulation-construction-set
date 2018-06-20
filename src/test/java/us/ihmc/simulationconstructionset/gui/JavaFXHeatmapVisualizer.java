@@ -1,30 +1,27 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
+import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
-
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import us.ihmc.commons.PrintTools;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SimpleGraphIndicesHolder;
 import us.ihmc.javaFXToolkit.graphing.JavaFXHeatmapGraph;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
-import us.ihmc.commons.thread.ThreadTools;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoDouble;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class JavaFXHeatmapVisualizer
 {

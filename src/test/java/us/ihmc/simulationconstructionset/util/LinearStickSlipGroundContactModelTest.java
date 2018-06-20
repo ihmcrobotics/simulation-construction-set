@@ -1,16 +1,7 @@
 package us.ihmc.simulationconstructionset.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.junit.Test;
-
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -20,6 +11,11 @@ import us.ihmc.simulationconstructionset.*;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.simulationconstructionset.util.ground.SlopedPlaneGroundProfile;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import static org.junit.Assert.*;
 
 public class LinearStickSlipGroundContactModelTest
 {

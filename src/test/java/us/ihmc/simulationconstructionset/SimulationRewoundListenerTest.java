@@ -1,20 +1,12 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
 import org.junit.Ignore;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
-import us.ihmc.continuousIntegration.IntegrationCategory;
-import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.commons.thread.ThreadTools;
+import us.ihmc.yoVariables.listener.RewoundListener;
 
-@ContinuousIntegrationPlan(categories = IntegrationCategory.EXCLUDE)
+import static org.junit.Assert.assertEquals;
+
 public class SimulationRewoundListenerTest
 {
    /**

@@ -1,18 +1,14 @@
 package us.ihmc.simulationconstructionset.physics.collision.gdx;
 
-import static org.junit.Assert.*;
-
-import java.util.Random;
-
-import org.junit.Test;
-
 import com.badlogic.gdx.math.Matrix4;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
+import org.junit.Test;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
-import us.ihmc.simulationconstructionset.physics.collision.gdx.GdxUtil;
+
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Abeles

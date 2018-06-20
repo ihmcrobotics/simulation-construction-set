@@ -1,23 +1,16 @@
 package us.ihmc.simulationconstructionset;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.MeshDataGenerator;
 import us.ihmc.graphicsDescription.MeshDataHolder;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.commons.thread.ThreadTools;
 
-@ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
+import java.util.ArrayList;
+
 public class LinkGraphicsTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();

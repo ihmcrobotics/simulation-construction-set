@@ -1,14 +1,11 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.simulationconstructionset.util.ground.VaryingStairGroundProfile;
 import us.ihmc.tools.MemoryTools;
+
+import static org.junit.Assert.assertEquals;
 
 public class VaryingStairGroundProfileTest
 {

@@ -3,7 +3,6 @@ package us.ihmc.simulationconstructionset;
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.junit.*;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.structure.Graphics3DNode;
 import us.ihmc.graphicsDescription.structure.Graphics3DNodeType;

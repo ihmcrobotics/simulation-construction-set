@@ -1,14 +1,9 @@
 package us.ihmc.simulationconstructionset.physics.collision.gdx;
 
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
 import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
 import us.ihmc.simulationconstructionset.physics.collision.SCSCollisionDetectorTest;
 
-@ContinuousIntegrationPlan(categories = IntegrationCategory.EXCLUDE)
 public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
 {
    @Override

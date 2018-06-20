@@ -1,25 +1,17 @@
 package us.ihmc.simulationconstructionset.yoUtilities.graphics;
 
-import java.awt.Color;
-
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.referenceFrame.interfaces.FramePoint2DReadOnly;
 import us.ihmc.euclid.referenceFrame.interfaces.FrameVertex2DSupplier;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.graphicsDescription.plotting.artifact.LineArtifact;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition.GraphicType;
-import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactLine2d;
-import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactLineSegment2d;
-import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactOval;
-import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPolygon;
-import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPosition;
+import us.ihmc.graphicsDescription.yoGraphics.plotting.*;
 import us.ihmc.plotting.Plotter;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
-import us.ihmc.yoVariables.variable.YoFrameLine2D;
-import us.ihmc.yoVariables.variable.YoFrameLineSegment2D;
-import us.ihmc.yoVariables.variable.YoFramePoint2D;
-import us.ihmc.yoVariables.variable.YoFrameVector2D;
+import us.ihmc.yoVariables.variable.*;
+
+import java.awt.*;
 
 public class YoArtifactDemo
 {
