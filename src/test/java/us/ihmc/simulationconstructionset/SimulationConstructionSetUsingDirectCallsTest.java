@@ -1,30 +1,8 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
-import java.awt.AWTException;
-import java.awt.Button;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import javax.swing.AbstractAction;
-
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
+import org.junit.*;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
 import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.continuousIntegration.IntegrationCategory;
@@ -39,6 +17,16 @@ import us.ihmc.jMonkeyEngineToolkit.camera.CameraConfiguration;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.ClassicCameraController;
 import us.ihmc.jMonkeyEngineToolkit.jme.JMEGraphics3DAdapter;
+import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
+import us.ihmc.simulationconstructionset.graphics.GraphicsDynamicGraphicsObject;
+import us.ihmc.simulationconstructionset.gui.*;
+import us.ihmc.simulationconstructionset.gui.camera.CameraTrackAndDollyYoVariablesHolder;
+import us.ihmc.simulationconstructionset.gui.config.GraphGroupList;
+import us.ihmc.simulationconstructionset.physics.*;
+import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionResult;
+import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionHandler;
+import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisualizer;
+import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingCollisionArbiter;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
 import us.ihmc.yoVariables.listener.RewoundListener;
@@ -48,40 +36,14 @@ import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
-import us.ihmc.simulationconstructionset.ExitActionListener;
-import us.ihmc.simulationconstructionset.ExternalForcePoint;
-import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
-import us.ihmc.simulationconstructionset.GraphConfiguration;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.NewDataListener;
-import us.ihmc.simulationconstructionset.PlayCycleListener;
-import us.ihmc.simulationconstructionset.PlaybackListener;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.simulationconstructionset.SimulationDoneCriterion;
-import us.ihmc.simulationconstructionset.SimulationDoneListener;
-import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
-import us.ihmc.simulationconstructionset.ViewportConfiguration;
-import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
-import us.ihmc.simulationconstructionset.graphics.GraphicsDynamicGraphicsObject;
-import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
-import us.ihmc.simulationconstructionset.gui.StandardGUIActions;
-import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
-import us.ihmc.simulationconstructionset.gui.ViewportWindow;
-import us.ihmc.simulationconstructionset.gui.YoGraphicMenuManager;
-import us.ihmc.simulationconstructionset.gui.camera.CameraTrackAndDollyYoVariablesHolder;
-import us.ihmc.simulationconstructionset.gui.config.GraphGroupList;
-import us.ihmc.simulationconstructionset.physics.CollisionArbiter;
-import us.ihmc.simulationconstructionset.physics.CollisionHandler;
-import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
-import us.ihmc.simulationconstructionset.physics.ScsCollisionConfigure;
-import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
-import us.ihmc.simulationconstructionset.physics.ScsPhysics;
-import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionResult;
-import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionHandler;
-import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisualizer;
-import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingCollisionArbiter;
-import us.ihmc.commons.thread.ThreadTools;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 @ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
 public class SimulationConstructionSetUsingDirectCallsTest
@@ -235,7 +197,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
       scs = new SimulationConstructionSet(simpleRobot, parameters);
       simpleScsPhysics = createScsPhysics();
-      scs.setFrameMaximized();
+//      scs.setFrameMaximized();
       scs.startOnAThread();
    }
 
@@ -713,7 +675,13 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertFalse(yoGraphicsAreShowing);
 
       scs.hideAllYoGraphics();
-      scs.setYoGraphicsListVisible(yoGraphicsListName, true);
+      for (YoGraphicsListRegistry registry : scs.getYoGraphicsListRegistries())
+      {
+         for (YoGraphicsList list : registry.getYoGraphicsLists())
+         {
+            list.setVisible(true);
+         }
+      }
       boolean yoGraphicsAreShowing2 = scs.checkAllYoGraphicsListRegistriesAreShowing();
       assertTrue(yoGraphicsAreShowing2);
 
