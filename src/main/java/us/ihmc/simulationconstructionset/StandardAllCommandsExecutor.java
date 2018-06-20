@@ -125,7 +125,14 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    @Override
    public ViewportWindow createNewViewportWindow(String viewportName)
    {
-      return createNewViewportWindow(viewportName, 0, false);
+      String mainFrameDeviceId = standardSimulationGUI.getFrame().getGraphicsConfiguration().getDevice().getIDstring();
+      String lastCharacter = mainFrameDeviceId.substring(mainFrameDeviceId.length() - 1);
+      int screenIdToDisplay = 0;
+      if (StringUtils.isNumeric(lastCharacter))
+      {
+         screenIdToDisplay = Integer.valueOf(lastCharacter);
+      }
+      return createNewViewportWindow(viewportName, screenIdToDisplay, false);
    }
 
    @Override
@@ -156,17 +163,23 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    @Override
    public YoVariableSliderWindow createNewYoVariableSliderWindow(String viewportName)
    {
-      return createNewYoVariableSliderWindow(viewportName, 0, false);
+      String mainFrameDeviceId = standardSimulationGUI.getFrame().getGraphicsConfiguration().getDevice().getIDstring();
+      String lastCharacter = mainFrameDeviceId.substring(mainFrameDeviceId.length() - 1);
+      int screenIdToDisplay = 0;
+      if (StringUtils.isNumeric(lastCharacter))
+      {
+         screenIdToDisplay = Integer.valueOf(lastCharacter);
+      }
+      return createNewYoVariableSliderWindow(viewportName, screenIdToDisplay, false);
    }
 
    @Override
    public YoVariableSliderWindow createNewYoVariableSliderWindow(String viewportName, int screenID, boolean maximizeWindow)
    {
       if (standardSimulationGUI != null)
-         return standardSimulationGUI.createNewParameterSliderWindow("", 1, false);
+         return standardSimulationGUI.createNewParameterSliderWindow(viewportName, screenID, maximizeWindow);
       else
          return null;
-
    }
 
    @Override
