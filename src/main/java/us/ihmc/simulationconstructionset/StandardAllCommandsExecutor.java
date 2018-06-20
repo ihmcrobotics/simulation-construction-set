@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
+import us.ihmc.commons.PrintTools;
 import us.ihmc.simulationconstructionset.commands.AllCommandsExecutor;
 import us.ihmc.simulationconstructionset.commands.ViewportSelectorCommandListener;
 import us.ihmc.simulationconstructionset.gui.*;
@@ -86,7 +88,14 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    @Override
    public GraphArrayWindow createNewGraphWindow(String graphGroupName)
    {
-      return createNewGraphWindow(graphGroupName, 0, null, null, false);
+      String mainFrameDeviceId = standardSimulationGUI.getFrame().getGraphicsConfiguration().getDevice().getIDstring();
+      String lastCharacter = mainFrameDeviceId.substring(mainFrameDeviceId.length() - 1);
+      int screenIdToDisplay = 0;
+      if (StringUtils.isNumeric(lastCharacter))
+      {
+         screenIdToDisplay = Integer.valueOf(lastCharacter);
+      }
+      return createNewGraphWindow(graphGroupName, screenIdToDisplay, null, null, false);
    }
 
    @Override
