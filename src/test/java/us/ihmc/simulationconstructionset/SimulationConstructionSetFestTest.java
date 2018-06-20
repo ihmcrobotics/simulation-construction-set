@@ -36,7 +36,7 @@ public class SimulationConstructionSetFestTest
 
 	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=100000)
-   public void testSimulationConstructionSetUsingGUITestFixture() throws AWTException
+   public void testSimulationConstructionSetUsingGUITestFixture()
    {
       FallingBrickRobot robot = new FallingBrickRobot();
 
