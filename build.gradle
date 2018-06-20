@@ -79,7 +79,7 @@ distributions {
 
 def testProject = ihmc.sourceSetProject("test")
 
-def void setJavaProperty(String propertyName, String value)
+def void setJavaProperty(String propertyName, def value)
 {
    def testProject = ihmc.sourceSetProject("test")
    println propertyName + ": " + value
@@ -109,15 +109,15 @@ testProject.test {
 
          println "Setting system properties."
 
-         setJavaProperty("keep.scs.up", keepScsUp)
-         setJavaProperty("show.scs.windows", showScsWindows)
-         setJavaProperty("show.splash.screen", showSplashScreen)
-         setJavaProperty("scs.dataBuffer.size", scsDataBufferSize)
+         setJavaProperty("keep.scs.up", false)
+         setJavaProperty("show.scs.windows", showGui)
+         setJavaProperty("show.splash.screen", false)
+         setJavaProperty("scs.dataBuffer.size", 2048)
          setJavaProperty("show.scs.yographics", showScsYoGraphics)
-         setJavaProperty("java.awt.headless", awtHeadless)
+         setJavaProperty("java.awt.headless", !showGui)
          setJavaProperty("create.videos", createVideos)
          setJavaProperty("create.scs.videos", createVideos)
-         setJavaProperty("create.scs.gui", createScsGui)
+         setJavaProperty("create.scs.gui", showGui)
          setJavaProperty("openh264.license", "accept")
          setJavaProperty("runningOnCIServer", runningOnCIServer)
          setJavaProperty("disable.joint.subsystem.publisher", "true")

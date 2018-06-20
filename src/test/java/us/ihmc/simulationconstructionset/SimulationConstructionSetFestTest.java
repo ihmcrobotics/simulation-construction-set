@@ -38,7 +38,7 @@ public class SimulationConstructionSetFestTest
    }
 
 	@ContinuousIntegrationTest(estimatedDuration = 0.1)
-	@Test(timeout=300000)
+	@Test(timeout=30000)
    public void testSimulationConstructionSetUsingGUITestFixture() throws AWTException
    {
       Assume.assumeTrue(!isGradleBuild());
