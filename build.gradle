@@ -62,8 +62,10 @@ mainDependencies {
 testDependencies {
    compile group: "junit", name: "junit", version: "4.12"
    compile group: 'org.ejml', name: 'dense64', version: '0.30'
-   compile group: "us.ihmc", name: "ihmc-ci-core-api", version: "0.17.14"
-   compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.20.0"
+   compile("us.ihmc:ihmc-commons-testing:0.20.0")
+         {
+            exclude group: "us.ihmc", module: "ihmc-ci-core-api"
+         }
 }
 
 utilitiesDependencies {

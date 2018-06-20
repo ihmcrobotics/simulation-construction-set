@@ -22,8 +22,7 @@ public class TypicalTorqueSpeedCurveTest
    {
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
-	@Test(timeout=300000) 
+	@Test(timeout=300000)
    public void testOne()
    {
       TypicalTorqueSpeedCurve torqueSpeedCurve = new TypicalTorqueSpeedCurve();

@@ -19,7 +19,6 @@ import us.ihmc.simulationconstructionset.physics.engine.featherstone.JointPhysic
 public class CollisionResolutionTest
 {
    
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testCollisionResolutionOne() throws UnreasonableAccelerationException
    {

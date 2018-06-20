@@ -34,7 +34,6 @@ public class SimulationConstructionSetFestTest
       return false;
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=100000)
    public void testSimulationConstructionSetUsingGUITestFixture()
    {
@@ -244,7 +243,6 @@ public class SimulationConstructionSetFestTest
       testFixture = null;
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=45000)
    public void testSimulationConstructionSetNewGraphWindowUsingGUITestFixture()
    {

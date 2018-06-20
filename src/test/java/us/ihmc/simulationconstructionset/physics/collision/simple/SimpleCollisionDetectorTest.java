@@ -19,7 +19,6 @@ import us.ihmc.simulationconstructionset.physics.collision.simple.SimpleCollisio
 public class SimpleCollisionDetectorTest
 {
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testSphereToSphereCollisions()
    {
@@ -146,7 +145,6 @@ public class SimpleCollisionDetectorTest
    }
 
    //TODO: More and more vigorous tests...
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testBoxToBoxCollisions()
    {

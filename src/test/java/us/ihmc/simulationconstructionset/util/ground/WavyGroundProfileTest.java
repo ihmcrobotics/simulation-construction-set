@@ -9,7 +9,6 @@ import us.ihmc.simulationconstructionset.util.ground.WavyGroundProfile;
 public class WavyGroundProfileTest extends GroundProfileTest
 {
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {

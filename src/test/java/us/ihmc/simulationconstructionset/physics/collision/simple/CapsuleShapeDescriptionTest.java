@@ -11,7 +11,6 @@ import us.ihmc.simulationconstructionset.physics.collision.simple.CapsuleShapeDe
 
 public class CapsuleShapeDescriptionTest
 {
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void test()
    {

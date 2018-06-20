@@ -20,7 +20,6 @@ import us.ihmc.simulationconstructionset.physics.collision.gdx.GdxUtil;
 public class GdxUtilTest
 {
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void convert_t2m()
 	{
@@ -53,7 +52,6 @@ public class GdxUtilTest
       assertEquals(m[15],a[15],1e-6f);
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void convert_m2t()
 	{

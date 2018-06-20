@@ -3,9 +3,7 @@ package us.ihmc.simulationconstructionset;
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.junit.*;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
 import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.structure.Graphics3DNode;
 import us.ihmc.graphicsDescription.structure.Graphics3DNodeType;
@@ -45,7 +43,6 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-@ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
 public class SimulationConstructionSetUsingDirectCallsTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
@@ -83,19 +80,19 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private final double cameraFieldOfView = 1.5;
    private final double secondsOfSimulation = 10;
    private final double simulateDurationInSeconds = 2.5;
-   private final double[] cameraDollyOffsetXYZValues = { 1.2, 2.2, 3.2 };
-   private final double[] cameraTrackingOffsetXYZValues = { 1.5, 2.5, 3.5 };
-   private final double[] cameraDollyXYZVarValues = { 1.5, 1.6, 1.7 };
-   private final double[] cameraTrackingXYZVarValues = { 0.5, 0.6, 0.7 };
-   private final double[] cameraFixXYZValues = { 1.8, 2.8, 3.8 };
-   private final double[] cameraFixXYZValues2 = { 1.1, 2.1, 3.1 };
-   private final double[] cameraPositionXYZValues = { 1.3, 2.3, 3.3 };
-   private final double[] cameraClipDistancesNearFarValues = { 1.75, 2.75 };
-   private final double[] variableGroup1Values = { 1.3, 2.3, 3.3 };
-   private final double[] variableGroup2Values = { 1.5, 1.6, 1.7 };
-   private final double[] variableGroup3Values = { 5.5, 5.6, 5.7 };
-   private final double[] variableGroup4Values = { 8.5, 8.6, 8.7 };
-   private final double[] variableGroup5Values = { 9.5, 9.6, 9.7 };
+   private final double[] cameraDollyOffsetXYZValues = {1.2, 2.2, 3.2};
+   private final double[] cameraTrackingOffsetXYZValues = {1.5, 2.5, 3.5};
+   private final double[] cameraDollyXYZVarValues = {1.5, 1.6, 1.7};
+   private final double[] cameraTrackingXYZVarValues = {0.5, 0.6, 0.7};
+   private final double[] cameraFixXYZValues = {1.8, 2.8, 3.8};
+   private final double[] cameraFixXYZValues2 = {1.1, 2.1, 3.1};
+   private final double[] cameraPositionXYZValues = {1.3, 2.3, 3.3};
+   private final double[] cameraClipDistancesNearFarValues = {1.75, 2.75};
+   private final double[] variableGroup1Values = {1.3, 2.3, 3.3};
+   private final double[] variableGroup2Values = {1.5, 1.6, 1.7};
+   private final double[] variableGroup3Values = {5.5, 5.6, 5.7};
+   private final double[] variableGroup4Values = {8.5, 8.6, 8.7};
+   private final double[] variableGroup5Values = {9.5, 9.6, 9.7};
 
    private final Point location = new Point(25, 50);
    private final FallingBrickRobot simpleRobot = new FallingBrickRobot();
@@ -103,13 +100,14 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private final String simpleRegistryName = "simpleRegistry";
    private final String searchString = "d";
    private final String searchStringStart = "q";
-   private final String[] variableGroup1 = new String[] { "simpleVar11", "simpleVar12", "simpleVar13" };
-   private final String[] variableGroup2 = new String[] { "simpleVar21", "simpleVar22", "simpleVar23" };
-   private final String[] variableGroup3 = new String[] { "simpleVar31", "simpleVar32", "simpleVar33" };
-   private final String[] variableGroup4 = new String[] { "simpleVar41", "simpleVar42", "simpleVar43" };
-   private final String[] variableGroup5 = new String[] { "simpleVar51", "simpleVar52", "simpleVar53" };
-   private final String[] cameraTrackingXYZVarNames = new String[] { "simpleCameraTrackingVarNameX", "simpleCameraTrackingVarNameY", "simpleCameraTrackingVarNameZ" };
-   private final String[] cameraDollyXYZVarNames = new String[] { "simpleCameraDollyVarNameX", "simpleCameraDollyVarNameY", "simpleCameraDollyVarNameZ" };
+   private final String[] variableGroup1 = new String[] {"simpleVar11", "simpleVar12", "simpleVar13"};
+   private final String[] variableGroup2 = new String[] {"simpleVar21", "simpleVar22", "simpleVar23"};
+   private final String[] variableGroup3 = new String[] {"simpleVar31", "simpleVar32", "simpleVar33"};
+   private final String[] variableGroup4 = new String[] {"simpleVar41", "simpleVar42", "simpleVar43"};
+   private final String[] variableGroup5 = new String[] {"simpleVar51", "simpleVar52", "simpleVar53"};
+   private final String[] cameraTrackingXYZVarNames = new String[] {"simpleCameraTrackingVarNameX", "simpleCameraTrackingVarNameY",
+         "simpleCameraTrackingVarNameZ"};
+   private final String[] cameraDollyXYZVarNames = new String[] {"simpleCameraDollyVarNameX", "simpleCameraDollyVarNameY", "simpleCameraDollyVarNameZ"};
    private final String configurationName = "simpleConfigurationName";
    private final String cameraConfigurationName = "simpleCameraConfigurationName";
    private final String viewportConfigurationName = "simpleViewportConfiguration";
@@ -124,19 +122,18 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private final String entryBoxGroupName = "simpleEntryBoxGroup";
    private final String entryBoxGroupName2 = "simpleEntryBoxGroup2";
    private final String entryBoxGroupName3 = "simpleEntryBoxGroup3";
-   private final String[] graphConfigurationNames = { "simpleGraphConfiguration", "simpleGraphConfiguration2" };
+   private final String[] graphConfigurationNames = {"simpleGraphConfiguration", "simpleGraphConfiguration2"};
    private final String extraPanelConfigurationName = "simpleExtraPanelConfigurationName";
-   private final String simpleComponentName =  "simpleComponent";
+   private final String simpleComponentName = "simpleComponent";
    private final String runningName = "simpleRunningName";
    private final String yoGraphicsListName = "simpleYoGraphicsList";
-   private final String[][] graphGroupVars = { cameraTrackingXYZVarNames, cameraDollyXYZVarNames };
-   private final String[][][] graphGroupVarsWithConfig = { { cameraTrackingXYZVarNames, { "config_1" } }, { cameraDollyXYZVarNames, { "config_2" } } };
+   private final String[][] graphGroupVars = {cameraTrackingXYZVarNames, cameraDollyXYZVarNames};
+   private final String[][][] graphGroupVarsWithConfig = {{cameraTrackingXYZVarNames, {"config_1"}}, {cameraDollyXYZVarNames, {"config_2"}}};
    private final String simpleRobotFirstVariableName = getFirstVariableNameFromRobotRegistry(simpleRobot);
    private final String simpleRobotLastVariableName = getLastVariableNameFromRobotRegistry(simpleRobot);
    private final String simpleRobotRegistryNameSpace = getRegistryNameSpaceFromRobot(simpleRobot);
-   private final String[] regularExpressions = new String[] { "gc.*.fs" };
+   private final String[] regularExpressions = new String[] {"gc.*.fs"};
    private final Dimension dimension = new Dimension(250, 350);
-
 
    private NameSpace simpleRegistryNameSpace;
    private YoVariableRegistry simpleRegistry;
@@ -178,7 +175,8 @@ public class SimulationConstructionSetUsingDirectCallsTest
       staticLinkGraphics = staticLink.getLinkGraphics();
       graphics3DNodeType = Graphics3DNodeType.GROUND;
       simpleExternalForcePoint = new ExternalForcePoint("simpleExternalForcePoint", dummyRegistry);
-      yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject", simpleExternalForcePoint.getYoPosition(), simpleExternalForcePoint.getYoForce(), 1.0/50.0);
+      yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject", simpleExternalForcePoint.getYoPosition(), simpleExternalForcePoint.getYoForce(),
+                                      1.0 / 50.0);
       exitActionListenerHasBeenNotified = new YoBoolean("exitActionListenerHasBeenNotified", dummyRegistry);
       simulationRewoundListenerHasBeenNotified = new YoBoolean("simulationRewoundListenerHasBeenNotified", dummyRegistry);
       simulationDoneListenerHasBeenNotified = new YoBoolean("simulationDoneListenerHasBeenNotified", dummyRegistry);
@@ -197,7 +195,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
       scs = new SimulationConstructionSet(simpleRobot, parameters);
       simpleScsPhysics = createScsPhysics();
-//      scs.setFrameMaximized();
+      //      scs.setFrameMaximized();
       scs.startOnAThread();
    }
 
@@ -232,8 +230,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       simpleScsPhysics = null;
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 2.8)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void testSimulationConstructionSetMiscellaneous() throws AWTException
    {
       Robot[] robotFromSCS = scs.getRobots();
@@ -296,8 +293,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(simpleScsPhysics, scsPhysicsFromSCS);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 2.6)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void testSimulationManagement()
    {
       double startTime = scs.getTime();
@@ -375,8 +371,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    @Ignore // Only run this one locally since it doesn't work on Bamboo on Linux necessarily.
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
-	@Test(timeout=300000)
+   @Test(timeout = 300000)
    public void testFrameMethodsThatOnlyWorkOnSomeOperatingSystems()
    {
       scs.setFrameSize(dimension);
@@ -412,8 +407,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(Frame.MAXIMIZED_BOTH, frameStateFromSCS2, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 12.7)
-	@Test(timeout = 64000)
+   @Test(timeout = 64000)
    public void testFrameMethods()
    {
       ThreadTools.sleep(THREAD_SLEEP_TIME);
@@ -463,12 +457,11 @@ public class SimulationConstructionSetUsingDirectCallsTest
       Component component = new Button();
       scs.addExtraJpanel(component, simpleComponentName, false);
       ThreadTools.sleep(THREAD_SLEEP_TIME);
-      Component componentFromSCS =  scs.getExtraPanel(simpleComponentName);
+      Component componentFromSCS = scs.getExtraPanel(simpleComponentName);
       assertEquals(component, componentFromSCS);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 2.5)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void testCameraMethods()
    {
       scs.setCameraTracking(true, false, false, false);
@@ -634,8 +627,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertBooleansAreOpposite(initialCameraKeyModeStatus, finalCameraKeyModeStatus);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 2.6)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void test3DGraphicsMethods()
    {
       scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
@@ -685,9 +677,9 @@ public class SimulationConstructionSetUsingDirectCallsTest
       boolean yoGraphicsAreShowing2 = scs.checkAllYoGraphicsListRegistriesAreShowing();
       assertTrue(yoGraphicsAreShowing2);
 
-//      scs.setDynamicGraphicMenuManager(dynamicGraphicMenuManager);
-//      DynamicGraphicMenuManager dynamicGraphicMenuManagerFromSCS =  scs.getDynamicGraphicMenuManager();
-//      assertEquals(dynamicGraphicMenuManager, dynamicGraphicMenuManagerFromSCS);
+      //      scs.setDynamicGraphicMenuManager(dynamicGraphicMenuManager);
+      //      DynamicGraphicMenuManager dynamicGraphicMenuManagerFromSCS =  scs.getDynamicGraphicMenuManager();
+      //      assertEquals(dynamicGraphicMenuManager, dynamicGraphicMenuManagerFromSCS);
 
       scs.disableGUIComponents();
       assertIfGUIComponentsAreDisableOrEnabled(scs, false);
@@ -702,8 +694,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
     * it for now. - @dcalvert
     */
    @Ignore
-	@ContinuousIntegrationTest(estimatedDuration = 2.5)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void testGetVariableMethods() throws AWTException
    {
       ArrayList<YoVariable<?>> allVariablesFromRobot = simpleRobot.getAllVariables();
@@ -760,8 +751,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(arrayOfVariablesRegExprRobot, arrayOfVariablesRegExprSCS);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 2.5)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void testTimingMethods() throws AWTException
    {
       scs.setDT(simulateDT, recordFrequency);
@@ -789,8 +779,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(Math.PI, timeFromSCS, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 3.0)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void testSimulationTickControl()
    {
       scs.setIndex(index);
@@ -933,16 +922,15 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(keyPoint - 1, currentIndexFromSCS6, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 8.7)
-	@Test(timeout = 43000)
+   @Test(timeout = 43000)
    public void testVariablesMethods()
    {
       addDoubleYoVariablesInSCSRegistry(cameraDollyXYZVarNames, cameraDollyXYZVarValues, scs);
       YoVariableList yoVariableList = createVarListOfDoubleYoVariableWithDummyRegistry(variableGroup1, variableGroup1Values);
       YoVariableList[] yoVariableLists = createTwoVarListOfDoubleYoVariablesWithDummyRegistry(variableGroup2, variableGroup2Values, variableGroup3,
-            variableGroup3Values);
+                                                                                              variableGroup3Values);
       ArrayList<YoVariableList> yoVariableArrayLists = createArrayListOfDoubleYoVariableWithDummyRegistry(variableGroup4, variableGroup4Values, variableGroup5,
-            variableGroup5Values);
+                                                                                                          variableGroup5Values);
 
       scs.setupEntryBox(simpleRobotFirstVariableName);
       ThreadTools.sleep(THREAD_SLEEP_TIME);
@@ -988,8 +976,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertYoVariableListContainsArrayListOfVariables(yoVariableListFromSCS3, yoVariableArrayLists);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 2.5)
-	@Test(timeout = 30000)
+   @Test(timeout = 30000)
    public void testGroupMethods()
    {
       addDoubleYoVariablesInSCSRegistry(cameraDollyXYZVarNames, cameraDollyXYZVarValues, scs);
@@ -1036,8 +1023,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertNotNull(extraPanelConfigurationPanelFromSCS);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 8.5)
-	@Test(timeout = 43000)
+   @Test(timeout = 43000)
    public void testSimulationListeners()
    {
       SimulationDoneListener simulationDoneListener = createSimulationDoneListener();
@@ -1091,8 +1077,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertTrue(toggleKeyPointModeCommandListenerHasBeenCalled.getBooleanValue());
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 9.5)
-	@Test(timeout = 48000)
+   @Test(timeout = 48000)
    public void testDataExporting()
    {
       simulateForTime(scs, simulateTime);
@@ -1207,12 +1192,12 @@ public class SimulationConstructionSetUsingDirectCallsTest
    {
       StandardGUIActions standardGUIActions = scs.getStandardGUIActions();
       ArrayList<AbstractAction> guiActions = standardGUIActions.getGuiActions();
-      for (int i = 0; i<guiActions.size(); i++)
+      for (int i = 0; i < guiActions.size(); i++)
       {
          AbstractAction guiAction = guiActions.get(i);
          boolean guiActionStatus = guiAction.isEnabled();
 
-         if(assertAreEnabled)
+         if (assertAreEnabled)
             assertTrue(guiActionStatus);
          else
             assertFalse(guiActionStatus);
@@ -1341,16 +1326,16 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return playCycleListener;
    }
 
-//   private ArrayList<CollisionGroup> createArrayListOfCollisionGroup(int numberOfElements)
-//   {
-//      ArrayList<CollisionGroup> arrayListOfCollisionGroup = new ArrayList<CollisionGroup>();
-//      for (int i = 0; i < numberOfElements; i++)
-//      {
-//         arrayListOfCollisionGroup.add(new CollisionGroup());
-//      }
-//
-//      return arrayListOfCollisionGroup;
-//   }
+   //   private ArrayList<CollisionGroup> createArrayListOfCollisionGroup(int numberOfElements)
+   //   {
+   //      ArrayList<CollisionGroup> arrayListOfCollisionGroup = new ArrayList<CollisionGroup>();
+   //      for (int i = 0; i < numberOfElements; i++)
+   //      {
+   //         arrayListOfCollisionGroup.add(new CollisionGroup());
+   //      }
+   //
+   //      return arrayListOfCollisionGroup;
+   //   }
 
    private <T> void assertArrayOfObjectsContainsTheArrayOfObject(ArrayList<T> mainArrayList, ArrayList<T> arrayList)
    {
@@ -1405,7 +1390,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    }
 
    private ArrayList<YoVariableList> createArrayListOfDoubleYoVariableWithDummyRegistry(String[] variableNames1, double[] varValues1, String[] variableNames2,
-         double[] varValues2)
+                                                                                        double[] varValues2)
    {
       ArrayList<YoVariableList> arrayLists = new ArrayList<YoVariableList>();
       YoVariableList[] yoVariableList = createTwoVarListOfDoubleYoVariablesWithDummyRegistry(variableNames1, varValues1, variableNames2, varValues2);
@@ -1436,7 +1421,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    }
 
    private YoVariableList[] createTwoVarListOfDoubleYoVariablesWithDummyRegistry(String[] variableNames1, double[] varValues1, String[] variableNames2,
-         double[] varValues2)
+                                                                                 double[] varValues2)
    {
       YoVariableRegistry registry = new YoVariableRegistry("dummy");
       YoDouble[] yoVariables1 = createAndSetDoubleYoVariableToRegistry(variableNames1, varValues1, registry);
@@ -1926,7 +1911,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       double x = cameraTrackAndDollyYoVariablesHolder.getTrackingX();
       double y = cameraTrackAndDollyYoVariablesHolder.getTrackingY();
       double z = cameraTrackAndDollyYoVariablesHolder.getTrackingZ();
-      return new double[] { x, y, z };
+      return new double[] {x, y, z};
    }
 
    private double[] getCameraDollyXYZVars(SimulationConstructionSet scs)
@@ -1935,7 +1920,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       double x = cameraTrackAndDollyYoVariablesHolder.getDollyX();
       double y = cameraTrackAndDollyYoVariablesHolder.getDollyY();
       double z = cameraTrackAndDollyYoVariablesHolder.getDollyZ();
-      return new double[] { x, y, z };
+      return new double[] {x, y, z};
    }
 
    private double[] getCameraTrackingOffsetXYZValues(SimulationConstructionSet scs)
@@ -1944,7 +1929,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       double dx = classicCameraController.getTrackingXOffset();
       double dy = classicCameraController.getTrackingYOffset();
       double dz = classicCameraController.getTrackingZOffset();
-      return new double[] { dx, dy, dz };
+      return new double[] {dx, dy, dz};
    }
 
    private double[] getCameraDollyOffsetXYZValues(SimulationConstructionSet scs)
@@ -1953,7 +1938,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       double dx = classicCameraController.getDollyXOffset();
       double dy = classicCameraController.getDollyYOffset();
       double dz = classicCameraController.getDollyZOffset();
-      return new double[] { dx, dy, dz };
+      return new double[] {dx, dy, dz};
    }
 
    private double[] getCameraFixXYZValues(SimulationConstructionSet scs)
@@ -1962,7 +1947,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       double x = classicCameraController.getFixX();
       double y = classicCameraController.getFixY();
       double z = classicCameraController.getFixZ();
-      return new double[] { x, y, z };
+      return new double[] {x, y, z};
    }
 
    private double[] getCameraNearFarValues(SimulationConstructionSet scs)
@@ -1970,7 +1955,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       ClassicCameraController classicCameraController = getClassicCameraController(scs);
       double near = classicCameraController.getClipNear();
       double far = classicCameraController.getClipFar();
-      return new double[] { near, far };
+      return new double[] {near, far};
    }
 
    private double[] getCameraPositionXYZValues(SimulationConstructionSet scs)
@@ -1979,7 +1964,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       double x = classicCameraController.getCamX();
       double y = classicCameraController.getCamY();
       double z = classicCameraController.getCamZ();
-      return new double[] { x, y, z };
+      return new double[] {x, y, z};
    }
 
    private GraphGroupList getGraphGroupList(SimulationConstructionSet scs)

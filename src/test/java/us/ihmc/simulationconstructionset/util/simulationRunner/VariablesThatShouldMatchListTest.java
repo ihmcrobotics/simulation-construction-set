@@ -16,7 +16,6 @@ import us.ihmc.yoVariables.variable.YoDouble;
 
 public class VariablesThatShouldMatchListTest
 {
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testOne()
    {

@@ -31,7 +31,6 @@ public class StateFileComparerTest
    {
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testAbsoluteCompareStateFiles() throws FileNotFoundException
    {
@@ -96,7 +95,6 @@ public class StateFileComparerTest
       stream.close();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testCompareVarLists()
    {

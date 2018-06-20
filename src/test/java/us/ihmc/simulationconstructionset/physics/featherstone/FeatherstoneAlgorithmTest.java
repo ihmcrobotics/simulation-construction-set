@@ -36,7 +36,6 @@ public class FeatherstoneAlgorithmTest
 
    private final SimulationTestingParameters simulationTestingParameters = SimulationTestingParameters.createFromSystemProperties();
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.5)
    @Test(timeout = 30000)
    public void testSinglePendulumAgainstLagrangianCalculation()
    {
@@ -45,7 +44,6 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(pendulumRobot, epsilon);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.5)
    @Test(timeout = 30000)
    public void testDoublePendulumAgainstLagrangianCalculation()
    {
@@ -54,7 +52,6 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(pendulumRobot, epsilon);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.5)
    @Test(timeout = 30000)
    public void testCartPoleAgainstLagrangianCalculation()
    {
@@ -63,7 +60,6 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(cartPoleRobot, epsilon);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.5)
    @Test(timeout = 30000)
    public void testUniversalJointAgainLagrangianCalculation()
    {

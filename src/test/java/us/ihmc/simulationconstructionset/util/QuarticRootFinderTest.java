@@ -11,7 +11,6 @@ public class QuarticRootFinderTest
 {
    private static final boolean DEBUG = false;
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testQuarticRootFinder()
    {

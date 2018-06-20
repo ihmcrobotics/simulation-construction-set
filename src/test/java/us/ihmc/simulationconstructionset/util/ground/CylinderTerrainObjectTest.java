@@ -18,7 +18,6 @@ public class CylinderTerrainObjectTest
    private static final double errEpsilon = 1e-14;
    private static final double testDelta = .0001;
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testSimpleCylinder()
    {
@@ -54,7 +53,6 @@ public class CylinderTerrainObjectTest
 
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtTranslatedRot90TallHorizontalCylinderJustInsideAndOutside()
    {
@@ -94,7 +92,6 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtRot90TallHorizontalCylinderJustInsideAndOutside()
    {
@@ -132,7 +129,6 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtTranslatedVerticalCylinderJustInside()
    {
@@ -161,7 +157,6 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtTranslatedHorizontalCylinderJustInside()
    {
@@ -191,7 +186,6 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtTranslatedVerticalCylinderJustOutside()
    {
@@ -218,7 +212,6 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtTranslatedHorizontalCylinderJustOutside()
    {
@@ -247,7 +240,6 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtVerticalCylinderOutside()
    {
@@ -286,7 +278,6 @@ public class CylinderTerrainObjectTest
       assertEquals(expectedHeightOnCircle, horizontalCylinder.heightAt(height / 4, radius / 2, radius), errEpsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtSlopedRotatedTwoSidesTop()
    {
@@ -316,7 +307,6 @@ public class CylinderTerrainObjectTest
       assertEquals(z, slopedRotatedCylinder.heightAt(x, y, z + 1), errEpsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtSlopedRotatedTwoSidesBottom()
    {
@@ -348,7 +338,6 @@ public class CylinderTerrainObjectTest
       assertEquals(expectedHeight, slopedRotatedCylinder.heightAt(x, y, -1), errEpsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtSlopedRotatedEndAndSideTop()
    {
@@ -377,7 +366,6 @@ public class CylinderTerrainObjectTest
       assertEquals(expectedHeight, slopedRotatedCylinder.heightAt(x, y, 2), errEpsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testHeightAtSlopedRotatedEndAndSideBottom()
    {

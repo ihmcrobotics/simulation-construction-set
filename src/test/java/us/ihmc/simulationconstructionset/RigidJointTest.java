@@ -29,7 +29,6 @@ public class RigidJointTest
 {
    private static final boolean doDynamics = true;
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testOneRigidJoint()
    {
@@ -53,7 +52,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(centerOfMassOffset, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testOneRigidJointWithTranslation()
    {
@@ -88,7 +86,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testOneRigidJointWithRotation()
    {
@@ -122,7 +119,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout = 30000)
    public void testOneRigidJointWithRotationAndTranslation()
    {
@@ -163,7 +159,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testSinglePinJoint() throws UnreasonableAccelerationException
    {
@@ -242,7 +237,6 @@ public class RigidJointTest
       }
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testSingleSliderJoint() throws UnreasonableAccelerationException
    {
@@ -323,7 +317,6 @@ public class RigidJointTest
       }
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderOne() throws UnreasonableAccelerationException
    {
@@ -348,7 +341,6 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
    
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderTwo() throws UnreasonableAccelerationException
    {
@@ -372,7 +364,6 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderThree() throws UnreasonableAccelerationException
    {
@@ -397,7 +388,6 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderFour() throws UnreasonableAccelerationException
    {

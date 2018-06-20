@@ -152,7 +152,6 @@ public class ActionsTest
       }
    };
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testSimpleActions()
    {
@@ -162,7 +161,6 @@ public class ActionsTest
       }
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testCreateNewGraphWindowAction()
    {
@@ -181,7 +179,6 @@ public class ActionsTest
               .assertMethodNotCalled("getGraphArrayWindow", String.class);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testCreateNewViewportWindowAction()
    {
@@ -200,7 +197,6 @@ public class ActionsTest
               .assertMethodNotCalled("getViewportWindow", String.class);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testHideShowViewportAction()
    {
@@ -265,7 +261,6 @@ public class ActionsTest
               );
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testSimulateAction()
    {
@@ -281,7 +276,6 @@ public class ActionsTest
               .assertMethodCalled("simulate");
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testToggleKeyPointModeAction()
    {
@@ -338,7 +332,6 @@ public class ActionsTest
               );
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testZoomInAction()
    {
@@ -355,7 +348,6 @@ public class ActionsTest
               .assertMethodNotCalled("zoomOut");
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testZoomOutAction()
    {
@@ -372,7 +364,6 @@ public class ActionsTest
               .assertMethodNotCalled("zoomIn");
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectGraphConfigurationAction()
    {
@@ -388,7 +379,6 @@ public class ActionsTest
               .assertMethodCalled("selectGraphConfiguration", "Test");
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectGraphGroupAction()
    {
@@ -404,7 +394,6 @@ public class ActionsTest
               .assertMethodCalled("selectGraphGroup", "Test");
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectVarGroupAction()
    {
@@ -420,7 +409,6 @@ public class ActionsTest
               .assertMethodCalled("selectVarGroup", "Test");
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectViewportAction()
    {
@@ -437,7 +425,6 @@ public class ActionsTest
    }
 
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testCameraPropertiesAction()
    {
@@ -464,7 +451,6 @@ public class ActionsTest
               .assertAllInterfaceMethodsCalled();
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectEntryBoxGroupAction()
    {
@@ -481,7 +467,6 @@ public class ActionsTest
               .assertAllInterfaceMethodsCalled();
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectExtraPanelAction()
    {
@@ -498,14 +483,12 @@ public class ActionsTest
               .assertAllInterfaceMethodsCalled();
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testThinBufferAction()
    {
       testActionCallingAllInterfaceMethods(ThinBufferCommandExecutor.class, ThinBufferAction.class);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectCameraAction()
    {
@@ -521,7 +504,6 @@ public class ActionsTest
               .assertMethodCalled("selectCamera", "Test");
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSelectGUIConfigFromFileAction()
    {

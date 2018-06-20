@@ -130,7 +130,6 @@ public class YoEntryBoxTest
 
    // GT - these values are twice the minimum working values for Trogdor.
    // This test is for humans to view
-	@ContinuousIntegrationTest(estimatedDuration = 0.1, categoriesOverride = IntegrationCategory.EXCLUDE)
 	@Test(timeout=300000)
    public void testEnumDisplay() throws SimulationExceededMaximumTimeException, InterruptedException
    {
@@ -144,7 +143,6 @@ public class YoEntryBoxTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 7.4)
 	@Test(timeout = 37000)
    public void testSwitchToEnumEntry() throws SimulationExceededMaximumTimeException, InterruptedException
    {

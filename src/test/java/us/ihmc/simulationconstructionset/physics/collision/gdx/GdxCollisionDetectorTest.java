@@ -18,7 +18,6 @@ public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
    }
 
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 300000)
    public void collisionMask_hit()
    {
@@ -26,7 +25,6 @@ public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
    }
 
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 300000)
    public void testBoxBarelyCollisions()
    {
@@ -34,7 +32,6 @@ public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
    }
 
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout = 300000)
    public void testBoxCloseButNoCollisions()
    {
@@ -42,7 +39,6 @@ public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
    }
 
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 300000)
    public void testSmallBox()
    {
@@ -50,7 +46,6 @@ public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
    }
 
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout = 300000)
    public void testUnitBox()
    {
@@ -58,7 +53,6 @@ public class GdxCollisionDetectorTest extends SCSCollisionDetectorTest
    }
 
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 300000)
    public void checkCollisionShape_offset()
    {

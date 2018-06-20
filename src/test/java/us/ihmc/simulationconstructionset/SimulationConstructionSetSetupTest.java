@@ -18,7 +18,6 @@ public class SimulationConstructionSetSetupTest
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
    private static final int pauseTimeForGUIs = 5000;
 
-	@ContinuousIntegrationTest(estimatedDuration = 5.0)
 	@Test(timeout = 30000)
    public void testSplashScreen() throws Exception
     {
@@ -36,7 +35,6 @@ public class SimulationConstructionSetSetupTest
       });
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 5.3)
 	@Test(timeout = 30000)
    public void testSimulationConstructionSetWithoutARobot()
    {
@@ -48,7 +46,6 @@ public class SimulationConstructionSetSetupTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 5.6)
 	@Test(timeout = 30000)
    public void testSimulationConstructionSetWithARobot()
    {

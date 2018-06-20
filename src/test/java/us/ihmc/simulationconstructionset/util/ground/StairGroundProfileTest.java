@@ -9,7 +9,6 @@ import us.ihmc.simulationconstructionset.util.ground.StairGroundProfile;
 public class StairGroundProfileTest extends GroundProfileTest
 {
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {

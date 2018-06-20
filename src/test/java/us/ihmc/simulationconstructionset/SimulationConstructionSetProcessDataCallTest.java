@@ -17,7 +17,6 @@ public class SimulationConstructionSetProcessDataCallTest
    private static final boolean DEBUG = false;
    private YoVariableRegistry registry;
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testForwardCount()
    {
@@ -75,7 +74,6 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testBackwardCount()
    {
@@ -134,7 +132,6 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testForwardCopy()
    {
@@ -192,7 +189,6 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testBackwardCopy()
    {

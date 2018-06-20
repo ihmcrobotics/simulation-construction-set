@@ -21,7 +21,6 @@ public class SimulationRewoundListenerTest
     * Hang forever
     */
    @Ignore
-	@ContinuousIntegrationTest(estimatedDuration = 30.0)
 	@Test(timeout=300000)
    public void testSimulationRewoundListener()
    {

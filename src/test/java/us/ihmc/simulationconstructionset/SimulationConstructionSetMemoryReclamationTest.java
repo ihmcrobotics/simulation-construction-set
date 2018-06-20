@@ -22,7 +22,6 @@ public class SimulationConstructionSetMemoryReclamationTest
 {
    private static final boolean DEBUG = true;
 
-	@ContinuousIntegrationTest(estimatedDuration = 10.3)
 	@Test(timeout = 51000)
    public void testMemoryReclamationForSCSWithoutARobot()
    {
@@ -37,7 +36,6 @@ public class SimulationConstructionSetMemoryReclamationTest
       assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 6.4)
 	@Test(timeout = 32000)
    public void testMemoryReclamationForSCSWithARobot()
    {
@@ -53,7 +51,6 @@ public class SimulationConstructionSetMemoryReclamationTest
    }
 
    // TODO https://jira.ihmc.us/browse/DRC-2208
-	@ContinuousIntegrationTest(estimatedDuration = 0.1, categoriesOverride = IntegrationCategory.EXCLUDE)
 	@Test(timeout=300000)
    public void testMemoryReclamationForSCSWithARobotAndVideo()
    {

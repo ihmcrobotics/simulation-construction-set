@@ -8,8 +8,7 @@ import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 
 public class FlatGroundProfileTest extends GroundProfileTest
 {
-   @Override@ContinuousIntegrationTest(estimatedDuration = 0.1)
-   @Test(timeout=300000)
+   @Override@Test(timeout=300000)
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
       super.testSurfaceNormalGridForSmoothTerrainUsingHeightMap();

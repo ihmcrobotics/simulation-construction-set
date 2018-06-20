@@ -22,7 +22,6 @@ public class SimulationConstructionSetRootRegistryTest
 {
    private static final boolean SHOW_GUI = false;
 
-	@ContinuousIntegrationTest(estimatedDuration = 1.1)
 	@Test(timeout = 30000)
    public void testRootRegistryNothingFancy()
    {
@@ -62,8 +61,7 @@ public class SimulationConstructionSetRootRegistryTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
-	@Test(timeout = 30000) 
+	@Test(timeout = 30000)
    public void testVarGroups()
    {
       Robot robot = new Robot("testVarGroups");
@@ -109,7 +107,6 @@ public class SimulationConstructionSetRootRegistryTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout = 30000)
    public void testRootRegistryAddYoVariablesAfterConstruction()
    {

@@ -9,7 +9,6 @@ import us.ihmc.simulationconstructionset.util.ground.BumpyGroundProfile;
 public class BumpyGroundProfileTest extends GroundProfileTest
 {
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {

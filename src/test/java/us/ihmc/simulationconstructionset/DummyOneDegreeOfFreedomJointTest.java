@@ -17,7 +17,6 @@ public class DummyOneDegreeOfFreedomJointTest
 {
    private final static boolean keepSCSUp = false;
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testDummyOneDegreeOfFreedomJoint()
    {

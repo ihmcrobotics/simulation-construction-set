@@ -16,7 +16,6 @@ public class DataProcessingFunctionTest
 {
    private static final boolean SHOW_GUI = false;
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=300000)
    public void testSimpleDataProcessingFunction() throws SimulationExceededMaximumTimeException, ControllerFailureException
    {
