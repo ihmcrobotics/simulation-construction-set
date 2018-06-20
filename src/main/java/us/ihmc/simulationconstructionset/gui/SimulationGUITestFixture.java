@@ -1,10 +1,6 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
+import javax.swing.*;
 
 import org.fest.swing.core.GenericTypeMatcher;
 import org.fest.swing.core.MouseButton;
@@ -494,6 +490,12 @@ public class SimulationGUITestFixture
       MenuItemTextTypeMatcher textMatcher = new MenuItemTextTypeMatcher("Remove " + variableName);
       popupMenu.menuItem(textMatcher).click();
 
+   }
+
+   public void clickOnAddNumericEntryBox()
+   {
+      JButtonFixture addNumericEntryBox = focusedWindow.button("Add Numeric Entry Box");
+      addNumericEntryBox.click();
    }
 
    public void clickOnUnusedEntryBox()

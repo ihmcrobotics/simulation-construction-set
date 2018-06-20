@@ -38,10 +38,10 @@ public class SimulationConstructionSetFestTest
    }
 
 	@ContinuousIntegrationTest(estimatedDuration = 0.1)
-	@Test(timeout=30000)
+	@Test(timeout=100000)
    public void testSimulationConstructionSetUsingGUITestFixture() throws AWTException
    {
-      Assume.assumeTrue(!isGradleBuild());
+//      Assume.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -55,7 +55,7 @@ public class SimulationConstructionSetFestTest
       scs.setFrameMaximized();
       scs.startOnAThread();
       scs.setSimulateDuration(2.0);
-      scs.hideViewport();
+//      scs.hideViewport();
 
 
       SimulationGUITestFixture testFixture = new SimulationGUITestFixture(scs);
@@ -73,6 +73,7 @@ public class SimulationConstructionSetFestTest
       testFixture.selectVariableInOpenTab("booleanForTests");
       ThreadTools.sleep(500);
 
+      testFixture.clickOnAddNumericEntryBox();
       testFixture.clickOnUnusedEntryBox();
 
       assertTrue(booleanForTests.getBooleanValue() == false);
@@ -102,6 +103,7 @@ public class SimulationConstructionSetFestTest
       testFixture.enterSearchText("enumForTests");
       testFixture.selectVariableInSearchTab("enumForTests");
 
+      testFixture.clickOnAddNumericEntryBox();
       testFixture.clickOnUnusedEntryBox();
 
       assertTrue(enumForTests.getEnumValue() == Axis.X);
