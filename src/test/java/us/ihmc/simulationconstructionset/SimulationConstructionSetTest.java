@@ -1,21 +1,17 @@
 package us.ihmc.simulationconstructionset;
 
-import java.awt.AWTException;
-
 import org.junit.Assume;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
-import us.ihmc.commons.thread.ThreadTools;
 
-@ContinuousIntegrationPlan(categories = IntegrationCategory.MANUAL)
+import java.awt.*;
+
 public class SimulationConstructionSetTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    private boolean isGradleBuild()
    {
       String property = System.getProperty("bamboo.gradle");
@@ -27,14 +23,13 @@ public class SimulationConstructionSetTest
       return false;
    }
    
-	@ContinuousIntegrationTest(estimatedDuration = 0.1, categoriesOverride = IntegrationCategory.EXCLUDE)
 	@Test(timeout=300000)
    public void testSimulationConstructionSetNewViewportWindowUsingGUITestFixture() throws AWTException
    {
       Assume.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.0001, 100);
       scs.setFrameMaximized();
       scs.startOnAThread();
@@ -57,14 +52,13 @@ public class SimulationConstructionSetTest
 
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1, categoriesOverride = IntegrationCategory.EXCLUDE)
 	@Test(timeout=300000)
    public void testSimulationConstructionSetVideoGenerationUsingGUITestFixture() throws AWTException
    {
       Assume.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.0001, 100);
       scs.setFrameMaximized();
       scs.startOnAThread();

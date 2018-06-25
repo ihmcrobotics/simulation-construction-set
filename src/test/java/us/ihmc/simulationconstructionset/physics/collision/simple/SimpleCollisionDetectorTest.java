@@ -1,10 +1,6 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -14,12 +10,13 @@ import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
 import us.ihmc.simulationconstructionset.physics.Contacts;
 import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionResult;
-import us.ihmc.simulationconstructionset.physics.collision.simple.SimpleCollisionDetector;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SimpleCollisionDetectorTest
 {
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testSphereToSphereCollisions()
    {
@@ -146,7 +143,6 @@ public class SimpleCollisionDetectorTest
    }
 
    //TODO: More and more vigorous tests...
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testBoxToBoxCollisions()
    {

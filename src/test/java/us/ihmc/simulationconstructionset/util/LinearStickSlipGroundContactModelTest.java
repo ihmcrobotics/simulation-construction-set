@@ -1,33 +1,26 @@
 package us.ihmc.simulationconstructionset.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.junit.Test;
-
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.GroundContactPoint;
-import us.ihmc.simulationconstructionset.GroundContactPointsHolder;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
+import us.ihmc.simulationconstructionset.*;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.simulationconstructionset.util.ground.SlopedPlaneGroundProfile;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import static org.junit.Assert.*;
+
 public class LinearStickSlipGroundContactModelTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testNonlinearZForce()
    {
@@ -38,7 +31,7 @@ public class LinearStickSlipGroundContactModelTest
 
       if (visualize)
       {
-         scs = new SimulationConstructionSet(new Robot("TestZForce"));
+         scs = new SimulationConstructionSet(new Robot("TestZForce"), parameters);
          registry = scs.getRootRegistry();
       }
       else
@@ -83,7 +76,6 @@ public class LinearStickSlipGroundContactModelTest
       }
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testOnFlatGroundNoSlipCompareWithAndWithoutNormals()
    {
@@ -180,7 +172,6 @@ public class LinearStickSlipGroundContactModelTest
       EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 0.0), force, 1e-7);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=300000)
    public void testOnSlantedGroundCompareWithAndWithoutNormals()
    {

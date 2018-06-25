@@ -1,10 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
 import org.junit.Test;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.simulationconstructionset.DataFileReader;
-import us.ihmc.simulationconstructionset.DataFileWriter;
-import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.*;
@@ -21,7 +17,6 @@ public class DataFileWriterTest
 {
    private static final String TEST_DIRECTORY = "us/ihmc/simulationconstructionset/dataFileWriterTest/";
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.8)
 	@Test(timeout=300000)
    public void testDataFileWriterAndReader() throws IOException, URISyntaxException
    {
@@ -133,7 +128,6 @@ public class DataFileWriterTest
 
    @SuppressWarnings("deprecation")
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testFileReadAndWriteWithDataOutputStreamAndDataInputStream() throws IOException, NullPointerException
    {
@@ -162,7 +156,6 @@ public class DataFileWriterTest
       assertTrue(testInteger == integerReadBack);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000, expected = EOFException.class)
    public void testFileReadAndWriteWithDataOutputStreamAndBufferedReader() throws IOException
    {
@@ -198,7 +191,6 @@ public class DataFileWriterTest
       assertTrue(integerReadBack == -testInteger);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testFileReadAndWriteBackWithDataOutputStreamAndDeferredBufferedReaderCreation() throws IOException
    {
@@ -234,7 +226,6 @@ public class DataFileWriterTest
       assertTrue(testInteger == integerReadBack);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testFileReadAndWriteBackWithDataOutputStreamAndBufferedReaderStringsOnly() throws IOException
    {
@@ -272,7 +263,6 @@ public class DataFileWriterTest
       assertTrue(string3.equals(readBack3));
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.3)
 	@Test(timeout = 30000)
    public void testWritingAndReadingALongStateFile() throws IOException
    {
@@ -314,7 +304,6 @@ public class DataFileWriterTest
       fileOne.delete();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.5)
 	@Test(timeout = 30000)
    public void testWritingAndReadingADataFileWithLotsOfVariables() throws IOException
    {

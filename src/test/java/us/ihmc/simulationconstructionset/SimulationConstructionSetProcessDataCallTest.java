@@ -1,28 +1,22 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
+
+import static org.junit.Assert.assertEquals;
 
 public class SimulationConstructionSetProcessDataCallTest
 {   
    private static final boolean DEBUG = false;
    private YoVariableRegistry registry;
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testForwardCount()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -75,12 +69,11 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testBackwardCount()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -134,12 +127,11 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testForwardCopy()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -192,12 +184,11 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=1000)
    public void testBackwardCopy()
    {
       Robot robot = new Robot("testRobot");
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(false);
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);

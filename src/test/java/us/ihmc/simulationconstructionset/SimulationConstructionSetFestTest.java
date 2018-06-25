@@ -1,29 +1,22 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
-import java.awt.AWTException;
-
-import org.fest.swing.exception.ActionFailedException;
-import org.junit.Assume;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.Axis;
-import us.ihmc.continuousIntegration.IntegrationCategory;
+import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
+import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
-import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
-import us.ihmc.commons.thread.ThreadTools;
 
-@ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class SimulationConstructionSetFestTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    private boolean isGradleBuild()
    {
       String property = System.getProperty("bamboo.gradle");
@@ -35,14 +28,12 @@ public class SimulationConstructionSetFestTest
       return false;
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
-	@Test(timeout=300000)
-   public void testSimulationConstructionSetUsingGUITestFixture() throws AWTException
+	@Test(timeout=100000)
+   public void testSimulationConstructionSetUsingGUITestFixture()
    {
-      Assume.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       YoVariableRegistry registryOne = new YoVariableRegistry("RegistryOne");
       YoEnum<Axis> enumForTests = new YoEnum<Axis>("enumForTests", registryOne, Axis.class);
       YoVariableRegistry registryTwo = new YoVariableRegistry("RegistryTwo");
@@ -53,7 +44,7 @@ public class SimulationConstructionSetFestTest
       scs.setFrameMaximized();
       scs.startOnAThread();
       scs.setSimulateDuration(2.0);
-      scs.hideViewport();
+//      scs.hideViewport();
 
 
       SimulationGUITestFixture testFixture = new SimulationGUITestFixture(scs);
@@ -71,6 +62,7 @@ public class SimulationConstructionSetFestTest
       testFixture.selectVariableInOpenTab("booleanForTests");
       ThreadTools.sleep(500);
 
+      testFixture.clickOnAddNumericEntryBox();
       testFixture.clickOnUnusedEntryBox();
 
       assertTrue(booleanForTests.getBooleanValue() == false);
@@ -100,6 +92,7 @@ public class SimulationConstructionSetFestTest
       testFixture.enterSearchText("enumForTests");
       testFixture.selectVariableInSearchTab("enumForTests");
 
+      testFixture.clickOnAddNumericEntryBox();
       testFixture.clickOnUnusedEntryBox();
 
       assertTrue(enumForTests.getEnumValue() == Axis.X);
@@ -244,60 +237,62 @@ public class SimulationConstructionSetFestTest
       testFixture = null;
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=45000)
-   public void testSimulationConstructionSetNewGraphWindowUsingGUITestFixture() throws AWTException
+   public void testSimulationConstructionSetNewGraphWindowUsingGUITestFixture()
    {
-      Assume.assumeTrue(!isGradleBuild());
-      try
-      {
-         FallingBrickRobot robot = new FallingBrickRobot();
-         robot.initialize();
+      FallingBrickRobot robot = new FallingBrickRobot();
+      robot.initialize();
 
-         SimulationConstructionSet scs = new SimulationConstructionSet(robot);
-         scs.setDT(0.0001, 100);
-         scs.setFrameMaximized();
-         scs.startOnAThread();
-         scs.setSimulateDuration(2.0);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
+      scs.setDT(0.0001, 100);
+      scs.startOnAThread();
 
-         ThreadTools.sleep(2000);
-         SimulationGUITestFixture testFixture = new SimulationGUITestFixture(scs);
+      SimulationGUITestFixture testFixture = new SimulationGUITestFixture(scs);
 
-         testFixture.closeAllGraphArrayWindows();
+      testFixture.clickNewGraphButton();
 
-         testFixture.selectNewGraphWindowMenu();
-         testFixture.selectNewGraphWindowMenu();
+      testFixture.focusMainSCSWindow();
+      testFixture.selectSearchTab();
+      testFixture.deleteSearchText();
+      testFixture.enterSearchText("t");
+      testFixture.selectVariableInSearchTab("t");
 
-         testFixture.focusNthGraphArrayWindow(0);
-         testFixture.clickNewGraphButton();
+      testFixture.middleClickInEmptyGraph();
 
-         testFixture.focusMainSCSWindow();
-         testFixture.selectSearchTab();
-         testFixture.deleteSearchText();
-         testFixture.enterSearchText("q_");
-         testFixture.selectVariableInSearchTab("q_z");
+      testFixture.clickSimulateButton();
 
-         testFixture.focusNthGraphArrayWindow(0);
-         testFixture.middleClickInEmptyGraph();
+      ThreadTools.sleep(200);
 
-         testFixture.focusMainSCSWindow();
-         testFixture.selectSearchTab();
-         testFixture.deleteSearchText();
-         testFixture.enterSearchText("q_");
-         testFixture.selectVariableInSearchTab("q_y");
+      testFixture.clickStopButton();
 
-         testFixture.focusNthGraphArrayWindow(1);
-         testFixture.clickNewGraphButton();
-         testFixture.middleClickInEmptyGraph();
+      testFixture.selectNewGraphWindowMenu();
+      testFixture.selectNewGraphWindowMenu();
 
-         testFixture.closeAndDispose();
-         scs.closeAndDispose();
-         scs = null;
-         testFixture = null;
-      }
-      catch (ActionFailedException e)
-      {
-         fail(e.getMessage());
-      }
+      testFixture.focusNthGraphArrayWindow(0);
+      testFixture.clickNewGraphButton();
+
+      testFixture.focusMainSCSWindow();
+      testFixture.selectSearchTab();
+      testFixture.deleteSearchText();
+      testFixture.enterSearchText("q_");
+      testFixture.selectVariableInSearchTab("q_z");
+
+      testFixture.focusNthGraphArrayWindow(0);
+      testFixture.middleClickInEmptyGraph();
+
+      testFixture.focusMainSCSWindow();
+      testFixture.selectSearchTab();
+      testFixture.deleteSearchText();
+      testFixture.enterSearchText("q_");
+      testFixture.selectVariableInSearchTab("q_y");
+
+      testFixture.focusNthGraphArrayWindow(1);
+      testFixture.clickNewGraphButton();
+      testFixture.middleClickInEmptyGraph();
+
+      testFixture.closeAndDispose();
+      scs.closeAndDispose();
+      scs = null;
+      testFixture = null;
    }
 }

@@ -1,13 +1,10 @@
 package us.ihmc.simulationconstructionset.gui.config;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.simulationconstructionset.gui.config.VarGroup;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
+
+import static org.junit.Assert.assertTrue;
 
 public class VarGroupTest {
 
@@ -25,7 +22,6 @@ public class VarGroupTest {
 		varGroup = new VarGroup("varGroup");
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testSetAndGetName() {
 		assertTrue("varGroup" == varGroup.getName());
@@ -38,7 +34,6 @@ public class VarGroupTest {
 				.getName());
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testAddGetAndRemoveSingleVariable() {
 		varGroup.addVar(variable1);
@@ -51,7 +46,6 @@ public class VarGroupTest {
 		assertTrue(0 == varGroupArray.length);
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testAddMultipleVariables() {
 		String[] variablesToBeAdded = { variable1, variable2, variable3,
@@ -66,7 +60,6 @@ public class VarGroupTest {
 
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testAddRemoveAndGetRegularExpressions() {
 		String[] regularExpressionsToBeAdded = { variable1, variable2,

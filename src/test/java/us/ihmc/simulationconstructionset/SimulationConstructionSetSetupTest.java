@@ -1,23 +1,15 @@
 package us.ihmc.simulationconstructionset;
 
-import javax.swing.JWindow;
-import javax.swing.SwingUtilities;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.gui.SplashPanel;
 
-@ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
+import javax.swing.*;
+
 public class SimulationConstructionSetSetupTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
    private static final int pauseTimeForGUIs = 5000;
 
-	@ContinuousIntegrationTest(estimatedDuration = 5.0)
 	@Test(timeout = 30000)
    public void testSplashScreen() throws Exception
     {
@@ -35,11 +27,10 @@ public class SimulationConstructionSetSetupTest
       });
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 5.3)
 	@Test(timeout = 30000)
    public void testSimulationConstructionSetWithoutARobot()
    {
-      SimulationConstructionSet scs = new SimulationConstructionSet();
+      SimulationConstructionSet scs = new SimulationConstructionSet(parameters);
       Thread thread = new Thread(scs);
       thread.start();
 
@@ -47,12 +38,11 @@ public class SimulationConstructionSetSetupTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 5.6)
 	@Test(timeout = 30000)
    public void testSimulationConstructionSetWithARobot()
    {
       Robot robot = new Robot("NullRobot");
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       Thread thread = new Thread(scs);
       thread.start();
 

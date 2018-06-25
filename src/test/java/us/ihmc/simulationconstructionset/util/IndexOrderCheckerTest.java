@@ -1,13 +1,10 @@
 package us.ihmc.simulationconstructionset.util;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.simulationconstructionset.util.IndexOrderChecker;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class IndexOrderCheckerTest
@@ -21,7 +18,6 @@ public class IndexOrderCheckerTest
       indexOrderChecker = new IndexOrderChecker("test", registry, 1);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testNoOverflow()
    {
@@ -33,7 +29,6 @@ public class IndexOrderCheckerTest
       assertEquals(increment - 1, indexOrderChecker.getMissedIndices());
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testOverflowOne()
    {
@@ -44,7 +39,6 @@ public class IndexOrderCheckerTest
       assertEquals(0, indexOrderChecker.getMissedIndices());
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testOverflowTwo()
    {
@@ -56,7 +50,6 @@ public class IndexOrderCheckerTest
       assertEquals(increment - 1, indexOrderChecker.getMissedIndices());
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testABunch()
    {

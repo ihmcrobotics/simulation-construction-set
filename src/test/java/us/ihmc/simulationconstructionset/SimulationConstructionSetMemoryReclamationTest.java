@@ -1,28 +1,20 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
-import java.awt.Frame;
-import java.io.File;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.tools.MemoryTools;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoDouble;
 
-@ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
+import java.awt.*;
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
+
 public class SimulationConstructionSetMemoryReclamationTest
 {
    private static final boolean DEBUG = true;
 
-	@ContinuousIntegrationTest(estimatedDuration = 10.3)
 	@Test(timeout = 51000)
    public void testMemoryReclamationForSCSWithoutARobot()
    {
@@ -37,7 +29,6 @@ public class SimulationConstructionSetMemoryReclamationTest
       assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 6.4)
 	@Test(timeout = 32000)
    public void testMemoryReclamationForSCSWithARobot()
    {
@@ -53,7 +44,6 @@ public class SimulationConstructionSetMemoryReclamationTest
    }
 
    // TODO https://jira.ihmc.us/browse/DRC-2208
-	@ContinuousIntegrationTest(estimatedDuration = 0.1, categoriesOverride = IntegrationCategory.EXCLUDE)
 	@Test(timeout=300000)
    public void testMemoryReclamationForSCSWithARobotAndVideo()
    {
@@ -142,13 +132,13 @@ public class SimulationConstructionSetMemoryReclamationTest
 
          robot.addYoVariableRegistry(registry);
          
-         SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+         SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
          parameters.setDataBufferSize(5000);
          scs = new SimulationConstructionSet(robot, parameters);
       }
       else
       {
-         SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+         SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
          parameters.setCreateGUI(true);
          parameters.setDataBufferSize(5000);
          scs = new SimulationConstructionSet(parameters);

@@ -144,7 +144,8 @@ public class GdxCollisionDetector implements ScsCollisionDetector
             simpleContact.addContact(pointOnA, pointOnB, normalA, distance);
          }
 
-         result.addContact(simpleContact);
+         if(simpleContact.getNumberOfContacts() != 0)
+            result.addContact(simpleContact);
 
          // you can un-comment out this line, and then all points are removed
          //         contactManifold.clearManifold();

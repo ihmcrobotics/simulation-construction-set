@@ -1,20 +1,16 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.KinematicPoint;
-import us.ihmc.simulationconstructionset.PinJoint;
-import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 
@@ -32,7 +28,6 @@ public class KinematicPointTest
 		kinematicPoint = new KinematicPoint("testPoint", offset, robot.getRobotsYoVariableRegistry());
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetAndSetParentJoint() 
 	{
@@ -42,14 +37,12 @@ public class KinematicPointTest
 		assertTrue(joint == kinematicPoint.getParentJoint());
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testToString()
 	{
 		assertEquals("name: testPoint x: 0.0, y: 0.0, z: 0.0", kinematicPoint.toString());
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testSetOffsetJointWithBothVectorAndXYAndZValuesAsParameters()
 	{
@@ -81,14 +74,12 @@ public class KinematicPointTest
 //		assertTrue(3.5 == kinematicPoint.getOffset().getZ());
 //	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetName()
 	{
 		assertTrue(kinematicPoint.getName() == "testPoint");
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetPosition()
 	{
@@ -106,7 +97,6 @@ public class KinematicPointTest
 
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetPositionPoint()
 	{
@@ -122,7 +112,6 @@ public class KinematicPointTest
 		assertTrue(5.2 == positionReceivedFromGetMethod.getZ());
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetVelocityVector()
 	{
@@ -139,7 +128,6 @@ public class KinematicPointTest
 		
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetVelocity()
 	{
@@ -157,7 +145,6 @@ public class KinematicPointTest
 		
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetYoPosition()
 	{
@@ -169,7 +156,6 @@ public class KinematicPointTest
 		assertEquals("( 5.000,  5.100,  5.200 )-" + frameName, yoPosition.toString());
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testGetYoVelocity()
 	{
@@ -181,7 +167,6 @@ public class KinematicPointTest
 		assertEquals("( 5.000,  5.100,  5.200 )-" + frameName, yoVelocity.toString());
 	}
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
 	public void testChangeableOffset()
 	{

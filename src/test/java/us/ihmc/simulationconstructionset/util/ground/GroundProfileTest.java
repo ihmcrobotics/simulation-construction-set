@@ -1,15 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Random;
-
 import org.junit.Test;
-
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
@@ -27,12 +19,19 @@ import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
+import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.util.LinearStickSlipGroundContactModel;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
+import java.util.Random;
+
+import static org.junit.Assert.*;
+
 public abstract class GroundProfileTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    private boolean VISUALIZE = false;
    private boolean DEBUG = false;
    
@@ -44,7 +43,6 @@ public abstract class GroundProfileTest
    public abstract double getMaxPercentageOfAllowablePeakPoints();
    public abstract double getMaxPercentageOfAllowableDropOffs();
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=300000)
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
@@ -74,7 +72,7 @@ public abstract class GroundProfileTest
           
          yoGraphicsListRegistry.registerYoGraphic("Viz", surfaceNormalGraphicVector);
          
-         scs = new SimulationConstructionSet(robot);
+         scs = new SimulationConstructionSet(robot, parameters);
          scs.setGroundVisible(true);
          scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
 

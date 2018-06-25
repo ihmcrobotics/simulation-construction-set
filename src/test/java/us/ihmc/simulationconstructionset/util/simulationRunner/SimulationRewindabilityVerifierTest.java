@@ -1,13 +1,6 @@
 package us.ihmc.simulationconstructionset.util.simulationRunner;
 
-
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
@@ -16,13 +9,17 @@ import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class SimulationRewindabilityVerifierTest
 {
    private static final boolean SHOW_GUI = false;
    private static final boolean VERBOSE = false;
    private final double DT = 0.01;
 
-	@ContinuousIntegrationTest(estimatedDuration = 4.0)
 	@Test(timeout=300000)
    public void testRewindableSimulation() throws UnreasonableAccelerationException
    {
@@ -43,7 +40,6 @@ public class SimulationRewindabilityVerifierTest
       scs2.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 4.0)
 	@Test(timeout=300000)
    public void testEasilyDetectableNonRewindableSimulation() throws UnreasonableAccelerationException
    {
@@ -70,7 +66,6 @@ public class SimulationRewindabilityVerifierTest
       scs2.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 8.2)
 	@Test(timeout=300000)
    public void testDifficultToDetectNonRewindableSimulation() throws UnreasonableAccelerationException
    {
@@ -146,7 +141,7 @@ public class SimulationRewindabilityVerifierTest
    
    private SimulationConstructionSet constructSimulationConstructionSet(Robot robot, RobotController controller)
    {
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters); 
       scs.setDT(DT, 1);

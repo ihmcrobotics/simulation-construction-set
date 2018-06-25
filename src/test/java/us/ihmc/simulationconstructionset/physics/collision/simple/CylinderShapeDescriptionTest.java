@@ -1,21 +1,18 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import us.ihmc.commons.MutationTestFacilitator;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.simulationconstructionset.physics.collision.simple.CylinderShapeDescription;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CylinderShapeDescriptionTest
 {
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testProjectionWhenNotTransformed()
    {
@@ -52,7 +49,6 @@ public class CylinderShapeDescriptionTest
       EuclidCoreTestTools.assertTuple3DEquals(new Point3D(radius * Math.sqrt(2.0) / 2.0, radius * Math.sqrt(2.0) / 2.0, height * 0.1), closestPointOnCylinder, 1e-7);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testProjectionWhenRotated()
    {
@@ -90,7 +86,6 @@ public class CylinderShapeDescriptionTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedPoint, closestPointOnCylinder, 1e-7);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testBoundingBox()
    {

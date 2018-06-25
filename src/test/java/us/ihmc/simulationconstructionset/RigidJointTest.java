@@ -1,13 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 import org.junit.Test;
-
 import us.ihmc.commons.MutationTestFacilitator;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
@@ -15,21 +9,16 @@ import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.Joint;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.OneDegreeOfFreedomJoint;
-import us.ihmc.simulationconstructionset.PinJoint;
-import us.ihmc.simulationconstructionset.RigidJoint;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SliderJoint;
-import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.RigidJointPhysics;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
 
 public class RigidJointTest
 {
    private static final boolean doDynamics = true;
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testOneRigidJoint()
    {
@@ -53,7 +42,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(centerOfMassOffset, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testOneRigidJointWithTranslation()
    {
@@ -88,7 +76,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testOneRigidJointWithRotation()
    {
@@ -122,7 +109,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout = 30000)
    public void testOneRigidJointWithRotationAndTranslation()
    {
@@ -163,7 +149,6 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testSinglePinJoint() throws UnreasonableAccelerationException
    {
@@ -242,7 +227,6 @@ public class RigidJointTest
       }
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testSingleSliderJoint() throws UnreasonableAccelerationException
    {
@@ -323,7 +307,6 @@ public class RigidJointTest
       }
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderOne() throws UnreasonableAccelerationException
    {
@@ -348,7 +331,6 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
    
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderTwo() throws UnreasonableAccelerationException
    {
@@ -372,7 +354,6 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderThree() throws UnreasonableAccelerationException
    {
@@ -397,7 +378,6 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testPinJointThenRigidJointThenSliderFour() throws UnreasonableAccelerationException
    {

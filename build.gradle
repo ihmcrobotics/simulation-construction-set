@@ -40,7 +40,7 @@ mainDependencies {
    compile group: 'com.badlogicgames.gdx', name: 'gdx-bullet', version: '1.9.4'
    compile group: 'com.badlogicgames.gdx', name: 'gdx', version: '1.9.4'
    compile group: 'com.google.guava', name: 'guava', version: '18.0'
-   compile group: 'org.easytesting', name: 'fest', version: '1.0.3'
+   compile group: 'org.easytesting', name: 'fest', version: '1.0.16'
    compile('org.easytesting:fest-swing:1.2.1')
          {
             exclude group: 'org.easytesting', module: 'fest'
@@ -62,8 +62,10 @@ mainDependencies {
 testDependencies {
    compile group: "junit", name: "junit", version: "4.12"
    compile group: 'org.ejml', name: 'dense64', version: '0.30'
-   compile group: "us.ihmc", name: "ihmc-ci-core-api", version: "0.17.14"
-   compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.20.0"
+   compile("us.ihmc:ihmc-commons-testing:0.20.0")
+         {
+            exclude group: "us.ihmc", module: "ihmc-ci-core-api"
+         }
 }
 
 utilitiesDependencies {
@@ -77,46 +79,57 @@ distributions {
    }
 }
 
-test {
-   minHeapSize="4g"
-   maxHeapSize="16g"
+def testProject = ihmc.sourceSetProject("test")
 
-   doFirst {
-      testLogging {
-         if (logLevel == "verbose")
-         {
-            events "passed", "skipped", "failed", "standardOut", "standardError"
-         } else
-         {
-            events "standardError"
+def void setJavaProperty(String propertyName, def value)
+{
+   def testProject = ihmc.sourceSetProject("test")
+   println propertyName + ": " + value
+   testProject.test.systemProperty propertyName, value
+}
+
+testProject.test {
+
+      minHeapSize="4g"
+      maxHeapSize="16g"
+
+      doFirst {
+         testLogging {
+            if (logLevel == "verbose")
+            {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+            } else
+            {
+               events "standardError"
+            }
+
+            exceptionFormat "full"
          }
 
-         exceptionFormat "full"
-      }
-
-      ignoreFailures true
+         ignoreFailures true
 //      forkEvery = 1
 
-      println "Setting system properties."
+         println "Setting system properties."
 
-      setJavaProperty("keep.scs.up", keepScsUp)
-      setJavaProperty("show.scs.windows", showScsWindows)
-      setJavaProperty("show.splash.screen", "false")
-      setJavaProperty("scs.dataBuffer.size", scsDataBufferSize)
-      setJavaProperty("show.scs.yographics", showScsYoGraphics)
-      setJavaProperty("java.awt.headless", awtHeadless)
-      setJavaProperty("create.videos", createVideos)
-      setJavaProperty("create.scs.videos", createVideos)
-      setJavaProperty("create.scs.gui", createScsGui)
-      setJavaProperty("openh264.license", "accept")
-      setJavaProperty("runningOnCIServer", "true")
-      setJavaProperty("disable.joint.subsystem.publisher", "true")
+         setJavaProperty("keep.scs.up", false)
+         setJavaProperty("show.scs.windows", showGui)
+         setJavaProperty("show.splash.screen", false)
+         setJavaProperty("scs.dataBuffer.size", 2048)
+         setJavaProperty("show.scs.yographics", showScsYoGraphics)
+         setJavaProperty("java.awt.headless", !showGui)
+         setJavaProperty("create.videos", createVideos)
+         setJavaProperty("create.scs.videos", createVideos)
+         setJavaProperty("create.scs.gui", showGui)
+         setJavaProperty("openh264.license", "accept")
+         setJavaProperty("runningOnCIServer", runningOnCIServer)
+         setJavaProperty("disable.joint.subsystem.publisher", "true")
 
-      if (createVideos == "true")
-      {
-         setJavaProperty("create.scs.gui", createVideos)
-         setJavaProperty("create.videos.dir", videoDir)
+         if (createVideos == "true")
+         {
+            setJavaProperty("create.scs.gui", createVideos)
+            setJavaProperty("create.videos.dir", videoDir)
+         }
+
       }
-
    }
-}
+

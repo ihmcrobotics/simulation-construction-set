@@ -1,15 +1,8 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.junit.AfterClass;
 import org.junit.Test;
-
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
@@ -29,10 +22,18 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 public class RobotTest
 {
    private static final double COORDINATE_SYSTEM_LENGTH = 0.3;
    private static final boolean SHOW_GUI = false;
+
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
 
    @AfterClass
    public static void finishedAllTestsMessage()
@@ -42,7 +43,6 @@ public class RobotTest
       System.err.flush();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.8)
 	@Test(timeout=300000)
    public void testSwitchingRootJoint() throws InterruptedException, UnreasonableAccelerationException, SimulationExceededMaximumTimeException, ControllerFailureException
    {
@@ -133,7 +133,7 @@ public class RobotTest
       assertEquals(pin1.getQDDYoVariable().getDoubleValue(), pin1.getQDDYoVariable().getDoubleValue(), 1e-8);
 
       double simulateTime = 1.0;
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       
       SimulationConstructionSet scs = new SimulationConstructionSet(new Robot[] {robot1, robot2}, parameters);
@@ -153,7 +153,6 @@ public class RobotTest
       assertEquals(computeScalarInertiaAroundJointAxis(link21, pin1), computeScalarInertiaAroundJointAxis(link22, pin2), epsilonAfter);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=300000)
    public void testSingleFloatingBodyWithCoMOffset() throws SimulationExceededMaximumTimeException, InterruptedException, UnreasonableAccelerationException, ControllerFailureException
    {
@@ -208,7 +207,7 @@ public class RobotTest
       Vector3D linearMomentum0 = computeLinearMomentum(robot);
 
       double dt = 1e-8;
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(1e-10, 10);
@@ -227,7 +226,6 @@ public class RobotTest
 //    sleepIfShowingGUI();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testFloatingJointAndPinJointWithMassiveBody() throws UnreasonableAccelerationException
    {
@@ -260,7 +258,6 @@ public class RobotTest
       assertEquals(pin1.getTauYoVariable().getDoubleValue(), torqueFromDynamics, pin1.getTauYoVariable().getDoubleValue() * 1e-3);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testCalculateAngularMomentum()
    {
@@ -290,7 +287,6 @@ public class RobotTest
 	   
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testCompareFloatingJointAndFLoatingPlanarJoint()
            throws UnreasonableAccelerationException, SimulationExceededMaximumTimeException, InterruptedException
@@ -550,7 +546,6 @@ public class RobotTest
       return angularMomentum;
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout=300000)
    public void testFreezeJointAtZero() throws UnreasonableAccelerationException
    {
@@ -666,7 +661,6 @@ public class RobotTest
       assertEquals(expectedJoint.getQDDYoVariable().getDoubleValue(), joint1.getQDDYoVariable().getDoubleValue(), epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testFreezeJointAtZeroTwo() throws UnreasonableAccelerationException
    {
@@ -802,7 +796,6 @@ public class RobotTest
       throw new RuntimeException();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testChangeLinkParameters() throws UnreasonableAccelerationException
    {      
@@ -954,7 +947,6 @@ public class RobotTest
       assertEquals(joint2.getQDDYoVariable().getDoubleValue(), joint2B.getQDDYoVariable().getDoubleValue(), epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.5)
 	@Test(timeout=300000)
    public void testConservationOfEnergyAndMomentum() throws UnreasonableAccelerationException
    {
@@ -974,7 +966,7 @@ public class RobotTest
       SimulationConstructionSet scs = null;
       if (SHOW_GUI)
       {
-         scs = new SimulationConstructionSet(robot);
+         scs = new SimulationConstructionSet(robot, parameters);
          int recordFrequency = 1;
          scs.setDT(simulateDT, recordFrequency);
          scs.startOnAThread();
