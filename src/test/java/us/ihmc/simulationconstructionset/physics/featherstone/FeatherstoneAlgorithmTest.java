@@ -2,6 +2,7 @@ package us.ihmc.simulationconstructionset.physics.featherstone;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.RobotController;
@@ -47,6 +48,7 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(pendulumRobot, epsilon);
    }
 
+   @Ignore
    @Test(timeout = 30000)
    public void testCartPoleAgainstLagrangianCalculation()
    {
@@ -55,6 +57,7 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(cartPoleRobot, epsilon);
    }
 
+   @Ignore
    @Test(timeout = 30000)
    public void testUniversalJointAgainLagrangianCalculation()
    {
