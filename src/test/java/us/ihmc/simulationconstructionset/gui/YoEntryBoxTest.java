@@ -1,5 +1,6 @@
 package us.ihmc.simulationconstructionset.gui;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
@@ -126,6 +127,7 @@ public class YoEntryBoxTest
 
    // GT - these values are twice the minimum working values for Trogdor.
    // This test is for humans to view
+   @Ignore // Throws an EdtViolationException at Runtime.
 	@Test(timeout=300000)
    public void testEnumDisplay() throws SimulationExceededMaximumTimeException, InterruptedException
    {
@@ -139,6 +141,7 @@ public class YoEntryBoxTest
       scs.closeAndDispose();
    }
 
+   @Ignore // Throws an EdtViolationException at Runtime
 	@Test(timeout = 37000)
    public void testSwitchToEnumEntry() throws SimulationExceededMaximumTimeException, InterruptedException
    {

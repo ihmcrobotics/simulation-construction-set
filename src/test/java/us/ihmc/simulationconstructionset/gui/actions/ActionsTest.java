@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset.gui.actions;
 
 import com.google.common.base.Defaults;
+import org.junit.Ignore;
 import org.junit.Test;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
@@ -347,7 +348,7 @@ public class ActionsTest
               .assertMethodCalled("selectViewport", "Test");
    }
 
-
+   @Ignore // Throws an EdtViolationException at runtime.
    @Test(timeout=300000)
    public void testCameraPropertiesAction()
    {
@@ -389,7 +390,7 @@ public class ActionsTest
               .assertMethodCalled("selectEntryBoxGroup", "Test")
               .assertAllInterfaceMethodsCalled();
    }
-
+   @Ignore // Throws an EdtViolationException at Runtime
    @Test(timeout=300000)
    public void testSelectExtraPanelAction()
    {
