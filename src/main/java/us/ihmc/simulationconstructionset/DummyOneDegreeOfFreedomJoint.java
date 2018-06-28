@@ -60,7 +60,7 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
    @Override
    protected void update()
    {
-      this.jointTransform3D.setIdentity();
+      this.setPinTransform3D(this.jointTransform3D, physics.u_i, q.getDoubleValue());
    }
 
    protected void setPinTransform3D(RigidBodyTransform t1, Vector3D u_i) // int rotAxis)
