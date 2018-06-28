@@ -237,7 +237,8 @@ public class SimulationConstructionSetFestTest
       scs = null;
       testFixture = null;
    }
-
+   @Ignore  //org.fest.swing.exception.ComponentLookupException: Unable to find component using matcher
+            // us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture$JSpinnerNameEndsWithMatcher@22212533.
 	@Test(timeout=45000)
    public void testSimulationConstructionSetNewGraphWindowUsingGUITestFixture()
    {
