@@ -321,27 +321,30 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
    @Override
    public void recursiveEulerIntegrate(double stepSize)
    {
-      owner.q_x.set(q_x_n + owner.qd_x.getDoubleValue() * stepSize);
-      owner.q_y.set(q_y_n + owner.qd_y.getDoubleValue() * stepSize);
-      owner.q_z.set(q_z_n + owner.qd_z.getDoubleValue() * stepSize);
-      owner.qd_x.set(qd_x_n + owner.qdd_x.getDoubleValue() * stepSize);
-      owner.qd_y.set(qd_y_n + owner.qdd_y.getDoubleValue() * stepSize);
-      owner.qd_z.set(qd_z_n + owner.qdd_z.getDoubleValue() * stepSize);
-      owner.q_qs.set(q_qs_n + 0.5 * (-q_qx_n * qd_wx_n - q_qy_n * qd_wy_n - q_qz_n * qd_wz_n) * stepSize);
-      owner.q_qx.set(q_qx_n + 0.5 * (+q_qs_n * qd_wx_n - q_qz_n * qd_wy_n + q_qy_n * qd_wz_n) * stepSize);
-      owner.q_qy.set(q_qy_n + 0.5 * (+q_qz_n * qd_wx_n + q_qs_n * qd_wy_n - q_qx_n * qd_wz_n) * stepSize);
-      owner.q_qz.set(q_qz_n + 0.5 * (-q_qy_n * qd_wx_n + q_qx_n * qd_wy_n + q_qs_n * qd_wz_n) * stepSize);
-      owner.qd_wx.set(qd_wx_n + owner.qdd_wx.getDoubleValue() * stepSize);
-      owner.qd_wy.set(qd_wy_n + owner.qdd_wy.getDoubleValue() * stepSize);
-      owner.qd_wz.set(qd_wz_n + owner.qdd_wz.getDoubleValue() * stepSize);
+      if (!owner.isPinned())
+      {
+         owner.q_x.set(q_x_n + owner.qd_x.getDoubleValue() * stepSize);
+         owner.q_y.set(q_y_n + owner.qd_y.getDoubleValue() * stepSize);
+         owner.q_z.set(q_z_n + owner.qd_z.getDoubleValue() * stepSize);
+         owner.qd_x.set(qd_x_n + owner.qdd_x.getDoubleValue() * stepSize);
+         owner.qd_y.set(qd_y_n + owner.qdd_y.getDoubleValue() * stepSize);
+         owner.qd_z.set(qd_z_n + owner.qdd_z.getDoubleValue() * stepSize);
+         owner.q_qs.set(q_qs_n + 0.5 * (-q_qx_n * qd_wx_n - q_qy_n * qd_wy_n - q_qz_n * qd_wz_n) * stepSize);
+         owner.q_qx.set(q_qx_n + 0.5 * (+q_qs_n * qd_wx_n - q_qz_n * qd_wy_n + q_qy_n * qd_wz_n) * stepSize);
+         owner.q_qy.set(q_qy_n + 0.5 * (+q_qz_n * qd_wx_n + q_qs_n * qd_wy_n - q_qx_n * qd_wz_n) * stepSize);
+         owner.q_qz.set(q_qz_n + 0.5 * (-q_qy_n * qd_wx_n + q_qx_n * qd_wy_n + q_qs_n * qd_wz_n) * stepSize);
+         owner.qd_wx.set(qd_wx_n + owner.qdd_wx.getDoubleValue() * stepSize);
+         owner.qd_wy.set(qd_wy_n + owner.qdd_wy.getDoubleValue() * stepSize);
+         owner.qd_wz.set(qd_wz_n + owner.qdd_wz.getDoubleValue() * stepSize);
 
-      double q_qlength = Math.sqrt(owner.q_qs.getDoubleValue() * owner.q_qs.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.q_qx.getDoubleValue()
-            + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
+         double q_qlength = Math.sqrt(owner.q_qs.getDoubleValue() * owner.q_qs.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.q_qx.getDoubleValue()
+                                      + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
 
-      owner.q_qs.set(owner.q_qs.getDoubleValue() / q_qlength);
-      owner.q_qx.set(owner.q_qx.getDoubleValue() / q_qlength);
-      owner.q_qy.set(owner.q_qy.getDoubleValue() / q_qlength);
-      owner.q_qz.set(owner.q_qz.getDoubleValue() / q_qlength);
+         owner.q_qs.set(owner.q_qs.getDoubleValue() / q_qlength);
+         owner.q_qx.set(owner.q_qx.getDoubleValue() / q_qlength);
+         owner.q_qy.set(owner.q_qy.getDoubleValue() / q_qlength);
+         owner.q_qz.set(owner.q_qz.getDoubleValue() / q_qlength);
+      }
 
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
@@ -355,28 +358,31 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
    @Override
    public void recursiveRungeKuttaSum(double stepSize)
    {
-      owner.q_x.set(q_x_n + stepSize * (k_qd_x[0] / 6.0 + k_qd_x[1] / 3.0 + k_qd_x[2] / 3.0 + k_qd_x[3] / 6.0));
-      owner.q_y.set(q_y_n + stepSize * (k_qd_y[0] / 6.0 + k_qd_y[1] / 3.0 + k_qd_y[2] / 3.0 + k_qd_y[3] / 6.0));
-      owner.q_z.set(q_z_n + stepSize * (k_qd_z[0] / 6.0 + k_qd_z[1] / 3.0 + k_qd_z[2] / 3.0 + k_qd_z[3] / 6.0));
-      owner.qd_x.set(qd_x_n + stepSize * (k_qdd_x[0] / 6.0 + k_qdd_x[1] / 3.0 + k_qdd_x[2] / 3.0 + k_qdd_x[3] / 6.0));
-      owner.qd_y.set(qd_y_n + stepSize * (k_qdd_y[0] / 6.0 + k_qdd_y[1] / 3.0 + k_qdd_y[2] / 3.0 + k_qdd_y[3] / 6.0));
-      owner.qd_z.set(qd_z_n + stepSize * (k_qdd_z[0] / 6.0 + k_qdd_z[1] / 3.0 + k_qdd_z[2] / 3.0 + k_qdd_z[3] / 6.0));
-      owner.q_qs.set(q_qs_n + stepSize * (k_qd_qs[0] / 6.0 + k_qd_qs[1] / 3.0 + k_qd_qs[2] / 3.0 + k_qd_qs[3] / 6.0));
-      owner.q_qx.set(q_qx_n + stepSize * (k_qd_qx[0] / 6.0 + k_qd_qx[1] / 3.0 + k_qd_qx[2] / 3.0 + k_qd_qx[3] / 6.0));
-      owner.q_qy.set(q_qy_n + stepSize * (k_qd_qy[0] / 6.0 + k_qd_qy[1] / 3.0 + k_qd_qy[2] / 3.0 + k_qd_qy[3] / 6.0));
-      owner.q_qz.set(q_qz_n + stepSize * (k_qd_qz[0] / 6.0 + k_qd_qz[1] / 3.0 + k_qd_qz[2] / 3.0 + k_qd_qz[3] / 6.0));
+      if (!owner.isPinned())
+      {
+         owner.q_x.set(q_x_n + stepSize * (k_qd_x[0] / 6.0 + k_qd_x[1] / 3.0 + k_qd_x[2] / 3.0 + k_qd_x[3] / 6.0));
+         owner.q_y.set(q_y_n + stepSize * (k_qd_y[0] / 6.0 + k_qd_y[1] / 3.0 + k_qd_y[2] / 3.0 + k_qd_y[3] / 6.0));
+         owner.q_z.set(q_z_n + stepSize * (k_qd_z[0] / 6.0 + k_qd_z[1] / 3.0 + k_qd_z[2] / 3.0 + k_qd_z[3] / 6.0));
+         owner.qd_x.set(qd_x_n + stepSize * (k_qdd_x[0] / 6.0 + k_qdd_x[1] / 3.0 + k_qdd_x[2] / 3.0 + k_qdd_x[3] / 6.0));
+         owner.qd_y.set(qd_y_n + stepSize * (k_qdd_y[0] / 6.0 + k_qdd_y[1] / 3.0 + k_qdd_y[2] / 3.0 + k_qdd_y[3] / 6.0));
+         owner.qd_z.set(qd_z_n + stepSize * (k_qdd_z[0] / 6.0 + k_qdd_z[1] / 3.0 + k_qdd_z[2] / 3.0 + k_qdd_z[3] / 6.0));
+         owner.q_qs.set(q_qs_n + stepSize * (k_qd_qs[0] / 6.0 + k_qd_qs[1] / 3.0 + k_qd_qs[2] / 3.0 + k_qd_qs[3] / 6.0));
+         owner.q_qx.set(q_qx_n + stepSize * (k_qd_qx[0] / 6.0 + k_qd_qx[1] / 3.0 + k_qd_qx[2] / 3.0 + k_qd_qx[3] / 6.0));
+         owner.q_qy.set(q_qy_n + stepSize * (k_qd_qy[0] / 6.0 + k_qd_qy[1] / 3.0 + k_qd_qy[2] / 3.0 + k_qd_qy[3] / 6.0));
+         owner.q_qz.set(q_qz_n + stepSize * (k_qd_qz[0] / 6.0 + k_qd_qz[1] / 3.0 + k_qd_qz[2] / 3.0 + k_qd_qz[3] / 6.0));
 
-      double q_qlength = Math.sqrt(owner.q_qs.getDoubleValue() * owner.q_qs.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.q_qx.getDoubleValue()
-            + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
+         double q_qlength = Math.sqrt(owner.q_qs.getDoubleValue() * owner.q_qs.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.q_qx.getDoubleValue()
+                                      + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
 
-      // Normalize the quaternion:
-      owner.q_qs.set(owner.q_qs.getDoubleValue() / q_qlength);
-      owner.q_qx.set(owner.q_qx.getDoubleValue() / q_qlength);
-      owner.q_qy.set(owner.q_qy.getDoubleValue() / q_qlength);
-      owner.q_qz.set(owner.q_qz.getDoubleValue() / q_qlength);
-      owner.qd_wx.set(qd_wx_n + stepSize * (k_qdd_wx[0] / 6.0 + k_qdd_wx[1] / 3.0 + k_qdd_wx[2] / 3.0 + k_qdd_wx[3] / 6.0));
-      owner.qd_wy.set(qd_wy_n + stepSize * (k_qdd_wy[0] / 6.0 + k_qdd_wy[1] / 3.0 + k_qdd_wy[2] / 3.0 + k_qdd_wy[3] / 6.0));
-      owner.qd_wz.set(qd_wz_n + stepSize * (k_qdd_wz[0] / 6.0 + k_qdd_wz[1] / 3.0 + k_qdd_wz[2] / 3.0 + k_qdd_wz[3] / 6.0));
+         // Normalize the quaternion:
+         owner.q_qs.set(owner.q_qs.getDoubleValue() / q_qlength);
+         owner.q_qx.set(owner.q_qx.getDoubleValue() / q_qlength);
+         owner.q_qy.set(owner.q_qy.getDoubleValue() / q_qlength);
+         owner.q_qz.set(owner.q_qz.getDoubleValue() / q_qlength);
+         owner.qd_wx.set(qd_wx_n + stepSize * (k_qdd_wx[0] / 6.0 + k_qdd_wx[1] / 3.0 + k_qdd_wx[2] / 3.0 + k_qdd_wx[3] / 6.0));
+         owner.qd_wy.set(qd_wy_n + stepSize * (k_qdd_wy[0] / 6.0 + k_qdd_wy[1] / 3.0 + k_qdd_wy[2] / 3.0 + k_qdd_wy[3] / 6.0));
+         owner.qd_wz.set(qd_wz_n + stepSize * (k_qdd_wz[0] / 6.0 + k_qdd_wz[1] / 3.0 + k_qdd_wz[2] / 3.0 + k_qdd_wz[3] / 6.0));
+      }
 
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
