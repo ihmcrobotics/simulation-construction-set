@@ -123,20 +123,32 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       // No torques:
       Q_i = 0.0;
 
-      // Are Holding on to the velocities as part of the state:
-      // But we need to rotate them into joint coordinates!!
-      w_i.set(owner.qd_wx.getDoubleValue(), owner.qd_wy.getDoubleValue(), owner.qd_wz.getDoubleValue());
-      v_i.set(owner.qd_x.getDoubleValue(), owner.qd_y.getDoubleValue(), owner.qd_z.getDoubleValue());
+      if (!owner.isPinned())
+      {
+         // Are Holding on to the velocities as part of the state:
+         // But we need to rotate them into joint coordinates!!
+         w_i.set(owner.qd_wx.getDoubleValue(), owner.qd_wy.getDoubleValue(), owner.qd_wz.getDoubleValue());
+         v_i.set(owner.qd_x.getDoubleValue(), owner.qd_y.getDoubleValue(), owner.qd_z.getDoubleValue());
 
-      // Ri_0.transform(w_i);  // w and wd not in world coords.  Only x,y,z are
-      Ri_0.transform(v_i);
+         // Ri_0.transform(w_i);  // w and wd not in world coords.  Only x,y,z are
+         Ri_0.transform(v_i);
 
-      // ///////////////////////////////
-      // +++JEP 10/17/01.  Transform v_i to be at com, not the joint location...
-      wXr1.cross(w_i, owner.link.comOffset);
-      v_i.add(wXr1);
+         // ///////////////////////////////
+         // +++JEP 10/17/01.  Transform v_i to be at com, not the joint location...
+         wXr1.cross(w_i, owner.link.comOffset);
+         v_i.add(wXr1);
 
-      // ///////////////////////////////
+         // ///////////////////////////////
+      }
+      else
+      { // Reset the velocities to zero
+         owner.qd_wx.set(0.0);
+         owner.qd_wy.set(0.0);
+         owner.qd_wz.set(0.0);
+         owner.qd_x.set(0.0);
+         owner.qd_y.set(0.0);
+         owner.qd_z.set(0.0);
+      }
    }
 
    @Override
@@ -178,52 +190,66 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
    @Override
    public void featherstonePassFour(SpatialVector a_hat_h, int passNumber) throws UnreasonableAccelerationException
    {
-      I_hat_i.getMatrix(I_hat_matrix);
+      if (!owner.isPinned())
+      {
+         I_hat_i.getMatrix(I_hat_matrix);
 
-      // if (I_hat_inverse == null) I_hat_inverse = new Matrix(I_hat_matrix.getRowDimension(), I_hat_matrix.getColumnDimension());
-      CommonOps.invert(I_hat_matrix, I_hat_inverse);
-      Z_hat_i.getMatrix(Z_hat_matrix);
+         // if (I_hat_inverse == null) I_hat_inverse = new Matrix(I_hat_matrix.getRowDimension(), I_hat_matrix.getColumnDimension());
+         CommonOps.invert(I_hat_matrix, I_hat_inverse);
+         Z_hat_i.getMatrix(Z_hat_matrix);
 
-      // System.out.println(Z_hat_i);
-      // a_hat_matrix = I_hat_inverse.times(Z_hat_matrix);
-      CommonOps.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
-      a_hat_i.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
-      a_hat_i.bottom.set(-a_hat_matrix.get(3, 0), -a_hat_matrix.get(4, 0), -a_hat_matrix.get(5, 0));
+         // System.out.println(Z_hat_i);
+         // a_hat_matrix = I_hat_inverse.times(Z_hat_matrix);
+         CommonOps.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
+         a_hat_i.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
+         a_hat_i.bottom.set(-a_hat_matrix.get(3, 0), -a_hat_matrix.get(4, 0), -a_hat_matrix.get(5, 0));
 
-      // +++JEP 10/17/01.  Transform to joint location from com location.
-      // +++TK 02/06/12 THIS WAS WRONG FOR 11 YEARS! We need a_hat_i to be expressed in com frame for the rest of the dynamics algorithm.
-      // Transformation to joint location should be done as post processing only (to set the qdd_* variables)
-      // Now doing this same transformation on data that does not matter for the rest of the algorithm
-//    wXr.cross(w_i, this.link.comOffset);
-//    wXwXr.cross(w_i, wXr);
-//    wdXr.cross(a_hat_i.top, this.link.comOffset);
-//    a_hat_i.bottom.sub(wdXr);
-//    a_hat_i.bottom.sub(wXwXr);
+         // +++JEP 10/17/01.  Transform to joint location from com location.
+         // +++TK 02/06/12 THIS WAS WRONG FOR 11 YEARS! We need a_hat_i to be expressed in com frame for the rest of the dynamics algorithm.
+         // Transformation to joint location should be done as post processing only (to set the qdd_* variables)
+         // Now doing this same transformation on data that does not matter for the rest of the algorithm
+         //    wXr.cross(w_i, this.link.comOffset);
+         //    wXwXr.cross(w_i, wXr);
+         //    wdXr.cross(a_hat_i.top, this.link.comOffset);
+         //    a_hat_i.bottom.sub(wdXr);
+         //    a_hat_i.bottom.sub(wXwXr);
 
-      // //////////////////
-      // Rotate into world coords...
-      R0_i.set(Ri_0);
-      R0_i.transpose();
-      a_hat_world_top.set(a_hat_i.top);
-      a_hat_world_bot.set(a_hat_i.bottom);
+         // //////////////////
+         // Rotate into world coords...
+         R0_i.set(Ri_0);
+         R0_i.transpose();
+         a_hat_world_top.set(a_hat_i.top);
+         a_hat_world_bot.set(a_hat_i.bottom);
 
-      // //////////////////
-      // +++JEP 10/17/01.  Transform to joint location from com location.
-      // +++TK 02/06/12 See comment above.
-      wXr.cross(w_i, owner.link.comOffset);
-      wXwXr.cross(w_i, wXr);
-      wdXr.cross(a_hat_world_top, owner.link.comOffset);
-      a_hat_world_bot.sub(wdXr);
-      a_hat_world_bot.sub(wXwXr);
+         // //////////////////
+         // +++JEP 10/17/01.  Transform to joint location from com location.
+         // +++TK 02/06/12 See comment above.
+         wXr.cross(w_i, owner.link.comOffset);
+         wXwXr.cross(w_i, wXr);
+         wdXr.cross(a_hat_world_top, owner.link.comOffset);
+         a_hat_world_bot.sub(wdXr);
+         a_hat_world_bot.sub(wXwXr);
 
-      // R0_i.transform(a_hat_world_top);  //+++JEP w and wd should be in joint coords, not world coords.  Only x,y,z in world coords.
-      R0_i.transform(a_hat_world_bot);
-      owner.qdd_x.set(a_hat_world_bot.getX());
-      owner.qdd_y.set(a_hat_world_bot.getY());
-      owner.qdd_z.set(a_hat_world_bot.getZ());
-      owner.qdd_wx.set(a_hat_world_top.getX());
-      owner.qdd_wy.set(a_hat_world_top.getY());
-      owner.qdd_wz.set(a_hat_world_top.getZ());
+         // R0_i.transform(a_hat_world_top);  //+++JEP w and wd should be in joint coords, not world coords.  Only x,y,z in world coords.
+         R0_i.transform(a_hat_world_bot);
+         owner.qdd_x.set(a_hat_world_bot.getX());
+         owner.qdd_y.set(a_hat_world_bot.getY());
+         owner.qdd_z.set(a_hat_world_bot.getZ());
+         owner.qdd_wx.set(a_hat_world_top.getX());
+         owner.qdd_wy.set(a_hat_world_top.getY());
+         owner.qdd_wz.set(a_hat_world_top.getZ());
+      }
+      else
+      {
+         a_hat_i.top.setToZero();
+         a_hat_i.bottom.setToZero();
+         owner.qdd_x.set(0.0);
+         owner.qdd_y.set(0.0);
+         owner.qdd_z.set(0.0);
+         owner.qdd_wx.set(0.0);
+         owner.qdd_wy.set(0.0);
+         owner.qdd_wz.set(0.0);
+      }
       jointDependentRecordK(passNumber);
 
       /*
@@ -367,16 +393,29 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       q_x_n = owner.q_x.getDoubleValue();
       q_y_n = owner.q_y.getDoubleValue();
       q_z_n = owner.q_z.getDoubleValue();
-      qd_x_n = owner.qd_x.getDoubleValue();
-      qd_y_n = owner.qd_y.getDoubleValue();
-      qd_z_n = owner.qd_z.getDoubleValue();
       q_qs_n = owner.q_qs.getDoubleValue();
       q_qx_n = owner.q_qx.getDoubleValue();
       q_qy_n = owner.q_qy.getDoubleValue();
       q_qz_n = owner.q_qz.getDoubleValue();
-      qd_wx_n = owner.qd_wx.getDoubleValue();
-      qd_wy_n = owner.qd_wy.getDoubleValue();
-      qd_wz_n = owner.qd_wz.getDoubleValue();
+
+      if (!owner.isPinned())
+      {
+         qd_x_n = owner.qd_x.getDoubleValue();
+         qd_y_n = owner.qd_y.getDoubleValue();
+         qd_z_n = owner.qd_z.getDoubleValue();
+         qd_wx_n = owner.qd_wx.getDoubleValue();
+         qd_wy_n = owner.qd_wy.getDoubleValue();
+         qd_wz_n = owner.qd_wz.getDoubleValue();
+      }
+      else
+      {
+         qd_x_n = 0.0;
+         qd_y_n = 0.0;
+         qd_z_n = 0.0;
+         qd_wx_n = 0.0;
+         qd_wy_n = 0.0;
+         qd_wz_n = 0.0;
+      }
 
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)

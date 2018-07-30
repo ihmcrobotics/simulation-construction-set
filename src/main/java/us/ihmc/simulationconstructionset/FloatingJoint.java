@@ -23,6 +23,8 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
 {
    private static final long serialVersionUID = 6863566500545068060L;
 
+   private boolean isPinned = false;
+
    private Quaternion tempOrientation1 = new Quaternion();
    private Vector3D tempPosition1 = new Vector3D();
 
@@ -482,6 +484,26 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       yawPitchRollToReturn[2] = roll;
       
       return yawPitchRollToReturn;
+   }
+
+   /**
+    * Indicates whether this floating joint is fixed or not. This field differs from
+    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is
+    * still simulated.
+    */
+   public boolean isPinned()
+   {
+      return isPinned;
+   }
+
+   /**
+    * Indicates whether this floating joint is fixed or not. This field differs from
+    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is
+    * still simulated.
+    */
+   public void setPinned(boolean isPinned)
+   {
+      this.isPinned = isPinned;
    }
 
    @Override
