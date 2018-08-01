@@ -7,23 +7,14 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
-import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPolygon;
-import us.ihmc.graphicsDescription.yoGraphics.YoGraphicShape;
-import us.ihmc.graphicsDescription.yoGraphics.YoGraphicText3D;
-import us.ihmc.graphicsDescription.yoGraphics.YoGraphicVector;
-import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsList;
-import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
+import us.ihmc.graphicsDescription.yoGraphics.*;
 import us.ihmc.jMonkeyEngineToolkit.Graphics3DAdapter;
 import us.ihmc.jMonkeyEngineToolkit.jme.JMEGraphics3DAdapter;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.variable.*;
 
 public class DynamicGraphicObjectEvaluation
 {
@@ -39,7 +30,7 @@ public class DynamicGraphicObjectEvaluation
    {
       Robot robot = new Robot("null");
 
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setDataBufferSize(100);
 
       final SimulationConstructionSet scs = new SimulationConstructionSet(robot, graphicsAdapter, parameters);

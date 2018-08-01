@@ -1,25 +1,18 @@
 package us.ihmc.simulationconstructionset.physics.collision;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.ExternalForcePoint;
-import us.ihmc.simulationconstructionset.FloatingJoint;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
+import us.ihmc.simulationconstructionset.*;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.JointPhysics;
+
+import static org.junit.Assert.assertTrue;
 
 public class CollisionResolutionTest
 {
    
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testCollisionResolutionOne() throws UnreasonableAccelerationException
    {

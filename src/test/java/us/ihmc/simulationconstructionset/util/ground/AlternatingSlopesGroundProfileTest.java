@@ -1,13 +1,9 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
-import us.ihmc.simulationconstructionset.util.ground.AlternatingSlopesGroundProfile;
+
+import static org.junit.Assert.assertEquals;
 
 public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
 {
@@ -40,14 +36,12 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
    }
    
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.1)
    @Test(timeout=300000)
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
       super.testSurfaceNormalGridForSmoothTerrainUsingHeightMap();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testAllFlat()
    {
@@ -64,7 +58,6 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(0.0, height, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testOne()
    {
@@ -100,7 +93,6 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(0.0, height, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testTwo()
    {
@@ -124,7 +116,6 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(1.0, height, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testThree()
    {
@@ -153,7 +144,6 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(1.0, height, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testFour()
    {
@@ -184,7 +174,6 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(1.0, height, epsilon);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(expected = RuntimeException.class,timeout=300000)
    public void testBadOrderingOne()
    {
@@ -192,7 +181,6 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       new AlternatingSlopesGroundProfile(xSlopePairs);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(expected = RuntimeException.class, timeout=300000)
    public void testBadOrderingTwo()
    {

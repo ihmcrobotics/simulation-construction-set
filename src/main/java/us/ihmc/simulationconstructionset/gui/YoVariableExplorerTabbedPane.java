@@ -73,6 +73,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       this.rootRegistry = rootRegistry;
       this.selectedVariableHolder = selectedVariableHolder;
       this.tabPane = new JTabbedPane();
+      tabPane.setName("CombinedVarPanel");
       this.tabPane.addChangeListener(new TabChangedAction());
       
       entryBox = new YoEntryBox(entryBoxArrayPanel, selectedVariableHolder);

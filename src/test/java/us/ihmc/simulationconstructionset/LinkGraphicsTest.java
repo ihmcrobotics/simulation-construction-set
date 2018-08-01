@@ -1,25 +1,20 @@
 package us.ihmc.simulationconstructionset;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.MeshDataGenerator;
 import us.ihmc.graphicsDescription.MeshDataHolder;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.commons.thread.ThreadTools;
 
-@ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
+import java.util.ArrayList;
+
 public class LinkGraphicsTest
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
+
    private SimulationConstructionSet sim;
 
    private static final double
@@ -47,7 +42,6 @@ public class LinkGraphicsTest
    private static final double
       WEDGE_X = 0.4, WEDGE_Y = 0.3, WEDGE_Z = 0.2;
 
-	@ContinuousIntegrationTest(estimatedDuration = 3.3)
 	@Test(timeout = 30000)
    public void testLinkGraphicsWithALargeNumberOfExampleShapes()
    {
@@ -55,7 +49,6 @@ public class LinkGraphicsTest
       startSimAndDisplayLink(link);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 3.4)
 	@Test(timeout = 30000)
    public void testLinkGraphicsWithASmallNumberOfExampleShapes()
    {
@@ -63,7 +56,6 @@ public class LinkGraphicsTest
       startSimAndDisplayLink(link);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 3.4)
 	@Test(timeout = 30000)
    public void testLinkGraphicsWithArcTorus()
    {
@@ -71,7 +63,6 @@ public class LinkGraphicsTest
       startSimAndDisplayLink(link);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 3.3)
 	@Test(timeout = 30000)
    public void testLinkGrapicsWithMeshData()
    {
@@ -79,7 +70,6 @@ public class LinkGraphicsTest
       startSimAndDisplayLink(link);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 3.3)
 	@Test(timeout = 30000)
    public void testLinkGrapicsWithCone()
    {
@@ -87,7 +77,6 @@ public class LinkGraphicsTest
       startSimAndDisplayLink(link);
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 3.3)
 	@Test(timeout = 30000)
    public void testLinkGrapicsWithExtrudedPolygon()
    {
@@ -98,7 +87,7 @@ public class LinkGraphicsTest
    private void startSimAndDisplayLink(Link linkToDisplay)
    {
 //    Robot nullRobot = new Robot("Null");
-      sim = new SimulationConstructionSet();
+      sim = new SimulationConstructionSet(parameters);
 
       sim.addStaticLink(linkToDisplay);
 

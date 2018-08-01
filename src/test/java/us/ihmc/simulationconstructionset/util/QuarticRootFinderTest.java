@@ -1,17 +1,15 @@
 package us.ihmc.simulationconstructionset.util;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import us.ihmc.commons.MutationTestFacilitator;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class QuarticRootFinderTest
 {
    private static final boolean DEBUG = false;
 
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testQuarticRootFinder()
    {

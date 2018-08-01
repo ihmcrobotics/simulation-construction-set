@@ -369,6 +369,10 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
    @Override
    public void setQdd(double qdd)
    {
+      if (Double.isNaN(qdd))
+         throw new RuntimeException("qdd = NaN.");
+
+      this.qdd.set(qdd);
    }
 
    @Override

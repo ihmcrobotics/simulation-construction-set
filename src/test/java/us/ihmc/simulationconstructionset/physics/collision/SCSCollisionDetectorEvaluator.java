@@ -1,7 +1,5 @@
 package us.ihmc.simulationconstructionset.physics.collision;
 
-import java.util.ArrayList;
-
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -9,22 +7,16 @@ import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
-import us.ihmc.yoVariables.variable.YoInteger;
-import us.ihmc.simulationconstructionset.FloatingJoint;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.simulationconstructionset.physics.CollisionHandler;
-import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
-import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
-import us.ihmc.simulationconstructionset.physics.Contacts;
-import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
-import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionResult;
-import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionHandler;
+import us.ihmc.simulationconstructionset.*;
+import us.ihmc.simulationconstructionset.physics.*;
 import us.ihmc.simulationconstructionset.physics.collision.gdx.GdxCollisionDetector;
+import us.ihmc.yoVariables.variable.YoInteger;
+
+import java.util.ArrayList;
 
 public class SCSCollisionDetectorEvaluator
 {
+   private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
 
    public SCSCollisionDetectorEvaluator()
    {
@@ -118,7 +110,7 @@ public class SCSCollisionDetectorEvaluator
 
       robot.setGravity(0.0);
 
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot);
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setGroundVisible(false);
       scs.startOnAThread();
 

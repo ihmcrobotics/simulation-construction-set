@@ -1,10 +1,10 @@
 package us.ihmc.simulationconstructionset.microbenchmarks;
 
+import us.ihmc.commons.Conversions;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-
-import us.ihmc.commons.Conversions;
 
 public class BenchmarkFieldOrArrayAccess
 {

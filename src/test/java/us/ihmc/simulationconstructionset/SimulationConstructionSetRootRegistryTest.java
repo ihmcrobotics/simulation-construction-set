@@ -1,28 +1,19 @@
 package us.ihmc.simulationconstructionset;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.YoVariableExplorerTabbedPane;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanel;
+import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoDouble;
 
-@ContinuousIntegrationPlan(categories={IntegrationCategory.UI})
+import static org.junit.Assert.assertTrue;
+
 public class SimulationConstructionSetRootRegistryTest
 {
    private static final boolean SHOW_GUI = false;
 
-	@ContinuousIntegrationTest(estimatedDuration = 1.1)
 	@Test(timeout = 30000)
    public void testRootRegistryNothingFancy()
    {
@@ -32,7 +23,7 @@ public class SimulationConstructionSetRootRegistryTest
       robot.getRobotsYoVariableRegistry().addChild(registryOne);
       YoDouble variableOne = new YoDouble("variableOne", registryOne);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       sleep(1000);
@@ -62,8 +53,7 @@ public class SimulationConstructionSetRootRegistryTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
-	@Test(timeout = 30000) 
+	@Test(timeout = 30000)
    public void testVarGroups()
    {
       Robot robot = new Robot("testVarGroups");
@@ -80,7 +70,7 @@ public class SimulationConstructionSetRootRegistryTest
       robot.getRobotsYoVariableRegistry().addChild(registryOne);
       robot.getRobotsYoVariableRegistry().addChild(registryTwo);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setupVarGroup("VarGroupToTest", new String[]{"variableOneA", "variableTwoB"});
@@ -109,7 +99,6 @@ public class SimulationConstructionSetRootRegistryTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.1)
 	@Test(timeout = 30000)
    public void testRootRegistryAddYoVariablesAfterConstruction()
    {
@@ -123,7 +112,7 @@ public class SimulationConstructionSetRootRegistryTest
       registryBeforeConstructionOne.addChild(registryBeforeConstructionOneOne);
       YoDouble variableBeforeConstructionOneOne = new YoDouble("variableBeforeConstructionOneOne", registryBeforeConstructionOneOne);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters();
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       

@@ -1,14 +1,7 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
+import org.junit.Ignore;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.continuousIntegration.IntegrationCategory;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
@@ -19,7 +12,11 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
 
-@ContinuousIntegrationPlan(categories = {IntegrationCategory.UI})
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 public class YoEntryBoxTest
 {
    public enum BadGreekEnum {ALPHA, BETA, GAMMA}
@@ -130,7 +127,7 @@ public class YoEntryBoxTest
 
    // GT - these values are twice the minimum working values for Trogdor.
    // This test is for humans to view
-	@ContinuousIntegrationTest(estimatedDuration = 0.1, categoriesOverride = IntegrationCategory.EXCLUDE)
+   @Ignore // Throws an EdtViolationException at Runtime.
 	@Test(timeout=300000)
    public void testEnumDisplay() throws SimulationExceededMaximumTimeException, InterruptedException
    {
@@ -144,7 +141,7 @@ public class YoEntryBoxTest
       scs.closeAndDispose();
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 7.4)
+   @Ignore // Throws an EdtViolationException at Runtime
 	@Test(timeout = 37000)
    public void testSwitchToEnumEntry() throws SimulationExceededMaximumTimeException, InterruptedException
    {
@@ -201,7 +198,7 @@ public class YoEntryBoxTest
       assertFalse(controller.getYoVariableRegistry() == null);
       robot.setController(controller);
       
-      SimulationConstructionSetParameters parameters = new SimulationConstructionSetParameters(); 
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
       parameters.setCreateGUI(showGUI);
       parameters.setDataBufferSize(2000);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);

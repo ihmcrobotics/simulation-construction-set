@@ -2,13 +2,10 @@ package us.ihmc.simulationconstructionset.util.ground;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.util.ground.ShipCorridorGroundProfile;
 
 public class ShipCorridorGroundProfileTest 
 {
@@ -22,7 +19,6 @@ public class ShipCorridorGroundProfileTest
       groundProfile = new ShipCorridorGroundProfile(100.0, -10.0, 5.0, -5.0, 0.8, -0.8, 0.0, 3.0, Math.toRadians( 2.0 ));
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
 	@Test(timeout=300000)
    public void testSurfaceNormalAlongYAxis()
    {

@@ -795,7 +795,9 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       if (robots != null)
       {
          JButton plusButton = new JButton("+");
+         plusButton.setName("Add Numeric Entry Box");
          JButton minusButton = new JButton("-");
+         minusButton.setName("Remove Numeric Entry Box");
 
          plusButton.addActionListener(new ActionListener()
          {

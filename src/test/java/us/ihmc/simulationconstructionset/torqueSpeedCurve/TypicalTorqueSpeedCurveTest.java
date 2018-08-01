@@ -1,14 +1,10 @@
 package us.ihmc.simulationconstructionset.torqueSpeedCurve;
 
-
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
-import us.ihmc.simulationconstructionset.torqueSpeedCurve.TypicalTorqueSpeedCurve;
+import static org.junit.Assert.assertEquals;
 
 public class TypicalTorqueSpeedCurveTest
 {
@@ -22,8 +18,7 @@ public class TypicalTorqueSpeedCurveTest
    {
    }
 
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
-	@Test(timeout=300000) 
+	@Test(timeout=300000)
    public void testOne()
    {
       TypicalTorqueSpeedCurve torqueSpeedCurve = new TypicalTorqueSpeedCurve();

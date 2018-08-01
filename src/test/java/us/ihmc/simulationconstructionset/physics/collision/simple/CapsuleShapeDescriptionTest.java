@@ -1,17 +1,13 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.simulationconstructionset.physics.collision.simple.CapsuleShapeDescription;
 
 public class CapsuleShapeDescriptionTest
 {
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void test()
    {

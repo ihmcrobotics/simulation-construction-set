@@ -1,16 +1,12 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import org.junit.Test;
-
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
-import us.ihmc.simulationconstructionset.util.ground.SingleStepGroundProfile;
 
 
 public class SingleStepGroundProfileTest extends GroundProfileTest
 {
    @Override
-   @ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
