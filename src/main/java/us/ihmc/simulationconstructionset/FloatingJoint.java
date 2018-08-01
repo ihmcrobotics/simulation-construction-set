@@ -17,11 +17,14 @@ import us.ihmc.euclid.tuple4D.interfaces.QuaternionBasics;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.FloatingJointPhysics;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class FloatingJoint extends Joint implements FloatingSCSJoint
 {
    private static final long serialVersionUID = 6863566500545068060L;
+
+   private YoBoolean isPinned;
 
    private Quaternion tempOrientation1 = new Quaternion();
    private Vector3D tempPosition1 = new Vector3D();
@@ -110,7 +113,9 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
          q_pitch = null;
          q_roll = null;
       }
-      
+
+      isPinned = new YoBoolean(jname + "IsPinned", "Whether this FloatingJoint is pinned or not", registry);
+
       this.setFloatingTransform3D(this.jointTransform3D);
       physics.u_i = null;
    }
@@ -482,6 +487,26 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       yawPitchRollToReturn[2] = roll;
       
       return yawPitchRollToReturn;
+   }
+
+   /**
+    * Indicates whether this floating joint is fixed or not. This field differs from
+    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is
+    * still simulated.
+    */
+   public boolean isPinned()
+   {
+      return isPinned.getValue();
+   }
+
+   /**
+    * Indicates whether this floating joint is fixed or not. This field differs from
+    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is
+    * still simulated.
+    */
+   public void setPinned(boolean isPinned)
+   {
+      this.isPinned.set(isPinned);
    }
 
    @Override
