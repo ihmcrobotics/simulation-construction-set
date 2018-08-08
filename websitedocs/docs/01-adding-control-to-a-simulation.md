@@ -19,35 +19,35 @@ import us.ihmc.robotics.dataStructures.variable.DoubleYoVariable;
 import us.ihmc.robotics.robotController.RobotController;
 
 public class SimplePendulumController implements RobotController
-{ 
+{
    @Override public void initialize(){}
-       
+
    @Override public void doControl(){}
-      
+
    @Override public YoVariableRegistry getYoVariableRegistry(){}
-   
+
    @Override public String getName(){}
-   
+
    @Override public String getDescription(){}
-   
+
 }
 ```
 
 * **Interface Implementations**  
- 
+
    The `RobotController` interface requires you to implement:  
    - `initialize()` Not used at this point.   
    - `doControl()` This method gets called each update, that's where your control code is written.
    - `getYoVariableRegistry()` returns a YoVariableRegistry object that you need to instantiate in the controller. This object will give you access to the control variables.   
    - `getName()` and `getDescription()` not used at this point.
-       
+
 
 
 ### 2. Add properties and create a constructor for SimplePendulumController
 
-We will start by populating the class with the following elements: 
+We will start by populating the class with the following elements:
 
-<pre><code data-url-index="0" data-snippet="portion" data-start="//" data-end="@Override" id="controllerProperties"></code></pre>
+<pre><code data-url-index="0" data-snippet="portion" data-start="//" data-end="}&#10&#10" id="controllerProperties"></code></pre>
 
 
 ### 3. Add some accessors to the SimplePendulumRobot
@@ -69,7 +69,7 @@ E.g.  'q_fulcrum',  'qd_fulcrum', 'tau_fulcrum'.*
 Add some more lines of code to the constructor to access to the joint's properties:
 
 ```java
-  
+
    public SimplePendulumRobot()
    {
       ...
@@ -81,14 +81,14 @@ Add some more lines of code to the constructor to access to the joint's properti
 ```
 
 Add some accessor methods to the pendulum robot.
-<pre><code data-url-index="1" data-snippet="portion" data-start="/**&#10    * Fulcrum's angular velocity" data-end="/**&#10    * Create the first link for the DoublePendulumRobot." id="robotMethods"></code></pre>
+<pre><code data-url-index="1" data-snippet="portion" data-start="/**&#10    * Fulcrum's angular velocity" data-end="this.tau_fulcrum.set(tau);&#10}" id="robotMethods"></code></pre>
 
 Now that we have access to these variables, we can use them in our doControl() method.
-<pre><code data-url-index="0" data-snippet="portion" data-start="private double positionError" data-end="@Override public YoVariableRegistry" id="robotMethods"></code></pre>
+<pre><code data-url-index="0" data-snippet="portion" data-start="private double positionError" data-end="}&#10&#10" id="robotMethods"></code></pre>
 -
-### 4. Link the controller to the robot 
+### 4. Link the controller to the robot
 
-In order for the control code to be accessed, it must be set in Simulation Construction Set. 
+In order for the control code to be accessed, it must be set in Simulation Construction Set.
 Therefore, in the `SimplePendulumSimulation` class add the following line of code under your robot's instantiation line:
 
 ```java
@@ -96,9 +96,9 @@ Therefore, in the `SimplePendulumSimulation` class add the following line of cod
    {
       SimplePendulumRobot robot = new SimplePendulumRobot();
       robot.setController(new SimplePendulumController(robot)); // Add this line
-    
+
     ...
-    
+
 ```
 
 

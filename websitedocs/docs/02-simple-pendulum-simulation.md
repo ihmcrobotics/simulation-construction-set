@@ -3,7 +3,7 @@ title: SimplePendulumSimulation.java
 ---
 
 Every SCS simulation requires an instance of `us.ihmc.simulationconstructionset.SimulationConstructionSet` and a Thread to run it.   IHMC's convention is to create a 'simulation' class which performs this function.
- 
+
 ### 1. Create the SimplePendulumSimulation Class
 
 In the java directory of your project, `src/main/java`, create a new java class `us.ihmc.exampleSimulations.simplePendulum.SimplePendulumSimulation`.
