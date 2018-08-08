@@ -6,15 +6,21 @@ title: Description and Analysis
    Add the following constructor to your FlyballGovernorRobot class.  
    Note where the ExternalForcePoints are created and attached.  
 
-<pre><code data-url-index="1" data-snippet="portion" data-start="public FlyballGovernorRobot" data-end="this.initControl();&#10}" id="RobotConstructor"></code></pre>
+<pre><code data-url-index="1" data-snippet="portion" data-start="public FlyballGovernorRobot" data-end="this.initControl();
+   }" id="RobotConstructor"></code></pre>
 
 ### 2. Add the link methods to the FlyballGovernorRobot class
 
    These methods build the links for the simulation.
-<pre><code data-url-index="1" data-snippet="portion" data-start="private Link centerRod()" data-end="linkGraphics.addCylinder(L4 / 8.0, 1.1 * R4);&#10&#9ret.setLinkGraphics(linkGraphics);&#10&#9return ret;&#10}" id="RobotMethods"></code></pre>
+<pre><code data-url-index="1" data-snippet="portion" data-start="private Link centerRod()" data-end="linkGraphics.addCylinder(L4 / 8.0, 1.1 * R4);
+      ret.setLinkGraphics(linkGraphics);
+
+      return ret;
+   }" id="RobotMethods"></code></pre>
 
 ###  3. Add the doConstraint method in FlyballGovernorSimpleClosedLoopConstraint
-<pre><code data-url-index="2" data-snippet="portion" data-start="private void doConstraint" data-end="forceB.set(newForceB);&#10}" id="doConstraint"></code></pre>
+<pre><code data-url-index="2" data-snippet="portion" data-start="private void doConstraint" data-end="forceB.set(newForceB);
+   }" id="doConstraint"></code></pre>
 
    Here is where the constraint forces between two points, A and B, are generated. We see that for each constraint, a linear spring-damper is used to "glue" the two ExternalForcePoints together.
 

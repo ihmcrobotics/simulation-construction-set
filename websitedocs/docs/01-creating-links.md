@@ -31,20 +31,22 @@ The parameters that adjust placement and spacing of the shapes are the `OFFSET` 
    The structure of this code should now be familiar to you. Notice, however, that this is purely a static graphic we are creating. There is no robot, and thus no dynamics.  
    This will allow us to focus on creating the graphics of a link.
 
- <pre><code data-url-index="0" data-snippet="portion" data-start="public LinkExamplesSimulation()" data-end=" myThread.start();&#10}" id="linkExamplesSimConstructor"></code></pre>
+ <pre><code data-url-index="0" data-snippet="portion" data-start="public LinkExamplesSimulation()" data-end="myThread.start();
+   }" id="linkExamplesSimConstructor"></code></pre>
 
 ### 5. Next add the method exampleShapes to your LinkExampleSimulation class
 This method will show you examples of how to create simple shapes, assign a color, and add them to your simulation.
 
 In this method there are examples of a Sphere, Ellipsoid, Cylinder, ArcTorus, Extruded Polygon, Mesh Data, and a Gridded Polytope.
 
- <pre><code data-url-index="0" data-snippet="portion" data-start="private Link exampleShapes()" data-end="return ret;&#10}" id="linkExamplesSimExampleShapes"></code></pre>
+ <pre><code data-url-index="0" data-snippet="portion" data-start="private Link exampleShapes()" data-end="return ret;
+   }" id="linkExamplesSimExampleShapes"></code></pre>
 
 ### 6. Add the main method to your class
 This method should just simply create a new `LinkExamplesSimulation`.
 
 Just as follows:
- <pre><code data-url-index="0" data-snippet="portion" data-start="public static void" data-end="&#10&#10" id="linkExamplesSimMain"></code></pre>
+ <pre><code data-url-index="0" data-snippet="portion" data-start="public static void" data-end="}" id="linkExamplesSimMain"></code></pre>
 
 
 ### Full code for the class

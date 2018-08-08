@@ -81,7 +81,8 @@ Add some more lines of code to the constructor to access to the joint's properti
 ```
 
 Add some accessor methods to the pendulum robot.
-<pre><code data-url-index="1" data-snippet="portion" data-start="/**&#10    * Fulcrum's angular velocity" data-end="this.tau_fulcrum.set(tau);&#10}" id="robotMethods"></code></pre>
+<pre><code data-url-index="1" data-snippet="portion" data-start="/**&#10    * Fulcrum's angular velocity" data-end="this.tau_fulcrum.set(tau);
+   }" id="robotMethods"></code></pre>
 
 Now that we have access to these variables, we can use them in our doControl() method.
 <pre><code data-url-index="0" data-snippet="portion" data-start="private double positionError" data-end="}&#10&#10" id="robotMethods"></code></pre>
