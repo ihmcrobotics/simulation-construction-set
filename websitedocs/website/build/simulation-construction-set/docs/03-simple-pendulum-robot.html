@@ -51,7 +51,7 @@ SCS provides a variety of Joints used to build robots such as: FloatingJoint, Fr
 <h3><a class="anchor" aria-hidden="true" id="2-define-the-pendulum-constants-and-initial-values"></a><a href="#2-define-the-pendulum-constants-and-initial-values" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. Define the Pendulum Constants and Initial Values:</h3>
 <p><details open>
 <summary> Constants and Initial Values </summary></p>
-<pre><code data-url-index="0" data-snippet="portion" id="SimplePendulumRobotVariables" data-start="public class SimplePendulumRobot" data-end="/*&#10      Define its constructor"></code></pre>
+<pre><code data-url-index="0" data-snippet="portion" id="SimplePendulumRobotVariables" data-start="public class SimplePendulumRobot" data-end="private YoDouble tau_fulcrum, q_fulcrum, qd_fulcrum; // Respectively Torque, Position, Velocity"></code></pre>
 </details>
 <p>*<strong>Lengths are expressed in meters (m), masses in kilograms (kg)</strong></p>
 <h3><a class="anchor" aria-hidden="true" id="3-include-required-imports"></a><a href="#3-include-required-imports" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. Include Required Imports:</h3>
@@ -81,7 +81,7 @@ SCS provides a variety of Joints used to build robots such as: FloatingJoint, Fr
 <p>Add the following method to your class:
 <details open>
 <summary> pendulumLink Method </summary></p>
-<pre><code data-url-index="0" data-snippet="portion" id="pendulumLink" data-start="private Link pendulumLink()" data-end="&#10&#10}"></code></pre>
+<pre><code data-url-index="0" data-snippet="portion" id="pendulumLink" data-start="private Link pendulumLink()" data-end="}&#10&#10"></code></pre>
 </details>  
 <p>Add the following to the end of the constructor:
 <details open>
@@ -122,7 +122,7 @@ This line associates our <code>pendulumGraphics</code> object with the <code>pen
 <p>Add the following to the end of the constructor:
 <details open>
 <summary> Create: fulcrumPinJoint </summary></p>
-<pre><code data-url-index="0" data-snippet="portion" id="fulcrumPinJoint" data-start="// b. Add a joint" data-end="}"></code></pre>
+<pre><code data-url-index="0" data-snippet="portion" id="fulcrumPinJoint" data-start="// b. Add a joint" data-end="this.addRootJoint(fulcrumPinJoint);"></code></pre>
 </details>   
 <ul>
 <li><p><strong>Create a pin joint:</strong>   <br>
@@ -155,7 +155,7 @@ One exception is that joints added as <strong>root joints</strong> of a robot ar
 </code></pre>
 <p>with</p>
 <pre><code class="hljs css languages- java">      SimplePendulumRobot robot = <span class="hljs-keyword">new</span> SimplePendulumRobot();
-    
+
       sim = <span class="hljs-keyword">new</span> SimulationConstructionSet(robot, parameters);
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" id="full-code-for-the-class"></a><a href="#full-code-for-the-class" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Full code for the class:</h3>
