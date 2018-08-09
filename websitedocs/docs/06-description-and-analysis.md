@@ -13,8 +13,7 @@ title: Description and Analysis
 
    These methods build the links for the simulation.
 <pre><code data-url-index="1" data-snippet="portion" data-start="private Link centerRod()" data-end="linkGraphics.addCylinder(L4 / 8.0, 1.1 * R4);
-      ret.setLinkGraphics(linkGraphics);
-
+      ret.setLinkGraphics(linkGraphics);&#10
       return ret;
    }" id="RobotMethods"></code></pre>
 
