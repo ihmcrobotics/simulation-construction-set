@@ -71,7 +71,8 @@ Since the first joint of the robot had an offset of `(0.0, 0.0, 1.0)`, we need t
 
 ## 3. Next, we will add and examine the steps creating the crossbar geometry
    Add the following to MobileRobot:
-<pre><code data-url-index="0" data-snippet="portion" data-start="/**&#10    * Creates a cross bar link from the given parameters." data-end="return ret;&#10}" id="MobileRobotCrossBar"></code></pre>
+<pre><code data-url-index="0" data-snippet="portion" data-start="/**&#10    * Creates a cross bar link from the given parameters." data-end="return ret;
+   }" id="MobileRobotCrossBar"></code></pre>
 
 We first create the upper sphere-capped cylinder which projects downward. Since the origin of a cylinder is the center of its base, we must first translate down the length of the upper cylinder (length/2.0) before adding it:
 
