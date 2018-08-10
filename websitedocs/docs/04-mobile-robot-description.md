@@ -129,4 +129,4 @@ For more detailed information on joints check out the [Robots and Joint API Page
 <pre><code data-url-index="0" data-snippet="complete" id="MobileRobotClass"></code></pre>
 </details>
 
-<script src="https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/a6a5d7c6/snippetautomation/codesnippets.js" id="snippetscript" sources=Array.of("https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileRobot.java","https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileSimulation.java")></script>
+<script src=https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/2b3f76ee/snippetautomation/codesnippets.js id="snippetscript" sources=Array.of("https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileRobot.java","https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileSimulation.java")></script>

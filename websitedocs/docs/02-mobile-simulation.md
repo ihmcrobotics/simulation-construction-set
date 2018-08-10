@@ -23,4 +23,4 @@ Instead of tracking and dollying the camera position and fix are set to get a go
    `sim.setCameraPosition(1.0,1.0,0.5);`  
    `sim.setCameraFix(0.0,0.0,0.8);`  
    
-<script id="snippetscript" src="https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/a6a5d7c6/snippetautomation/codesnippets.js" sources=Array.of("https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileSimulation.java")></script>
+<script id="snippetscript" src=https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/2b3f76ee/snippetautomation/codesnippets.js sources=Array.of("https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileSimulation.java")></script>
