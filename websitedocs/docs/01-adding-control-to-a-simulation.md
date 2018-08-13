@@ -47,7 +47,7 @@ public class SimplePendulumController implements RobotController
 
 We will start by populating the class with the following elements:
 
-<pre><code data-url-index="0" data-snippet="portion" data-start="//" data-end="}&#10&#10" id="controllerProperties"></code></pre>
+<pre><code data-url-index="0" data-snippet="portion" data-start="//" data-end="}" id="controllerProperties"></code></pre>
 
 
 ### 3. Add some accessors to the SimplePendulumRobot
