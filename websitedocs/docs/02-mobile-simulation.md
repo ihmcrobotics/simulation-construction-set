@@ -9,7 +9,7 @@ title: Mobile Simulation
 
 Note that the integration time step is set to 0.02 seconds: `sim.setDT(0.02, 1);`
 
-This is a fairly large time step, but in this case it is possible since there are no high-frequency interactions in the system. In general, to set the integration time step, experiment with different values. As the time step gets higher, you will see different behavior due to numerical instabilities. Choose a time step which is low enough that making it any lower does not change the outcome of the simulation. 
+This is a fairly large time step, but in this case it is possible since there are no high-frequency interactions in the system. In general, to set the integration time step, experiment with different values. As the time step gets higher, you will see different behavior due to numerical instabilities. Choose a time step which is low enough that making it any lower does not change the outcome of the simulation.
 
 The second parameter to setDT is 1, meaning that every integration step will be recorded.
 
@@ -22,5 +22,5 @@ Instead of tracking and dollying the camera position and fix are set to get a go
    `sim.setCameraDolly(false,false,false,false);`  
    `sim.setCameraPosition(1.0,1.0,0.5);`  
    `sim.setCameraFix(0.0,0.0,0.8);`  
-   
-<script id="snippetscript" src=https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/source/websitedocs/website/static/snippetautomation/codesnippets.js sources=Array.of("https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileSimulation.java")></script>
+
+<script id="snippetscript" src=https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/source/websitedocs/website/static/snippetautomation/codesnippets.js sources=Array.of("https://cdn.rawgit.com/ihmcrobotics/ihmc-open-robotics-software/7e9f65db/example-simulations/src/main/java/us/ihmc/exampleSimulations/mobile/MobileSimulation.java")></script>

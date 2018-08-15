@@ -51,7 +51,7 @@ Before we add a robot, there are some basic parameters and settings that you sho
 <pre><code data-url-index="0" data-snippet="complete" id="SimplePendulum"></code></pre>
 
 
-<script id="snippetscript" src=https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/source/websitedocs/website/static/snippetautomation/codesnippets.js sources=Array.of("https://rawgit.com/ihmcrobotics/ihmc-open-robotics-software/master/example-simulations/src/main/java/us/ihmc/exampleSimulations/simplePendulum/SimplePendulumSimulation.java")></script>
+<script id="snippetscript" src=https://cdn.rawgit.com/ihmcrobotics/ihmcrobotics.github.io/source/websitedocs/website/static/snippetautomation/codesnippets.js sources=Array.of("https://cdn.rawgit.com/ihmcrobotics/ihmc-open-robotics-software/7e9f65db/example-simulations/src/main/java/us/ihmc/exampleSimulations/simplePendulum/SimplePendulumSimulation.java")></script>
 
 <br>
 
