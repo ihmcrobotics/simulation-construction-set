@@ -21,9 +21,9 @@
 
 # directories to always ignore
 **/classes
+**/build
 **/bin
 **/out
-**/build
 **/.gradle
 **/.project
 **/.classpath
