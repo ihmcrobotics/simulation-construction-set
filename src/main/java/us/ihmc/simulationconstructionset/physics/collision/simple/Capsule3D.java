@@ -30,22 +30,22 @@ public class Capsule3D extends Shape3D<Capsule3D>
 
    public Capsule3D(double radius, LineSegment3DReadOnly line3D)
    {
-      setRadius(radius);
       setLineSegment(line3D);
+      setRadius(radius);
    }
 
    public Capsule3D(RigidBodyTransform pose, double radius, LineSegment3DReadOnly line3D)
    {
       setPose(pose);
-      setRadius(radius);
       setLineSegment(line3D);
+      setRadius(radius);
    }
 
    public Capsule3D(Pose3D pose, double radius, LineSegment3DReadOnly line3D)
    {
       setPose(shapePose);
-      setRadius(radius);
       setLineSegment(line3D);
+      setRadius(radius);
    }
 
    public void setRadius(double radius)
@@ -86,8 +86,8 @@ public class Capsule3D extends Shape3D<Capsule3D>
    public void set(Capsule3D other)
    {
       setPose(other.shapePose);
-      setRadius(other.radius);
       setLineSegment(other.line3D);
+      setRadius(other.radius);
    }
 
    @Override
