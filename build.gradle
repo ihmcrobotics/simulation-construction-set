@@ -14,6 +14,15 @@ ihmc {
    configurePublications()
 }
 
+categories.create("fast") {
+   //classesPerJVM = 1
+   //maxJVMs = 2
+   //maxParallelTests = 1
+   jvmProperties.putAll(getScsDefaultJVMProps())
+   minHeapSizeGB = 6
+   maxHeapSizeGB = 8
+}
+
 mainDependencies {
    compile group: "net.jafama", name: "jafama", version: "2.1.0"
    compile group: "org.jfree", name: "jfreechart", version: "1.0.17"
