@@ -2664,7 +2664,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       // myGUI.allowTickUpdatesNow();
 
-      synchronized (simulationSynchronizer) // Synched so we don't update during a graphics redraw...
+      synchronized (myGUI.getGraphicsConch()) // Synched so we don't update during a graphics redraw...
       {
          int tick = Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1);
          myDataBuffer.tickButDoNotNotifySimulationRewoundListeners(tick);
