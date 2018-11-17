@@ -2651,7 +2651,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
                {
                   //TODO: Create some way to automatically figure out the registry stuff
                   // and fix the config files when they don't have a registry.
-//                  PrintTools.warn(StandardSimulationGUI.this, "Warning: Could not find registry " + name);
+//                  LogTools.warn("Warning: Could not find registry " + name);
                   // new Throwable().printStackTrace();
                }
             }

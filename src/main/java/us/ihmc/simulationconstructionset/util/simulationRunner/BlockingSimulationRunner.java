@@ -3,8 +3,8 @@ package us.ihmc.simulationconstructionset.util.simulationRunner;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.thread.ThreadTools;
+import us.ihmc.log.LogTools;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
 import us.ihmc.yoVariables.listener.VariableChangedListener;
@@ -69,7 +69,7 @@ public class BlockingSimulationRunner
       }
       catch (Exception e)
       {
-         PrintTools.error(this, e.getMessage());
+         LogTools.error(e.getMessage());
          return false;
       }
    }
@@ -116,7 +116,7 @@ public class BlockingSimulationRunner
       }
       catch (Exception e)
       {
-         PrintTools.error(this, e.getMessage());
+         LogTools.error(e.getMessage());
          return false;
       }
    }

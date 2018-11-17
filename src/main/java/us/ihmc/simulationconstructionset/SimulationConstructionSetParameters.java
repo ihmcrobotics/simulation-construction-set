@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.commons.PrintTools;
-
 import java.util.HashMap;
+
+import us.ihmc.log.LogTools;
 
 public class SimulationConstructionSetParameters
 {
@@ -72,11 +72,11 @@ public class SimulationConstructionSetParameters
          if (propertyValue != null)
          {
             parameters.get(systemPropertyName).setFromString(propertyValue);
-            PrintTools.info(this, "Loading " + systemPropertyName + ": " + propertyValue);
+            LogTools.info("Loading " + systemPropertyName + ": " + propertyValue);
          }
          else
          {
-            PrintTools.warn(this, "System property not set: " + systemPropertyName + ". Current value: " + parameters.get(systemPropertyName).getStringValue());
+            LogTools.warn("System property not set: " + systemPropertyName + ". Current value: " + parameters.get(systemPropertyName).getStringValue());
          }
       }
    }

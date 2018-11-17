@@ -10,11 +10,11 @@ import us.ihmc.codecs.builder.H264Settings;
 import us.ihmc.codecs.builder.MP4H264MovieBuilder;
 import us.ihmc.codecs.generated.EProfileIdc;
 import us.ihmc.codecs.generated.EUsageType;
-import us.ihmc.commons.PrintTools;
 import us.ihmc.jMonkeyEngineToolkit.Graphics3DAdapter;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.ViewportAdapter;
+import us.ihmc.log.LogTools;
 import us.ihmc.simulationconstructionset.TimeHolder;
 import us.ihmc.simulationconstructionset.commands.ExportVideoCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.RunCommandsExecutor;
@@ -242,7 +242,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
       }
       catch(IOException e)
       {
-         PrintTools.error(this, "Could not crate movie.  " + e.getMessage());
+         LogTools.error("Could not crate movie.  " + e.getMessage());
       }
       finally
       {

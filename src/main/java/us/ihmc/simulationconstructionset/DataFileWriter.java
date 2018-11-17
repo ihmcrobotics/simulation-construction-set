@@ -19,7 +19,7 @@ import com.jmatio.io.MatFileIncrementalWriter;
 import com.jmatio.types.MLDouble;
 import com.jmatio.types.MLStructure;
 
-import us.ihmc.commons.PrintTools;
+import us.ihmc.log.LogTools;
 import us.ihmc.simulationconstructionset.robotdefinition.RobotDefinitionFixedFrame;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
@@ -397,7 +397,7 @@ public class DataFileWriter
                   if(!mlRoot.getName().equals(rootName))
                   {
                           writer.write(mlRoot);
-                          PrintTools.info(this, "MLStructure '"+ mlRoot.getName() + "' written", true);
+                          LogTools.info("MLStructure '"+ mlRoot.getName() + "' written", true);
                           mlRoot = new MLStructure(rootName, new int[]{1,1});
                   }
                }
@@ -431,7 +431,7 @@ public class DataFileWriter
          if (mlRoot != null)
          {
             writer.write(mlRoot);
-            PrintTools.info(this, "MLStructure '"+ mlRoot.getName() + "' written", true);
+            LogTools.info("MLStructure '"+ mlRoot.getName() + "' written", true);
          }
          writer.close();
       }

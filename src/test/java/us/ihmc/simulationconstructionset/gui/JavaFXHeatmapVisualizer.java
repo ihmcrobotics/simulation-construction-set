@@ -1,27 +1,30 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
-import us.ihmc.commons.PrintTools;
+
+import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SimpleGraphIndicesHolder;
 import us.ihmc.javaFXToolkit.graphing.JavaFXHeatmapGraph;
+import us.ihmc.log.LogTools;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class JavaFXHeatmapVisualizer
 {
@@ -109,7 +112,7 @@ public class JavaFXHeatmapVisualizer
       }
       catch (IOException | COSVisitorException e)
       {
-         PrintTools.error(this, "Could not save pdf to file " + System.getProperty("user.home") + "/TestPDF.pdf");
+         LogTools.error("Could not save pdf to file " + System.getProperty("user.home") + "/TestPDF.pdf");
       }
    }
 

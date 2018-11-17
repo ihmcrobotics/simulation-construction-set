@@ -2,7 +2,6 @@ package us.ihmc.simulationconstructionset.dataBuffer;
 
 import org.junit.Before;
 import org.junit.Test;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations;
 import us.ihmc.simulationconstructionset.gui.config.VarGroup;
 import us.ihmc.simulationconstructionset.gui.config.VarGroupList;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
@@ -40,8 +39,6 @@ public class DataBufferToolsTest
       cBuffer = new DataBufferEntry(c, testBufferSize);
    }
 
-
-   @ContinuousIntegrationAnnotations.ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout=300000)
    public void testGetVarsFromGroup()
    {
