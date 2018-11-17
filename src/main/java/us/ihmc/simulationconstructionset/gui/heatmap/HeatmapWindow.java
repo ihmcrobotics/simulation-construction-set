@@ -22,13 +22,13 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.nio.FileTools;
-import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
-import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.javaFXToolkit.graphing.JavaFXHeatmapGraph;
+import us.ihmc.log.LogTools;
+import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
+import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
@@ -122,7 +122,7 @@ public class HeatmapWindow
       }
       catch (IOException | COSVisitorException e)
       {
-         PrintTools.error(this, "Could not save pdf to file " + file);
+         LogTools.error("Could not save pdf to file " + file);
       }
    }
 

@@ -6,10 +6,15 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
-import us.ihmc.commons.PrintTools;
+
 import us.ihmc.simulationconstructionset.commands.AllCommandsExecutor;
 import us.ihmc.simulationconstructionset.commands.ViewportSelectorCommandListener;
-import us.ihmc.simulationconstructionset.gui.*;
+import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
+import us.ihmc.simulationconstructionset.gui.GUIConfigurationSaveAndLoad;
+import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
+import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
+import us.ihmc.simulationconstructionset.gui.ViewportWindow;
+import us.ihmc.simulationconstructionset.gui.YoVariableSliderWindow;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
 

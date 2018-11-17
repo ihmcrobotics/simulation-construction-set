@@ -30,10 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import com.jme3.renderer.Camera;
-
 import us.ihmc.commons.Conversions;
-import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
@@ -42,7 +39,6 @@ import us.ihmc.graphicsDescription.Graphics3DSpotLight;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 import us.ihmc.graphicsDescription.HeightMap;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.color.MutableColor;
 import us.ihmc.graphicsDescription.image.DepthImageCallback;
 import us.ihmc.graphicsDescription.image.ImageCallback;
@@ -56,6 +52,7 @@ import us.ihmc.jMonkeyEngineToolkit.Graphics3DAdapter;
 import us.ihmc.jMonkeyEngineToolkit.Graphics3DBackgroundScaleMode;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraConfiguration;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
+import us.ihmc.log.LogTools;
 import us.ihmc.robotics.robotDescription.RobotDescription;
 import us.ihmc.simulationconstructionset.commands.AddCameraKeyCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.AddKeyPointCommandExecutor;
@@ -3525,7 +3522,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public void writeSpreadsheetFormattedData(String varGroupName, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
-      PrintTools.info(this, "Writing Data File " + chosenFile.getAbsolutePath());
+      LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
       // ArrayList vars = myGUI.getVarsFromGroup(varGroup);
       ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
@@ -3569,7 +3566,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public void writeData(ArrayList<YoVariable<?>> vars, boolean binary, boolean compress, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
-      PrintTools.info(this, "Writing Data File " + chosenFile.getAbsolutePath());
+      LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
       dataWriter.writeData(robots[0].getName(), mySimulation.getDT() * mySimulation.getRecordFreq(), myDataBuffer, vars, binary, compress, robots[0]);
    }
@@ -3577,7 +3574,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public void writeMatlabData(String varGroup, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
-      PrintTools.info(this, "Writing Data File " + chosenFile.getAbsolutePath());
+      LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
       ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroup, varGroupList);
       dataWriter.writeMatlabBinaryData(mySimulation.getDT() * mySimulation.getRecordFreq(), myDataBuffer, vars);
@@ -3600,7 +3597,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         PrintTools.error("Can Not Create a Video if the gui wasn't created! myGUI was null");
+         LogTools.error("Can Not Create a Video if the gui wasn't created! myGUI was null");
       }
    }
 
@@ -3713,7 +3710,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public void writeSpreadsheetFormattedState(String varGroupName, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
-      PrintTools.info(this, "Writing Data File " + chosenFile.getAbsolutePath());
+      LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
       ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
 
