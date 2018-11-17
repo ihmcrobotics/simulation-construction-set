@@ -66,7 +66,7 @@ testDependencies {
 }
 
 utilitiesDependencies {
-   compile group: "us.ihmc", name: "euclid-core", version: "0.6.0"
+   compile group: "us.ihmc", name: "euclid-core", version: "0.7.0"
    compile group: "us.ihmc", name: "ihmc-yovariables", version: "0.3.6"
 }
 
