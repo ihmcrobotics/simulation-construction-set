@@ -21,11 +21,11 @@ import com.badlogic.gdx.physics.bullet.collision.btPersistentManifold;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.geometry.Box3D;
-import us.ihmc.euclid.geometry.Cylinder3D;
-import us.ihmc.euclid.geometry.Ramp3D;
-import us.ihmc.euclid.geometry.Shape3D;
-import us.ihmc.euclid.geometry.Sphere3D;
+import us.ihmc.euclid.shape.Box3D;
+import us.ihmc.euclid.shape.Cylinder3D;
+import us.ihmc.euclid.shape.Ramp3D;
+import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.Sphere3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;

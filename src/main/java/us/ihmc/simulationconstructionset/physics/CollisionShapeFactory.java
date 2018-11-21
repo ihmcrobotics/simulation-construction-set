@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics;
 
-import us.ihmc.euclid.geometry.Shape3D;
+import us.ihmc.euclid.shape.Shape3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
 import us.ihmc.simulationconstructionset.Link;

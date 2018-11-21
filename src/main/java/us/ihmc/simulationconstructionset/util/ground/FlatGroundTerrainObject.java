@@ -3,8 +3,8 @@ package us.ihmc.simulationconstructionset.util.ground;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.geometry.Box3D;
-import us.ihmc.euclid.geometry.Shape3D;
+import us.ihmc.euclid.shape.Box3D;
+import us.ihmc.euclid.shape.Shape3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 
 public class FlatGroundTerrainObject extends FlatGroundProfile implements TerrainObject3D

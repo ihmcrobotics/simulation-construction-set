@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.physics.collision.simple;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.geometry.Shape3D;
+import us.ihmc.euclid.shape.Shape3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;

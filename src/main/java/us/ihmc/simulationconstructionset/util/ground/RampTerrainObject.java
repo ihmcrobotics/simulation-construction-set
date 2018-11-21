@@ -5,8 +5,8 @@ import java.util.List;
 
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.geometry.Ramp3D;
-import us.ihmc.euclid.geometry.Shape3D;
+import us.ihmc.euclid.shape.Ramp3D;
+import us.ihmc.euclid.shape.Shape3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
