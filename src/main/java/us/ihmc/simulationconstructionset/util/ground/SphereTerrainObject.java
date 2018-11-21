@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.geometry.Shape3D;
-import us.ihmc.euclid.geometry.Sphere3D;
+import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.Sphere3D;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;

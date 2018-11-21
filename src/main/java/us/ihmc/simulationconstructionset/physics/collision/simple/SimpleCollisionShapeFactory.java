@@ -2,13 +2,13 @@ package us.ihmc.simulationconstructionset.physics.collision.simple;
 
 import java.util.ArrayList;
 
-import us.ihmc.euclid.geometry.Box3D;
-import us.ihmc.euclid.geometry.Cylinder3D;
 import us.ihmc.euclid.geometry.LineSegment3D;
-import us.ihmc.euclid.geometry.Ramp3D;
-import us.ihmc.euclid.geometry.Shape3D;
-import us.ihmc.euclid.geometry.Sphere3D;
 import us.ihmc.euclid.geometry.interfaces.LineSegment3DReadOnly;
+import us.ihmc.euclid.shape.Box3D;
+import us.ihmc.euclid.shape.Cylinder3D;
+import us.ihmc.euclid.shape.Ramp3D;
+import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.Sphere3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.geometry.polytope.ConvexPolytope;
