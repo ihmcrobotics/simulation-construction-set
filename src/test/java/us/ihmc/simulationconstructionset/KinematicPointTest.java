@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -9,10 +9,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-
+import static us.ihmc.robotics.Assert.*;
 
 public class KinematicPointTest 
 {
@@ -20,7 +17,7 @@ public class KinematicPointTest
 	Robot robot;
 	KinematicPoint kinematicPoint;
 
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		offset = new Vector3D(1.0, 2.0, 3.0);
@@ -28,7 +25,7 @@ public class KinematicPointTest
 		kinematicPoint = new KinematicPoint("testPoint", offset, robot.getRobotsYoVariableRegistry());
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetAndSetParentJoint() 
 	{
 		PinJoint joint = new PinJoint("joint", new Vector3D(0.0, 0.0, 0.0), robot, Axis.X);
@@ -37,13 +34,13 @@ public class KinematicPointTest
 		assertTrue(joint == kinematicPoint.getParentJoint());
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testToString()
 	{
 		assertEquals("name: testPoint x: 0.0, y: 0.0, z: 0.0", kinematicPoint.toString());
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testSetOffsetJointWithBothVectorAndXYAndZValuesAsParameters()
 	{
 	   Robot robot = new Robot("testRobot");
@@ -65,7 +62,7 @@ public class KinematicPointTest
 		assertTrue(5.0 == kinematicPoint.getOffsetCopy().getZ());
 	}
 	
-//	@Test(timeout=300000)
+//	@Test// timeout=300000
 //	public void testSetOffsetWorld()
 //	{
 //		kinematicPoint.setOffsetWorld(4.0, 1.5, 3.5);
@@ -74,13 +71,13 @@ public class KinematicPointTest
 //		assertTrue(3.5 == kinematicPoint.getOffset().getZ());
 //	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetName()
 	{
 		assertTrue(kinematicPoint.getName() == "testPoint");
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetPosition()
 	{
 		Point3D positionToPack = new Point3D();
@@ -97,7 +94,7 @@ public class KinematicPointTest
 
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetPositionPoint()
 	{
 		Point3D positionReceivedFromGetMethod = kinematicPoint.getPositionPoint();
@@ -112,7 +109,7 @@ public class KinematicPointTest
 		assertTrue(5.2 == positionReceivedFromGetMethod.getZ());
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetVelocityVector()
 	{
 		Vector3D vectorReceivedFromGetMethod = kinematicPoint.getVelocityVector();
@@ -128,7 +125,7 @@ public class KinematicPointTest
 		
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetVelocity()
 	{
 		Vector3D velocityToPack = kinematicPoint.getVelocityVector();
@@ -145,7 +142,7 @@ public class KinematicPointTest
 		
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetYoPosition()
 	{
 		YoFramePoint3D yoPosition = kinematicPoint.getYoPosition();
@@ -156,7 +153,7 @@ public class KinematicPointTest
 		assertEquals("( 5.000,  5.100,  5.200 )-" + frameName, yoPosition.toString());
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testGetYoVelocity()
 	{
 		YoFrameVector3D yoVelocity = kinematicPoint.getYoVelocity();
@@ -167,7 +164,7 @@ public class KinematicPointTest
 		assertEquals("( 5.000,  5.100,  5.200 )-" + frameName, yoVelocity.toString());
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testChangeableOffset()
 	{
 	   Robot robot = new Robot("testRobot");

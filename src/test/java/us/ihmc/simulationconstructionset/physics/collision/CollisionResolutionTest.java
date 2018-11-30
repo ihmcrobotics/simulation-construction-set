@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics.collision;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
@@ -8,12 +8,12 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.*;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.JointPhysics;
 
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class CollisionResolutionTest
 {
    
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testCollisionResolutionOne() throws UnreasonableAccelerationException
    {
       Robot robot = new Robot("TestCollisions");

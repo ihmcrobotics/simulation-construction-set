@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.Axis;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
@@ -11,8 +11,7 @@ import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class SimulationConstructionSetFestTest
 {
@@ -28,8 +27,8 @@ public class SimulationConstructionSetFestTest
 
       return false;
    }
-   @Ignore //java.lang.AssertionError: expected:<4> but was:<909>
-	@Test(timeout=100000)
+   @Disabled //java.lang.AssertionError: expected:<4> but was:<909>
+	@Test// timeout=100000
    public void testSimulationConstructionSetUsingGUITestFixture()
    {
       FallingBrickRobot robot = new FallingBrickRobot();
@@ -237,9 +236,9 @@ public class SimulationConstructionSetFestTest
       scs = null;
       testFixture = null;
    }
-   @Ignore  //org.fest.swing.exception.ComponentLookupException: Unable to find component using matcher
+   @Disabled  //org.fest.swing.exception.ComponentLookupException: Unable to find component using matcher
             // us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture$JSpinnerNameEndsWithMatcher@22212533.
-	@Test(timeout=45000)
+	@Test// timeout=45000
    public void testSimulationConstructionSetNewGraphWindowUsingGUITestFixture()
    {
       FallingBrickRobot robot = new FallingBrickRobot();

@@ -1,24 +1,23 @@
 package us.ihmc.simulationconstructionset.util;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 
-import static org.junit.Assert.assertEquals;
-
+import static us.ihmc.robotics.Assert.*;
 
 public class IndexOrderCheckerTest
 {
    private IndexOrderChecker indexOrderChecker;
 
-   @Before
+   @BeforeEach
    public void setUp()
    {
       YoVariableRegistry registry = new YoVariableRegistry("testRegistry");
       indexOrderChecker = new IndexOrderChecker("test", registry, 1);
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testNoOverflow()
    {
       int index = 0;
@@ -29,7 +28,7 @@ public class IndexOrderCheckerTest
       assertEquals(increment - 1, indexOrderChecker.getMissedIndices());
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testOverflowOne()
    {
       int index = Integer.MAX_VALUE;
@@ -39,7 +38,7 @@ public class IndexOrderCheckerTest
       assertEquals(0, indexOrderChecker.getMissedIndices());
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testOverflowTwo()
    {
       int index = Integer.MAX_VALUE - 2;
@@ -50,7 +49,7 @@ public class IndexOrderCheckerTest
       assertEquals(increment - 1, indexOrderChecker.getMissedIndices());
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testABunch()
    {
       assertEquals(0, indexOrderChecker.getMissedIndices());

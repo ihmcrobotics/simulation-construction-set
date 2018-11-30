@@ -1,19 +1,18 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.MutationTestFacilitator;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class CylinderShapeDescriptionTest
 {
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testProjectionWhenNotTransformed()
    {
       double radius = 0.5;
@@ -49,7 +48,7 @@ public class CylinderShapeDescriptionTest
       EuclidCoreTestTools.assertTuple3DEquals(new Point3D(radius * Math.sqrt(2.0) / 2.0, radius * Math.sqrt(2.0) / 2.0, height * 0.1), closestPointOnCylinder, 1e-7);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testProjectionWhenRotated()
    {
       double radius = 0.5;
@@ -86,7 +85,7 @@ public class CylinderShapeDescriptionTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedPoint, closestPointOnCylinder, 1e-7);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testBoundingBox()
    {
       double radius = 0.5;

@@ -1,19 +1,19 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.yoVariables.listener.RewoundListener;
 
-import static org.junit.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.*;
 
 public class SimulationRewoundListenerTest
 {
    /**
     * Hang forever
     */
-   @Ignore
-	@Test(timeout=300000)
+   @Disabled
+	@Test// timeout=300000
    public void testSimulationRewoundListener()
    {
       boolean showGUI = false;

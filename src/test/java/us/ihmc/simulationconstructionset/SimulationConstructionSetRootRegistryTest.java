@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.YoVariableExplorerTabbedPane;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanel;
@@ -8,13 +8,13 @@ import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class SimulationConstructionSetRootRegistryTest
 {
    private static final boolean SHOW_GUI = false;
 
-	@Test(timeout = 30000)
+	@Test// timeout = 30000
    public void testRootRegistryNothingFancy()
    {
       Robot robot = new Robot("RobotsRootRegistry");
@@ -53,7 +53,7 @@ public class SimulationConstructionSetRootRegistryTest
       scs.closeAndDispose();
    }
 
-	@Test(timeout = 30000)
+	@Test// timeout = 30000
    public void testVarGroups()
    {
       Robot robot = new Robot("testVarGroups");
@@ -99,7 +99,7 @@ public class SimulationConstructionSetRootRegistryTest
       scs.closeAndDispose();
    }
 
-	@Test(timeout = 30000)
+	@Test// timeout = 30000
    public void testRootRegistryAddYoVariablesAfterConstruction()
    {
       Robot robot = new Robot("TestAfterConstruction");

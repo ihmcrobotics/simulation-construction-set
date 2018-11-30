@@ -1,10 +1,10 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 import java.util.Random;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import us.ihmc.commons.RandomNumbers;
 import us.ihmc.euclid.Axis;
@@ -27,7 +27,7 @@ public class PinnedFloatingJointTest
 {
    private static final double EPSILON = 1.0e-12;
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testPinnedFloatingJoint() throws Exception, UnreasonableAccelerationException
    {
       Random random = new Random(39847534);
@@ -119,7 +119,7 @@ public class PinnedFloatingJointTest
       }
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testUnpinningFloatingJoint() throws Exception, UnreasonableAccelerationException
    {
       Random random = new Random(39847534);

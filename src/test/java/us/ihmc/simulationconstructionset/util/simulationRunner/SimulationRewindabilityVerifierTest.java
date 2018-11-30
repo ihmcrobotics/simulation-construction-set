@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util.simulationRunner;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
@@ -11,8 +11,7 @@ import us.ihmc.yoVariables.variable.YoDouble;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class SimulationRewindabilityVerifierTest
 {
@@ -20,7 +19,7 @@ public class SimulationRewindabilityVerifierTest
    private static final boolean VERBOSE = false;
    private final double DT = 0.01;
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testRewindableSimulation() throws UnreasonableAccelerationException
    {
       SimulationConstructionSet scs1 = constructRewindableSimulationConstructionSet();
@@ -40,7 +39,7 @@ public class SimulationRewindabilityVerifierTest
       scs2.closeAndDispose();
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testEasilyDetectableNonRewindableSimulation() throws UnreasonableAccelerationException
    {
       SimulationConstructionSet scs1 = constructEasilyDetectableNonRewindableSimulationConstructionSet();
@@ -66,7 +65,7 @@ public class SimulationRewindabilityVerifierTest
       scs2.closeAndDispose();
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testDifficultToDetectNonRewindableSimulation() throws UnreasonableAccelerationException
    {
       SimulationConstructionSet scs1 = constructDifficultToDetectNonRewindableSimulationConstructionSet();

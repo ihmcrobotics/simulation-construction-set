@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
@@ -8,7 +8,7 @@ import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 public class SlopedPlaneGroundProfileTest extends GroundProfileTest
 {
    @Override
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
       super.testSurfaceNormalGridForSmoothTerrainUsingHeightMap();

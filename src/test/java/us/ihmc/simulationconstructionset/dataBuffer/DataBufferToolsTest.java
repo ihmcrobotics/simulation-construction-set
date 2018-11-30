@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.dataBuffer;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.gui.config.VarGroup;
 import us.ihmc.simulationconstructionset.gui.config.VarGroupList;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
@@ -12,8 +12,7 @@ import us.ihmc.yoVariables.variable.YoVariable;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class DataBufferToolsTest
 {
@@ -25,7 +24,7 @@ public class DataBufferToolsTest
    private YoDouble a, b, c;
    private DataBufferEntry aBuffer, bBuffer, cBuffer;
 
-   @Before
+   @BeforeEach
    public void setUp()
    {
       registry = new YoVariableRegistry("testRegistry");
@@ -39,7 +38,7 @@ public class DataBufferToolsTest
       cBuffer = new DataBufferEntry(c, testBufferSize);
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testGetVarsFromGroup()
    {
       dataBuffer.addEntry(aBuffer);

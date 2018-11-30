@@ -1,20 +1,19 @@
 package us.ihmc.simulationconstructionset.dataBuffer;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.listener.VariableChangedListener;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
-import static org.junit.Assert.*;
-
+import static us.ihmc.robotics.Assert.*;
 
 public class MirroredYoVariableRegistryTest
 {
     private static final int TEST_VARIABLE_COUNT = 10;
 
-     @Test(timeout = 30000)
+     @Test// timeout = 30000
     public void testMirroredRegistryIsTheSameAsOriginalAfterCreation()
     {
         YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
@@ -25,7 +24,7 @@ public class MirroredYoVariableRegistryTest
     }
 
 
-     @Test(timeout = 30000)
+     @Test// timeout = 30000
     public void testYoVariableRegistryChildren()
     {
         YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
@@ -42,7 +41,7 @@ public class MirroredYoVariableRegistryTest
 
     }
 
-     @Test(timeout = 30000)
+     @Test// timeout = 30000
     public void testChangesArePropagatedFromOriginal()
     {
         YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
@@ -61,7 +60,7 @@ public class MirroredYoVariableRegistryTest
         assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
     }
 
-     @Test(timeout = 30000)
+     @Test// timeout = 30000
     public void testChangesArePropagatedFromMirror()
     {
         YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
@@ -80,7 +79,7 @@ public class MirroredYoVariableRegistryTest
         assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
     }
 
-     @Test(timeout = 30000)
+     @Test// timeout = 30000
     public void testMirrorValuesArePreferredWhenConflict()
     {
         YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
@@ -112,7 +111,7 @@ public class MirroredYoVariableRegistryTest
         }
     }
 
-     @Test(timeout = 30000)
+     @Test// timeout = 30000
     public void testOriginalListenersAreCalledWhenMirrorChanges()
     {
         YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
@@ -134,7 +133,7 @@ public class MirroredYoVariableRegistryTest
         assertEquals(listenerCounter.callCount, originalRegistry.getAllVariables().size());
     }
 
-     @Test(timeout = 30000)
+     @Test// timeout = 30000
     public void testMirrorListenersAreCalledWhenOriginalChanges()
     {
         YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);

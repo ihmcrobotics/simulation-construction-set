@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset.gui.actions;
 
 import com.google.common.base.Defaults;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
 import us.ihmc.simulationconstructionset.commands.*;
@@ -28,8 +28,7 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class ActionsTest
 {
@@ -76,7 +75,7 @@ public class ActionsTest
       }
    };
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSimpleActions()
    {
       for (Map.Entry<Class<?>, Class<?>> actionToTest : SIMPLE_ACTIONS.entrySet())
@@ -85,7 +84,7 @@ public class ActionsTest
       }
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testCreateNewGraphWindowAction()
    {
       createMethodTesterForInterface(CreateNewGraphWindowCommandExecutor.class)
@@ -103,7 +102,7 @@ public class ActionsTest
               .assertMethodNotCalled("getGraphArrayWindow", String.class);
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testCreateNewViewportWindowAction()
    {
       createMethodTesterForInterface(CreateNewViewportWindowCommandExecutor.class)
@@ -121,7 +120,7 @@ public class ActionsTest
               .assertMethodNotCalled("getViewportWindow", String.class);
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testHideShowViewportAction()
    {
       final ViewportSelectorCommandExecutor dummyExecutor = new ViewportSelectorCommandExecutor()
@@ -185,7 +184,7 @@ public class ActionsTest
               );
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSimulateAction()
    {
       createMethodTesterForInterface(SimulateCommandExecutor.class)
@@ -200,7 +199,7 @@ public class ActionsTest
               .assertMethodCalled("simulate");
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testToggleKeyPointModeAction()
    {
       final ToggleKeyPointModeAction[] actionHolder = new ToggleKeyPointModeAction[1];
@@ -256,7 +255,7 @@ public class ActionsTest
               );
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testZoomInAction()
    {
       createMethodTesterForInterface(ZoomGraphCommandExecutor.class)
@@ -272,7 +271,7 @@ public class ActionsTest
               .assertMethodNotCalled("zoomOut");
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testZoomOutAction()
    {
       createMethodTesterForInterface(ZoomGraphCommandExecutor.class)
@@ -288,7 +287,7 @@ public class ActionsTest
               .assertMethodNotCalled("zoomIn");
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSelectGraphConfigurationAction()
    {
       createMethodTesterForInterface(SelectGraphConfigurationCommandExecutor.class)
@@ -303,7 +302,7 @@ public class ActionsTest
               .assertMethodCalled("selectGraphConfiguration", "Test");
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSelectGraphGroupAction()
    {
       createMethodTesterForInterface(GraphGroupSelector.class)
@@ -318,7 +317,7 @@ public class ActionsTest
               .assertMethodCalled("selectGraphGroup", "Test");
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSelectVarGroupAction()
    {
       createMethodTesterForInterface(VarGroupSelector.class)
@@ -333,7 +332,7 @@ public class ActionsTest
               .assertMethodCalled("selectVarGroup", "Test");
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSelectViewportAction()
    {
       createMethodTesterForInterface(ViewportSelectorCommandExecutor.class)
@@ -348,8 +347,8 @@ public class ActionsTest
               .assertMethodCalled("selectViewport", "Test");
    }
 
-   @Ignore // Throws an EdtViolationException at runtime.
-   @Test(timeout=300000)
+   @Disabled // Throws an EdtViolationException at runtime.
+   @Test// timeout=300000
    public void testCameraPropertiesAction()
    {
       final ActiveCameraHolder holder = new ActiveCameraHolder() {
@@ -375,7 +374,7 @@ public class ActionsTest
               .assertAllInterfaceMethodsCalled();
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSelectEntryBoxGroupAction()
    {
       createMethodTesterForInterface(EntryBoxGroupSelector.class)
@@ -390,8 +389,8 @@ public class ActionsTest
               .assertMethodCalled("selectEntryBoxGroup", "Test")
               .assertAllInterfaceMethodsCalled();
    }
-   @Ignore // Throws an EdtViolationException at Runtime
-   @Test(timeout=300000)
+   @Disabled // Throws an EdtViolationException at Runtime
+   @Test// timeout=300000
    public void testSelectExtraPanelAction()
    {
       createMethodTesterForInterface(ExtraPanelSelector.class)
@@ -407,13 +406,13 @@ public class ActionsTest
               .assertAllInterfaceMethodsCalled();
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testThinBufferAction()
    {
       testActionCallingAllInterfaceMethods(ThinBufferCommandExecutor.class, ThinBufferAction.class);
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSelectCameraAction()
    {
       createMethodTesterForInterface(CameraSelector.class)
@@ -428,7 +427,7 @@ public class ActionsTest
               .assertMethodCalled("selectCamera", "Test");
    }
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSelectGUIConfigFromFileAction()
    {
       final String testPath = "TestPath";

@@ -1,14 +1,14 @@
 package us.ihmc.simulationconstructionset.physics.collision.gdx;
 
 import com.badlogic.gdx.math.Matrix4;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.*;
 
 /**
  * @author Peter Abeles
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class GdxUtilTest
 {
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void convert_t2m()
 	{
       Random random = new Random(234234L);
@@ -48,7 +48,7 @@ public class GdxUtilTest
       assertEquals(m[15],a[15],1e-6f);
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void convert_m2t()
 	{
 	   Random random = new Random(234234L);

@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.simulatedSensors;
 
 import org.ejml.data.DenseMatrix64F;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -15,15 +15,14 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class GroundContactPointBasedWrenchCalculatorTest
 {
    WrenchCalculatorInterface calculator;
    OneDegreeOfFreedomJoint joint;
 
-	@Test(timeout = 30000)
+	@Test// timeout = 30000
    public void testWrenchCalculation()
    {
       double epsilon = 1e-7;

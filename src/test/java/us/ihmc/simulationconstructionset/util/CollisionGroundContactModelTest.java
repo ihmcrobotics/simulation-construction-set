@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import us.ihmc.robotics.Assert;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.util.ground.RollingGroundProfile;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class CollisionGroundContactModelTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testDoGroundContact()
    {
       YoVariableRegistry registry = new YoVariableRegistry("CollisionGroundContactModelTest");

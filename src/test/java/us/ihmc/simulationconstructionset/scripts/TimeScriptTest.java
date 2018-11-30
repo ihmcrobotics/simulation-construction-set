@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset.scripts;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
@@ -13,7 +13,7 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.*;
 
 public class TimeScriptTest
 {
@@ -23,7 +23,7 @@ public class TimeScriptTest
    private YoInteger integerVariable;
    private YoEnum<TimeScriptTestEnums> enumVariable;
    
-   @Before
+   @BeforeEach
    public void setUp() throws Exception
    {
       rootRegistry = new YoVariableRegistry("root");
@@ -44,7 +44,7 @@ public class TimeScriptTest
       V0, V1, V2;
    }
 
-   @After
+   @AfterEach
    public void tearDown() throws Exception
    {
       rootRegistry = null;
@@ -57,7 +57,7 @@ public class TimeScriptTest
       enumVariable = null;
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testEmptyTimeScript()
    {
       YoVariableRegistry registry = new YoVariableRegistry("Test");
@@ -68,7 +68,7 @@ public class TimeScriptTest
       timeScript.doScript(time);
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testAddEntryAndDoScript()
    {
       TimeScript timeScript = new TimeScript(rootRegistry);
@@ -127,7 +127,7 @@ public class TimeScriptTest
       }
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testTimeScriptCommand()
    {
       TimeScript timeScript = new TimeScript(rootRegistry);
@@ -215,7 +215,7 @@ public class TimeScriptTest
       }
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testSaveAndLoad()
    {
       Random random = new Random(1776L);

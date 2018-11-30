@@ -1,9 +1,9 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
@@ -11,20 +11,20 @@ import us.ihmc.simulationconstructionset.util.simulationTesting.SimulationTestin
 import us.ihmc.tools.MemoryTools;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 
-import static junit.framework.TestCase.fail;
+import static us.ihmc.robotics.Assert.*;
 
 /**
  * Tests simulation against closed-form dynamics
  */
 public class FeatherstoneAlgorithmTest
 {
-   @Before
+   @BeforeEach
    public void setup()
    {
       MemoryTools.printCurrentMemoryUsageAndReturnUsedMemoryInMB(getClass().getSimpleName() + " before test.");
    }
 
-   @After
+   @AfterEach
    public void tearDown()
    {
       MemoryTools.printCurrentMemoryUsageAndReturnUsedMemoryInMB(getClass().getSimpleName() + " after test.");
@@ -32,7 +32,7 @@ public class FeatherstoneAlgorithmTest
 
    private final SimulationTestingParameters simulationTestingParameters = SimulationTestingParameters.createFromSystemProperties();
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testSinglePendulumAgainstLagrangianCalculation()
    {
       double epsilon = 1e-7;
@@ -40,7 +40,7 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(pendulumRobot, epsilon);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testDoublePendulumAgainstLagrangianCalculation()
    {
       double epsilon = 1e-6;
@@ -48,8 +48,8 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(pendulumRobot, epsilon);
    }
 
-   @Ignore
-   @Test(timeout = 30000)
+   @Disabled
+   @Test// timeout = 30000
    public void testCartPoleAgainstLagrangianCalculation()
    {
       double epsilon = 1e-2;
@@ -57,8 +57,8 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(cartPoleRobot, epsilon);
    }
 
-   @Ignore
-   @Test(timeout = 30000)
+   @Disabled
+   @Test// timeout = 30000
    public void testUniversalJointAgainLagrangianCalculation()
    {
       double epsilon = 1e-4;

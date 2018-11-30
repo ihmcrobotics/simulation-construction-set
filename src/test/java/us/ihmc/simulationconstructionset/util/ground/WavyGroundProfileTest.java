@@ -1,12 +1,12 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 
 public class WavyGroundProfileTest extends GroundProfileTest
 {
    @Override
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
       super.testSurfaceNormalGridForSmoothTerrainUsingHeightMap();

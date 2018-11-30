@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -11,13 +11,12 @@ import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
 import us.ihmc.simulationconstructionset.physics.Contacts;
 import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionResult;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class SimpleCollisionDetectorTest
 {
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testSphereToSphereCollisions()
    {
       SimpleCollisionDetector detector = new SimpleCollisionDetector();
@@ -143,7 +142,7 @@ public class SimpleCollisionDetectorTest
    }
 
    //TODO: More and more vigorous tests...
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testBoxToBoxCollisions()
    {
       SimpleCollisionDetector detector = new SimpleCollisionDetector();

@@ -1,17 +1,17 @@
 package us.ihmc.simulationconstructionset.util.simulationRunner;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class VariablesThatShouldMatchListTest
 {
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testOne()
    {
       YoVariableRegistry registryOne = new YoVariableRegistry("root");

@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.RandomNumbers;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
@@ -10,13 +10,12 @@ import us.ihmc.yoVariables.variable.YoDouble;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class JointWrenchSensorTest
 {
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testStaticallyHangingMasses() throws UnreasonableAccelerationException
    {
       double massOne = 7.21;
@@ -63,7 +62,7 @@ public class JointWrenchSensorTest
       assertJointWrenchEquals(jointWrenchSensorTwo, expectedJointForce, expectedJointTorque);
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testJointTorquesMatchWhenSensorAtJoint() throws UnreasonableAccelerationException
    {
       double massOne = 7.21;
@@ -109,7 +108,7 @@ public class JointWrenchSensorTest
       }
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testOffsetAtCenterOfMassWithCantileveredBeam() throws UnreasonableAccelerationException
    {
       double massOne = 7.21;
