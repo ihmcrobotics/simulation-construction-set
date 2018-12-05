@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.Axis;
@@ -13,6 +14,7 @@ import us.ihmc.yoVariables.variable.YoEnum;
 
 import static us.ihmc.robotics.Assert.*;
 
+@Tag("video")
 public class SimulationConstructionSetFestTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();

@@ -2,10 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.junit.BeforeClass;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.graphicsDescription.Graphics3DObject;
@@ -47,6 +44,7 @@ import java.util.ArrayList;
 
 import static us.ihmc.robotics.Assert.*;
 
+@Tag("video")
 public class SimulationConstructionSetUsingDirectCallsTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();

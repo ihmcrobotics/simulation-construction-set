@@ -1,10 +1,12 @@
 package us.ihmc.simulationconstructionset;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.gui.SplashPanel;
 
 import javax.swing.*;
 
+@Tag("gui")
 public class SimulationConstructionSetSetupTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
