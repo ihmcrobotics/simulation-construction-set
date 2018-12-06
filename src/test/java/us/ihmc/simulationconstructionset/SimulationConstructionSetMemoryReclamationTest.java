@@ -1,5 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.tools.MemoryTools;
@@ -11,6 +12,7 @@ import java.io.File;
 
 import static us.ihmc.robotics.Assert.*;
 
+@Tag("gui")
 public class SimulationConstructionSetMemoryReclamationTest
 {
    private static final boolean DEBUG = true;
