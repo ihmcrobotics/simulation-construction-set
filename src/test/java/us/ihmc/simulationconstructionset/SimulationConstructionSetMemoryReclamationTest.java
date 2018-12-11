@@ -28,7 +28,7 @@ public class SimulationConstructionSetMemoryReclamationTest
       int usedMemoryMB = usedMemoryMBAtEnd - usedMemoryMBAtStart;
 
       checkForLingeringFrames();
-      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
+      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 100);
    }
 
 	@Test// timeout = 32000
@@ -42,7 +42,7 @@ public class SimulationConstructionSetMemoryReclamationTest
       int usedMemoryMB = usedMemoryMBAtEnd - usedMemoryMBAtStart;
 
       checkForLingeringFrames();
-      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
+      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 100);
    }
 
    // TODO https://jira.ihmc.us/browse/DRC-2208
@@ -57,7 +57,7 @@ public class SimulationConstructionSetMemoryReclamationTest
       int usedMemoryMB = usedMemoryMBAtEnd - usedMemoryMBAtStart;
 
       checkForLingeringFrames();
-      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
+      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 100);
    }
 
    private int testOneAndReturnUsedMemoryMB(boolean useARobot, int numberOfTests, boolean createVideo)
