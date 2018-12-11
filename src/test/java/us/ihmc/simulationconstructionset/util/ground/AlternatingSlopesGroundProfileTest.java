@@ -1,9 +1,10 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 
-import static us.ihmc.robotics.Assert.*;
+import static us.ihmc.robotics.Assert.assertEquals;
 
 public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
 {
@@ -177,14 +178,18 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
 	@Test// expected = RuntimeException.class,timeout=300000
    public void testBadOrderingOne()
    {
-      double[][] xSlopePairs = new double[][]{{0.0, -1.0}, {1e-10, 1.0}};
-      new AlternatingSlopesGroundProfile(xSlopePairs);
+      Assertions.assertThrows(RuntimeException.class, () -> {
+         double[][] xSlopePairs = new double[][] {{0.0, -1.0}, {1e-10, 1.0}};
+         new AlternatingSlopesGroundProfile(xSlopePairs);
+      });
    }
 
 	@Test// expected = RuntimeException.class, timeout=300000
    public void testBadOrderingTwo()
    {
-      double[][] xSlopePairs = new double[][]{{0.0, -1.0}, {1.0, 1.0}, {3.5, 1.0}, {3.0, 1.0}, {4.0, 1.0}};
-      new AlternatingSlopesGroundProfile(xSlopePairs);
+      Assertions.assertThrows(RuntimeException.class, () -> {
+         double[][] xSlopePairs = new double[][] {{0.0, -1.0}, {1.0, 1.0}, {3.5, 1.0}, {3.0, 1.0}, {4.0, 1.0}};
+         new AlternatingSlopesGroundProfile(xSlopePairs);
+      });
    }
 }
