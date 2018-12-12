@@ -39,7 +39,6 @@ mainDependencies {
    compile group: "org.apache.pdfbox", name: "pdfbox", version: "1.8.4"
    compile group: "net.sourceforge.jmatio", name: "jmatio", version: "1.0"
    compile group: "org.ejml", name: "core", version: "0.30"
-   compile group: "junit", name: "junit", version: "4.12"
    compile group: "xml-apis", name: "xml-apis", version: "2.0.2"
    compile group: "com.badlogicgames.gdx", name: "gdx-bullet-platform", version: "1.9.4", classifier: "natives-desktop"
    compile group: "com.badlogicgames.gdx", name: "gdx-bullet", version: "1.9.4"
