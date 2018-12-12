@@ -44,7 +44,7 @@ import java.util.ArrayList;
 
 import static us.ihmc.robotics.Assert.*;
 
-@Tag("video")
+@Tag("gui")
 public class SimulationConstructionSetUsingDirectCallsTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();

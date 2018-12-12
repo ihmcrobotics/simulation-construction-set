@@ -14,7 +14,7 @@ import us.ihmc.yoVariables.variable.YoEnum;
 
 import static us.ihmc.robotics.Assert.*;
 
-@Tag("video")
+@Tag("gui")
 public class SimulationConstructionSetFestTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
