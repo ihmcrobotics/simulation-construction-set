@@ -1,6 +1,6 @@
 plugins {
    id("us.ihmc.ihmc-build") version "0.15.5"
-   id("us.ihmc.ihmc-ci") version "3.4"
+   id("us.ihmc.ihmc-ci") version "3.5"
    id("us.ihmc.log-tools") version "0.2.2"
    id("us.ihmc.scs")
 }
@@ -16,15 +16,11 @@ ihmc {
 }
 
 def gui = categories.create("gui")
-gui.classesPerJVM = 0
-gui.maxJVMs = 1
-gui.initialHeapSizeGB = 6
+gui.minHeapSizeGB = 6
 gui.maxHeapSizeGB = 8
 
 def video = categories.create("video")
-video.classesPerJVM = 0  // forkEvery
-video.maxJVMs = 1        // maxParallelForks
-video.initialHeapSizeGB = 6
+video.minHeapSizeGB = 6
 video.maxHeapSizeGB = 8
 
 mainDependencies {
