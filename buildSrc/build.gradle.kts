@@ -4,11 +4,11 @@ import com.gradle.publish.PluginConfig
 plugins {
    `java-gradle-plugin`
    kotlin("jvm") version "1.2.61"
-   id("com.gradle.plugin-publish") version "0.9.9"
+   id("com.gradle.plugin-publish") version "0.10.0"
 }
 
 group = "us.ihmc"
-version = "0.1"
+version = "0.2"
 
 repositories {
    mavenCentral()
@@ -37,7 +37,7 @@ pluginBundle {
    description = "Runtime configuration for IHMC's Simulation Construction Set."
    tags = listOf("scs", "property", "initialization", "ihmc", "robotics", "simulation")
 
-   plugins.register("scsGradlePlugin") {
+   plugins.getByName("scsGradlePlugin") {
       id = project.group as String + "." + project.name
       version = project.version as String
       displayName = "SCS Gradle Plugin"

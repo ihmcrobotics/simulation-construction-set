@@ -13,7 +13,34 @@ class SCSPlugin : Plugin<Project>
    var runningOnCIServer = false
    val javaProperties = hashMapOf<String, String>()
 
-   open class SCSExtension(val javaProperties: Map<String, String>) // in the future, add real fields?
+   open class SCSExtension(val javaProperties: HashMap<String, String>,
+                           val scsPlugin: SCSPlugin)  // in the future, add real fields?
+   {
+      fun showGui()  // these methods provide the ability to configure dynamically in build.gradle
+      {
+         if (!scsPlugin.scsShowGui)
+         {
+            javaProperties["show.scs.windows"] = "true"
+            javaProperties["create.scs.gui"] = "true"
+            javaProperties["java.awt.headless"] = "false"
+            javaProperties["show.scs.yographics"] = "true"
+         }
+      }
+
+      fun captureVideo()
+      {
+         if (!scsPlugin.scsVideo)
+         {
+            javaProperties["create.scs.gui"] = "true"
+            javaProperties["java.awt.headless"] = "false"
+            javaProperties["create.videos"] = "true"
+            if (scsPlugin.runningOnCIServer)
+               javaProperties["create.videos.dir"] = "/opt/ihmc/bamboo-videos"
+            else
+               javaProperties["create.videos.dir"] = System.getProperty("user.home") + "/bamboo-videos"
+         }
+      }
+   }
 
    override fun apply(project: Project)
    {
@@ -52,28 +79,34 @@ class SCSPlugin : Plugin<Project>
             javaProperties["create.videos.dir"] = System.getProperty("user.home") + "/bamboo-videos"
       }
 
-      project.extensions.create("scs", SCSExtension::class.java, javaProperties)
+      project.extensions.create("scs", SCSExtension::class.java, javaProperties, this)
 
       for (allproject in project.allprojects)
       {
          allproject.tasks.withType(JavaExec::class.java) { javaExec ->
-            // setup properties for all JavaExec tasks
-            javaExec.systemProperties.putAll(javaProperties)
-            allproject.logger.info("[scs] Passing JVM args ${javaExec.systemProperties} to $javaExec")
+            javaExec.doFirst {
+               // setup properties for all JavaExec tasks
+               javaExec.systemProperties.putAll(javaProperties)
+               allproject.logger.info("[scs] Passing JVM args ${javaExec.systemProperties} to $javaExec")
+            }
          }
          allproject.tasks.withType(Test::class.java) { test ->
-            // setup properties for forked test jvms
-            test.systemProperties.putAll(javaProperties)
-            allproject.logger.info("[scs] Passing JVM args ${test.systemProperties} to $test")
+            test.doFirst {
+               // setup properties for forked test jvms
+               test.systemProperties.putAll(javaProperties)
+               allproject.logger.info("[scs] Passing JVM args ${test.systemProperties} to $test")
+            }
          }
          allproject.tasks.withType(CreateStartScripts::class.java) { startScripts ->
-            // setup properties for all start scripts (includes application plugin)
-            val list = arrayListOf<String>()
-            javaProperties.forEach {
-               list.add("-D${it.key}=${it.value}")
+            startScripts.doFirst {
+               // setup properties for all start scripts (includes application plugin)
+               val list = arrayListOf<String>()
+               javaProperties.forEach {
+                  list.add("-D${it.key}=${it.value}")
+               }
+               startScripts.defaultJvmOpts = list
+               allproject.logger.info("[scs] Passing JVM args $list to $startScripts")
             }
-            startScripts.defaultJvmOpts = list
-            allproject.logger.info("[scs] Passing JVM args $list to $startScripts")
          }
       }
    }
