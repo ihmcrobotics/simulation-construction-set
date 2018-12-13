@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.*;
@@ -11,13 +11,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class DataFileWriterTest
 {
    private static final String TEST_DIRECTORY = "us/ihmc/simulationconstructionset/dataFileWriterTest/";
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testDataFileWriterAndReader() throws IOException, URISyntaxException
    {
       int numDataPoints = 10000;
@@ -128,7 +128,7 @@ public class DataFileWriterTest
 
    @SuppressWarnings("deprecation")
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testFileReadAndWriteWithDataOutputStreamAndDataInputStream() throws IOException, NullPointerException
    {
       Random rng = new Random();
@@ -156,42 +156,7 @@ public class DataFileWriterTest
       assertTrue(testInteger == integerReadBack);
    }
 
-	@Test(timeout=300000, expected = EOFException.class)
-   public void testFileReadAndWriteWithDataOutputStreamAndBufferedReader() throws IOException
-   {
-      Random rng = new Random();
-      String testString = "This string tests readLine";
-      double testDouble = rng.nextDouble();
-      int testInteger = rng.nextInt();
-      String filename = TEST_DIRECTORY + "shortReadWriteTestFile.txt";
-      URL resource = getClass().getClassLoader().getResource(filename);
-      File testFile = new File(resource.getFile());
-
-      DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(testFile));
-      outputStream.writeDouble(testDouble);
-      outputStream.writeBytes(testString + "\n");
-      outputStream.writeInt(testInteger);
-      outputStream.close();
-
-      DataInputStream inputStream = new DataInputStream(new FileInputStream(testFile));
-      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "US-ASCII"));
-      double doubleReadBack = inputStream.readDouble();
-      String lineReadBack = bufferedReader.readLine();
-      int integerReadBack = inputStream.readInt();
-      integerReadBack = -testInteger;
-
-      inputStream.close();
-      bufferedReader.close();
-
-      // System.out.println(lineReadBack);
-      // System.out.println(testString);
-
-      assertTrue(testDouble == doubleReadBack);
-      assertTrue(testString.equals(lineReadBack));
-      assertTrue(integerReadBack == -testInteger);
-   }
-
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testFileReadAndWriteBackWithDataOutputStreamAndDeferredBufferedReaderCreation() throws IOException
    {
       Random rng = new Random();
@@ -226,7 +191,7 @@ public class DataFileWriterTest
       assertTrue(testInteger == integerReadBack);
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testFileReadAndWriteBackWithDataOutputStreamAndBufferedReaderStringsOnly() throws IOException
    {
       String string1 = "This is the first string";
@@ -263,7 +228,7 @@ public class DataFileWriterTest
       assertTrue(string3.equals(readBack3));
    }
 
-	@Test(timeout = 30000)
+	@Test// timeout = 30000
    public void testWritingAndReadingALongStateFile() throws IOException
    {
       File fileOne = new File("fileOne.state");
@@ -304,7 +269,7 @@ public class DataFileWriterTest
       fileOne.delete();
    }
 
-	@Test(timeout = 30000)
+	@Test// timeout = 30000
    public void testWritingAndReadingADataFileWithLotsOfVariables() throws IOException
    {
       File fileOne = new File("fileOne.state.gz");

@@ -1,10 +1,10 @@
 package us.ihmc.simulationconstructionset.gui.config;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class VarGroupTest {
 
@@ -12,7 +12,7 @@ public class VarGroupTest {
 	YoVariableRegistry registry;
 	VarGroup varGroup;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		registry = new YoVariableRegistry("regsitry");
 		variable1 = "doubleYoVariable1";
@@ -22,7 +22,7 @@ public class VarGroupTest {
 		varGroup = new VarGroup("varGroup");
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testSetAndGetName() {
 		assertTrue("varGroup" == varGroup.getName());
 
@@ -34,7 +34,7 @@ public class VarGroupTest {
 				.getName());
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testAddGetAndRemoveSingleVariable() {
 		varGroup.addVar(variable1);
 
@@ -46,7 +46,7 @@ public class VarGroupTest {
 		assertTrue(0 == varGroupArray.length);
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testAddMultipleVariables() {
 		String[] variablesToBeAdded = { variable1, variable2, variable3,
 				variable4 };
@@ -60,7 +60,7 @@ public class VarGroupTest {
 
 	}
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
 	public void testAddRemoveAndGetRegularExpressions() {
 		String[] regularExpressionsToBeAdded = { variable1, variable2,
 				variable3, variable4 };

@@ -1,18 +1,18 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
-import static org.junit.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.*;
 
 public class SimulationConstructionSetProcessDataCallTest
 {   
    private static final boolean DEBUG = false;
    private YoVariableRegistry registry;
 
-	@Test(timeout=1000)
+	@Test// timeout=1000
    public void testForwardCount()
    {
       Robot robot = new Robot("testRobot");
@@ -69,7 +69,7 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@Test(timeout=1000)
+	@Test// timeout=1000
    public void testBackwardCount()
    {
       Robot robot = new Robot("testRobot");
@@ -127,7 +127,7 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@Test(timeout=1000)
+	@Test// timeout=1000
    public void testForwardCopy()
    {
       Robot robot = new Robot("testRobot");
@@ -184,7 +184,7 @@ public class SimulationConstructionSetProcessDataCallTest
       }    
    }
 
-	@Test(timeout=1000)
+	@Test// timeout=1000
    public void testBackwardCopy()
    {
       Robot robot = new Robot("testRobot");

@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -13,13 +13,13 @@ public class ShipCorridorGroundProfileTest
    private final double epsilon = 1e-6;
    private final boolean debug = false;
 
-   @Before
+   @BeforeEach
    public void setUp()
    {
       groundProfile = new ShipCorridorGroundProfile(100.0, -10.0, 5.0, -5.0, 0.8, -0.8, 0.0, 3.0, Math.toRadians( 2.0 ));
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testSurfaceNormalAlongYAxis()
    {
       int nSteps = 1000;

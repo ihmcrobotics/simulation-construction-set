@@ -1,16 +1,15 @@
 package us.ihmc.simulationconstructionset.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.MutationTestFacilitator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static us.ihmc.robotics.Assert.*;
 
 public class QuarticRootFinderTest
 {
    private static final boolean DEBUG = false;
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testQuarticRootFinder()
    {
       double[] realSolutions = new double[4];

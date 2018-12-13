@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
@@ -15,13 +15,13 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class LinearStickSlipGroundContactModelTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
 
-   @Test(timeout=300000)
+   @Test// timeout=300000
    public void testNonlinearZForce()
    {
       boolean visualize = false;
@@ -76,7 +76,7 @@ public class LinearStickSlipGroundContactModelTest
       }
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testOnFlatGroundNoSlipCompareWithAndWithoutNormals()
    {
       YoVariableRegistry registry = new YoVariableRegistry("TestRegistry");
@@ -172,7 +172,7 @@ public class LinearStickSlipGroundContactModelTest
       EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 0.0), force, 1e-7);
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testOnSlantedGroundCompareWithAndWithoutNormals()
    {
       YoVariableRegistry registryOnFlat = new YoVariableRegistry("TestRegistryOnFlat");

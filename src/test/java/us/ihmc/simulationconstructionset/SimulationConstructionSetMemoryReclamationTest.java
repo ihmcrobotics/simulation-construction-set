@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.tools.MemoryTools;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
@@ -9,13 +10,14 @@ import us.ihmc.yoVariables.variable.YoDouble;
 import java.awt.*;
 import java.io.File;
 
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
+@Tag("gui")
 public class SimulationConstructionSetMemoryReclamationTest
 {
    private static final boolean DEBUG = true;
 
-	@Test(timeout = 51000)
+	@Test// timeout = 51000
    public void testMemoryReclamationForSCSWithoutARobot()
    {
       boolean useRobot = false;
@@ -26,10 +28,10 @@ public class SimulationConstructionSetMemoryReclamationTest
       int usedMemoryMB = usedMemoryMBAtEnd - usedMemoryMBAtStart;
 
       checkForLingeringFrames();
-      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
+      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 100);
    }
 
-	@Test(timeout = 32000)
+	@Test// timeout = 32000
    public void testMemoryReclamationForSCSWithARobot()
    {
       boolean useRobot = true;
@@ -40,11 +42,11 @@ public class SimulationConstructionSetMemoryReclamationTest
       int usedMemoryMB = usedMemoryMBAtEnd - usedMemoryMBAtStart;
 
       checkForLingeringFrames();
-      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
+      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 100);
    }
 
    // TODO https://jira.ihmc.us/browse/DRC-2208
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testMemoryReclamationForSCSWithARobotAndVideo()
    {
       boolean useRobot = true;
@@ -55,7 +57,7 @@ public class SimulationConstructionSetMemoryReclamationTest
       int usedMemoryMB = usedMemoryMBAtEnd - usedMemoryMBAtStart;
 
       checkForLingeringFrames();
-      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 50);
+      assertTrue("usedMemoryMB = " + usedMemoryMB, usedMemoryMB < 100);
    }
 
    private int testOneAndReturnUsedMemoryMB(boolean useARobot, int numberOfTests, boolean createVideo)

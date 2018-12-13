@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset.util.simulationRunner;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
@@ -12,22 +12,22 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class StateFileComparerTest
 {
 
-   @Before
+   @BeforeEach
    public void setUp() throws Exception
    {
    }
 
-   @After
+   @AfterEach
    public void tearDown() throws Exception
    {
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testAbsoluteCompareStateFiles() throws FileNotFoundException
    {
       File fileOne = new File("fileOne.state");
@@ -91,7 +91,7 @@ public class StateFileComparerTest
       stream.close();
    }
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testCompareVarLists()
    {
       YoVariableRegistry registry1 = createRegistryAndFillWithVariables();

@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.MutationTestFacilitator;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.matrix.Matrix3D;
@@ -13,13 +13,13 @@ import us.ihmc.simulationconstructionset.physics.engine.featherstone.RigidJointP
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.*;
 
 public class RigidJointTest
 {
    private static final boolean doDynamics = true;
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testOneRigidJoint()
    {
       Robot robot = new Robot("Test");
@@ -42,7 +42,7 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(centerOfMassOffset, centerOfMass, 1e-10);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testOneRigidJointWithTranslation()
    {
       Robot robot = new Robot("Test");
@@ -76,7 +76,7 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testOneRigidJointWithRotation()
    {
       Robot robot = new Robot("Test");
@@ -109,7 +109,7 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testOneRigidJointWithRotationAndTranslation()
    {
       Robot robot = new Robot("Test");
@@ -149,7 +149,7 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testSinglePinJoint() throws UnreasonableAccelerationException
    {
       Robot robotA = new Robot("RobotA");
@@ -227,7 +227,7 @@ public class RigidJointTest
       }
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testSingleSliderJoint() throws UnreasonableAccelerationException
    {
       Robot robotA = new Robot("RobotA");
@@ -307,7 +307,7 @@ public class RigidJointTest
       }
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testPinJointThenRigidJointThenSliderOne() throws UnreasonableAccelerationException
    {
       // Rigid joint rotation but no offset.
@@ -331,7 +331,7 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
    
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testPinJointThenRigidJointThenSliderTwo() throws UnreasonableAccelerationException
    {
       // No Rigid joint rotation or offset, but center of mass offsets.
@@ -354,7 +354,7 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testPinJointThenRigidJointThenSliderThree() throws UnreasonableAccelerationException
    {
       // No Rigid joint rotation or offset, but translation of second joint.
@@ -378,7 +378,7 @@ public class RigidJointTest
                                               radiiOfGyrationTwo, qOne, qdOne, qTwo, qdTwo);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testPinJointThenRigidJointThenSliderFour() throws UnreasonableAccelerationException
    {
       // Offsets, rotations, joint positions, and joint velocities.

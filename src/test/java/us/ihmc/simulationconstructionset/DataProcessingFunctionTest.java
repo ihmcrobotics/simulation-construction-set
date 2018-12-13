@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
@@ -8,13 +8,13 @@ import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
-import static org.junit.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.*;
 
 public class DataProcessingFunctionTest
 {
    private static final boolean SHOW_GUI = false;
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testSimpleDataProcessingFunction() throws SimulationExceededMaximumTimeException, ControllerFailureException
    {
       final Robot robot = new Robot("DataProcessingFunctionTestRobot");

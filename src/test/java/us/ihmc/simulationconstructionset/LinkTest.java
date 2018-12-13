@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
@@ -12,7 +12,7 @@ public class LinkTest
 {
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testLinkInertia()
    {
       // This is a manual test. Run it with visualize = true and verify that the ellipsoid graphics rotates around the long axis.

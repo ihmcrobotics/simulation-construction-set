@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset;
 
 import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
@@ -24,8 +24,8 @@ public class SimulationConstructionSetTest
       return false;
    }
 
-   @Ignore //org.junit.runners.model.TestTimedOutException: test timed out after 300000 milliseconds
-	@Test(timeout=300000)
+   @Disabled //org.junit.runners.model.TestTimedOutException: test timed out after 300000 milliseconds
+	@Test// timeout=300000
    public void testSimulationConstructionSetNewViewportWindowUsingGUITestFixture() throws AWTException
    {
       Assume.assumeTrue(!isGradleBuild());
@@ -54,8 +54,8 @@ public class SimulationConstructionSetTest
 
    }
 
-   @Ignore //org.junit.runners.model.TestTimedOutException: test timed out after 300000 milliseconds
-	@Test(timeout=300000)
+   @Disabled //org.junit.runners.model.TestTimedOutException: test timed out after 300000 milliseconds
+	@Test// timeout=300000
    public void testSimulationConstructionSetVideoGenerationUsingGUITestFixture() throws AWTException
    {
       Assume.assumeTrue(!isGradleBuild());

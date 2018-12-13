@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
@@ -26,7 +26,7 @@ import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public abstract class GroundProfileTest
 {
@@ -43,7 +43,7 @@ public abstract class GroundProfileTest
    public abstract double getMaxPercentageOfAllowablePeakPoints();
    public abstract double getMaxPercentageOfAllowableDropOffs();
 
-	@Test(timeout=300000)
+	@Test// timeout=300000
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
       Random random = new Random(1234L);
