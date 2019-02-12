@@ -25,6 +25,7 @@ class SCSPlugin : Plugin<Project>
             javaProperties["create.scs.gui"] = "true"
             javaProperties["java.awt.headless"] = "false"
             javaProperties["show.scs.yographics"] = "true"
+            javaProperties["show.splash.screen"] = "true"
 
             scsPlugin.putProperties()
          }
@@ -34,9 +35,13 @@ class SCSPlugin : Plugin<Project>
       {
          if (!scsPlugin.scsVideo)
          {
+            javaProperties["show.scs.windows"] = "true"
             javaProperties["create.scs.gui"] = "true"
             javaProperties["java.awt.headless"] = "false"
-            javaProperties["create.videos"] = "true"
+            javaProperties["show.scs.yographics"] = "true"
+            javaProperties["show.splash.screen"] = "true"
+            javaProperties["show.scs.yographics"] = "false"
+            javaProperties["create.scs.videos"] = "true"
             if (scsPlugin.runningOnCIServer)
                javaProperties["create.videos.dir"] = "/opt/ihmc/bamboo-videos"
             else
@@ -68,18 +73,19 @@ class SCSPlugin : Plugin<Project>
       javaProperties["show.scs.yographics"] = "false"
       javaProperties["java.awt.headless"] = "true"
       javaProperties["create.videos"] = "false"
-      if (scsShowGui)
+      javaProperties["show.splash.screen"] = "false"
+      if (scsShowGui || scsVideo)
       {
          javaProperties["show.scs.windows"] = "true"
          javaProperties["create.scs.gui"] = "true"
          javaProperties["java.awt.headless"] = "false"
          javaProperties["show.scs.yographics"] = "true"
+         javaProperties["show.splash.screen"] = "true"
       }
       if (scsVideo)
       {
-         javaProperties["create.scs.gui"] = "true"
-         javaProperties["java.awt.headless"] = "false"
-         javaProperties["create.videos"] = "true"
+         javaProperties["show.scs.yographics"] = "false"
+         javaProperties["create.scs.videos"] = "true"
          if (runningOnCIServer)
             javaProperties["create.videos.dir"] = "/opt/ihmc/bamboo-videos"
          else

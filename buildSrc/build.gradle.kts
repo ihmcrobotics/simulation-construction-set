@@ -1,14 +1,13 @@
 import com.gradle.publish.MavenCoordinates
-import com.gradle.publish.PluginConfig
 
 plugins {
    `java-gradle-plugin`
-   kotlin("jvm") version "1.2.61"
+   kotlin("jvm") version "1.3.20"
    id("com.gradle.plugin-publish") version "0.10.0"
 }
 
 group = "us.ihmc"
-version = "0.3"
+version = "0.4"
 
 repositories {
    mavenCentral()
