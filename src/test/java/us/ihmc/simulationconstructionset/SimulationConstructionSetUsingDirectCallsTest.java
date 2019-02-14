@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.*;
 
 import us.ihmc.commons.thread.ThreadTools;
@@ -161,7 +161,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private ScsPhysics simpleScsPhysics;
    private SimulationConstructionSet scs;
 
-   @BeforeClass
+   @BeforeAll
    public static void setUpOnce()
    {
       FailOnThreadViolationRepaintManager.install();

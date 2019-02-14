@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.Assume;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
@@ -28,7 +28,7 @@ public class SimulationConstructionSetTest
 	@Test// timeout=300000
    public void testSimulationConstructionSetNewViewportWindowUsingGUITestFixture() throws AWTException
    {
-      Assume.assumeTrue(!isGradleBuild());
+      Assumptions.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
@@ -58,7 +58,7 @@ public class SimulationConstructionSetTest
 	@Test// timeout=300000
    public void testSimulationConstructionSetVideoGenerationUsingGUITestFixture() throws AWTException
    {
-      Assume.assumeTrue(!isGradleBuild());
+      Assumptions.assumeTrue(!isGradleBuild());
       FallingBrickRobot robot = new FallingBrickRobot();
 
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
