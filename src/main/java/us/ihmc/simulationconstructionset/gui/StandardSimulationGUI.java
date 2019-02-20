@@ -45,6 +45,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeListener;
 
 import javafx.animation.AnimationTimer;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -3382,5 +3383,15 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    public void removeSpotLight(Graphics3DSpotLight spotLight)
    {
       graphics3dAdapter.removeSpotLight(spotLight);
+   }
+
+   public void addSelectedVariableChangedListener(ChangeListener listener)
+   {
+      selectedVariableHolder.addChangeListener(listener);
+   }
+
+   public YoVariable<?> getSelectedVariable()
+   {
+      return selectedVariableHolder.getSelectedVariable();
    }
 }
