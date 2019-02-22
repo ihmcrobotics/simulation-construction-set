@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JApplet;
@@ -120,6 +121,7 @@ import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableListPane
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableSearchPanel;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
+import us.ihmc.simulationconstructionset.util.AdditionalPanelTools.FrameMap;
 import us.ihmc.simulationconstructionset.util.SimpleFileReader;
 import us.ihmc.simulationconstructionset.util.SimpleFileWriter;
 import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
@@ -3393,5 +3395,10 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    public YoVariable<?> getSelectedVariable()
    {
       return selectedVariableHolder.getSelectedVariable();
+   }
+
+   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable<?>> filter)
+   {
+      yoVariableExplorerTabbedPane.getYoVariableSearchPanel().setFrameMap(frameMap, filter);
    }
 }

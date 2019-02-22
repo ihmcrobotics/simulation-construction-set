@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -27,6 +28,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.gui.BookmarkedVariablesHolder;
 import us.ihmc.simulationconstructionset.gui.BookmarkedVariablesPanel;
@@ -35,6 +37,7 @@ import us.ihmc.simulationconstructionset.gui.EntryBoxArrayTabbedPanel;
 import us.ihmc.simulationconstructionset.gui.GraphArrayPanel;
 import us.ihmc.simulationconstructionset.gui.YoEntryBox;
 import us.ihmc.simulationconstructionset.gui.YoVariableExplorerTabbedPane;
+import us.ihmc.simulationconstructionset.util.AdditionalPanelTools.FrameMap;
 import us.ihmc.simulationconstructionset.util.RegularExpression;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
@@ -55,6 +58,8 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
    private final YoEntryBox entryBox;
    private final SelectedVariableHolder holder;
    private JLabel label;
+
+   private final JLabel frameLabel;
 
    private boolean showOnlyParameters = false;
 
@@ -174,6 +179,40 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       c.gridheight = 1;
       c.fill = GridBagConstraints.HORIZONTAL;
       this.add(entryBox, c);
+
+      frameLabel = new JLabel();
+      c.gridy += 1;
+      holder.addChangeListener(e -> updateFrameLabel(c, holder.getSelectedVariable()));
+   }
+
+   private void updateFrameLabel(GridBagConstraints c, YoVariable<?> yoVariable)
+   {
+      if (filter.test(yoVariable))
+      {
+         ReferenceFrame frame = frameMap.getReferenceFrame(yoVariable.getValueAsLongBits());
+         if (frame != null)
+         {
+            frameLabel.setText(frame.getName());
+         }
+         else
+         {
+            frameLabel.setText("UNKNOWN");
+         }
+         add(frameLabel, c);
+      }
+      else
+      {
+         remove(frameLabel);
+      }
+   }
+
+   private FrameMap frameMap;
+   private Predicate<YoVariable<?>> filter;
+
+   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable<?>> filter)
+   {
+      this.frameMap = frameMap;
+      this.filter = filter;
    }
 
    public void setDoubleClickListener(DoubleClickListener listener)
