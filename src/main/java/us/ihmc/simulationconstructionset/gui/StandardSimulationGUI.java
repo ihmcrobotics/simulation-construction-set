@@ -1174,6 +1174,9 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       {
          repaintGraphs();
       }
+
+      // Hijack this to update the frame label.
+      yoVariableExplorerTabbedPane.getYoVariableSearchPanel().updateFrameLabel();
    }
 
    private void repaintGraphs()

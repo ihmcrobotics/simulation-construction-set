@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -141,7 +142,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       this.dataBuffer = dataBuffer;
       setLayout(new GridBagLayout());
       removeAll();
-      GridBagConstraints c = new GridBagConstraints();
+      c = new GridBagConstraints();
 
       c.fill = GridBagConstraints.HORIZONTAL;
       c.anchor = GridBagConstraints.NORTH;
@@ -181,13 +182,21 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       this.add(entryBox, c);
 
       frameLabel = new JLabel();
+      frameLabel.setBorder(new EmptyBorder(0, 6, 0, 6));
       c.gridy += 1;
-      holder.addChangeListener(e -> updateFrameLabel(c, holder.getSelectedVariable()));
+
+      holder.addChangeListener(e -> updateFrameLabel());
    }
 
-   private void updateFrameLabel(GridBagConstraints c, YoVariable<?> yoVariable)
+   public void updateFrameLabel()
    {
-      if (filter.test(yoVariable))
+      if (frameMap == null || filter == null)
+      {
+         return;
+      }
+
+      YoVariable<?> yoVariable = holder.getSelectedVariable();
+      if (filter.test(yoVariable ))
       {
          ReferenceFrame frame = frameMap.getReferenceFrame(yoVariable.getValueAsLongBits());
          if (frame != null)
@@ -206,6 +215,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       }
    }
 
+   private GridBagConstraints c;
    private FrameMap frameMap;
    private Predicate<YoVariable<?>> filter;
 
