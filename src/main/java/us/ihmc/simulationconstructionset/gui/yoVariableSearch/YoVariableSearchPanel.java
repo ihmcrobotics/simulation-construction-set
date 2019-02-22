@@ -60,7 +60,10 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
    private final SelectedVariableHolder holder;
    private JLabel label;
 
-   private final JLabel frameLabel;
+   private GridBagConstraints frameLabelConstraint;
+   private FrameMap frameMap;
+   private Predicate<YoVariable<?>> filter;
+   private final JLabel frameLabel = new JLabel();
 
    private boolean showOnlyParameters = false;
 
@@ -142,7 +145,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       this.dataBuffer = dataBuffer;
       setLayout(new GridBagLayout());
       removeAll();
-      c = new GridBagConstraints();
+      GridBagConstraints c = new GridBagConstraints();
 
       c.fill = GridBagConstraints.HORIZONTAL;
       c.anchor = GridBagConstraints.NORTH;
@@ -181,10 +184,16 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       c.fill = GridBagConstraints.HORIZONTAL;
       this.add(entryBox, c);
 
-      frameLabel = new JLabel();
       frameLabel.setBorder(new EmptyBorder(0, 6, 0, 6));
-      c.gridy += 1;
-
+      frameLabelConstraint = new GridBagConstraints();
+      frameLabelConstraint.anchor = c.anchor;
+      frameLabelConstraint.fill = c.fill;
+      frameLabelConstraint.weightx = c.weightx;
+      frameLabelConstraint.weighty = c.weighty;
+      frameLabelConstraint.gridx = c.gridx;
+      frameLabelConstraint.gridy = c.gridy + 1;
+      frameLabelConstraint.gridwidth = c.gridwidth;
+      frameLabelConstraint.gridheight = c.gridheight;
       holder.addChangeListener(e -> updateFrameLabel());
    }
 
@@ -196,7 +205,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       }
 
       YoVariable<?> yoVariable = holder.getSelectedVariable();
-      if (filter.test(yoVariable ))
+      if (filter.test(yoVariable))
       {
          ReferenceFrame frame = frameMap.getReferenceFrame(yoVariable.getValueAsLongBits());
          if (frame != null)
@@ -207,17 +216,13 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          {
             frameLabel.setText("UNKNOWN");
          }
-         add(frameLabel, c);
+         add(frameLabel, frameLabelConstraint);
       }
       else
       {
          remove(frameLabel);
       }
    }
-
-   private GridBagConstraints c;
-   private FrameMap frameMap;
-   private Predicate<YoVariable<?>> filter;
 
    public void setFrameMap(FrameMap frameMap, Predicate<YoVariable<?>> filter)
    {
