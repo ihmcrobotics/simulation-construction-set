@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.*;
 
 import us.ihmc.commons.thread.ThreadTools;
@@ -161,7 +161,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private ScsPhysics simpleScsPhysics;
    private SimulationConstructionSet scs;
 
-   @BeforeClass
+   @BeforeAll
    public static void setUpOnce()
    {
       FailOnThreadViolationRepaintManager.install();
@@ -1153,7 +1153,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.writeState(file4);
       double initialTime = scs.getTime();
       simulateForTime(scs, simulateTime);
-      scs.readState(file4);
+      scs.readState(file4, false);
       double timeAfterReadState = scs.getTime();
       assertEquals(initialTime, timeAfterReadState, epsilon);
       file4.delete();
@@ -1162,7 +1162,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.writeState("all", false, true, file5);
       double initialTime2 = scs.getTime();
       simulateForTime(scs, simulateTime);
-      scs.readState(file5);
+      scs.readState(file5, false);
       double timeAfterReadState2 = scs.getTime();
       assertEquals(initialTime2, timeAfterReadState2, epsilon);
       file5.delete();
@@ -1174,7 +1174,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.writeState(TEST_DIRECTORY + "test.state");
       double initialTime3 = scs.getTime();
       simulateForTime(scs, simulateTime);
-      scs.readState(TEST_DIRECTORY + "test.state");
+      scs.readState(TEST_DIRECTORY + "test.state", false);
       double timeAfterReadState3 = scs.getTime();
       assertEquals(initialTime3, timeAfterReadState3, epsilon);
 
@@ -1186,6 +1186,8 @@ public class SimulationConstructionSetUsingDirectCallsTest
       double timeAfterReadState4 = scs.getTime();
       assertEquals(initialTime4, timeAfterReadState4, epsilon);
       file7.delete();
+
+      scs.closeAndDispose();
    }
 
    // local methods
