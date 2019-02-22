@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JApplet;
@@ -45,6 +46,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeListener;
 
 import javafx.animation.AnimationTimer;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -119,6 +121,7 @@ import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableListPane
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableSearchPanel;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
+import us.ihmc.simulationconstructionset.util.AdditionalPanelTools.FrameMap;
 import us.ihmc.simulationconstructionset.util.SimpleFileReader;
 import us.ihmc.simulationconstructionset.util.SimpleFileWriter;
 import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
@@ -1171,6 +1174,9 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       {
          repaintGraphs();
       }
+
+      // Hijack this to update the frame label.
+      yoVariableExplorerTabbedPane.getYoVariableSearchPanel().updateFrameLabel();
    }
 
    private void repaintGraphs()
@@ -3382,5 +3388,20 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    public void removeSpotLight(Graphics3DSpotLight spotLight)
    {
       graphics3dAdapter.removeSpotLight(spotLight);
+   }
+
+   public void addSelectedVariableChangedListener(ChangeListener listener)
+   {
+      selectedVariableHolder.addChangeListener(listener);
+   }
+
+   public YoVariable<?> getSelectedVariable()
+   {
+      return selectedVariableHolder.getSelectedVariable();
+   }
+
+   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable<?>> filter)
+   {
+      yoVariableExplorerTabbedPane.getYoVariableSearchPanel().setFrameMap(frameMap, filter);
    }
 }

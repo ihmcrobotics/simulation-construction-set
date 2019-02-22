@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -21,12 +22,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.gui.BookmarkedVariablesHolder;
 import us.ihmc.simulationconstructionset.gui.BookmarkedVariablesPanel;
@@ -35,6 +38,7 @@ import us.ihmc.simulationconstructionset.gui.EntryBoxArrayTabbedPanel;
 import us.ihmc.simulationconstructionset.gui.GraphArrayPanel;
 import us.ihmc.simulationconstructionset.gui.YoEntryBox;
 import us.ihmc.simulationconstructionset.gui.YoVariableExplorerTabbedPane;
+import us.ihmc.simulationconstructionset.util.AdditionalPanelTools.FrameMap;
 import us.ihmc.simulationconstructionset.util.RegularExpression;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
@@ -55,6 +59,11 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
    private final YoEntryBox entryBox;
    private final SelectedVariableHolder holder;
    private JLabel label;
+
+   private GridBagConstraints frameLabelConstraint;
+   private FrameMap frameMap;
+   private Predicate<YoVariable<?>> filter;
+   private final JLabel frameLabel = new JLabel();
 
    private boolean showOnlyParameters = false;
 
@@ -174,6 +183,51 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       c.gridheight = 1;
       c.fill = GridBagConstraints.HORIZONTAL;
       this.add(entryBox, c);
+
+      frameLabel.setBorder(new EmptyBorder(0, 6, 0, 6));
+      frameLabelConstraint = new GridBagConstraints();
+      frameLabelConstraint.anchor = c.anchor;
+      frameLabelConstraint.fill = c.fill;
+      frameLabelConstraint.weightx = c.weightx;
+      frameLabelConstraint.weighty = c.weighty;
+      frameLabelConstraint.gridx = c.gridx;
+      frameLabelConstraint.gridy = c.gridy + 1;
+      frameLabelConstraint.gridwidth = c.gridwidth;
+      frameLabelConstraint.gridheight = c.gridheight;
+      holder.addChangeListener(e -> updateFrameLabel());
+   }
+
+   public void updateFrameLabel()
+   {
+      if (frameMap == null || filter == null)
+      {
+         return;
+      }
+
+      YoVariable<?> yoVariable = holder.getSelectedVariable();
+      if (filter.test(yoVariable))
+      {
+         ReferenceFrame frame = frameMap.getReferenceFrame(yoVariable.getValueAsLongBits());
+         if (frame != null)
+         {
+            frameLabel.setText(frame.getName());
+         }
+         else
+         {
+            frameLabel.setText("UNKNOWN");
+         }
+         add(frameLabel, frameLabelConstraint);
+      }
+      else
+      {
+         remove(frameLabel);
+      }
+   }
+
+   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable<?>> filter)
+   {
+      this.frameMap = frameMap;
+      this.filter = filter;
    }
 
    public void setDoubleClickListener(DoubleClickListener listener)
