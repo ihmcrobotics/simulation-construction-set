@@ -559,12 +559,12 @@ public class StandardGUIActions implements GUIEnablerAndDisabler
 
    protected JPanel createMainWindowButtons()
    {
-      Action[] fileActions = new Action[] { exportAction, importDataAction, mediaCapture, exportSnapshotAction }; // , searchForVariableAction};
+      Action[] fileActions = new Action[] { /* exportAction, importDataAction, */mediaCapture, exportSnapshotAction }; // , searchForVariableAction};
       Action[] runActions = new Action[] { simulateAction, playAction, stopAction };
       Action[] stepActions = new Action[] { setInPointAction, goInPointAction, stepBackwardAction, stepForwardAction, goOutPointAction, setOutPointAction };
       Action[] keyActions = new Action[] { setKeyAction, toggleKeyPointModeAction };
       Action[] playbackPropertiesActions = new Action[] {}; // playbackPropertiesAction};
-      Action[] graphsActions = new Action[] { zoomInAction, zoomOutAction, printGraphsAction, exportGraphsToFileAction };
+      Action[] graphsActions = new Action[] { zoomInAction, zoomOutAction /*, printGraphsAction, exportGraphsToFileAction */ };
       Action[] cameraActions = new Action[] {}; // cameraPropertiesAction;
       Action[] windowActions = new Action[] {};
       Action[] helpActions = new Action[] {};
