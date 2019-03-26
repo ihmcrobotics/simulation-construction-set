@@ -40,6 +40,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.time.Duration;
 import java.util.ArrayList;
 
 import static us.ihmc.robotics.Assert.*;
@@ -412,55 +413,58 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @Test// timeout = 64000
    public void testFrameMethods()
    {
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
+      Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () ->
+      {
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
 
-      scs.createNewGraphWindow();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      GraphArrayWindow graphArrayWindowFromSCS = scs.getGraphArrayWindow("Unnamed");
-      assertNotNull(graphArrayWindowFromSCS);
+         scs.createNewGraphWindow();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         GraphArrayWindow graphArrayWindowFromSCS = scs.getGraphArrayWindow("Unnamed");
+         assertNotNull(graphArrayWindowFromSCS);
 
-      scs.createNewGraphWindow("simpleGraphArrayWindow");
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      GraphArrayWindow graphArrayWindowFromSCS2 = scs.getGraphArrayWindow("simpleGraphArrayWindow");
-      assertNotNull(graphArrayWindowFromSCS2);
+         scs.createNewGraphWindow("simpleGraphArrayWindow");
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         GraphArrayWindow graphArrayWindowFromSCS2 = scs.getGraphArrayWindow("simpleGraphArrayWindow");
+         assertNotNull(graphArrayWindowFromSCS2);
 
-      scs.createNewGraphWindow("simpleGraphArrayWindow2", 0, false);
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      GraphArrayWindow graphArrayWindowFromSCS3 = scs.getGraphArrayWindow("simpleGraphArrayWindow2");
-      assertNotNull(graphArrayWindowFromSCS3);
+         scs.createNewGraphWindow("simpleGraphArrayWindow2", 0, false);
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         GraphArrayWindow graphArrayWindowFromSCS3 = scs.getGraphArrayWindow("simpleGraphArrayWindow2");
+         assertNotNull(graphArrayWindowFromSCS3);
 
-      scs.createNewViewportWindow();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      ViewportWindow viewportWindowFromSCS = scs.getViewportWindow("Unnamed");
-      assertNotNull(viewportWindowFromSCS);
+         scs.createNewViewportWindow();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         ViewportWindow viewportWindowFromSCS = scs.getViewportWindow("Unnamed");
+         assertNotNull(viewportWindowFromSCS);
 
-      scs.createNewViewportWindow("simpleViewportWindow");
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      ViewportWindow viewportWindowFromSCS2 = scs.getViewportWindow("simpleViewportWindow");
-      assertNotNull(viewportWindowFromSCS2);
+         scs.createNewViewportWindow("simpleViewportWindow");
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         ViewportWindow viewportWindowFromSCS2 = scs.getViewportWindow("simpleViewportWindow");
+         assertNotNull(viewportWindowFromSCS2);
 
-      scs.createNewViewportWindow("simpleViewportWindow", 0, false);
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      ViewportWindow viewportWindowFromSCS3 = scs.getViewportWindow("simpleViewportWindow");
-      assertNotNull(viewportWindowFromSCS3);
+         scs.createNewViewportWindow("simpleViewportWindow", 0, false);
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         ViewportWindow viewportWindowFromSCS3 = scs.getViewportWindow("simpleViewportWindow");
+         assertNotNull(viewportWindowFromSCS3);
 
-      scs.showViewport();
-      scs.hideViewport();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      boolean isViewportHidden = scs.isViewportHidden();
-      assertTrue(isViewportHidden);
+         scs.showViewport();
+         scs.hideViewport();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         boolean isViewportHidden = scs.isViewportHidden();
+         assertTrue(isViewportHidden);
 
-      scs.hideViewport();
-      scs.showViewport();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      boolean isViewportHidden2 = scs.isViewportHidden();
-      assertFalse(isViewportHidden2);
+         scs.hideViewport();
+         scs.showViewport();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         boolean isViewportHidden2 = scs.isViewportHidden();
+         assertFalse(isViewportHidden2);
 
-      Component component = new Button();
-      scs.addExtraJpanel(component, simpleComponentName, false);
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      Component componentFromSCS = scs.getExtraPanel(simpleComponentName);
-      assertEquals(component, componentFromSCS);
+         Component component = new Button();
+         scs.addExtraJpanel(component, simpleComponentName, false);
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         Component componentFromSCS = scs.getExtraPanel(simpleComponentName);
+         assertEquals(component, componentFromSCS);
+      });
    }
 
    @Test// timeout = 30000
