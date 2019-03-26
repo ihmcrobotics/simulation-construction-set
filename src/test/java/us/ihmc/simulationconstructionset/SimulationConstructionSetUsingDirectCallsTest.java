@@ -4,6 +4,7 @@ import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.*;
 
+import us.ihmc.commons.ContinuousIntegrationTools;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.structure.Graphics3DNode;
@@ -165,41 +166,45 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @BeforeAll
    public static void setUpOnce()
    {
-      FailOnThreadViolationRepaintManager.install();
+      if (!ContinuousIntegrationTools.isRunningOnContinuousIntegrationServer())
+      {
+         FailOnThreadViolationRepaintManager.install();  // does not work on OpenJDK
+      }
    }
 
    @BeforeEach
    public void createAndStartSCSWithRobot()
    {
-      simpleRegistryNameSpace = new NameSpace(rootRegistryName + "." + simpleRegistryName);
-      simpleRegistry = new YoVariableRegistry(simpleRegistryName);
-      dummyRegistry = new YoVariableRegistry("dummyRegistry");
-      staticLink = new Link("simpleLink");
-      staticLinkGraphics = staticLink.getLinkGraphics();
-      graphics3DNodeType = Graphics3DNodeType.GROUND;
-      simpleExternalForcePoint = new ExternalForcePoint("simpleExternalForcePoint", dummyRegistry);
-      yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject", simpleExternalForcePoint.getYoPosition(), simpleExternalForcePoint.getYoForce(),
-                                      1.0 / 50.0);
-      exitActionListenerHasBeenNotified = new YoBoolean("exitActionListenerHasBeenNotified", dummyRegistry);
-      simulationRewoundListenerHasBeenNotified = new YoBoolean("simulationRewoundListenerHasBeenNotified", dummyRegistry);
-      simulationDoneListenerHasBeenNotified = new YoBoolean("simulationDoneListenerHasBeenNotified", dummyRegistry);
-      setSimulationDoneCriterion = new YoBoolean("setSimulationDoneCriterion", dummyRegistry);
-      extraPanelConfiguration = createExtraPanelConfigurationWithPanel(extraPanelConfigurationName);
-      cameraConfiguration = createCameraConfiguration(cameraConfigurationName);
-      viewportConfiguration = createViewportConfiguration(viewportConfigurationName);
-      viewportConfiguration.addCameraView("Back View", 0, 0, 1, 1);
+      Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () -> {
+         simpleRegistryNameSpace = new NameSpace(rootRegistryName + "." + simpleRegistryName);
+         simpleRegistry = new YoVariableRegistry(simpleRegistryName);
+         dummyRegistry = new YoVariableRegistry("dummyRegistry");
+         staticLink = new Link("simpleLink");
+         staticLinkGraphics = staticLink.getLinkGraphics();
+         graphics3DNodeType = Graphics3DNodeType.GROUND;
+         simpleExternalForcePoint = new ExternalForcePoint("simpleExternalForcePoint", dummyRegistry);
+         yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject", simpleExternalForcePoint.getYoPosition(), simpleExternalForcePoint.getYoForce(), 1.0 / 50.0);
+         exitActionListenerHasBeenNotified = new YoBoolean("exitActionListenerHasBeenNotified", dummyRegistry);
+         simulationRewoundListenerHasBeenNotified = new YoBoolean("simulationRewoundListenerHasBeenNotified", dummyRegistry);
+         simulationDoneListenerHasBeenNotified = new YoBoolean("simulationDoneListenerHasBeenNotified", dummyRegistry);
+         setSimulationDoneCriterion = new YoBoolean("setSimulationDoneCriterion", dummyRegistry);
+         extraPanelConfiguration = createExtraPanelConfigurationWithPanel(extraPanelConfigurationName);
+         cameraConfiguration = createCameraConfiguration(cameraConfigurationName);
+         viewportConfiguration = createViewportConfiguration(viewportConfigurationName);
+         viewportConfiguration.addCameraView("Back View", 0, 0, 1, 1);
 
-      graphConfigurations = createGraphConfigurations(graphConfigurationNames);
-      realTimeRateInSCS = new YoDouble("realTimeRate", dummyRegistry);
-      processDataHasBeenCalled = new YoBoolean("processDataHasBeenCalled", dummyRegistry);
-      toggleKeyPointModeCommandListenerHasBeenCalled = new YoBoolean("toggleKeyPointModeCommandListenerHasBeenCalled", dummyRegistry);
-      yoGraphicsListRegistry = createYoGraphicsListRegistryWithObject();
-      yoGraphicMenuManager = new YoGraphicMenuManager();
+         graphConfigurations = createGraphConfigurations(graphConfigurationNames);
+         realTimeRateInSCS = new YoDouble("realTimeRate", dummyRegistry);
+         processDataHasBeenCalled = new YoBoolean("processDataHasBeenCalled", dummyRegistry);
+         toggleKeyPointModeCommandListenerHasBeenCalled = new YoBoolean("toggleKeyPointModeCommandListenerHasBeenCalled", dummyRegistry);
+         yoGraphicsListRegistry = createYoGraphicsListRegistryWithObject();
+         yoGraphicMenuManager = new YoGraphicMenuManager();
 
-      scs = new SimulationConstructionSet(simpleRobot, parameters);
-      simpleScsPhysics = createScsPhysics();
-      //      scs.setFrameMaximized();
-      scs.startOnAThread();
+         scs = new SimulationConstructionSet(simpleRobot, parameters);
+         simpleScsPhysics = createScsPhysics();
+         //      scs.setFrameMaximized();
+         scs.startOnAThread();
+      });
    }
 
    @AfterEach
