@@ -1,14 +1,13 @@
 package us.ihmc.simulationconstructionset.gui.actions.dialogActions;
 
-import java.awt.Image;
+import us.ihmc.log.LogTools;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
 
 public class AbstractActionTools
 {
@@ -42,12 +41,12 @@ public class AbstractActionTools
       try
       {
          BufferedImage bimage = ImageIO.read(iconInputStream);
-         if (bimage.getWidth() == bimage.getHeight()) {
-            return bimage.getScaledInstance(32, 32, Image.SCALE_DEFAULT);
-         } else {
-            System.err.println("It's quite convenient when icons have the same width as height... please resize '"+iconFilename+"'");
-            return null;
+         if (bimage.getWidth() != bimage.getHeight())
+         {
+            LogTools.warn("Icon not square: {} {}x{}", iconFilename, bimage.getWidth(), bimage.getHeight());
          }
+
+         return bimage.getScaledInstance(32, 32, Image.SCALE_DEFAULT);
       }
       catch (IOException e)
       {

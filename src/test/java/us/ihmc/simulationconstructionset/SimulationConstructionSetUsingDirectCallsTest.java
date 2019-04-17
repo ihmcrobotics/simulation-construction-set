@@ -4,6 +4,7 @@ import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.*;
 
+import us.ihmc.commons.ContinuousIntegrationTools;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.structure.Graphics3DNode;
@@ -40,6 +41,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.time.Duration;
 import java.util.ArrayList;
 
 import static us.ihmc.robotics.Assert.*;
@@ -164,41 +166,45 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @BeforeAll
    public static void setUpOnce()
    {
-      FailOnThreadViolationRepaintManager.install();
+      if (!ContinuousIntegrationTools.isRunningOnContinuousIntegrationServer())
+      {
+         FailOnThreadViolationRepaintManager.install();  // does not work on OpenJDK
+      }
    }
 
    @BeforeEach
    public void createAndStartSCSWithRobot()
    {
-      simpleRegistryNameSpace = new NameSpace(rootRegistryName + "." + simpleRegistryName);
-      simpleRegistry = new YoVariableRegistry(simpleRegistryName);
-      dummyRegistry = new YoVariableRegistry("dummyRegistry");
-      staticLink = new Link("simpleLink");
-      staticLinkGraphics = staticLink.getLinkGraphics();
-      graphics3DNodeType = Graphics3DNodeType.GROUND;
-      simpleExternalForcePoint = new ExternalForcePoint("simpleExternalForcePoint", dummyRegistry);
-      yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject", simpleExternalForcePoint.getYoPosition(), simpleExternalForcePoint.getYoForce(),
-                                      1.0 / 50.0);
-      exitActionListenerHasBeenNotified = new YoBoolean("exitActionListenerHasBeenNotified", dummyRegistry);
-      simulationRewoundListenerHasBeenNotified = new YoBoolean("simulationRewoundListenerHasBeenNotified", dummyRegistry);
-      simulationDoneListenerHasBeenNotified = new YoBoolean("simulationDoneListenerHasBeenNotified", dummyRegistry);
-      setSimulationDoneCriterion = new YoBoolean("setSimulationDoneCriterion", dummyRegistry);
-      extraPanelConfiguration = createExtraPanelConfigurationWithPanel(extraPanelConfigurationName);
-      cameraConfiguration = createCameraConfiguration(cameraConfigurationName);
-      viewportConfiguration = createViewportConfiguration(viewportConfigurationName);
-      viewportConfiguration.addCameraView("Back View", 0, 0, 1, 1);
+      Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () -> {
+         simpleRegistryNameSpace = new NameSpace(rootRegistryName + "." + simpleRegistryName);
+         simpleRegistry = new YoVariableRegistry(simpleRegistryName);
+         dummyRegistry = new YoVariableRegistry("dummyRegistry");
+         staticLink = new Link("simpleLink");
+         staticLinkGraphics = staticLink.getLinkGraphics();
+         graphics3DNodeType = Graphics3DNodeType.GROUND;
+         simpleExternalForcePoint = new ExternalForcePoint("simpleExternalForcePoint", dummyRegistry);
+         yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject", simpleExternalForcePoint.getYoPosition(), simpleExternalForcePoint.getYoForce(), 1.0 / 50.0);
+         exitActionListenerHasBeenNotified = new YoBoolean("exitActionListenerHasBeenNotified", dummyRegistry);
+         simulationRewoundListenerHasBeenNotified = new YoBoolean("simulationRewoundListenerHasBeenNotified", dummyRegistry);
+         simulationDoneListenerHasBeenNotified = new YoBoolean("simulationDoneListenerHasBeenNotified", dummyRegistry);
+         setSimulationDoneCriterion = new YoBoolean("setSimulationDoneCriterion", dummyRegistry);
+         extraPanelConfiguration = createExtraPanelConfigurationWithPanel(extraPanelConfigurationName);
+         cameraConfiguration = createCameraConfiguration(cameraConfigurationName);
+         viewportConfiguration = createViewportConfiguration(viewportConfigurationName);
+         viewportConfiguration.addCameraView("Back View", 0, 0, 1, 1);
 
-      graphConfigurations = createGraphConfigurations(graphConfigurationNames);
-      realTimeRateInSCS = new YoDouble("realTimeRate", dummyRegistry);
-      processDataHasBeenCalled = new YoBoolean("processDataHasBeenCalled", dummyRegistry);
-      toggleKeyPointModeCommandListenerHasBeenCalled = new YoBoolean("toggleKeyPointModeCommandListenerHasBeenCalled", dummyRegistry);
-      yoGraphicsListRegistry = createYoGraphicsListRegistryWithObject();
-      yoGraphicMenuManager = new YoGraphicMenuManager();
+         graphConfigurations = createGraphConfigurations(graphConfigurationNames);
+         realTimeRateInSCS = new YoDouble("realTimeRate", dummyRegistry);
+         processDataHasBeenCalled = new YoBoolean("processDataHasBeenCalled", dummyRegistry);
+         toggleKeyPointModeCommandListenerHasBeenCalled = new YoBoolean("toggleKeyPointModeCommandListenerHasBeenCalled", dummyRegistry);
+         yoGraphicsListRegistry = createYoGraphicsListRegistryWithObject();
+         yoGraphicMenuManager = new YoGraphicMenuManager();
 
-      scs = new SimulationConstructionSet(simpleRobot, parameters);
-      simpleScsPhysics = createScsPhysics();
-      //      scs.setFrameMaximized();
-      scs.startOnAThread();
+         scs = new SimulationConstructionSet(simpleRobot, parameters);
+         simpleScsPhysics = createScsPhysics();
+         //      scs.setFrameMaximized();
+         scs.startOnAThread();
+      });
    }
 
    @AfterEach
@@ -412,55 +418,58 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @Test// timeout = 64000
    public void testFrameMethods()
    {
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
+      Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () ->
+      {
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
 
-      scs.createNewGraphWindow();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      GraphArrayWindow graphArrayWindowFromSCS = scs.getGraphArrayWindow("Unnamed");
-      assertNotNull(graphArrayWindowFromSCS);
+         scs.createNewGraphWindow();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         GraphArrayWindow graphArrayWindowFromSCS = scs.getGraphArrayWindow("Unnamed");
+         assertNotNull(graphArrayWindowFromSCS);
 
-      scs.createNewGraphWindow("simpleGraphArrayWindow");
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      GraphArrayWindow graphArrayWindowFromSCS2 = scs.getGraphArrayWindow("simpleGraphArrayWindow");
-      assertNotNull(graphArrayWindowFromSCS2);
+         scs.createNewGraphWindow("simpleGraphArrayWindow");
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         GraphArrayWindow graphArrayWindowFromSCS2 = scs.getGraphArrayWindow("simpleGraphArrayWindow");
+         assertNotNull(graphArrayWindowFromSCS2);
 
-      scs.createNewGraphWindow("simpleGraphArrayWindow2", 0, false);
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      GraphArrayWindow graphArrayWindowFromSCS3 = scs.getGraphArrayWindow("simpleGraphArrayWindow2");
-      assertNotNull(graphArrayWindowFromSCS3);
+         scs.createNewGraphWindow("simpleGraphArrayWindow2", 0, false);
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         GraphArrayWindow graphArrayWindowFromSCS3 = scs.getGraphArrayWindow("simpleGraphArrayWindow2");
+         assertNotNull(graphArrayWindowFromSCS3);
 
-      scs.createNewViewportWindow();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      ViewportWindow viewportWindowFromSCS = scs.getViewportWindow("Unnamed");
-      assertNotNull(viewportWindowFromSCS);
+         scs.createNewViewportWindow();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         ViewportWindow viewportWindowFromSCS = scs.getViewportWindow("Unnamed");
+         assertNotNull(viewportWindowFromSCS);
 
-      scs.createNewViewportWindow("simpleViewportWindow");
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      ViewportWindow viewportWindowFromSCS2 = scs.getViewportWindow("simpleViewportWindow");
-      assertNotNull(viewportWindowFromSCS2);
+         scs.createNewViewportWindow("simpleViewportWindow");
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         ViewportWindow viewportWindowFromSCS2 = scs.getViewportWindow("simpleViewportWindow");
+         assertNotNull(viewportWindowFromSCS2);
 
-      scs.createNewViewportWindow("simpleViewportWindow", 0, false);
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      ViewportWindow viewportWindowFromSCS3 = scs.getViewportWindow("simpleViewportWindow");
-      assertNotNull(viewportWindowFromSCS3);
+         scs.createNewViewportWindow("simpleViewportWindow", 0, false);
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         ViewportWindow viewportWindowFromSCS3 = scs.getViewportWindow("simpleViewportWindow");
+         assertNotNull(viewportWindowFromSCS3);
 
-      scs.showViewport();
-      scs.hideViewport();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      boolean isViewportHidden = scs.isViewportHidden();
-      assertTrue(isViewportHidden);
+         scs.showViewport();
+         scs.hideViewport();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         boolean isViewportHidden = scs.isViewportHidden();
+         assertTrue(isViewportHidden);
 
-      scs.hideViewport();
-      scs.showViewport();
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      boolean isViewportHidden2 = scs.isViewportHidden();
-      assertFalse(isViewportHidden2);
+         scs.hideViewport();
+         scs.showViewport();
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         boolean isViewportHidden2 = scs.isViewportHidden();
+         assertFalse(isViewportHidden2);
 
-      Component component = new Button();
-      scs.addExtraJpanel(component, simpleComponentName, false);
-      ThreadTools.sleep(THREAD_SLEEP_TIME);
-      Component componentFromSCS = scs.getExtraPanel(simpleComponentName);
-      assertEquals(component, componentFromSCS);
+         Component component = new Button();
+         scs.addExtraJpanel(component, simpleComponentName, false);
+         ThreadTools.sleep(THREAD_SLEEP_TIME);
+         Component componentFromSCS = scs.getExtraPanel(simpleComponentName);
+         assertEquals(component, componentFromSCS);
+      });
    }
 
    @Test// timeout = 30000

@@ -12,7 +12,7 @@ public class SimulationConstructionSetSetupTest
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
    private static final int pauseTimeForGUIs = 5000;
 
-	@Test// timeout = 30000
+	@Test
    public void testSplashScreen() throws Exception
     {
       SwingUtilities.invokeAndWait(new Runnable()
@@ -29,7 +29,7 @@ public class SimulationConstructionSetSetupTest
       });
    }
 
-	@Test// timeout = 30000
+	@Test
    public void testSimulationConstructionSetWithoutARobot()
    {
       SimulationConstructionSet scs = new SimulationConstructionSet(parameters);
@@ -40,7 +40,7 @@ public class SimulationConstructionSetSetupTest
       scs.closeAndDispose();
    }
 
-	@Test// timeout = 30000
+	@Test
    public void testSimulationConstructionSetWithARobot()
    {
       Robot robot = new Robot("NullRobot");
