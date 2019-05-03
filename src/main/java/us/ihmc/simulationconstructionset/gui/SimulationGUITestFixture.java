@@ -35,7 +35,10 @@ public class SimulationGUITestFixture
 
    public SimulationGUITestFixture(final SimulationConstructionSet scs)
    {
-      FailOnThreadViolationRepaintManager.install();
+      if (System.getProperty("java.vendor").toLowerCase().contains("oracle"))
+      {
+         FailOnThreadViolationRepaintManager.install();  // does not work on OpenJDK
+      }
 
       JFrame frame = GuiActionRunner.execute(new GuiQuery<JFrame>()
       {
@@ -812,5 +815,28 @@ public class SimulationGUITestFixture
       }
    }
 
+   public static boolean isRunningOnContinuousIntegrationServer()
+   {
+      String property = System.getProperty("runningOnCIServer");
+      String environmentVariable = System.getenv("RUNNING_ON_CONTINUOUS_INTEGRATION_SERVER");
 
+      if (property != null && property.trim().toLowerCase().contains("true"))
+      {
+         return true;
+      }
+      else if (environmentVariable != null && environmentVariable.trim().toLowerCase().contains("true"))
+      {
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   }
+
+   public static void main(String[] args)
+   {
+      System.out.println(System.getProperty("java.vendor"));
+      System.out.println(System.getProperty("java.vendor.url"));
+   }
 }

@@ -166,7 +166,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @BeforeAll
    public static void setUpOnce()
    {
-      if (!ContinuousIntegrationTools.isRunningOnContinuousIntegrationServer())
+      if (System.getProperty("java.vendor").toLowerCase().contains("oracle"))
       {
          FailOnThreadViolationRepaintManager.install();  // does not work on OpenJDK
       }
