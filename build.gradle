@@ -49,7 +49,7 @@ mainDependencies {
             exclude group: "org.easytesting", module: "fest"
          }
    compile group: "us.ihmc.thirdparty.jinput", name: "jinput", version: "190214"
-   compile group: "us.ihmc", name: "ihmc-yovariables", version: "0.3.10"
+   compile group: "us.ihmc", name: "ihmc-yovariables", version: "0.3.11"
    compile group: "us.ihmc", name: "ihmc-video-codecs", version: "2.1.5"
    compile group: "us.ihmc", name: "euclid", version: "0.12.0"
    compile group: "us.ihmc", name: "ihmc-commons", version: "0.26.3"
@@ -69,7 +69,7 @@ testDependencies {
 
 utilitiesDependencies {
    compile group: "us.ihmc", name: "euclid", version: "0.12.0"
-   compile group: "us.ihmc", name: "ihmc-yovariables", version: "0.3.10"
+   compile group: "us.ihmc", name: "ihmc-yovariables", version: "0.3.11"
 }
 
 //distributions {
