@@ -2,9 +2,9 @@ package us.ihmc.simulationconstructionset.util.ground;
 
 import java.util.Arrays;
 
+import us.ihmc.commons.MathTools;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.commons.MathTools;
 
 public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
 {

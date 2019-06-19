@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics;
 
-import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
 import us.ihmc.simulationconstructionset.Link;
@@ -30,7 +30,7 @@ public interface CollisionShapeFactory
     * @param radiusZ Radius of box along z-axis
     * @return Description of the shape.
     */
-   CollisionShapeDescription<?> createSimpleCollisionShape(Shape3D<?> shape3D);
+   CollisionShapeDescription<?> createSimpleCollisionShape(Shape3DReadOnly shape3D);
 
    CollisionShapeDescription<?> createBox(double radiusX, double radiusY, double radiusZ);
 

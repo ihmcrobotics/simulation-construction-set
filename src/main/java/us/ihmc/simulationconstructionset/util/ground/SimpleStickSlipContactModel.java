@@ -4,11 +4,11 @@ package us.ihmc.simulationconstructionset.util.ground;
 import java.util.ArrayList;
 
 import us.ihmc.euclid.tuple3D.Point3D;
+import us.ihmc.simulationconstructionset.ExternalForcePoint;
+import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoInteger;
-import us.ihmc.simulationconstructionset.ExternalForcePoint;
-import us.ihmc.simulationconstructionset.GroundContactPoint;
 
 public class SimpleStickSlipContactModel
 {

@@ -1,78 +1,48 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.shape.Cylinder3D;
+import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
+import us.ihmc.euclid.shape.primitives.Cylinder3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
-import us.ihmc.euclid.tuple2D.Vector2D;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
-import us.ihmc.geometry.polytope.CylinderSupportingVertexHolder;
-import us.ihmc.geometry.polytope.SupportingVertexHolder;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
 
 public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> implements CollisionShapeDescription<T>
 {
-   private final CylinderSupportingVertexHolder supportingVertexHolder;
-   private double radius;
-   private double height;
    private double smoothingRadius = 0.0;
-
-   private final RigidBodyTransform transform = new RigidBodyTransform();
-
-   private final BoundingBox3D boundingBox = new BoundingBox3D(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-   private boolean boundingBoxNeedsUpdating = true;
 
    private final Cylinder3D cylinder3d;
 
    public CylinderShapeDescription(double radius, double height)
    {
-      supportingVertexHolder = new CylinderSupportingVertexHolder(radius, height);
-
-      this.radius = radius;
-      this.height = height;
-
       cylinder3d = new Cylinder3D(height, radius);
-
-      boundingBoxNeedsUpdating = true;
    }
 
    public double getRadius()
    {
-      return radius;
+      return cylinder3d.getRadius();
    }
 
    public double getHeight()
    {
-      return height;
+      return cylinder3d.getLength();
    }
 
-   public void getTransform(RigidBodyTransform transformToPack)
+   public void set(CylinderShapeDescription<T> other)
    {
-      transformToPack.set(transform);
+      smoothingRadius = other.smoothingRadius;
+      cylinder3d.set(other.cylinder3d);
    }
 
    @Override
    public CylinderShapeDescription<T> copy()
    {
-      CylinderShapeDescription<T> copy = new CylinderShapeDescription<T>(radius, height);
-      copy.smoothingRadius = this.smoothingRadius;
-      copy.setTransform(this.transform);
+      CylinderShapeDescription<T> copy = new CylinderShapeDescription<T>(cylinder3d.getRadius(), cylinder3d.getLength());
+      copy.set(copy);
       return copy;
-   }
-
-   public void setTransform(RigidBodyTransform transform)
-   {
-      this.transform.set(transform);
-      setSupportingVertexAndCylinder3dTransformFromThisAndConsistencyTransform();
-   }
-
-   private void setSupportingVertexAndCylinder3dTransformFromThisAndConsistencyTransform()
-   {
-      supportingVertexHolder.setTransform(transform);
-      this.cylinder3d.setPose(this.transform);
-      boundingBoxNeedsUpdating = true;
    }
 
    public double getSmoothingRadius()
@@ -83,24 +53,18 @@ public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> imp
    @Override
    public void applyTransform(RigidBodyTransform transformToWorld)
    {
-      transform.preMultiply(transformToWorld);
-      setSupportingVertexAndCylinder3dTransformFromThisAndConsistencyTransform();
+      cylinder3d.applyTransform(transformToWorld);
    }
 
    @Override
    public void setFrom(T cylinder)
    {
-      this.radius = cylinder.getRadius();
-      this.height = cylinder.getHeight();
-
-      cylinder.getTransform(this.transform);
-
-      setSupportingVertexAndCylinder3dTransformFromThisAndConsistencyTransform();
+      cylinder3d.set(cylinder.getSupportingVertexHolder());
    }
 
-   public SupportingVertexHolder getSupportingVertexHolder()
+   public Cylinder3D getSupportingVertexHolder()
    {
-      return supportingVertexHolder;
+      return cylinder3d;
    }
 
    public void getProjection(Point3D pointToProject, Point3D closestPointOnCylinderToPack)
@@ -112,43 +76,7 @@ public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> imp
    @Override
    public void getBoundingBox(BoundingBox3D boundingBoxToPack)
    {
-      if (boundingBoxNeedsUpdating)
-      {
-         updateBoundingBox();
-         boundingBoxNeedsUpdating = false;
-      }
-      boundingBoxToPack.set(boundingBox);
-   }
-
-   private final Vector3D supportDirectionForBoundingBox = new Vector3D();
-
-   private void updateBoundingBox()
-   {
-      supportDirectionForBoundingBox.set(1.0, 0.0, 0.0);
-      Point3D supportingVertex = supportingVertexHolder.getSupportingVertex(supportDirectionForBoundingBox);
-      double xMax = supportingVertex.getX();
-      
-      supportDirectionForBoundingBox.set(-1.0, 0.0, 0.0);
-      supportingVertex = supportingVertexHolder.getSupportingVertex(supportDirectionForBoundingBox);
-      double xMin = supportingVertex.getX();
-      
-      supportDirectionForBoundingBox.set(0.0, 1.0, 0.0);
-      supportingVertex = supportingVertexHolder.getSupportingVertex(supportDirectionForBoundingBox);
-      double yMax = supportingVertex.getY();
-      
-      supportDirectionForBoundingBox.set(0.0, -1.0, 0.0);
-      supportingVertex = supportingVertexHolder.getSupportingVertex(supportDirectionForBoundingBox);
-      double yMin = supportingVertex.getY();
-      
-      supportDirectionForBoundingBox.set(0.0, 0.0, 1.0);
-      supportingVertex = supportingVertexHolder.getSupportingVertex(supportDirectionForBoundingBox);
-      double zMax = supportingVertex.getZ();
-      
-      supportDirectionForBoundingBox.set(0.0, 0.0, -1.0);
-      supportingVertex = supportingVertexHolder.getSupportingVertex(supportDirectionForBoundingBox);
-      double zMin = supportingVertex.getZ();
-      
-      boundingBox.set(xMin, yMin, zMin, xMax, yMax, zMax);
+      boundingBoxToPack.set(cylinder3d.getBoundingBox());
    }
 
    @Override
@@ -163,8 +91,7 @@ public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> imp
       return projectToBottomOfCurvedSurface(surfaceNormal, pointToRoll);
    }
 
-   private final Point3D tempPointInWorldForProjectingToBottom = new Point3D();
-   private final Vector3D tempVectorInWorldForProjectingToBottom = new Vector3D();
+   private final Vector3D orthogonalComponent = new Vector3D();
 
    /**
     * Projects the pointToProject to the bottom of a curved surface given the surfaceNormal defining
@@ -178,35 +105,18 @@ public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> imp
     */
    public boolean projectToBottomOfCurvedSurface(Vector3DReadOnly surfaceNormal, Point3DBasics pointToProject)
    {
-      //TODO: Should this method be in Shape3d, or not even be here at all? Not sure...
-      tempPointInWorldForProjectingToBottom.set(pointToProject);
-      tempVectorInWorldForProjectingToBottom.set(surfaceNormal);
-      cylinder3d.transformToLocal(tempPointInWorldForProjectingToBottom);
-      cylinder3d.transformToLocal(tempVectorInWorldForProjectingToBottom);
+      double normalDot = surfaceNormal.dot(cylinder3d.getAxis());
+      orthogonalComponent.scaleAdd(-normalDot, cylinder3d.getAxis(), surfaceNormal);
 
-      boolean wasRolling = projectToBottomOfCurvedSurfaceInShapeFrame(tempVectorInWorldForProjectingToBottom, tempPointInWorldForProjectingToBottom);
-      cylinder3d.transformToWorld(tempPointInWorldForProjectingToBottom);
+      boolean wasRolling = Math.abs(orthogonalComponent.getX()) >= 1e-7 || Math.abs(orthogonalComponent.getY()) >= 1e-7;
 
-      pointToProject.set(tempPointInWorldForProjectingToBottom);
+      orthogonalComponent.normalize();
+      
+      double positionAlongAxis = EuclidGeometryTools.percentageAlongLine3D(pointToProject, cylinder3d.getPosition(), cylinder3d.getAxis());
+      pointToProject.set(cylinder3d.getPosition());
+      pointToProject.scaleAdd(cylinder3d.getRadius(), orthogonalComponent, pointToProject);
+      pointToProject.scaleAdd(positionAlongAxis, cylinder3d.getAxis(), pointToProject);
+
       return wasRolling;
-   }
-
-   private final Vector2D tempVectorInShapeFrameForProjectingToBottom = new Vector2D();
-
-   private boolean projectToBottomOfCurvedSurfaceInShapeFrame(Vector3DReadOnly normalInShapeFrame, Point3DBasics pointToRollInShapeFrame)
-   {
-      double x = normalInShapeFrame.getX();
-      double y = normalInShapeFrame.getY();
-
-      if (Math.abs(x) < 1e-7 && Math.abs(y) < 1e-7)
-         return false;
-
-      tempVectorInShapeFrameForProjectingToBottom.set(x, normalInShapeFrame.getY());
-      tempVectorInShapeFrameForProjectingToBottom.normalize();
-      tempVectorInShapeFrameForProjectingToBottom.scale(radius);
-
-      pointToRollInShapeFrame.set(tempVectorInShapeFrameForProjectingToBottom.getX(), tempVectorInShapeFrameForProjectingToBottom.getY(),
-                                  pointToRollInShapeFrame.getZ());
-      return true;
    }
 }

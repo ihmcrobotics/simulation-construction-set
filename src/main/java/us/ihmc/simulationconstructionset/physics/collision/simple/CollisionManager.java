@@ -3,8 +3,7 @@ package us.ihmc.simulationconstructionset.physics.collision.simple;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.shape.Shape3D;
-import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
 import us.ihmc.simulationconstructionset.Joint;
@@ -80,16 +79,13 @@ public class CollisionManager
 
       if (environmentObject != null)
       {
-         List<? extends Shape3D<?>> simpleShapes = environmentObject.getTerrainCollisionShapes();
+         List<? extends Shape3DReadOnly> simpleShapes = environmentObject.getTerrainCollisionShapes();
          CollisionShapeFactory shapeFactory = getCollisionDetector().getShapeFactory();
 
          for (int i = 0; i < simpleShapes.size(); i++)
          {
             CollisionShapeDescription<?> collisionShapeDescription = shapeFactory.createSimpleCollisionShape(simpleShapes.get(i));
-
-            RigidBodyTransform transform = new RigidBodyTransform();
-            simpleShapes.get(i).getPose(transform);
-            shapeFactory.addShape(environmentStaticLink, transform, collisionShapeDescription, true, 0xFFFF, 0xFFFF);
+            shapeFactory.addShape(environmentStaticLink, null, collisionShapeDescription, true, 0xFFFF, 0xFFFF);
          }
       }
 
