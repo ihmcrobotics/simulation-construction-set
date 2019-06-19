@@ -6,12 +6,13 @@ import java.util.List;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.geometry.Line3D;
-import us.ihmc.euclid.shape.Box3D;
-import us.ihmc.euclid.shape.Cylinder3D;
-import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.primitives.Box3D;
+import us.ihmc.euclid.shape.primitives.Cylinder3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -28,7 +29,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    private final Point3D tempPoint = new Point3D();
    private final Vector3D zVector = new Vector3D(0.0, 0.0, -1.0);
    
-   private final ArrayList<Shape3D<?>> terrainCollisionShapes = new ArrayList<>();
+   private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
    // TODO: change box based surface equations to cylinder surface equations
 
@@ -37,14 +38,15 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
       this.height = height;
       this.radius = radius;
       this.location = location;
-      cylinder = new Cylinder3D(location, height, radius);
+      cylinder = new Cylinder3D(height, radius);
+      cylinder.applyTransform(location);
 
       Box3D box = new Box3D(location, radius * 2, radius * 2, height);
-      Point3D[] vertices = box.getVertices();
+      Point3DBasics[] vertices = box.getVertices();
       Point3D minPoint = new Point3D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
       Point3D maxPoint = new Point3D(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
 
-      for (Point3D cornerPoint : vertices)
+      for (Point3DBasics cornerPoint : vertices)
       {
          for (int i = 0; i < 3; i++)
          {
@@ -60,7 +62,8 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
 
       addGraphics(appearance);
       
-      Cylinder3D cylinderShape = new Cylinder3D(location, height, radius);
+      Cylinder3D cylinderShape = new Cylinder3D(height, radius);
+      cylinderShape.applyTransform(location);
       
       this.terrainCollisionShapes.add(cylinderShape);
    }
@@ -157,7 +160,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    public Vector3D getAxisDirectionCopy()
    {
       Vector3D axisDirection = new Vector3D();
-      location.getRotationMatrix().getColumn(Axis.Z.ordinal(), axisDirection);
+      location.getRotation().getColumn(Axis.Z.ordinal(), axisDirection);
       return axisDirection;
    }
 
@@ -187,31 +190,32 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
       return boundingBox.isXYInsideInclusive(x, y);
    }
 
+   private final Point3D ignoreIntesectionPoint = new Point3D();
+   private final Vector3D ignoreNormal = new Vector3D();
+
    public void closestIntersectionTo(double x, double y, double z, Point3D intersectionToPack)
    {
       tempPoint.set(x, y, z);
-      cylinder.checkIfInside(tempPoint, intersectionToPack, null);
+      cylinder.evaluatePoint3DCollision(tempPoint, intersectionToPack, ignoreNormal);
    }
-
-   private final Point3D ignoreIntesectionPoint = new Point3D();
 
    public void surfaceNormalAt(double x, double y, double z, Vector3D normalToPack)
    {
       tempPoint.set(x, y, z);
-      cylinder.checkIfInside(tempPoint, ignoreIntesectionPoint, normalToPack);
+      cylinder.evaluatePoint3DCollision(tempPoint, ignoreIntesectionPoint, normalToPack);
    }
 
    public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
    {
       tempPoint.set(x, y, z);
-      cylinder.checkIfInside(tempPoint, intersectionToPack, normalToPack);
+      cylinder.evaluatePoint3DCollision(tempPoint, intersectionToPack, normalToPack);
    }
 
    @Override
    public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
    {
       tempPoint.set(x, y, z);
-      return cylinder.checkIfInside(tempPoint, intersectionToPack, normalToPack);
+      return cylinder.evaluatePoint3DCollision(tempPoint, intersectionToPack, normalToPack);
    }
 
    @Override
@@ -221,7 +225,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    }
    
    @Override
-   public List<Shape3D<?>> getTerrainCollisionShapes()
+   public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {
       return terrainCollisionShapes;
    }

@@ -1,20 +1,18 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
+import us.ihmc.euclid.shape.convexPolytope.ConvexPolytope3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.geometry.polytope.ConvexPolytope;
-import us.ihmc.geometry.polytope.GilbertJohnsonKeerthiCollisionDetector;
-import us.ihmc.geometry.polytope.SupportingVertexHolder;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
 
 public class PolytopeShapeDescription<T extends PolytopeShapeDescription<T>> implements CollisionShapeDescription<T>
 {
-   private final ConvexPolytope polytope;
+   private final ConvexPolytope3D polytope;
    private double smoothingRadius = 0.0;
 
-   public PolytopeShapeDescription(ConvexPolytope polytope)
+   public PolytopeShapeDescription(ConvexPolytope3D polytope)
    {
       this.polytope = polytope;
    }
@@ -22,13 +20,13 @@ public class PolytopeShapeDescription<T extends PolytopeShapeDescription<T>> imp
    @Override
    public PolytopeShapeDescription<T> copy()
    {
-      ConvexPolytope polytopeCopy = new ConvexPolytope(polytope);
+      ConvexPolytope3D polytopeCopy = new ConvexPolytope3D(polytope);
       PolytopeShapeDescription<T> copy = new PolytopeShapeDescription<T>(polytopeCopy);
       copy.setSmoothingRadius(smoothingRadius);
       return copy;
    }
 
-   public ConvexPolytope getPolytope()
+   public ConvexPolytope3D getPolytope()
    {
       return polytope;
    }
@@ -36,7 +34,7 @@ public class PolytopeShapeDescription<T extends PolytopeShapeDescription<T>> imp
    @Override
    public void setFrom(T polytopeShapeDescription)
    {
-      this.polytope.copyVerticesFrom(polytopeShapeDescription.getPolytope());
+      this.polytope.set(polytopeShapeDescription.getPolytope());
    }
 
    @Override
@@ -61,24 +59,10 @@ public class PolytopeShapeDescription<T extends PolytopeShapeDescription<T>> imp
       polytope.getBoundingBox(boundingBoxToPack);
    }
 
-   private static final GilbertJohnsonKeerthiCollisionDetector detectorForCheckingPointInside = new GilbertJohnsonKeerthiCollisionDetector();
-   private static final Point3D tempPointA = new Point3D();
-   private static final Point3D tempPointB = new Point3D();
-   
    @Override
    public boolean isPointInside(Point3D pointInWorld)
-   {      
-      //TODO: Reduce garbage generation here.
-      SupportingVertexHolder polytopeA = new SupportingVertexHolder()
-      {
-         @Override
-         public Point3D getSupportingVertex(Vector3D supportDirection)
-         {
-            return pointInWorld;
-         }
-      };
- 
-      return detectorForCheckingPointInside.arePolytopesColliding(polytopeA, this.polytope, tempPointA, tempPointB);
+   {
+      return polytope.isPointInside(pointInWorld);
    }
 
    @Override

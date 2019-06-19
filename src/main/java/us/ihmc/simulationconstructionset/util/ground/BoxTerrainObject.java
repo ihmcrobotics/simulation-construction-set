@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.shape.Box3D;
-import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.primitives.Box3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
@@ -18,7 +18,7 @@ public class BoxTerrainObject implements TerrainObject3D, HeightMapWithNormals
 {
    private final BoundingBox3D boundingBox;
    private Graphics3DObject linkGraphics;
-   private final ArrayList<Shape3D<?>> terrainCollisionShapes = new ArrayList<>();
+   private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
    public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd, AppearanceDefinition appearance)
    {
@@ -43,7 +43,7 @@ public class BoxTerrainObject implements TerrainObject3D, HeightMapWithNormals
      linkGraphics.addCube(Math.abs(xEnd-xStart), Math.abs(yEnd-yStart), zMax-zMin, appearance);
      
      Box3D boxShape = new Box3D(Math.abs(xStart - xEnd), Math.abs(yStart - yEnd), Math.abs(zStart - zEnd));
-     boxShape.appendTranslation((xStart+xEnd)/2.0, (yStart+yEnd)/2.0, (zStart+zEnd)/2.0);
+     boxShape.getPose().setTranslation((xStart+xEnd)/2.0, (yStart+yEnd)/2.0, (zStart+zEnd)/2.0);
      
      this.terrainCollisionShapes.add(boxShape);
  }
@@ -192,7 +192,7 @@ public double heightAt(double x, double y, double z)
    }
 
    @Override
-   public List<Shape3D<?>> getTerrainCollisionShapes()
+   public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {
       return terrainCollisionShapes;
    }

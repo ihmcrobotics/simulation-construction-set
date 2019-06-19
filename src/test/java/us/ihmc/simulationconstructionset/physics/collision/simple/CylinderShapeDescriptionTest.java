@@ -1,13 +1,14 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
+import static us.ihmc.robotics.Assert.*;
+
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.commons.MutationTestFacilitator;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
-
-import static us.ihmc.robotics.Assert.*;
 
 public class CylinderShapeDescriptionTest
 {
@@ -21,10 +22,6 @@ public class CylinderShapeDescriptionTest
       assertEquals(radius, cylinder.getRadius(), 1e-10);
       assertEquals(height, cylinder.getHeight(), 1e-10);
       assertEquals(0.0, cylinder.getSmoothingRadius(), 1e-10);
-
-      RigidBodyTransform transformCheck = new RigidBodyTransform();
-      cylinder.getTransform(transformCheck);
-      assertTrue(transformCheck.epsilonEquals(new RigidBodyTransform(), 1e-10));
 
       Point3D pointToProject = new Point3D(0.0, 0.0, 100.0);
       Point3D closestPointOnCylinder = new Point3D();
@@ -58,11 +55,7 @@ public class CylinderShapeDescriptionTest
 
       double angle = Math.PI / 7.0;
       transform.appendPitchRotation(angle);
-      cylinder.setTransform(transform);
-
-      RigidBodyTransform transformCheck = new RigidBodyTransform(transform);
-      cylinder.getTransform(transformCheck);
-      assertTrue(transformCheck.epsilonEquals(transform, 1e-10));
+      cylinder.applyTransform(transform);
 
       Point3D expectedPoint = new Point3D(-radius, 0.0, height / 2.0);
       transform.transform(expectedPoint);

@@ -5,13 +5,14 @@ import java.util.Random;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.geometry.LineSegment3D;
+import us.ihmc.euclid.shape.collision.EuclidShape3DCollisionResult;
+import us.ihmc.euclid.shape.collision.epa.ExpandingPolytopeAlgorithm;
+import us.ihmc.euclid.shape.collision.gjk.GilbertJohnsonKeerthiCollisionDetector;
+import us.ihmc.euclid.shape.collision.interfaces.SupportingVertexHolder;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
-import us.ihmc.geometry.polytope.ExpandingPolytopeAlgorithm;
-import us.ihmc.geometry.polytope.GilbertJohnsonKeerthiCollisionDetector;
-import us.ihmc.geometry.polytope.SimplexPolytope;
-import us.ihmc.geometry.polytope.SupportingVertexHolder;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.CollisionShape;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
@@ -427,8 +428,7 @@ public class SimpleCollisionDetector implements ScsCollisionDetector
    }
 
    private final GilbertJohnsonKeerthiCollisionDetector gjkCollisionDetector = new GilbertJohnsonKeerthiCollisionDetector();
-   private double epsilonRelative = 1e-4;
-   private final ExpandingPolytopeAlgorithm expandingPolytopeAlgorithm = new ExpandingPolytopeAlgorithm(epsilonRelative);
+   private final ExpandingPolytopeAlgorithm expandingPolytopeAlgorithm = new ExpandingPolytopeAlgorithm();
    private final Point3D pointOnAToPack = new Point3D();
    private final Point3D pointOnBToPack = new Point3D();
 
@@ -445,9 +445,10 @@ public class SimpleCollisionDetector implements ScsCollisionDetector
       SupportingVertexHolder sphereAsSupportingVertexHolder = new SupportingVertexHolder()
       {
          @Override
-         public Point3D getSupportingVertex(Vector3D supportDirection)
+         public boolean getSupportingVertex(Vector3DReadOnly supportDirection, Point3DBasics supportingVertexToPack)
          {
-            return centerOfSphere;
+            supportingVertexToPack.set(centerOfSphere);
+            return true;
          }
       };
 
@@ -479,7 +480,7 @@ public class SimpleCollisionDetector implements ScsCollisionDetector
       SupportingVertexHolder capsuleAsSupportingVertexHolder = new SupportingVertexHolder()
       {
          @Override
-         public Point3D getSupportingVertex(Vector3D supportDirection)
+         public boolean getSupportingVertex(Vector3DReadOnly supportDirection, Point3DBasics supportingVertexToPack)
          {
             tempSegmentPointVector.set(tempSegmentPointOne);
             double dotOne = tempSegmentPointVector.dot(supportDirection);
@@ -488,9 +489,10 @@ public class SimpleCollisionDetector implements ScsCollisionDetector
             double dotTwo = tempSegmentPointVector.dot(supportDirection);
 
             if (dotOne > dotTwo)
-               return new Point3D(tempSegmentPointOne);
+               supportingVertexToPack.set(tempSegmentPointOne);
             else
-               return new Point3D(tempSegmentPointTwo);
+               supportingVertexToPack.set(tempSegmentPointTwo);
+            return true;
          }
       };
 
@@ -501,10 +503,13 @@ public class SimpleCollisionDetector implements ScsCollisionDetector
    private boolean doPolytopePolytopeCollisionDetection(CollisionShape objectOne, SupportingVertexHolder supportingVertexHolderOne, double radiusOne,
          CollisionShape objectTwo, SupportingVertexHolder supportingVertexHolderTwo, double radiusTwo, CollisionDetectionResult result)
    {
-      boolean areColliding = gjkCollisionDetector.arePolytopesColliding(supportingVertexHolderOne, supportingVertexHolderTwo, pointOnAToPack, pointOnBToPack);
+      EuclidShape3DCollisionResult collisionResult = gjkCollisionDetector.evaluateCollision(supportingVertexHolderOne, supportingVertexHolderTwo);
+      boolean areColliding = collisionResult.areShapesColliding();
 
       if (!areColliding)
       {
+         pointOnAToPack.set(collisionResult.getPointOnA());
+         pointOnBToPack.set(collisionResult.getPointOnB());
          double separationDistanceForContact = radiusOne + radiusTwo;
 
          double distanceSquared = pointOnAToPack.distanceSquared(pointOnBToPack);
@@ -538,171 +543,31 @@ public class SimpleCollisionDetector implements ScsCollisionDetector
       }
       else
       {
-//                 System.out.println("Colliding!");
-         //TODO: Deal with collision of the sharp objects...
-         // Need to first compute the intersecting regions...
+            expandingPolytopeAlgorithm.evaluateCollision(supportingVertexHolderOne, supportingVertexHolderTwo, gjkCollisionDetector.getSimplex().getVertices(), collisionResult);
+            pointOnAToPack.set(collisionResult.getPointOnA());
+            pointOnBToPack.set(collisionResult.getPointOnB());
 
-         SimplexPolytope simplex = gjkCollisionDetector.getSimplex();
-
-         if (simplex.getNumberOfPoints() == 1)
-         {
-            // Point at the origin. Likely exact point to point contact, so we can just ignore till a little more penetration.
-            return false;
-         }
-         
-         if (simplex.getNumberOfPoints() == 2)
-         {
-            // For now just try adding vertices in a few directions until you do have 4 vertices to start EPA with...
-            // Try the direction perpendicular to the line segment:
-            Point3D vertexOne = simplex.getPoint(0);
-            Point3D vertexTwo = simplex.getPoint(1);
-            
-            Vector3D directionVector = new Vector3D();
-            
-            getNormalToLineSegment(vertexOne, vertexTwo, directionVector);
-            tryAddingASimplexPointInThisSupportDirection(directionVector, supportingVertexHolderOne, supportingVertexHolderTwo, simplex);
-         }
-         
-         if (simplex.getNumberOfPoints() == 3)
-         {  
-            // For now just try adding vertices in a few directions until you do have 4 vertices to start EPA with...
-            // Try the direction perpendicular to the surface:
-            Point3D vertexOne = simplex.getPoint(0);
-            Point3D vertexTwo = simplex.getPoint(1);
-            Point3D vertexThree = simplex.getPoint(2);
-            
-            Vector3D directionVector = new Vector3D();
-            
-            getNormalToFace(vertexOne, vertexTwo, vertexThree, directionVector);
-            tryAddingASimplexPointInThisSupportDirection(directionVector, supportingVertexHolderOne, supportingVertexHolderTwo, simplex);
-
-            if ((simplex.getNumberOfPoints() == 4) && (computeTripleProduct(simplex) < 1e-10))
-            {
+            if (!collisionResult.areShapesColliding())
                return false;
-            }
-         }
-         
-         if (simplex.getNumberOfPoints() != 4)
-          {
-//             System.err.println("\n-------------------\nTroublesome Polytopes!: ");
-//             System.err.println("simplex = ");
-//             System.err.println(simplex);
-//             System.err.println("polytopeOneCopy = ");
-//             System.err.println(supportingVertexHolderOne);
-//             System.err.println("polytopeTwoCopy = ");
-//             System.err.println(supportingVertexHolderTwo);
-             return false;
-          }
-            
-            
-//         if (simplex.getNumberOfPoints() == 4)
-         {
-            expandingPolytopeAlgorithm.setPolytopes(simplex, supportingVertexHolderOne, supportingVertexHolderTwo);
-            try
-            {
-               //TODO: Reduce trash here...
-               Vector3D collisionNormal = new Vector3D();
-               expandingPolytopeAlgorithm.computeExpandedPolytope(collisionNormal, pointOnAToPack, pointOnBToPack);
 
-               //TODO: Magic number for normalize
-               if (collisionNormal.lengthSquared() > 1e-6)
-               {
-                  collisionNormal.normalize();
-                  SimpleContactWrapper contacts = new SimpleContactWrapper(objectOne, objectTwo);
+            //TODO: Reduce trash here...
+            Vector3D collisionNormal = new Vector3D(expandingPolytopeAlgorithm.getClosestFace().getClosestPointToOrigin());
 
-                  double distanceToReport = -pointOnAToPack.distance(pointOnBToPack); //TODO: Do we even need this?
-                  contacts.addContact(new Point3D(pointOnAToPack), new Point3D(pointOnBToPack), collisionNormal, distanceToReport);
-                  result.addContact(contacts);
-               }
-            }
-            catch (RuntimeException e)
+            //TODO: Magic number for normalize
+            if (collisionNormal.lengthSquared() > 1e-6)
             {
-//               System.err.println("\n-------------------\nTroublesome Polytopes!: ");
-//               System.err.println("simplex = ");
-//               System.err.println(simplex);
-//               System.err.println("polytopeOneCopy = ");
-//               System.err.println(supportingVertexHolderOne);
-//               System.err.println("polytopeTwoCopy = ");
-//               System.err.println(supportingVertexHolderTwo);
+               collisionNormal.normalize();
+               SimpleContactWrapper contacts = new SimpleContactWrapper(objectOne, objectTwo);
+
+               double distanceToReport = -pointOnAToPack.distance(pointOnBToPack); //TODO: Do we even need this?
+               contacts.addContact(new Point3D(pointOnAToPack), new Point3D(pointOnBToPack), collisionNormal, distanceToReport);
+               result.addContact(contacts);
             }
-         }
 
          return true;
       }
 
       return false;
-   }
-   
-   private final Vector3D tempVector12 = new Vector3D();
-   private final Vector3D tempVector13 = new Vector3D();
-   private final Vector3D tempVector14 = new Vector3D();
-   private final Vector3D tempVector12Cross13 = new Vector3D();
-
-   private double computeTripleProduct(SimplexPolytope simplex)
-   {
-      Point3D pointOne = simplex.getPoint(0);
-      Point3D pointTwo = simplex.getPoint(1);
-      Point3D pointThree = simplex.getPoint(2);
-      Point3D pointFour = simplex.getPoint(3);
-
-      tempVector12.sub(pointTwo, pointOne);
-      tempVector13.sub(pointThree, pointOne);
-      tempVector14.sub(pointFour, pointOne);
-      tempVector12Cross13.cross(tempVector12, tempVector13);
-      double tripleProduct = tempVector12Cross13.dot(tempVector14);
-      
-      return tripleProduct;
-   }
-
-   private void getNormalToLineSegment(Point3D vertexOne, Point3D vertexTwo, Vector3D normalToPack)
-   {
-      Vector3D tempVector1 = new Vector3D();
-      Vector3D tempVector2 = new Vector3D();
-      
-      tempVector1.sub(vertexTwo, vertexOne);
-      
-      double xMagnitude = Math.abs(tempVector1.getX());
-      double yMagnitude = Math.abs(tempVector1.getY());
-      double zMagnitude = Math.abs(tempVector1.getZ());
-      
-      if ((xMagnitude < yMagnitude) && (xMagnitude < zMagnitude))
-      {
-         tempVector2.set(1.0, 0.0, 0.0);
-      }
-      else if (yMagnitude < zMagnitude)
-      {
-         tempVector2.set(0.0, 1.0, 0.0);
-      }
-      else 
-      {
-         tempVector2.set(0.0, 0.0, 1.0);
-      }
-      
-      normalToPack.cross(tempVector1, tempVector2);
-   }
-   
-   private void getNormalToFace(Point3D vertexOne, Point3D vertexTwo, Point3D vertexThree, Vector3D normalToPack)
-   {
-      Vector3D tempVector1 = new Vector3D();
-      Vector3D tempVector2 = new Vector3D();
-      
-      tempVector1.sub(vertexTwo, vertexOne);
-      tempVector2.sub(vertexThree, vertexOne);
-      
-      normalToPack.cross(tempVector1, tempVector2);
-   }
-
-   private boolean tryAddingASimplexPointInThisSupportDirection(Vector3D supportDirection, SupportingVertexHolder supportingVertexHolderOne, SupportingVertexHolder supportingVertexHolderTwo,
-                                                             SimplexPolytope simplex)
-   {
-      Point3D supportingVertexOne = supportingVertexHolderOne.getSupportingVertex(supportDirection);
-      supportDirection.negate();
-      Point3D supportingVertexTwo = supportingVertexHolderTwo.getSupportingVertex(supportDirection);
-      
-      Point3D simplexPointToAdd = new Point3D(supportingVertexOne);
-      simplexPointToAdd.sub(supportingVertexTwo);
-      
-      return simplex.addVertex(simplexPointToAdd, supportingVertexOne, supportingVertexTwo);
    }
 
    public void addShape(CollisionShape collisionShape)

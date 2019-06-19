@@ -3,8 +3,8 @@ package us.ihmc.simulationconstructionset.util.ground;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.shape.Box3D;
-import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.primitives.Box3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 
 public class FlatGroundTerrainObject extends FlatGroundProfile implements TerrainObject3D
@@ -14,7 +14,7 @@ public class FlatGroundTerrainObject extends FlatGroundProfile implements Terrai
    
    private final Graphics3DObject groundGraphics;
    
-   private final ArrayList<Shape3D<?>> terrainCollisionShapes = new ArrayList<>();
+   private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
    
    public FlatGroundTerrainObject()
    {
@@ -23,7 +23,7 @@ public class FlatGroundTerrainObject extends FlatGroundProfile implements Terrai
       groundGraphics.addCube(groundSize, groundSize, groundThickness);
       
       Box3D boxShape = new Box3D(groundSize, groundSize, groundThickness);
-      boxShape.appendTranslation(0.0, 0.0, -groundThickness);  
+      boxShape.getPose().setTranslation(0.0, 0.0, -groundThickness);  
       this.terrainCollisionShapes.add(boxShape);
    }
    
@@ -34,7 +34,7 @@ public class FlatGroundTerrainObject extends FlatGroundProfile implements Terrai
    }
 
    @Override
-   public List<Shape3D<?>> getTerrainCollisionShapes()
+   public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {
       return terrainCollisionShapes;
    }

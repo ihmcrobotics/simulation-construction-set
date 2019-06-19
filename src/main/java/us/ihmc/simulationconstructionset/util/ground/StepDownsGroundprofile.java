@@ -2,7 +2,6 @@ package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.simulationconstructionset.util.ground.GroundProfileFromHeightMap;
 
 
 public class StepDownsGroundprofile extends GroundProfileFromHeightMap

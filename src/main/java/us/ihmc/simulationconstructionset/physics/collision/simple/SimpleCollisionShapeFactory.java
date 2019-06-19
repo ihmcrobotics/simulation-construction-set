@@ -1,18 +1,20 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.geometry.LineSegment3D;
-import us.ihmc.euclid.geometry.interfaces.LineSegment3DReadOnly;
-import us.ihmc.euclid.shape.Box3D;
-import us.ihmc.euclid.shape.Cylinder3D;
-import us.ihmc.euclid.shape.Ramp3D;
-import us.ihmc.euclid.shape.Shape3D;
-import us.ihmc.euclid.shape.Sphere3D;
+import us.ihmc.euclid.geometry.interfaces.Vertex3DSupplier;
+import us.ihmc.euclid.shape.convexPolytope.ConvexPolytope3D;
+import us.ihmc.euclid.shape.convexPolytope.tools.EuclidPolytopeFactories;
+import us.ihmc.euclid.shape.primitives.Box3D;
+import us.ihmc.euclid.shape.primitives.Capsule3D;
+import us.ihmc.euclid.shape.primitives.Cylinder3D;
+import us.ihmc.euclid.shape.primitives.Ramp3D;
+import us.ihmc.euclid.shape.primitives.Sphere3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.geometry.polytope.ConvexPolytope;
-import us.ihmc.geometry.polytope.ConvexPolytopeConstructor;
 import us.ihmc.robotics.robotDescription.CapsuleDescriptionReadOnly;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
 import us.ihmc.robotics.robotDescription.ConvexShapeDescriptionReadOnly;
@@ -40,7 +42,7 @@ public class SimpleCollisionShapeFactory implements CollisionShapeFactory
    }
    
    @Override
-   public CollisionShapeDescription<?> createSimpleCollisionShape(Shape3D<?> shape3D)
+   public CollisionShapeDescription<?> createSimpleCollisionShape(Shape3DReadOnly shape3D)
    {
       if ((shape3D instanceof Box3D))
          return createBox(shape3D);
@@ -56,15 +58,15 @@ public class SimpleCollisionShapeFactory implements CollisionShapeFactory
       throw new IllegalArgumentException("The type of "+ shape3D.getClass() + " is not matched among the simple shape Box3D, Sphere3D, Cylinder3D, Capsule3D");      
    } 
 
-   private CollisionShapeDescription<?> createBox(Shape3D<?> shape3D)
+   private CollisionShapeDescription<?> createBox(Shape3DReadOnly shape3D)
    {
       if (!(shape3D instanceof Box3D))
          throw new IllegalArgumentException("Check Shape3D is Box3D");
       Box3D box3D = (Box3D) shape3D;
-      return createBox(0.5 * box3D.getLength(), 0.5 * box3D.getWidth(), 0.5 * box3D.getHeight());
+      return createBox(0.5 * box3D.getSizeX(), 0.5 * box3D.getSizeY(), 0.5 * box3D.getSizeZ());
    }
 
-   private CollisionShapeDescription<?> createSphere(Shape3D<?> shape3D)
+   private CollisionShapeDescription<?> createSphere(Shape3DReadOnly shape3D)
    {
       if (!(shape3D instanceof Sphere3D))
          throw new IllegalArgumentException("Check Shape3D is Sphere3D");
@@ -72,37 +74,38 @@ public class SimpleCollisionShapeFactory implements CollisionShapeFactory
       return createSphere(sphere3D.getRadius());
    }
 
-   private CollisionShapeDescription<?> createCylinder(Shape3D<?> shape3D)
+   private CollisionShapeDescription<?> createCylinder(Shape3DReadOnly shape3D)
    {
       if (!(shape3D instanceof Cylinder3D))
          throw new IllegalArgumentException("Check Shape3D is Cylinder3D");
       Cylinder3D cylinder3D = (Cylinder3D) shape3D;
-      return createCylinder(cylinder3D.getRadius(), cylinder3D.getHeight());
+      return createCylinder(cylinder3D.getRadius(), cylinder3D.getLength());
    }
 
-   private CollisionShapeDescription<?> createCapsule(Shape3D<?> shape3D)
+   private CollisionShapeDescription<?> createCapsule(Shape3DReadOnly shape3D)
    {
       if (!(shape3D instanceof Capsule3D))
          throw new IllegalArgumentException("Check Shape3D is Capsule3D");
       Capsule3D capsule3D = (Capsule3D) shape3D;
-      return createCapsule(capsule3D.getRadius(), capsule3D.getLineSegment());
+      return createCapsule(capsule3D.getRadius(), capsule3D.getLength());
    }
    
-   private CollisionShapeDescription<?> createRamp(Shape3D<?> shape3D)
+   private CollisionShapeDescription<?> createRamp(Shape3DReadOnly shape3D)
    {
       if (!(shape3D instanceof Ramp3D))
          throw new IllegalArgumentException("Check Shape3D is Ramp3D");
       Ramp3D ramp3D = (Ramp3D) shape3D;
-      ConvexPolytope polytope = ConvexPolytopeConstructor.constructRamp(ramp3D.getLength(), ramp3D.getWidth(), ramp3D.getHeight());
+      ConvexPolytope3D polytope = new ConvexPolytope3D(Vertex3DSupplier.asVertex3DSupplier(ramp3D.getVertices()));
       return new PolytopeShapeDescription<>(polytope);
    }
 
    @Override
    public CollisionShapeDescription<?> createBox(double halfLengthX, double halfWidthY, double halfHeightZ)
    {
-      ConvexPolytope polytope = ConvexPolytopeConstructor.constructBoxWithCenterAtZero(halfLengthX, halfWidthY, halfHeightZ);
+      List<Point3D> cubeVertices = EuclidPolytopeFactories.newCubeVertices(2.0);
+      cubeVertices.forEach(vertex -> vertex.scale(halfLengthX, halfWidthY, halfHeightZ));
+      ConvexPolytope3D polytope = new ConvexPolytope3D(Vertex3DSupplier.asVertex3DSupplier(cubeVertices));
       return new PolytopeShapeDescription<>(polytope);
-      //      return new BoxShapeDescription(halfLengthX, halfWidthY, halfHeightZ);
    }
 
    @Override
@@ -121,11 +124,6 @@ public class SimpleCollisionShapeFactory implements CollisionShapeFactory
    public CollisionShapeDescription<?> createCapsule(double radius, double height)
    {
       return new CapsuleShapeDescription<>(radius, height);
-   }
-
-   public CollisionShapeDescription<?> createCapsule(double radius, LineSegment3DReadOnly capToCapLineSegment)
-   {
-      return new CapsuleShapeDescription<>(radius, capToCapLineSegment);
    }
 
    @Override
@@ -168,7 +166,7 @@ public class SimpleCollisionShapeFactory implements CollisionShapeFactory
             LineSegment3D capToCapLineSegment = new LineSegment3D();
             capsule.getCapToCapLineSegment(capToCapLineSegment);
 
-            CollisionShapeDescription<?> collisionShapeDescription = createCapsule(capsule.getRadius(), capToCapLineSegment);
+            CollisionShapeDescription<?> collisionShapeDescription = createCapsule(capsule.getRadius(), capToCapLineSegment.length());
             addShape(link, null, collisionShapeDescription, collisionMeshDescription.getIsGround(), collisionMeshDescription.getCollisionGroup(),
                      collisionMeshDescription.getCollisionMask());
          }

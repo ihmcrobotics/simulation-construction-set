@@ -6,8 +6,8 @@ import java.util.List;
 import us.ihmc.euclid.Axis;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
-import us.ihmc.euclid.shape.Ramp3D;
-import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.primitives.Ramp3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -32,7 +32,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
 
    private Graphics3DObject linkGraphics;
    
-   private final ArrayList<Shape3D<?>> terrainCollisionShapes = new ArrayList<>();
+   private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
    /**
     * @param xStartBeforeYaw
@@ -50,7 +50,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
       double radiansYaw = Math.toRadians(degreesYaw);
       transform = new RigidBodyTransform();
       RotationMatrix a1 = new RotationMatrix();
-      a1.setToYawMatrix(radiansYaw + (slopeDown ? Math.PI : 0));
+      a1.setToYawOrientation(radiansYaw + (slopeDown ? Math.PI : 0));
       transform.setRotation(a1);
       transform.setTranslation(new Vector3D(xCenter, yCenter, 0));
       inverseTransform = new RigidBodyTransform();
@@ -246,7 +246,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
    }
    
    @Override
-   public List<Shape3D<?>> getTerrainCollisionShapes()
+   public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {
       return terrainCollisionShapes;
    }
