@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.shape.Box3D;
-import us.ihmc.euclid.shape.Shape3D;
+import us.ihmc.euclid.shape.primitives.Box3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -26,14 +26,14 @@ public class RotatableBoxTerrainObject implements TerrainObject3D, HeightMapWith
    private final Point3D intersectionA = new Point3D();
    private final Point3D intersectionB = new Point3D();
 
-   private final ArrayList<Shape3D<?>> terrainCollisionShapes = new ArrayList<>();
+   private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
    
    public RotatableBoxTerrainObject(Box3D box, AppearanceDefinition appearance)
    {
       this.box = box;
       this.appearance = appearance;
 
-      box.getBoundingBox3D(boundingBox);
+      boundingBox.set(box.getBoundingBox());
 
       addGraphics();
       
@@ -47,8 +47,7 @@ public class RotatableBoxTerrainObject implements TerrainObject3D, HeightMapWith
 
    protected void addGraphics()
    {
-      RigidBodyTransform transformCenterConventionToBottomConvention = new RigidBodyTransform();
-      box.getPose(transformCenterConventionToBottomConvention);
+      RigidBodyTransform transformCenterConventionToBottomConvention = new RigidBodyTransform(box.getPose());
 
       transformCenterConventionToBottomConvention.appendTranslation(0.0, 0.0, -box.getSizeZ() / 2.0);
       linkGraphics = new Graphics3DObject();
@@ -130,22 +129,25 @@ public class RotatableBoxTerrainObject implements TerrainObject3D, HeightMapWith
       return boundingBox.isXYInsideInclusive(x, y);
    }
 
+   private final Point3D ignoreIntesectionPoint = new Point3D();
+   private final Vector3D ignoreNormal = new Vector3D();
+
    public void closestIntersectionTo(double x, double y, double z, Point3D intersectionToPack)
    {
       tempPoint.set(x, y, z);
-      box.checkIfInside(tempPoint, intersectionToPack, null);
+      box.evaluatePoint3DCollision(tempPoint, intersectionToPack, ignoreNormal);
    }
 
    public void surfaceNormalAt(double x, double y, double z, Vector3D normalToPack)
    {
       tempPoint.set(x, y, z);
-      box.checkIfInside(tempPoint, null, normalToPack);
+      box.evaluatePoint3DCollision(tempPoint, ignoreIntesectionPoint, normalToPack);
    }
 
    public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
    {
       tempPoint.set(x, y, z);
-      box.checkIfInside(tempPoint, intersectionToPack, normalToPack);
+      box.evaluatePoint3DCollision(tempPoint, intersectionToPack, normalToPack);
    }
 
    @Override
@@ -153,10 +155,10 @@ public class RotatableBoxTerrainObject implements TerrainObject3D, HeightMapWith
    {
       tempPoint.set(x, y, z);
 
-      if (!box.isInsideOrOnSurface(tempPoint))
+      if (!box.isPointInside(tempPoint))
          return false;
 
-      box.checkIfInside(tempPoint, intersectionToPack, normalToPack);
+      box.evaluatePoint3DCollision(tempPoint, intersectionToPack, normalToPack);
 
       return true;
    }
@@ -168,7 +170,7 @@ public class RotatableBoxTerrainObject implements TerrainObject3D, HeightMapWith
    }
    
    @Override
-   public List<Shape3D<?>> getTerrainCollisionShapes()
+   public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {
       return terrainCollisionShapes;
    }

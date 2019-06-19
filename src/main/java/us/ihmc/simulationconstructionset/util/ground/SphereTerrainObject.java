@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.shape.Shape3D;
-import us.ihmc.euclid.shape.Sphere3D;
+import us.ihmc.euclid.shape.primitives.Sphere3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
@@ -17,7 +17,7 @@ public class SphereTerrainObject implements TerrainObject3D, HeightMapWithNormal
    private final BoundingBox3D boundingBox;
    private Graphics3DObject linkGraphics;
 
-   private final ArrayList<Shape3D<?>> terrainCollisionShapes = new ArrayList<>();
+   private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
    public SphereTerrainObject(double centerX, double centerY, double centerZ, double radius, AppearanceDefinition appearance)
    {
@@ -171,7 +171,7 @@ public class SphereTerrainObject implements TerrainObject3D, HeightMapWithNormal
    }
 
    @Override
-   public List<Shape3D<?>> getTerrainCollisionShapes()
+   public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {
       return terrainCollisionShapes;
    }
