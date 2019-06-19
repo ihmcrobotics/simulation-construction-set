@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.euclid.geometry.LineSegment3D;
+import us.ihmc.euclid.geometry.interfaces.LineSegment3DReadOnly;
 import us.ihmc.euclid.geometry.interfaces.Vertex3DSupplier;
 import us.ihmc.euclid.shape.convexPolytope.ConvexPolytope3D;
 import us.ihmc.euclid.shape.convexPolytope.tools.EuclidPolytopeFactories;
@@ -126,6 +127,11 @@ public class SimpleCollisionShapeFactory implements CollisionShapeFactory
       return new CapsuleShapeDescription<>(radius, height);
    }
 
+   public CollisionShapeDescription<?> createCapsule(double radius, LineSegment3DReadOnly capToCapLineSegment)
+   {
+      return new CapsuleShapeDescription<>(radius, capToCapLineSegment);
+   }
+
    @Override
    public CollisionShape addShape(Link link, RigidBodyTransform shapeToLink, CollisionShapeDescription<?> description, boolean isGround, int groupMask,
                                   int collisionMask)
@@ -166,7 +172,7 @@ public class SimpleCollisionShapeFactory implements CollisionShapeFactory
             LineSegment3D capToCapLineSegment = new LineSegment3D();
             capsule.getCapToCapLineSegment(capToCapLineSegment);
 
-            CollisionShapeDescription<?> collisionShapeDescription = createCapsule(capsule.getRadius(), capToCapLineSegment.length());
+            CollisionShapeDescription<?> collisionShapeDescription = createCapsule(capsule.getRadius(), capToCapLineSegment);
             addShape(link, null, collisionShapeDescription, collisionMeshDescription.getIsGround(), collisionMeshDescription.getCollisionGroup(),
                      collisionMeshDescription.getCollisionMask());
          }
