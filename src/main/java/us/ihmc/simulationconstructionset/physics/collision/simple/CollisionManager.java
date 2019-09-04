@@ -93,34 +93,7 @@ public class CollisionManager
          {
             Shape3DReadOnly shape3D = simpleShapes.get(i);
             CollisionShapeDescription<?> collisionShapeDescription = shapeFactory.createSimpleCollisionShape(shape3D);
-            RigidBodyTransform transform = new RigidBodyTransform();
-
-            if (shape3D instanceof Sphere3DReadOnly)
-            {
-               Sphere3DReadOnly sphereShape = (Sphere3DReadOnly) shape3D;
-               transform.setTranslation(sphereShape.getPosition());
-            }
-            if (shape3D instanceof Box3DReadOnly)
-            {
-               Box3DReadOnly boxShape = (Box3DReadOnly) shape3D;
-               transform.set(boxShape.getPose());
-            }
-            if (shape3D instanceof Capsule3DReadOnly)
-            {
-               Capsule3DReadOnly capsuleShape = (Capsule3DReadOnly) shape3D;
-               transform.setTranslation(capsuleShape.getPosition());
-               Vector3DReadOnly axis = capsuleShape.getAxis();
-               transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
-            }
-            if (shape3D instanceof Cylinder3DReadOnly)
-            {
-               Cylinder3DReadOnly cylinderShape = (Cylinder3DReadOnly) shape3D;
-               transform.setTranslation(cylinderShape.getPosition());
-               Vector3DReadOnly axis = cylinderShape.getAxis();
-               transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
-            }
-
-            shapeFactory.addShape(environmentStaticLink, transform, collisionShapeDescription, true, 0xFFFF, 0xFFFF);
+            shapeFactory.addShape(environmentStaticLink, extractRigidBodyTransform(shape3D), collisionShapeDescription, true, 0xFFFF, 0xFFFF);
          }
       }
 
@@ -196,4 +169,33 @@ public class CollisionManager
       }
    }
 
+   private static RigidBodyTransform extractRigidBodyTransform(Shape3DReadOnly shape3D)
+   {
+      RigidBodyTransform transform = new RigidBodyTransform();
+      if (shape3D instanceof Sphere3DReadOnly)
+      {
+         Sphere3DReadOnly sphereShape = (Sphere3DReadOnly) shape3D;
+         transform.setTranslation(sphereShape.getPosition());
+      }
+      if (shape3D instanceof Box3DReadOnly)
+      {
+         Box3DReadOnly boxShape = (Box3DReadOnly) shape3D;
+         transform.set(boxShape.getPose());
+      }
+      if (shape3D instanceof Capsule3DReadOnly)
+      {
+         Capsule3DReadOnly capsuleShape = (Capsule3DReadOnly) shape3D;
+         transform.setTranslation(capsuleShape.getPosition());
+         Vector3DReadOnly axis = capsuleShape.getAxis();
+         transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
+      }
+      if (shape3D instanceof Cylinder3DReadOnly)
+      {
+         Cylinder3DReadOnly cylinderShape = (Cylinder3DReadOnly) shape3D;
+         transform.setTranslation(cylinderShape.getPosition());
+         Vector3DReadOnly axis = cylinderShape.getAxis();
+         transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
+      }
+      return transform;
+   }
 }
