@@ -2,7 +2,7 @@ import com.gradle.publish.MavenCoordinates
 
 plugins {
    `java-gradle-plugin`
-   kotlin("jvm") version "1.3.20"
+   kotlin("jvm") version "1.3.41"
    id("com.gradle.plugin-publish") version "0.10.0"
 }
 

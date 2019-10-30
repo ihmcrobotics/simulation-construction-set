@@ -3,8 +3,15 @@ package us.ihmc.simulationconstructionset.physics.collision.simple;
 import java.util.ArrayList;
 import java.util.List;
 
+import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
+import us.ihmc.euclid.shape.primitives.interfaces.Box3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Capsule3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Cylinder3DReadOnly;
 import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Sphere3DReadOnly;
+import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
 import us.ihmc.simulationconstructionset.Joint;
 import us.ihmc.simulationconstructionset.Link;
@@ -33,7 +40,7 @@ public class CollisionManager
    private final int numberOfVectorsToCreate = 1000;
 
    private final TerrainObject3D environmentObject;
-   
+
    public CollisionManager(CollisionHandler collisionHandler)
    {
       this(null, collisionHandler);
@@ -84,8 +91,9 @@ public class CollisionManager
 
          for (int i = 0; i < simpleShapes.size(); i++)
          {
-            CollisionShapeDescription<?> collisionShapeDescription = shapeFactory.createSimpleCollisionShape(simpleShapes.get(i));
-            shapeFactory.addShape(environmentStaticLink, null, collisionShapeDescription, true, 0xFFFF, 0xFFFF);
+            Shape3DReadOnly shape3D = simpleShapes.get(i);
+            CollisionShapeDescription<?> collisionShapeDescription = shapeFactory.createSimpleCollisionShape(shape3D);
+            shapeFactory.addShape(environmentStaticLink, extractRigidBodyTransform(shape3D), collisionShapeDescription, true, 0xFFFF, 0xFFFF);
          }
       }
 
@@ -161,4 +169,33 @@ public class CollisionManager
       }
    }
 
+   private static RigidBodyTransform extractRigidBodyTransform(Shape3DReadOnly shape3D)
+   {
+      RigidBodyTransform transform = new RigidBodyTransform();
+      if (shape3D instanceof Sphere3DReadOnly)
+      {
+         Sphere3DReadOnly sphereShape = (Sphere3DReadOnly) shape3D;
+         transform.setTranslation(sphereShape.getPosition());
+      }
+      if (shape3D instanceof Box3DReadOnly)
+      {
+         Box3DReadOnly boxShape = (Box3DReadOnly) shape3D;
+         transform.set(boxShape.getPose());
+      }
+      if (shape3D instanceof Capsule3DReadOnly)
+      {
+         Capsule3DReadOnly capsuleShape = (Capsule3DReadOnly) shape3D;
+         transform.setTranslation(capsuleShape.getPosition());
+         Vector3DReadOnly axis = capsuleShape.getAxis();
+         transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
+      }
+      if (shape3D instanceof Cylinder3DReadOnly)
+      {
+         Cylinder3DReadOnly cylinderShape = (Cylinder3DReadOnly) shape3D;
+         transform.setTranslation(cylinderShape.getPosition());
+         Vector3DReadOnly axis = cylinderShape.getAxis();
+         transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
+      }
+      return transform;
+   }
 }
