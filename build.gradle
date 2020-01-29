@@ -48,16 +48,17 @@ mainDependencies {
          {
             exclude group: "org.easytesting", module: "fest"
          }
-   api("us.ihmc.thirdparty.jinput:jinput:190214")
-   api("us.ihmc:ihmc-yovariables:0.3.11")
+
+   api("us.ihmc.thirdparty.jinput:jinput:200128")
+   api("us.ihmc:ihmc-yovariables:0.4.0")
    api("us.ihmc:ihmc-video-codecs:2.1.5")
-   api("us.ihmc:euclid:0.12.1")
+   api("us.ihmc:euclid:0.12.2")
    api("us.ihmc:ihmc-commons:0.26.6")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.12.9")
-   api("us.ihmc:ihmc-robot-description:0.12.8")
-   api("us.ihmc:ihmc-graphics-description:0.12.13")
-   api("us.ihmc:ihmc-javafx-toolkit:0.12.11")
-   api("us.ihmc:ihmc-swing-plotting:0.12.8")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.13.0")
+   api("us.ihmc:ihmc-robot-description:0.13.0")
+   api("us.ihmc:ihmc-graphics-description:0.13.0")
+   api("us.ihmc:ihmc-javafx-toolkit:0.13.0")
+   api("us.ihmc:ihmc-swing-plotting:0.13.0")
    compile ihmc.sourceSetProject("utilities")
 }
 
@@ -67,8 +68,8 @@ testDependencies {
 }
 
 utilitiesDependencies {
-   api("us.ihmc:euclid:0.12.1")
-   api("us.ihmc:ihmc-yovariables:0.3.11")
+   api("us.ihmc:euclid:0.12.2")
+   api("us.ihmc:ihmc-yovariables:0.4.0")
 }
 
 //distributions {
