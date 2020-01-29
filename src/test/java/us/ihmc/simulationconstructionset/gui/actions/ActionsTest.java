@@ -1,8 +1,21 @@
 package us.ihmc.simulationconstructionset.gui.actions;
 
-import com.google.common.base.Defaults;
+import static us.ihmc.robotics.Assert.assertFalse;
+import static us.ihmc.robotics.Assert.assertTrue;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.io.File;
+import java.lang.reflect.*;
+import java.util.*;
+
+import javax.swing.JPanel;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.base.Defaults;
+
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
 import us.ihmc.simulationconstructionset.commands.*;
@@ -21,14 +34,6 @@ import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
-
-import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.List;
-
-import static us.ihmc.robotics.Assert.*;
 
 public class ActionsTest
 {
@@ -767,6 +772,8 @@ public class ActionsTest
    {
       if (type.isPrimitive())
          return Defaults.defaultValue(type);
+      else if (type == File.class)
+         return new File(".");
       else if (type == Void.class)
          return null;
       else if (type.isArray())
@@ -785,12 +792,13 @@ public class ActionsTest
       Constructor<?> constructor = type.getDeclaredConstructors()[0];
       for (Constructor<?> c : type.getDeclaredConstructors())
       {
-         if (c.getParameterTypes().length < constructor.getParameterTypes().length)
+         if (c.getParameterTypes().length < constructor.getParameterTypes().length && Modifier.isPublic(c.getModifiers()))
             constructor = c;
       }
 
 
       Object[] params = new Object[constructor.getParameterTypes().length];
+
       for (int i = 0; i < constructor.getParameterTypes().length; i++)
       {
          params[i] = instantiateType(constructor.getParameterTypes()[i]);

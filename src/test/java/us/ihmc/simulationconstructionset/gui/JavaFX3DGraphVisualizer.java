@@ -1,5 +1,7 @@
 package us.ihmc.simulationconstructionset.gui;
 
+import com.sun.javafx.application.PlatformImpl;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
@@ -12,15 +14,14 @@ import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
 import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
 import us.ihmc.yoVariables.variable.YoVariable;
 
-public class JavaFX3DGraphVisualizer extends Application
+public class JavaFX3DGraphVisualizer
 {
-   @Override
-   public void start(Stage primaryStage) throws Exception
+   public JavaFX3DGraphVisualizer(Stage primaryStage)
    {
       primaryStage.setTitle(getClass().getSimpleName());
       primaryStage.setWidth(1920);
       primaryStage.setHeight(1080);
-      
+
       DataEntryHolder dataEntryHolder = new DataEntryHolder()
       {
          @Override
@@ -32,12 +33,12 @@ public class JavaFX3DGraphVisualizer extends Application
       TimeDataHolder timeDataHolder = new MinimalTimeDataHolder(200);
       SelectedVariableHolder selectedVariableHolder = new SelectedVariableHolder();
       GraphIndicesHolder graphIndicesHolder = new MinimalGraphIndicesHolder();
-      
+
       JavaFX3DGraph javaFX3DGraph = new JavaFX3DGraph(graphIndicesHolder, selectedVariableHolder, dataEntryHolder, timeDataHolder);
-      
+
       primaryStage.setScene(javaFX3DGraph.getPanel().getScene());
       primaryStage.show();
-      
+
       primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>()
       {
          @Override
@@ -47,9 +48,9 @@ public class JavaFX3DGraphVisualizer extends Application
          }
       });
    }
-   
+
    public static void main(String[] args)
    {
-      launch(args);
+      PlatformImpl.startup(() -> new JavaFX3DGraphVisualizer(new Stage()));
    }
 }

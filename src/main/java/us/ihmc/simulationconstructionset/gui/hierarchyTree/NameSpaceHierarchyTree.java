@@ -478,7 +478,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
 
       if (recursive)
       {
-         Enumeration<TreeNode> childrenNodes = parentNode.children();
+         Enumeration<? extends TreeNode> childrenNodes = parentNode.children();
 
          while(childrenNodes.hasMoreElements())
          {
