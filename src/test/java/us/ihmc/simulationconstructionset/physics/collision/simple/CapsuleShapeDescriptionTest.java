@@ -18,24 +18,18 @@ public class CapsuleShapeDescriptionTest
 
       BoundingBox3D boundingBox = new BoundingBox3D(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       capsule.getBoundingBox(boundingBox);
-      Point3D minimumPoint = new Point3D();
-      boundingBox.getMinPoint(minimumPoint);
-      Point3D maximumPoint = new Point3D();
-      boundingBox.getMaxPoint(maximumPoint);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(-0.2, -0.2, -0.3), minimumPoint, 1e-10);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.2, 0.2, 0.3), maximumPoint, 1e-10);
+      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(-0.2, -0.2, -0.3), boundingBox.getMinPoint(), 1e-10);
+      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.2, 0.2, 0.3), boundingBox.getMaxPoint(), 1e-10);
 
       RigidBodyTransform transform = new RigidBodyTransform();
       transform.setTranslation(7.0, 8.0, 9.0);
       capsule.applyTransform(transform);
 
       capsule.getBoundingBox(boundingBox);
-      boundingBox.getMinPoint(minimumPoint);
-      boundingBox.getMaxPoint(maximumPoint);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(6.8, 7.8, 8.7), minimumPoint, 1e-10);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(7.2, 8.2, 9.3), maximumPoint, 1e-10);
+      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(6.8, 7.8, 8.7), boundingBox.getMinPoint(), 1e-10);
+      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(7.2, 8.2, 9.3), boundingBox.getMaxPoint(), 1e-10);
    }
 
 }
