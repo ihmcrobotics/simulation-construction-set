@@ -31,8 +31,8 @@ public class RigidJoint extends Joint
    @Override
    protected void update()
    {
-      this.jointTransform3D.setTranslation(rigidTranslation);
-      this.jointTransform3D.setRotation(rigidRotation);
+      this.jointTransform3D.getTranslation().set(rigidTranslation);
+      this.jointTransform3D.getRotation().set(rigidRotation);
    }
 
    public void setRigidTranslation(Vector3DReadOnly jointTranslation)

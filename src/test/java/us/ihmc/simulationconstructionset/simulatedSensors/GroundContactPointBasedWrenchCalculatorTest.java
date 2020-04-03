@@ -87,7 +87,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
       robot.update();
       
       RigidBodyTransform transformToJoint = new RigidBodyTransform();
-      transformToJoint.setTranslation(new Vector3D(-1.0, -1.0, 0.0));
+      transformToJoint.getTranslation().set(new Vector3D(-1.0, -1.0, 0.0));
 
       calculator = new GroundContactPointBasedWrenchCalculator(joint.getName(), contactPoints, joint3, transformToJoint, new YoVariableRegistry("dummy3"));
 

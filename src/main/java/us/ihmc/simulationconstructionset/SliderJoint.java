@@ -361,7 +361,7 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
       tTranslate.setIdentity();
 
       // vTranslate.x = x; vTranslate.y = y; vTranslate.z = z;
-      tTranslate.setTranslation(vTranslate);
+      tTranslate.getTranslation().set(vTranslate);
 
       // return tTranslate;
    }

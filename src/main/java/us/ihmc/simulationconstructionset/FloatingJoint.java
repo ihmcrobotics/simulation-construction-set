@@ -226,7 +226,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    public void setRotationAndTranslation(RigidBodyTransform transform)
    {
       RotationMatrix rotationMatrix = new RotationMatrix();
-      transform.getRotation(rotationMatrix);
+      rotationMatrix.set(transform.getRotation());
       setRotation(rotationMatrix);
 
       Vector3D translation = new Vector3D();

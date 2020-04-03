@@ -36,8 +36,8 @@ public class SimpleCollisionDetectorTest
 
       double delta = 0.01;
 
-      transformOne.setTranslation(0.0, 0.0, 0.0);
-      transformOne.setTranslation(1.0 + delta, 0.0, 0.0);
+      transformOne.getTranslation().set(0.0, 0.0, 0.0);
+      transformOne.getTranslation().set(1.0 + delta, 0.0, 0.0);
 
       collideableObjectOne.setTransformToWorld(transformOne);
       collideableObjectTwo.setTransformToWorld(transformTwo);
@@ -48,8 +48,8 @@ public class SimpleCollisionDetectorTest
       assertEquals(0, result.getNumberOfCollisions());
 
       transformOne.setRotationEulerAndZeroTranslation(0.3, 0.7, 0.9);
-      transformOne.setTranslation(0.0, 0.0, 0.0);
-      transformOne.setTranslation(1.0 - delta, 0.0, 0.0);
+      transformOne.getTranslation().set(0.0, 0.0, 0.0);
+      transformOne.getTranslation().set(1.0 - delta, 0.0, 0.0);
 
       collideableObjectOne.setTransformToWorld(transformOne);
       collideableObjectTwo.setTransformToWorld(transformTwo);
@@ -98,8 +98,8 @@ public class SimpleCollisionDetectorTest
       assertEquals(-delta, distance, 1e-7);
 
       // Another sphere to sphere test
-      transformOne.setTranslation(-0.7, -0.1, 0.13);
-      transformOne.setTranslation(-0.4, 0.85, 0.3);
+      transformOne.getTranslation().set(-0.7, -0.1, 0.13);
+      transformOne.getTranslation().set(-0.4, 0.85, 0.3);
 
       collideableObjectOne.setTransformToWorld(transformOne);
       collideableObjectTwo.setTransformToWorld(transformTwo);
@@ -164,8 +164,8 @@ public class SimpleCollisionDetectorTest
 
       double delta = 0.01;
 
-      transformOne.setTranslation(0.0, 0.0, 0.0);
-      transformTwo.setTranslation(1.0 + delta, 0.0, 0.0);
+      transformOne.getTranslation().set(0.0, 0.0, 0.0);
+      transformTwo.getTranslation().set(1.0 + delta, 0.0, 0.0);
 
       collideableObjectOne.setTransformToWorld(transformOne);
       collideableObjectTwo.setTransformToWorld(transformTwo);
@@ -175,8 +175,8 @@ public class SimpleCollisionDetectorTest
 
       assertEquals(0, result.getNumberOfCollisions());
 
-      transformOne.setTranslation(0.0, 0.0, 0.0);
-      transformTwo.setTranslation(1.0 - delta, 0.0, 0.0);
+      transformOne.getTranslation().set(0.0, 0.0, 0.0);
+      transformTwo.getTranslation().set(1.0 - delta, 0.0, 0.0);
 
       collideableObjectOne.setTransformToWorld(transformOne);
       collideableObjectTwo.setTransformToWorld(transformTwo);
@@ -225,8 +225,8 @@ public class SimpleCollisionDetectorTest
       assertEquals(-delta, distance, 1e-7);
 
       // Another sphere to sphere test
-      transformOne.setTranslation(-0.7, -0.1, 0.13);
-      transformTwo.setTranslation(-0.4, 0.85, 0.3);
+      transformOne.getTranslation().set(-0.7, -0.1, 0.13);
+      transformTwo.getTranslation().set(-0.4, 0.85, 0.3);
 
       collideableObjectOne.setTransformToWorld(transformOne);
       collideableObjectTwo.setTransformToWorld(transformTwo);

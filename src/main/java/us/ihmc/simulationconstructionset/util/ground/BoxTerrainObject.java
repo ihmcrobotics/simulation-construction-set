@@ -43,7 +43,7 @@ public class BoxTerrainObject implements TerrainObject3D, HeightMapWithNormals
      linkGraphics.addCube(Math.abs(xEnd-xStart), Math.abs(yEnd-yStart), zMax-zMin, appearance);
      
      Box3D boxShape = new Box3D(Math.abs(xStart - xEnd), Math.abs(yStart - yEnd), Math.abs(zStart - zEnd));
-     boxShape.getPose().setTranslation((xStart+xEnd)/2.0, (yStart+yEnd)/2.0, (zStart+zEnd)/2.0);
+     boxShape.getPose().getTranslation().set((xStart+xEnd)/2.0, (yStart+yEnd)/2.0, (zStart+zEnd)/2.0);
      
      this.terrainCollisionShapes.add(boxShape);
  }

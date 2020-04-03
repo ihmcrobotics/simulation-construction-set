@@ -21,7 +21,7 @@ public class CylinderTerrainObjectTest
       double height = 1.3;
       double radius = 0.2;
       RigidBodyTransform location = new RigidBodyTransform();
-      location.setTranslation(new Vector3D(0.0, 0.0, height/2.0));
+      location.getTranslation().set(new Vector3D(0.0, 0.0, height/2.0));
 
       CylinderTerrainObject cylinderTerrainObject = new CylinderTerrainObject(location, height, radius, YoAppearance.Red());
       

@@ -9,6 +9,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.euclid.tuple4D.Quaternion;
+import us.ihmc.euclid.yawPitchRoll.YawPitchRoll;
 import us.ihmc.robotics.robotDescription.Plane;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.FloatingPlanarJointPhysics;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
@@ -280,7 +281,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
          t1.setRotationYawAndZeroTranslation(q_rot.getDoubleValue());
       }
 
-      t1.setTranslation(position);
+      t1.getTranslation().set(position);
    }
 
    public Plane getType()
@@ -288,13 +289,13 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
       return type;
    }
 
-   private final double[] yawPitchRoll = new double[3];
+   private final YawPitchRoll yawPitchRoll = new YawPitchRoll();
 
    @Override
    public void setRotationAndTranslation(RigidBodyTransform transform)
    {
       Quaternion rotation = new Quaternion();
-      transform.getRotation(rotation);
+      rotation.set(transform.getRotation());
 
       YawPitchRollConversion.convertQuaternionToYawPitchRoll(rotation, yawPitchRoll);
 
@@ -304,15 +305,15 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
       switch (type)
       {
       case XY:
-         setRotation(yawPitchRoll[2]);
+         setRotation(yawPitchRoll.getRoll());
          setCartesianPosition(translation.getX(), translation.getY());
          break;
       case XZ:
-         setRotation(yawPitchRoll[1]);
+         setRotation(yawPitchRoll.getPitch());
          setCartesianPosition(translation.getX(), translation.getZ());
          break;
       default:
-         setRotation(yawPitchRoll[0]);
+         setRotation(yawPitchRoll.getYaw());
          setCartesianPosition(translation.getY(), translation.getZ());
          break;
       }

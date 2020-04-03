@@ -76,8 +76,8 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    private static RigidBodyTransform yawPitchDegreesTransform(Vector3D center, double yawCCWDegrees, double pitchDownDegrees)
    {
       RigidBodyTransform location = new RigidBodyTransform();
-      location.setRotationYawPitchRoll(Math.toRadians(yawCCWDegrees), Math.toRadians(pitchDownDegrees), 0.0);
-      location.setTranslation(center);
+      location.getRotation().setYawPitchRoll(Math.toRadians(yawCCWDegrees), Math.toRadians(pitchDownDegrees), 0.0);
+      location.getTranslation().set(center);
       return location;
    }
 

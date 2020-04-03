@@ -152,13 +152,13 @@ public class UniversalJoint extends PinJoint
    @Override
    public void getRotationToWorld(RotationMatrix rotation)
    {
-      joint2.transformToNext.getRotation(rotation);
+      rotation.set(joint2.transformToNext.getRotation());
    }
 
    @Override
    public void getRotationToWorld(Quaternion rotation)
    {
-      joint2.transformToNext.getRotation(rotation);
+      rotation.set(joint2.transformToNext.getRotation());
    }
 
    @Override

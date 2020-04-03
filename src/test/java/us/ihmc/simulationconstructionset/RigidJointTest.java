@@ -53,7 +53,7 @@ public class RigidJointTest
       rigidJointOne.setRigidTranslation(translation);
 
       RigidBodyTransform transform = new RigidBodyTransform();
-      transform.setTranslation(translation);
+      transform.getTranslation().set(translation);
 
       Link rigidLinkOne = new Link("rigidLinkOne");
       double massOne = 1.0;
@@ -126,8 +126,8 @@ public class RigidJointTest
       rigidJointOne.setRigidTranslation(translation);
 
       RigidBodyTransform transform = new RigidBodyTransform();
-      transform.setTranslation(translation);
-      transform.setRotation(rotation);
+      transform.getTranslation().set(translation);
+      transform.getRotation().set(rotation);
 
       Link rigidLinkOne = new Link("rigidLinkOne");
       double massOne = 1.0;

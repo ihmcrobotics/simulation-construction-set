@@ -23,7 +23,7 @@ public class CapsuleShapeDescriptionTest
       EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.2, 0.2, 0.3), boundingBox.getMaxPoint(), 1e-10);
 
       RigidBodyTransform transform = new RigidBodyTransform();
-      transform.setTranslation(7.0, 8.0, 9.0);
+      transform.getTranslation().set(7.0, 8.0, 9.0);
       capsule.applyTransform(transform);
 
       capsule.getBoundingBox(boundingBox);

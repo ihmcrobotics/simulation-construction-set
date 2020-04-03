@@ -78,7 +78,7 @@ public class FreeJoint extends Joint
       vTranslate.setX(x);
       vTranslate.setY(y);
       vTranslate.setZ(z);
-      tTranslate.setTranslation(vTranslate);
+      tTranslate.getTranslation().set(vTranslate);
 
       tYaw.setRotationYawAndZeroTranslation(yaw);
       tRoll.setRotationRollAndZeroTranslation(roll);

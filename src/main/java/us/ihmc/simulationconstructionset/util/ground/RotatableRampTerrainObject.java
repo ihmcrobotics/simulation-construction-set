@@ -51,8 +51,8 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
       transform = new RigidBodyTransform();
       RotationMatrix a1 = new RotationMatrix();
       a1.setToYawOrientation(radiansYaw + (slopeDown ? Math.PI : 0));
-      transform.setRotation(a1);
-      transform.setTranslation(new Vector3D(xCenter, yCenter, 0));
+      transform.getRotation().set(a1);
+      transform.getTranslation().set(new Vector3D(xCenter, yCenter, 0));
       inverseTransform = new RigidBodyTransform();
       inverseTransform.setAndInvert(transform);
 
