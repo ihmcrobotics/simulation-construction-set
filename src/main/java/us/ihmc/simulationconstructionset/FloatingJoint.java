@@ -230,7 +230,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       setRotation(rotationMatrix);
 
       Vector3D translation = new Vector3D();
-      transform.getTranslation(translation);
+      translation.set(transform.getTranslation());
       setPosition(translation);
    }
 

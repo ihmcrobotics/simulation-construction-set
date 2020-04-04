@@ -300,7 +300,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
       YawPitchRollConversion.convertQuaternionToYawPitchRoll(rotation, yawPitchRoll);
 
       Vector3D translation = new Vector3D();
-      transform.getTranslation(translation);
+      translation.set(transform.getTranslation());
 
       switch (type)
       {

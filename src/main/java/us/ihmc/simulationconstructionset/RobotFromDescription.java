@@ -199,7 +199,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
          else
          {
             Vector3D offsetToPack = new Vector3D();
-            forceSensorDescription.getTransformToJoint().getTranslation(offsetToPack);
+            offsetToPack.set(forceSensorDescription.getTransformToJoint().getTranslation());
             JointWrenchSensor jointWrenchSensor = new JointWrenchSensor(forceSensorDescription.getName(), offsetToPack, this);
             joint.addJointWrenchSensor(jointWrenchSensor);
 
@@ -320,7 +320,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
             //               System.out.println("SDFRobot: Adding force sensor to: " + joint.getName());
 
             Vector3D offsetToPack = new Vector3D();
-            forceSensorDescription.getTransformToJoint().getTranslation(offsetToPack);
+            offsetToPack.set(forceSensorDescription.getTransformToJoint().getTranslation());
             JointWrenchSensor jointWrenchSensor = new JointWrenchSensor(forceSensorDescription.getName(), offsetToPack, this);
             joint.addJointWrenchSensor(jointWrenchSensor);
 

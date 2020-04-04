@@ -82,7 +82,7 @@ public class IMUMount
    protected void updateIMUMountPositionAndVelocity()
    {
       // Offsets of IMUMount:
-      transformFromMountToJoint.getTranslation(tempIMUOffset);
+      tempIMUOffset.set(transformFromMountToJoint.getTranslation());
       tempIMURotation.set(transformFromMountToJoint.getRotation());
 
       // Orientation:
@@ -118,7 +118,7 @@ public class IMUMount
       // but it is safer that way since updateIMUMountAcceleration might be called by itself sometimes.
       
       // Offsets of IMUMount:
-      transformFromMountToJoint.getTranslation(tempIMUOffset);
+      tempIMUOffset.set(transformFromMountToJoint.getTranslation());
       tempIMURotation.set(transformFromMountToJoint.getRotation());
 
       // Orientation:

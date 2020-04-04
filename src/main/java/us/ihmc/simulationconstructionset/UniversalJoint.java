@@ -164,7 +164,7 @@ public class UniversalJoint extends PinJoint
    @Override
    public void getTranslationToWorld(Vector3DBasics translation)
    {
-      joint2.transformToNext.getTranslation(translation);
+      translation.set(joint2.transformToNext.getTranslation());
    }
 
 
