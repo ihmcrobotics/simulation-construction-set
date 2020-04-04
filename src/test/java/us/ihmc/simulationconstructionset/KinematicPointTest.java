@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -28,7 +28,7 @@ public class KinematicPointTest
 	@Test// timeout=300000
 	public void testGetAndSetParentJoint() 
 	{
-		PinJoint joint = new PinJoint("joint", new Vector3D(0.0, 0.0, 0.0), robot, Axis.X);
+		PinJoint joint = new PinJoint("joint", new Vector3D(0.0, 0.0, 0.0), robot, Axis3D.X);
 		robot.addRootJoint(joint);
 		kinematicPoint.setParentJoint(joint);
 		assertTrue(joint == kinematicPoint.getParentJoint());

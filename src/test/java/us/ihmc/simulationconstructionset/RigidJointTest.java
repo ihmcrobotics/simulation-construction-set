@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import org.junit.jupiter.api.Test;
 import us.ihmc.commons.MutationTestFacilitator;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
@@ -410,8 +410,8 @@ public class RigidJointTest
       Robot robotA = new Robot("RobotA");
       Robot robotB = new Robot("RobotB");
 
-      PinJoint pinJointA = new PinJoint("pinA", new Vector3D(), robotA, Axis.Y);
-      PinJoint pinJointB = new PinJoint("pinB", new Vector3D(), robotB, Axis.Y);
+      PinJoint pinJointA = new PinJoint("pinA", new Vector3D(), robotA, Axis3D.Y);
+      PinJoint pinJointB = new PinJoint("pinB", new Vector3D(), robotB, Axis3D.Y);
 
       Link linkOneA = new Link("linkOneA");
       Link linkOneB = new Link("linkOneB");

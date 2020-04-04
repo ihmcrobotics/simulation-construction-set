@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
@@ -37,7 +37,7 @@ public class SimulationConstructionSetFestTest
 
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       YoVariableRegistry registryOne = new YoVariableRegistry("RegistryOne");
-      YoEnum<Axis> enumForTests = new YoEnum<Axis>("enumForTests", registryOne, Axis.class);
+      YoEnum<Axis3D> enumForTests = new YoEnum<Axis3D>("enumForTests", registryOne, Axis3D.class);
       YoVariableRegistry registryTwo = new YoVariableRegistry("RegistryTwo");
       YoBoolean booleanForTests = new YoBoolean("booleanForTests", registryTwo);
       registryOne.addChild(registryTwo);
@@ -87,7 +87,7 @@ public class SimulationConstructionSetFestTest
 
 
       // Setup a few entry boxes:
-      enumForTests.set(Axis.X);
+      enumForTests.set(Axis3D.X);
 
       testFixture.selectSearchTab();
       testFixture.deleteSearchText();
@@ -97,9 +97,9 @@ public class SimulationConstructionSetFestTest
       testFixture.clickOnAddNumericEntryBox();
       testFixture.clickOnUnusedEntryBox();
 
-      assertTrue(enumForTests.getEnumValue() == Axis.X);
+      assertTrue(enumForTests.getEnumValue() == Axis3D.X);
       testFixture.findEnumEntryBoxAndSelectValue("enumForTests", "Z");
-      assertTrue(enumForTests.getEnumValue() == Axis.Z);
+      assertTrue(enumForTests.getEnumValue() == Axis3D.Z);
 
       // Search for variables, change their values, and plot them:
 //    testFixture.selectNameSpaceTab();

@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
 import us.ihmc.commons.MathTools;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.Link;
 import us.ihmc.simulationconstructionset.PinJoint;
@@ -11,7 +11,7 @@ public class SinglePendulumRobot extends RobotWithClosedFormDynamics
    private final double mass = 1.0;
    private final double length = 1.0;
    private final double Ixx = 0.5;
-   private final Axis axis = Axis.X;
+   private final Axis3D axis = Axis3D.X;
    private final double damping = 0.1;
 
    private final PinJoint pinJoint;

@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.Link;
 import us.ihmc.simulationconstructionset.UniversalJoint;
@@ -16,7 +16,7 @@ public class UniversalJointRobot extends RobotWithClosedFormDynamics
    {
       super(name);
 
-      universalJoint = new UniversalJoint(name + "Joint1", name + "Joint2", new Vector3D(), this, Axis.X, Axis.Y);
+      universalJoint = new UniversalJoint(name + "Joint1", name + "Joint2", new Vector3D(), this, Axis3D.X, Axis3D.Y);
 
       Link link = new Link(name + "Link");
       link.setMass(mass);

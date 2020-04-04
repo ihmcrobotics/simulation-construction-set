@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.util.ground;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.shape.primitives.Ramp3D;
 import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
@@ -45,7 +45,7 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
       linkGraphics.translate((xStart + xEnd) / 2.0, (yStart + yEnd) / 2.0, 0.0);
 
       if (xStart > xEnd)
-         linkGraphics.rotate(Math.PI, Axis.Z);
+         linkGraphics.rotate(Math.PI, Axis3D.Z);
       linkGraphics.addWedge(Math.abs(xEnd - xStart), Math.abs(yEnd - yStart), height, appearance);
 
       Point3D minPoint = new Point3D(xMin, yMin, Double.NEGATIVE_INFINITY);

@@ -7,7 +7,7 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.commons.RandomNumbers;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -265,7 +265,7 @@ public class PinnedFloatingJointTest
       Random random = new Random(seed);
       String jname = "randomPinJoint" + random.nextInt();
       Vector3DReadOnly offset = EuclidCoreRandomTools.nextVector3D(random);
-      Axis jaxis = Axis.values[random.nextInt(Axis.values.length)];
+      Axis3D jaxis = Axis3D.values[random.nextInt(Axis3D.values.length)];
       PinJoint pinJoint = new PinJoint(jname, offset, rob, jaxis);
       pinJoint.setQ(random.nextDouble());
       pinJoint.setQd(random.nextDouble());
@@ -277,7 +277,7 @@ public class PinnedFloatingJointTest
       Random random = new Random(seed);
       String jname = "randomSliderJoint" + random.nextInt();
       Vector3D offset = EuclidCoreRandomTools.nextVector3D(random);
-      Axis jaxis = Axis.values[random.nextInt(Axis.values.length)];
+      Axis3D jaxis = Axis3D.values[random.nextInt(Axis3D.values.length)];
       SliderJoint sliderJoint = new SliderJoint(jname, offset, rob, jaxis);
       sliderJoint.setQ(random.nextDouble());
       sliderJoint.setQd(random.nextDouble());
