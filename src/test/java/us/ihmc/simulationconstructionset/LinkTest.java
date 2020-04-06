@@ -36,12 +36,12 @@ public class LinkTest
       Vector3D rotationAxis = new Vector3D(0.0, 0.0, 1.0);
       
       RotationMatrix rotation = new RotationMatrix();
-      rotation.setToPitchMatrix(Math.PI/3.0);
+      rotation.setToPitchOrientation(Math.PI/3.0);
       momentOfInertia = InertiaTools.rotate(rotation, momentOfInertia);
       rotation.transform(rotationAxis);
       
       rotation = new RotationMatrix();
-      rotation.setToYawMatrix(Math.PI/5.0);
+      rotation.setToYawOrientation(Math.PI/5.0);
       momentOfInertia = InertiaTools.rotate(rotation, momentOfInertia);
       rotation.transform(rotationAxis);
 

@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.SliderJointPhysics;
@@ -37,7 +37,7 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
     * @param rob Robot to which this joint belongs
     * @param jaxis int representing the joint axis
     */
-   public SliderJoint(String jname, Vector3D offset, Robot rob, Axis jaxis)
+   public SliderJoint(String jname, Vector3D offset, Robot rob, Axis3D jaxis)
    {
       super(jname, offset, rob);
       physics = new SliderJointPhysics(this);
@@ -51,15 +51,15 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
 
       physics.u_i = new Vector3D();
 
-      if (jaxis == Axis.X)
+      if (jaxis == Axis3D.X)
       {
          physics.u_i.setX(1.0);
       }
-      else if (jaxis == Axis.Y)
+      else if (jaxis == Axis3D.Y)
       {
          physics.u_i.setY(1.0);
       }
-      else if (jaxis == Axis.Z)
+      else if (jaxis == Axis3D.Z)
       {
          physics.u_i.setZ(1.0);
       }
@@ -361,7 +361,7 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
       tTranslate.setIdentity();
 
       // vTranslate.x = x; vTranslate.y = y; vTranslate.z = z;
-      tTranslate.setTranslation(vTranslate);
+      tTranslate.getTranslation().set(vTranslate);
 
       // return tTranslate;
    }

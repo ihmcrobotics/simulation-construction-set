@@ -518,16 +518,16 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
 
       if (owner.type == Plane.YZ)
       {
-         Rh_i.setToRollMatrix(owner.q_rot.getDoubleValue());
+         Rh_i.setToRollOrientation(owner.q_rot.getDoubleValue());
          
       }    // Rotation about X
       else if (owner.type == Plane.XZ)
       {
-         Rh_i.setToPitchMatrix(owner.q_rot.getDoubleValue());
+         Rh_i.setToPitchOrientation(owner.q_rot.getDoubleValue());
       }    // Rotation about Y
       else
       {
-         Rh_i.setToYawMatrix(owner.q_rot.getDoubleValue());
+         Rh_i.setToYawOrientation(owner.q_rot.getDoubleValue());
       }    // Rotation about Z
    }
 }

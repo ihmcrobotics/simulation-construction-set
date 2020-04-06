@@ -190,7 +190,7 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
    public void changeOffsetVector(double x, double y, double z)
    {
       this.offset.set(x, y, z);
-      this.offsetTransform3D.setTranslation(this.offset);
+      this.offsetTransform3D.getTranslation().set(this.offset);
 
 //    this.jointGraphics3D.changeOffsetVector(offsetTransform3D);
    }
@@ -290,7 +290,7 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
          retBuffer.append("  Parent Joint: " + this.parentJoint.name + "\n");
       else
          retBuffer.append("  Root Joint \n");
-      transformToNext.getTranslation(translation);
+      translation.set(transformToNext.getTranslation());
       retBuffer.append("   Location vector: " + translation + "\n");
       retBuffer.append("   offset vector: " + offset + "\n");
 
@@ -638,7 +638,7 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
    private void setOffset(Vector3DReadOnly offset)
    {
       this.offset.set(offset);
-      this.offsetTransform3D.setTranslation(offset);
+      this.offsetTransform3D.getTranslation().set(offset);
    }
 
    public void getOffset(Vector3DBasics offsetToPack)
@@ -779,7 +779,7 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
     */
    public void getRotationToWorld(RotationMatrix rotation)
    {
-      transformToNext.getRotation(rotation);
+      rotation.set(transformToNext.getRotation());
    }
 
    /**
@@ -790,7 +790,7 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
     */
    public void getRotationToWorld(Quaternion rotation)
    {
-      transformToNext.getRotation(rotation);
+      rotation.set(transformToNext.getRotation());
    }
 
    /**
@@ -801,7 +801,7 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
     */
    public void getTranslationToWorld(Vector3DBasics translation)
    {
-      transformToNext.getTranslation(translation);
+      translation.set(transformToNext.getTranslation());
    }
 
    private Vector3D tempVector3d = new Vector3D();

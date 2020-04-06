@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import org.junit.jupiter.api.Test;
 import us.ihmc.commons.RandomNumbers;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
@@ -25,13 +25,13 @@ public class JointWrenchSensorTest
 
       Robot robot = new Robot("JointWrenchSensorTest");
 
-      PinJoint pinJointOne = createPinJointWithHangingMass("pinJointOne", massOne, Axis.Y, robot);
+      PinJoint pinJointOne = createPinJointWithHangingMass("pinJointOne", massOne, Axis3D.Y, robot);
       JointWrenchSensor jointWrenchSensorOne = new JointWrenchSensor("jointWrenchSensorOne", sensorOffsetFromJointOne, robot);
       pinJointOne.addJointWrenchSensor(jointWrenchSensorOne);
       assertTrue(jointWrenchSensorOne == pinJointOne.getJointWrenchSensor());
       robot.addRootJoint(pinJointOne);
 
-      PinJoint pinJointTwo = createPinJointWithHangingMass("pinJointTwo", massTwo, Axis.X, robot);
+      PinJoint pinJointTwo = createPinJointWithHangingMass("pinJointTwo", massTwo, Axis3D.X, robot);
       JointWrenchSensor jointWrenchSensorTwo = new JointWrenchSensor("jointWrenchSensorTwo", sensorOffsetFromJointTwo, robot);
       pinJointTwo.addJointWrenchSensor(jointWrenchSensorTwo);
       assertTrue(jointWrenchSensorTwo == pinJointTwo.getJointWrenchSensor());
@@ -72,13 +72,13 @@ public class JointWrenchSensorTest
 
       Robot robot = new Robot("JointWrenchSensorTest");
 
-      PinJoint pinJointOne = createPinJointWithHangingMass("pinJointOne", massOne, Axis.Y, robot);
+      PinJoint pinJointOne = createPinJointWithHangingMass("pinJointOne", massOne, Axis3D.Y, robot);
       JointWrenchSensor jointWrenchSensorOne = new JointWrenchSensor("jointWrenchSensorOne", sensorOffsetFromJointOne, robot);
       pinJointOne.addJointWrenchSensor(jointWrenchSensorOne);
       assertTrue(jointWrenchSensorOne == pinJointOne.getJointWrenchSensor());
       robot.addRootJoint(pinJointOne);
 
-      PinJoint pinJointTwo = createPinJointWithHangingMass("pinJointTwo", massTwo, Axis.X, robot);
+      PinJoint pinJointTwo = createPinJointWithHangingMass("pinJointTwo", massTwo, Axis3D.X, robot);
       JointWrenchSensor jointWrenchSensorTwo = new JointWrenchSensor("jointWrenchSensorTwo", sensorOffsetFromJointTwo, robot);
       pinJointTwo.addJointWrenchSensor(jointWrenchSensorTwo);
       assertTrue(jointWrenchSensorTwo == pinJointTwo.getJointWrenchSensor());
@@ -115,7 +115,7 @@ public class JointWrenchSensorTest
 
       Robot robot = new Robot("JointWrenchSensorTest");
 
-      PinJoint pinJointOne = createPinJointWithHangingMass("pinJointOne", massOne, Axis.Y, robot);
+      PinJoint pinJointOne = createPinJointWithHangingMass("pinJointOne", massOne, Axis3D.Y, robot);
       
       Vector3D comOffsetFromJointOne = new Vector3D();
       pinJointOne.getLink().getComOffset(comOffsetFromJointOne);
@@ -179,7 +179,7 @@ public class JointWrenchSensorTest
       EuclidCoreTestTools.assertTuple3DEquals(expectedJointTorque, jointTorque, 1e-7);
    }
 
-   private PinJoint createPinJointWithHangingMass(String name, double mass, Axis axis, Robot robot)
+   private PinJoint createPinJointWithHangingMass(String name, double mass, Axis3D axis, Robot robot)
    {
       PinJoint pinJoint = new PinJoint(name, new Vector3D(), robot, axis);
 

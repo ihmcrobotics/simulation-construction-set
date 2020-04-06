@@ -175,7 +175,7 @@ public class CollisionManager
       if (shape3D instanceof Sphere3DReadOnly)
       {
          Sphere3DReadOnly sphereShape = (Sphere3DReadOnly) shape3D;
-         transform.setTranslation(sphereShape.getPosition());
+         transform.getTranslation().set(sphereShape.getPosition());
       }
       if (shape3D instanceof Box3DReadOnly)
       {
@@ -185,16 +185,16 @@ public class CollisionManager
       if (shape3D instanceof Capsule3DReadOnly)
       {
          Capsule3DReadOnly capsuleShape = (Capsule3DReadOnly) shape3D;
-         transform.setTranslation(capsuleShape.getPosition());
+         transform.getTranslation().set(capsuleShape.getPosition());
          Vector3DReadOnly axis = capsuleShape.getAxis();
-         transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
+         transform.getRotation().set(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
       }
       if (shape3D instanceof Cylinder3DReadOnly)
       {
          Cylinder3DReadOnly cylinderShape = (Cylinder3DReadOnly) shape3D;
-         transform.setTranslation(cylinderShape.getPosition());
+         transform.getTranslation().set(cylinderShape.getPosition());
          Vector3DReadOnly axis = cylinderShape.getAxis();
-         transform.setRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
+         transform.getRotation().set(EuclidGeometryTools.axisAngleFromZUpToVector3D(axis));
       }
       return transform;
    }

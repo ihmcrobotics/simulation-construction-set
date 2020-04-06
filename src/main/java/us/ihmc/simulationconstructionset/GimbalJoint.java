@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 
@@ -12,7 +12,7 @@ public class GimbalJoint extends PinJoint
    private static final long serialVersionUID = 6692640300004794312L;
    private PinJoint joint2, joint3;
 
-   public GimbalJoint(String jname1, String jname2, String jname3, Vector3DReadOnly offset, Robot rob, Axis firstAxis, Axis secondAxis, Axis thirdAxis)
+   public GimbalJoint(String jname1, String jname2, String jname3, Vector3DReadOnly offset, Robot rob, Axis3D firstAxis, Axis3D secondAxis, Axis3D thirdAxis)
    {
       super(jname1, offset, rob, firstAxis);
 

@@ -48,7 +48,6 @@ import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 
-import javafx.animation.AnimationTimer;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
@@ -78,8 +77,6 @@ import us.ihmc.jMonkeyEngineToolkit.camera.OffscreenBufferDepthImageServer;
 import us.ihmc.jMonkeyEngineToolkit.camera.OffscreenBufferVideoServer;
 import us.ihmc.jMonkeyEngineToolkit.camera.TrackingDollyCameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.ViewportAdapter;
-import us.ihmc.javaFXToolkit.graphing.JavaFX3DGraph;
-import us.ihmc.javaFXToolkit.graphing.JavaFXHeatmapGraph;
 import us.ihmc.simulationconstructionset.ExitActionListener;
 import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
@@ -115,7 +112,6 @@ import us.ihmc.simulationconstructionset.gui.config.ViewportConfigurationList;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.AllDialogConstructorsHolder;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.GUIEnablerAndDisabler;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.StandardAllDialogConstructorsGenerator;
-import us.ihmc.simulationconstructionset.gui.heatmap.HeatmapWindow;
 import us.ihmc.simulationconstructionset.gui.hierarchyTree.NameSpaceHierarchyTree;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableListPanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
@@ -486,10 +482,11 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       return new YoVariableSliderWindow(selectedVariableHolder, closeableAndDisposableRegistry);
    }
 
-   public HeatmapWindow createNewHeatmapWindow(String name)
-   {
-      return new HeatmapWindow(name, rootRegistry, myGraphArrayPanel, selectedVariableHolder, myDataBuffer, myDataBuffer);
-   }
+//   public HeatmapWindow createNewHeatmapWindow(String name)
+//   {
+////      return new HeatmapWindow(name, rootRegistry, myGraphArrayPanel, selectedVariableHolder, myDataBuffer, myDataBuffer);
+//      return null;
+//   }
    
    public void setupMultiViews(String viewportName, ViewportPanel viewport_Panel)
    {
@@ -2048,32 +2045,34 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
          }
       });
    }
-   
-   public JavaFX3DGraph addJavaFX3DGraph(String name)
-   {
-      JavaFX3DGraph javaFX3DGraph = new JavaFX3DGraph(myGraphArrayPanel, selectedVariableHolder, myDataBuffer, myDataBuffer);
-      setupExtraPanels(new ExtraPanelConfiguration(name, javaFX3DGraph.getPanel(), true));
-      selectPanel(name);
-      return javaFX3DGraph;
-   }
-   
-   public JavaFXHeatmapGraph addHeatmapGraph(String name)
-   {
-      JavaFXHeatmapGraph heatmapGraph = new JavaFXHeatmapGraph(rootRegistry, myGraphArrayPanel, selectedVariableHolder, myDataBuffer, myDataBuffer);
-      
-      new AnimationTimer()
-      {
-         @Override
-         public void handle(long currentNanoTime)
-         {
-            heatmapGraph.update();
-         }
-      }.start();
-      
-      setupExtraPanels(new ExtraPanelConfiguration(name, heatmapGraph.getPanel(), true));
-      selectPanel(name);
-      return heatmapGraph;
-   }
+
+//   @Deprecated
+//   public JavaFX3DGraph addJavaFX3DGraph(String name)
+//   {
+////      JavaFX3DGraph javaFX3DGraph = new JavaFX3DGraph(myGraphArrayPanel, selectedVariableHolder, myDataBuffer, myDataBuffer);
+////      setupExtraPanels(new ExtraPanelConfiguration(name, javaFX3DGraph.getPanel(), true));
+////      selectPanel(name);
+//      return null;
+//   }
+//
+//   @Deprecated
+//   public JavaFXHeatmapGraph addHeatmapGraph(String name)
+//   {
+////      JavaFXHeatmapGraph heatmapGraph = new JavaFXHeatmapGraph(rootRegistry, myGraphArrayPanel, selectedVariableHolder, myDataBuffer, myDataBuffer);
+////
+////      new AnimationTimer()
+////      {
+////         @Override
+////         public void handle(long currentNanoTime)
+////         {
+////            heatmapGraph.update();
+////         }
+////      }.start();
+////
+////      setupExtraPanels(new ExtraPanelConfiguration(name, heatmapGraph.getPanel(), true));
+////      selectPanel(name);
+//      return null;
+//   }
 
    @Override
    public void selectCamera(String cameraName)

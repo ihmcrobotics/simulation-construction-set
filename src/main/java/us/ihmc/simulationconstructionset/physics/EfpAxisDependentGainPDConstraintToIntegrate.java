@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
@@ -89,7 +89,7 @@ public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIn
       this.stiffnessFrame = stiffnessFrame;
    }
 
-   public void setStiffness(Axis axis, double stiffness)
+   public void setStiffness(Axis3D axis, double stiffness)
    {
       switch (axis)
       {
@@ -102,7 +102,7 @@ public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIn
       }
    }
 
-   public void setDamping(Axis axis, double damping)
+   public void setDamping(Axis3D axis, double damping)
    {
       switch (axis)
       {
@@ -121,7 +121,7 @@ public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIn
 
       computeErrors();
 
-      stiffnessFrame.getTransformToDesiredFrame(worldFrame).getRotation(stiffnessFrameToWorldFrameRotation);
+      stiffnessFrameToWorldFrameRotation.set(stiffnessFrame.getTransformToDesiredFrame(worldFrame).getRotation());
 
       stiffnessGainMatrix.setM00(stiffnessX.getDoubleValue());
       stiffnessGainMatrix.setM11(stiffnessY.getDoubleValue());

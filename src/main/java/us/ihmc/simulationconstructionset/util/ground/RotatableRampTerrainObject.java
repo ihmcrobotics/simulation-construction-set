@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.util.ground;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.shape.primitives.Ramp3D;
@@ -51,8 +51,8 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
       transform = new RigidBodyTransform();
       RotationMatrix a1 = new RotationMatrix();
       a1.setToYawOrientation(radiansYaw + (slopeDown ? Math.PI : 0));
-      transform.setRotation(a1);
-      transform.setTranslation(new Vector3D(xCenter, yCenter, 0));
+      transform.getRotation().set(a1);
+      transform.getTranslation().set(new Vector3D(xCenter, yCenter, 0));
       inverseTransform = new RigidBodyTransform();
       inverseTransform.setAndInvert(transform);
 
@@ -77,7 +77,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
 
       linkGraphics = new Graphics3DObject();
       linkGraphics.translate(xCenter, yCenter, 0.0);
-      linkGraphics.rotate(radiansYaw + (slopeDown ? Math.PI : 0), Axis.Z);
+      linkGraphics.rotate(radiansYaw + (slopeDown ? Math.PI : 0), Axis3D.Z);
       linkGraphics.addWedge(absRun, width, height, appearance);
 
       Point3D minPoint = new Point3D(xGlobalMin, yGlobalMin, Double.NEGATIVE_INFINITY);

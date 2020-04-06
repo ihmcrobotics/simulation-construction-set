@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.Vector2D;
@@ -51,7 +51,7 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
       double height = width;
       linkGraphics.translate(origin.getX() + (xMin + xMax) / 2.0, origin.getY() + (yMin + yMax) / 2.0, heightAboveGround - height);
       double angle = Math.atan2(direction.getY(), direction.getX());
-      linkGraphics.rotate(angle, Axis.Z);
+      linkGraphics.rotate(angle, Axis3D.Z);
 
       linkGraphics.addCube(forward + back, width, height, appearance);
    }

@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.axisAngle.AxisAngle;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -51,7 +51,7 @@ public class PinJoint extends OneDegreeOfFreedomJoint
     * @param rob Robot to which this joint will belong
     * @param jaxis int representing the axis
     */
-   public PinJoint(String jname, Vector3DReadOnly offset, Robot rob, Axis jaxis)
+   public PinJoint(String jname, Vector3DReadOnly offset, Robot rob, Axis3D jaxis)
    {
       super(jname, offset, rob);
       physics = new PinJointPhysics(this);
@@ -413,7 +413,7 @@ public class PinJoint extends OneDegreeOfFreedomJoint
    {
       t1.setIdentity();
       axisAngle.set(u_i, rotAng);
-      t1.setRotation(axisAngle);
+      t1.getRotation().set(axisAngle);
    }
 
    /**
