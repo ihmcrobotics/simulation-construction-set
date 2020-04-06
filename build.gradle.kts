@@ -51,7 +51,7 @@ mainDependencies {
    api("us.ihmc:ihmc-video-codecs:2.1.5")
    api("us.ihmc:euclid:0.13.0")
    api("us.ihmc:ihmc-commons:0.28.2")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.14.0")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.15.0")
    api("us.ihmc:ihmc-robot-description:0.15.0")
    api("us.ihmc:ihmc-graphics-description:0.15.0")
    api("us.ihmc:ihmc-swing-plotting:0.15.0")
