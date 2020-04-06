@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.physics.featherstone;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 import us.ihmc.commons.MathTools;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.Link;
 import us.ihmc.simulationconstructionset.PinJoint;
@@ -32,14 +32,14 @@ public class CartPoleRobot extends RobotWithClosedFormDynamics
    {
       super(name);
 
-      sliderJoint = new SliderJoint(name + "CartJoint", new Vector3D(), this, Axis.X);
+      sliderJoint = new SliderJoint(name + "CartJoint", new Vector3D(), this, Axis3D.X);
       sliderJoint.setDamping(cartDamping);
 
       Link cartLink = new Link(name + "CartLink");
       cartLink.setMass(cartMass);
       sliderJoint.setLink(cartLink);
 
-      pinJoint = new PinJoint(name + "PoleJoint", new Vector3D(), this, Axis.Y);
+      pinJoint = new PinJoint(name + "PoleJoint", new Vector3D(), this, Axis3D.Y);
       pinJoint.setDamping(poleDamping);
 
       Link poleLink = new Link(name + "PoleLink");

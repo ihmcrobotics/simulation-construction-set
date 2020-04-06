@@ -75,7 +75,7 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
       t1.setIdentity();
 
       axisAngle.set(u_i, rotAng);
-      t1.setRotation(axisAngle);
+      t1.getRotation().set(axisAngle);
 
       // t1.setRotation();
    }

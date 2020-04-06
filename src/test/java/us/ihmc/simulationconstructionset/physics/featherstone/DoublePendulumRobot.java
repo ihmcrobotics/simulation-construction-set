@@ -2,8 +2,9 @@ package us.ihmc.simulationconstructionset.physics.featherstone;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+
 import us.ihmc.commons.MathTools;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.Link;
 import us.ihmc.simulationconstructionset.PinJoint;
@@ -27,7 +28,7 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
 
    private final double mass1 = 1.0, mass2 = 1.5;
    private final double damping1 = 0.2, damping2 = 0.1;
-   private final Axis axis = Axis.X;
+   private final Axis3D axis = Axis3D.X;
 
    private final PinJoint pinJoint1;
    private final PinJoint pinJoint2;

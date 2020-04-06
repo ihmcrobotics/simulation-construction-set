@@ -23,7 +23,7 @@ public class FlatGroundTerrainObject extends FlatGroundProfile implements Terrai
       groundGraphics.addCube(groundSize, groundSize, groundThickness);
       
       Box3D boxShape = new Box3D(groundSize, groundSize, groundThickness);
-      boxShape.getPose().setTranslation(0.0, 0.0, -groundThickness);  
+      boxShape.getPose().getTranslation().set(0.0, 0.0, -groundThickness);  
       this.terrainCollisionShapes.add(boxShape);
    }
    

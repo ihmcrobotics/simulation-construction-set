@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.util.ground;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.geometry.Line3D;
 import us.ihmc.euclid.shape.primitives.Box3D;
@@ -76,8 +76,8 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    private static RigidBodyTransform yawPitchDegreesTransform(Vector3D center, double yawCCWDegrees, double pitchDownDegrees)
    {
       RigidBodyTransform location = new RigidBodyTransform();
-      location.setRotationYawPitchRoll(Math.toRadians(yawCCWDegrees), Math.toRadians(pitchDownDegrees), 0.0);
-      location.setTranslation(center);
+      location.getRotation().setYawPitchRoll(Math.toRadians(yawCCWDegrees), Math.toRadians(pitchDownDegrees), 0.0);
+      location.getTranslation().set(center);
       return location;
    }
 
@@ -150,7 +150,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    public Line3D getAxis()
    {
       Point3D axisOrigin = new Point3D();
-      location.getTranslation(axisOrigin);
+      axisOrigin.set(location.getTranslation());
 
       Vector3D axisDirection = getAxisDirectionCopy();
 
@@ -160,7 +160,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    public Vector3D getAxisDirectionCopy()
    {
       Vector3D axisDirection = new Vector3D();
-      location.getRotation().getColumn(Axis.Z.ordinal(), axisDirection);
+      location.getRotation().getColumn(Axis3D.Z.ordinal(), axisDirection);
       return axisDirection;
    }
 

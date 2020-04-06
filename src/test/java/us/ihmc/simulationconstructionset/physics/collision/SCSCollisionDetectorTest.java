@@ -252,7 +252,7 @@ public abstract class SCSCollisionDetectorTest
       collisionDetector.initialize();
 
       RigidBodyTransform offset = new RigidBodyTransform();
-      offset.setTranslation(new Vector3D(0, 0, -1.7));
+      offset.getTranslation().set(new Vector3D(0, 0, -1.7));
 
       FloatingJoint cubeA = cube(collisionDetector, "A", 10, null, 1, 1, 1, 2, 2);
       FloatingJoint cubeB = cube(collisionDetector, "B", 10, null, 1, 1, 1, 2, 2);

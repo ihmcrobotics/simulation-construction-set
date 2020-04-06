@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset.simulatedSensors;
 
 import org.ejml.data.DenseMatrix64F;
 import org.junit.jupiter.api.Test;
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -35,7 +35,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
       contactPoints.add(point0);
       contactPoints.add(point1);
             
-      joint = new PinJoint("test", new Vector3D(1.0, 0.0, 0.0), robot, Axis.X);
+      joint = new PinJoint("test", new Vector3D(1.0, 0.0, 0.0), robot, Axis3D.X);
       robot.addRootJoint(joint);
       robot.update();
       
@@ -56,7 +56,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
       assertEquals(0.0, tauXFXAndFZ.get(3, 0), epsilon);
       assertEquals(1.0, tauXFXAndFZ.get(5, 0), epsilon);
       
-      PinJoint joint2 = new PinJoint("test2", new Vector3D(-1.0, -1.0, 0.0), robot, Axis.X);
+      PinJoint joint2 = new PinJoint("test2", new Vector3D(-1.0, -1.0, 0.0), robot, Axis3D.X);
       robot.addRootJoint(joint2);
       robot.update();
       
@@ -82,12 +82,12 @@ public class GroundContactPointBasedWrenchCalculatorTest
       
       
       //Off-joint-axis force-Sensor
-      PinJoint joint3 = new PinJoint("test3", new Vector3D(0.0, 0.0, 0.0), robot, Axis.X);
+      PinJoint joint3 = new PinJoint("test3", new Vector3D(0.0, 0.0, 0.0), robot, Axis3D.X);
       robot.addRootJoint(joint3);
       robot.update();
       
       RigidBodyTransform transformToJoint = new RigidBodyTransform();
-      transformToJoint.setTranslation(new Vector3D(-1.0, -1.0, 0.0));
+      transformToJoint.getTranslation().set(new Vector3D(-1.0, -1.0, 0.0));
 
       calculator = new GroundContactPointBasedWrenchCalculator(joint.getName(), contactPoints, joint3, transformToJoint, new YoVariableRegistry("dummy3"));
 

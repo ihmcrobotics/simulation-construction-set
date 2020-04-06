@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -43,7 +43,7 @@ public class SimpleTableTerrainObject implements TerrainObject3D, HeightMapWithN
       linkGraphics.addModelFile("models/plasticTableTop.obj");
 
       if (TABLE_LENGTH < TABLE_WIDTH)
-         linkGraphics.rotate(Math.PI / 2, Axis.Z);
+         linkGraphics.rotate(Math.PI / 2, Axis3D.Z);
       linkGraphics.scale(new Vector3D(1, 1, boundingBox.getMaxZ() / TABLE_THICKNESS));
       linkGraphics.addModelFile("models/FoldingTableLegs.obj");
    }

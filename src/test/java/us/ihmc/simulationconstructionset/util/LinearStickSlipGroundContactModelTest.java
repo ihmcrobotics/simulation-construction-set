@@ -196,7 +196,7 @@ public class LinearStickSlipGroundContactModelTest
       RigidBodyTransform transform3D = new RigidBodyTransform();
       transform3D.setRotationRollAndZeroTranslation(0.3);
       transform3D.setRotationPitchAndZeroTranslation(-0.7);
-      transform3D.setTranslation(new Vector3D(0.1, 0.2, 0.3));
+      transform3D.getTranslation().set(new Vector3D(0.1, 0.2, 0.3));
       
       RigidBodyTransform inverseTransform3D = new RigidBodyTransform(transform3D);
       inverseTransform3D.invert();
