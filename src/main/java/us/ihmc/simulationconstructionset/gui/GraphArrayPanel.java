@@ -15,11 +15,9 @@ import javax.swing.JPanel;
 
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.javaFXToolkit.graphing.JavaFX3DGraph;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
-import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
 import us.ihmc.simulationconstructionset.commands.ZoomGraphCommandExecutor;
 
@@ -28,7 +26,6 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
    private static final long serialVersionUID = -4366771635271760899L;
 
    private ArrayList<YoGraph> graphsOnThisPanel;
-   private ArrayList<JavaFX3DGraph> javaFX3DGraphs;
 
    private StandardSimulationGUI standardSimulationGUI;
    private JFrame parentFrame;
@@ -59,7 +56,6 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
       this.setOpaque(true);
       this.graphsOnThisPanel = new ArrayList<>(16);
-      this.javaFX3DGraphs = new ArrayList<>();
 
       this.setPreferredSize(new Dimension(800, 400));
    }
@@ -471,14 +467,15 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
       addGraph(g);
    }
 
+   @Deprecated
    public void addNew3dGraph()
    {
-      JavaFX3DGraph javaFX3DGraph = new JavaFX3DGraph(this, selectedVariableHolder, dataBuffer, dataBuffer);
-      javaFX3DGraphs.add(javaFX3DGraph);
-      standardSimulationGUI.setupExtraPanels(new ExtraPanelConfiguration("3D Graph " + javaFX3DGraphs.size(),
-                                                                         javaFX3DGraph.getPanel(),
-                                                                         true));
-      standardSimulationGUI.selectPanel("3D Graph " + javaFX3DGraphs.size());
+//      JavaFX3DGraph javaFX3DGraph = new JavaFX3DGraph(this, selectedVariableHolder, dataBuffer, dataBuffer);
+//      javaFX3DGraphs.add(javaFX3DGraph);
+//      standardSimulationGUI.setupExtraPanels(new ExtraPanelConfiguration("3D Graph " + javaFX3DGraphs.size(),
+//                                                                         javaFX3DGraph.getPanel(),
+//                                                                         true));
+//      standardSimulationGUI.selectPanel("3D Graph " + javaFX3DGraphs.size());
    }
 
    public void removeEmptyGraphs()
