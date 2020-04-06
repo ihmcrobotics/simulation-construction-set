@@ -39,9 +39,6 @@ mainDependencies {
    api("net.sourceforge.jmatio:jmatio:1.0")
    api("org.ejml:core:0.30")
    api("xml-apis:xml-apis:2.0.2")
-   api("com.badlogicgames.gdx:gdx-bullet-platform:1.9.4:natives-desktop")
-   api("com.badlogicgames.gdx:gdx-bullet:1.9.4")
-   api("com.badlogicgames.gdx:gdx:1.9.4")
    api("com.google.guava:guava:18.0")
    api("org.easytesting:fest:1.0.16")
    api("org.easytesting:fest-swing:1.2.1")
@@ -57,7 +54,6 @@ mainDependencies {
    api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.14.0")
    api("us.ihmc:ihmc-robot-description:0.14.1")
    api("us.ihmc:ihmc-graphics-description:0.14.1")
-   api("us.ihmc:ihmc-javafx-toolkit:0.14.1")
    api("us.ihmc:ihmc-swing-plotting:0.14.1")
    api(ihmc.sourceSetProject("utilities"))
 }

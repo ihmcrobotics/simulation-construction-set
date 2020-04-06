@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import javafx.application.Platform;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
@@ -29,7 +28,7 @@ public class YoVariableDoubleClickListener implements DoubleClickListener {
         ArrayList<DataBufferEntry> entries = new ArrayList<DataBufferEntry>();
         entries.add(entry);
 
-        Platform.runLater(() -> new VarPropertiesDialog(parentFrame, entries));
+        SwingUtilities.invokeLater(() -> new VarPropertiesDialog(parentFrame, entries));
     }
 
 }
