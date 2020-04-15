@@ -28,6 +28,8 @@ public class SimulationOverheadPlotterFactory
 
    private boolean createInSeperateWindow = false;
    private boolean showOnStart = true;
+   private boolean createLegend = true;
+   private boolean createShowHideMenu = true;
    private String variableNameToTrack = null;
    private String plotterName = "Plotter";
 
@@ -38,15 +40,20 @@ public class SimulationOverheadPlotterFactory
          throw new RuntimeException("SimulationConstructionSet not set");
       }
 
-      SimulationOverheadPlotter simulationOverheadPlotter = new SimulationOverheadPlotter();
+      SimulationOverheadPlotter simulationOverheadPlotter = new SimulationOverheadPlotter(createLegend, createShowHideMenu);
       simulationOverheadPlotter.setDrawHistory(false);
       simulationOverheadPlotter.setXVariableToTrack(null);
       simulationOverheadPlotter.setYVariableToTrack(null);
       simulationConstructionSet.attachPlaybackListener(simulationOverheadPlotter);
 
       JPanel plotterPanel = simulationOverheadPlotter.getJPanel();
-      JPanel plotterKeyJPanel = simulationOverheadPlotter.getJPanelKey();
-      JScrollPane scrollPane = new JScrollPane(plotterKeyJPanel);
+
+      JScrollPane legendScrollPane = null;
+      if (createLegend)
+      {
+         JPanel plotterKeyJPanel = simulationOverheadPlotter.getJPanelKey();
+         legendScrollPane = new JScrollPane(plotterKeyJPanel);
+      }
       
       if (createInSeperateWindow)
       {
@@ -56,7 +63,11 @@ public class SimulationOverheadPlotterFactory
          overheadWindow.add(splitPane);
 
          splitPane.add(plotterPanel);
-         splitPane.add(scrollPane);
+
+         if (createLegend)
+         {
+            splitPane.add(legendScrollPane);
+         }
 
          splitPane.setResizeWeight(1.0);
 
@@ -89,11 +100,17 @@ public class SimulationOverheadPlotterFactory
       {
          simulationConstructionSet.addExtraJpanel(plotterPanel, plotterName, showOnStart);
 
-         simulationConstructionSet.addExtraJpanel(scrollPane, "Plotter Legend", false);
+         if (createLegend)
+         {
+            simulationConstructionSet.addExtraJpanel(legendScrollPane, "Plotter Legend", false);
+         }
 
-         JScrollPane menuScrollPanel = new JScrollPane(simulationOverheadPlotter.getMenuPanel());
-         menuScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
-         simulationConstructionSet.addExtraJpanel(menuScrollPanel, PlotterShowHideMenu.getPanelName(), false);
+         if (createShowHideMenu)
+         {
+            JScrollPane showHideMenuScrollPanel = new JScrollPane(simulationOverheadPlotter.getShowHideMenuPanel());
+            showHideMenuScrollPanel.getVerticalScrollBar().setUnitIncrement(16);
+            simulationConstructionSet.addExtraJpanel(showHideMenuScrollPanel, PlotterShowHideMenu.getPanelName(), false);
+         }
 
          for (int i = 0; i < yoGraphicsListRegistries.size(); i++)
          {
@@ -159,5 +176,15 @@ public class SimulationOverheadPlotterFactory
    public void setVariableNameToTrack(String variableNameToTrack)
    {
       this.variableNameToTrack = variableNameToTrack;
+   }
+
+   public void setCreateLegend(boolean createLegend)
+   {
+      this.createLegend = createLegend;
+   }
+
+   public void setCreateShowHideMenu(boolean createShowHideMenu)
+   {
+      this.createShowHideMenu = createShowHideMenu;
    }
 }

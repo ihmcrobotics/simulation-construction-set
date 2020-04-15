@@ -30,13 +30,34 @@ public class SimulationOverheadPlotter implements PlaybackListener
 
    public SimulationOverheadPlotter()
    {
+      this(true, true);
+   }
+
+   public SimulationOverheadPlotter(boolean createLegendPanel, boolean createShowHideMenu)
+   {
       plotter = new Plotter(PlotterColors.javaFXStyle(), false);
-      legendPanel = plotter.createPlotterLegendPanel();
       plotter.setViewRange(1.0);
+
+      if (createLegendPanel)
+      {
+         legendPanel = plotter.createPlotterLegendPanel();
+      }
+      else
+      {
+         legendPanel = null;
+      }
+
       buildMenuBar();
 
-      plotterShowHideMenu = new PlotterShowHideMenu(plotter);
-      plotter.addArtifactsChangedListener(plotterShowHideMenu);
+      if (createShowHideMenu)
+      {
+         plotterShowHideMenu = new PlotterShowHideMenu(plotter);
+         plotter.addArtifactsChangedListener(plotterShowHideMenu);
+      }
+      else
+      {
+         plotterShowHideMenu = null;
+      }
    }
 
    public JFrame createAndDisplayJFrame()
@@ -165,7 +186,7 @@ public class SimulationOverheadPlotter implements PlaybackListener
    {
    }
 
-   public PlotterShowHideMenu getMenuPanel()
+   public PlotterShowHideMenu getShowHideMenuPanel()
    {
       return plotterShowHideMenu;
    }
