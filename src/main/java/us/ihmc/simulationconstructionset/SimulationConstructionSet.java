@@ -118,7 +118,7 @@ import us.ihmc.yoVariables.variable.YoVariableList;
  * <p/>
  * <p><b><big>Cameras and Viewports</big></b></p>
  * <p>The simulation construction set provides a camera interface that is both robust and versatile.  Cameras can easily be configured to track or follow your robot from any conceivable angle.
- * The following provides a brief introduction to this functionality.  For more detailed information see {@link Camera Camera} and {@link ViewportConfiguration ViewportConfiguration}.</p>
+ * The following provides a brief introduction to this functionality.  For more detailed information see {@link com.jme3.renderer.Camera Camera} and {@link ViewportConfiguration ViewportConfiguration}.</p>
  * <p/>
  * <p><b>Cameras</b></p>
  * <p>Each camera has two main parameters: fix and position.  A camera's fix is the point in space at which the camera is looking, while
@@ -228,8 +228,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor, ToggleKeyPointModeCommandExecutor, GUIEnablerAndDisabler, WriteDataCommandExecutor,
       TimeHolder, ParameterRootNamespaceHolder, DataBufferCommandsExecutor, TickAndUpdatable
 {
-   private static final boolean TESTING_LOAD_STUFF = false;
-
    /**
     * If set top true this will print YoVariable hotspots. Those are YoVariableRegistries with more
     * then the specified number of variables or children.
@@ -2285,18 +2283,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    {
       // myGUI.setupConfiguration("all", "all", "all", "all");
 
-      if (!TESTING_LOAD_STUFF)
+      if ((!defaultLoaded) && (myGUI != null))
       {
-         if ((!defaultLoaded) && (myGUI != null))
+         if (parameters.getShowWindows())
          {
-            if (parameters.getShowWindows())
-            {
-               myGUI.loadDefaultGUIConfigurationFile();
+            myGUI.loadDefaultGUIConfigurationFile();
 
-               // myGUI.loadRegistryConfiguration();
-               defaultLoaded = true;
-               myGUI.saveNormalGUIConfigurationFile();
-            }
+            // myGUI.loadRegistryConfiguration();
+            defaultLoaded = true;
+            myGUI.saveNormalGUIConfigurationFile();
          }
       }
 
