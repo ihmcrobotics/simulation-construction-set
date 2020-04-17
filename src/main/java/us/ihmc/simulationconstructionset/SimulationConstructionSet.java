@@ -31,6 +31,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import us.ihmc.commons.Conversions;
+import us.ihmc.commons.thread.Notification;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
@@ -263,6 +264,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    // private boolean keyPointToggle = false;
 
    private boolean hasSimulationThreadStarted = false;
+   private Notification simulationThreadStartedNotification = new Notification();
    private boolean isSimulationThreadRunning = false;
    private boolean isSimulating = false;
    private boolean simulateNoFasterThanRealTime = false;
@@ -1211,9 +1213,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       if (SHOW_REGISTRY_SIZES_ON_STARTUP)
          YoVariableRegistry.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
 
-      while (!this.hasSimulationThreadStarted())
+      while (!hasSimulationThreadStarted())
       {
-         Thread.yield();
+         simulationThreadStartedNotification.blockingPoll();
       }
    }
 
@@ -2348,6 +2350,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       hasSimulationThreadStarted = true;
+      simulationThreadStartedNotification.set();
       isSimulationThreadRunning = true;
 
       if (robots == null)
@@ -2820,12 +2823,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    public boolean hasSimulationThreadStarted()
    {
-      return this.hasSimulationThreadStarted;
+      return hasSimulationThreadStarted;
    }
 
    public boolean isSimulationThreadRunning()
    {
-      return this.isSimulationThreadRunning;
+      return isSimulationThreadRunning;
    }
 
    /**
