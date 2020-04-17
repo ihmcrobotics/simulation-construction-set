@@ -2341,7 +2341,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
             yoGraphicMenuManager.hideAllGraphics();
          }
 
-         this.setYoGraphicsGlobalScale(parameters.getYoGraphicsGlobalScale());
+         setYoGraphicsGlobalScale(parameters.getYoGraphicsGlobalScale());
       }
 
       hasSimulationThreadStarted = true;
@@ -2359,7 +2359,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       // t = rob.getVariable("t");
 
       if (SHOW_REGISTRY_SIZES_ON_STARTUP)
+      {
          YoVariableRegistry.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
+      }
 
       // Three state loop, simulation is either playing, running, or waiting
       while (true)
