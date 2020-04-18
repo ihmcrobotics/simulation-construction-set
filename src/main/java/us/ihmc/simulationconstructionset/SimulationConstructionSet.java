@@ -264,6 +264,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private boolean hasSimulationThreadStarted = false;
    private Notification simulationThreadStartedNotification = new Notification();
    private boolean isSimulationThreadRunning = false;
+   private Notification simulationThreadStoppedNotification = new Notification();
    private boolean isSimulating = false;
    private boolean simulateNoFasterThanRealTime = false;
    private final RealTimeRateEnforcer realTimeRateEnforcer = new RealTimeRateEnforcer();
@@ -2273,7 +2274,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    private int fastTicks = 0;
-   private boolean stopSimulationThread = false;
+   private Notification stopSimulationThreadNotification = new Notification();
 
    /**
     * Function to run both the simulation and playback of the data. The robot and GUI are updated before simulation cycles begin.
@@ -2346,13 +2347,13 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       hasSimulationThreadStarted = true;
       simulationThreadStartedNotification.set();
-      isSimulationThreadRunning = true;
 
       if (robots == null)
       {
-         isSimulationThreadRunning = false;
          return;
       }
+
+      isSimulationThreadRunning = true;
 
       fastTicks = 0;
 
@@ -2364,7 +2365,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       // Three state loop, simulation is either playing, running, or waiting
-      while (true)
+      while (!stopSimulationThreadNotification.poll())
       {
          if (isSimulating)
          {
@@ -2433,17 +2434,10 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
             {
             }
          }
-
-         if (stopSimulationThread)
-         {
-            break;
-         }
-
-         // foo++;
-         // System.out.println("Tick" + foo);
       }
 
       isSimulationThreadRunning = false;
+      simulationThreadStoppedNotification.set();
    }
 
    /**
@@ -2451,18 +2445,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void stopSimulationThread()
    {
-      stopSimulationThread = true;
-
-      while (isSimulationThreadRunning)
-      {
-         try
-         {
-            Thread.sleep(100);
-         }
-         catch (InterruptedException e)
-         {
-         }
-      }
+      stopSimulationThreadNotification.set();
+      simulationThreadStoppedNotification.blockingPoll();
    }
 
    /**
