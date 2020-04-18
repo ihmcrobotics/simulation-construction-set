@@ -3340,7 +3340,10 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    public void startStreamingVideoData(CameraConfiguration cameraConfiguration, int width, int height, ImageCallback imageCallback,
          TimestampProvider timestampProvider, int framesPerSecond)
    {
-      CameraTrackingAndDollyPositionHolder cameraTrackingAndDollyPositionHolder = new CameraTrackAndDollyYoVariablesHolder(yoVariableHolder);
+      CameraTrackAndDollyYoVariablesHolder cameraTrackingAndDollyPositionHolder = new CameraTrackAndDollyYoVariablesHolder(yoVariableHolder);
+      YoDouble cameraFov = new YoDouble("camera_FOVV", rootRegistry);
+      cameraFov.set(Math.PI - 0.1);
+      cameraTrackingAndDollyPositionHolder.setFieldOfViewVar(cameraFov);
       new OffscreenBufferVideoServer(graphics3dAdapter, cameraMountList, cameraConfiguration, cameraTrackingAndDollyPositionHolder, width, height,
             imageCallback, timestampProvider, framesPerSecond);
 
