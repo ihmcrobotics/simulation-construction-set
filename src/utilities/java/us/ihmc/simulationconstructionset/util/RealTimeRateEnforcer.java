@@ -1,5 +1,11 @@
 package us.ihmc.simulationconstructionset.util;
 
+import us.ihmc.commons.thread.Notification;
+import us.ihmc.commons.thread.ThreadTools;
+
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Class for enforcing that a simulation or other computational process doesn't run any faster than real time.
  * Of course, if it runs slower than real time, nothing you can do about it except speed up the algorithm
@@ -13,6 +19,8 @@ public class RealTimeRateEnforcer
 {
    private long wallStartTimeInMilliseconds = -1;
    private double simulatedStartTimeInSeconds = -1.0;
+   private final ScheduledExecutorService wakupScheduler = ThreadTools.newSingleThreadScheduledExecutor("RealTimeRateEnforcer");
+   private final Notification sleepNotification = new Notification();
 
    public void sleepIfNecessaryToEnforceRealTimeRate(double simulatedCurrentTimeInSeconds)
    {
@@ -31,13 +39,8 @@ public class RealTimeRateEnforcer
       int timeToSleepInMilliseconds = (int) (simulatedElapsedTimeInMilliseconds - wallElapsedTimeInMilliseconds);
       if (timeToSleepInMilliseconds > 10)
       {
-         try
-         {
-            Thread.sleep(timeToSleepInMilliseconds);
-         }
-         catch (InterruptedException e)
-         {
-         }
+         wakupScheduler.schedule(sleepNotification::set, timeToSleepInMilliseconds, TimeUnit.MILLISECONDS);
+         sleepNotification.blockingPoll();
       }
    }
 

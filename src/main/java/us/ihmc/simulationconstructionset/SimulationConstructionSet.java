@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -268,6 +270,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private boolean isSimulating = false;
    private boolean simulateNoFasterThanRealTime = false;
    private final RealTimeRateEnforcer realTimeRateEnforcer = new RealTimeRateEnforcer();
+   private final ScheduledExecutorService waitScheduler = ThreadTools.newSingleThreadScheduledExecutor("SCSWait");
+   private final Notification simulationThreadWaitNotification = new Notification();
    private boolean isPlaying = false;
    private boolean fastSimulate = false;
    private int numberOfTicksBeforeUpdatingGraphs = 15;
@@ -2426,13 +2430,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          {
             loopCycle();
 
-            try
-            {
-               Thread.sleep(50);
-            }
-            catch (InterruptedException e)
-            {
-            }
+            waitScheduler.schedule(simulationThreadWaitNotification::set, 50, TimeUnit.MILLISECONDS);
+            simulationThreadWaitNotification.blockingPoll();
          }
       }
 
