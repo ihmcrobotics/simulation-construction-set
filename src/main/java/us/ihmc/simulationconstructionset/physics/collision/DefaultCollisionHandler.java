@@ -210,7 +210,7 @@ public class DefaultCollisionHandler implements CollisionHandler
             {
                Vector3D velocityWorld = new Vector3D(0.0, 0.0, 0.0);
 
-               if (externalForcePointOne.getVelocityVector().lengthSquared() > velocityForMicrocollision * velocityForMicrocollision)
+               if (externalForcePointOne.getVelocityCopy().lengthSquared() > velocityForMicrocollision * velocityForMicrocollision)
                {
                   collisionOccurred = externalForcePointOne.resolveCollision(velocityWorld, negative_normal, epsilon, mu, p_world); // link1.epsilon, link1.mu, p_world);
                }
@@ -225,7 +225,7 @@ public class DefaultCollisionHandler implements CollisionHandler
             else if (shapeOneIsGround)
             {
                Vector3D velocityWorld = new Vector3D(0.0, 0.0, 0.0);
-               if (externalForcePointTwo.getVelocityVector().lengthSquared() > velocityForMicrocollision * velocityForMicrocollision)
+               if (externalForcePointTwo.getVelocityCopy().lengthSquared() > velocityForMicrocollision * velocityForMicrocollision)
                {
                   collisionOccurred = externalForcePointTwo.resolveCollision(velocityWorld, normal, epsilon, mu, p_world); // link1.epsilon, link1.mu, p_world);
                }
@@ -240,8 +240,8 @@ public class DefaultCollisionHandler implements CollisionHandler
             }
             else
             {
-               Vector3D velocityVectorOne = externalForcePointOne.getVelocityVector();
-               Vector3D velocityVectorTwo = externalForcePointTwo.getVelocityVector();
+               Vector3D velocityVectorOne = externalForcePointOne.getVelocityCopy();
+               Vector3D velocityVectorTwo = externalForcePointTwo.getVelocityCopy();
 
                Vector3D velocityDifference = new Vector3D();
                velocityDifference.sub(velocityVectorTwo, velocityVectorOne);
@@ -305,7 +305,7 @@ public class DefaultCollisionHandler implements CollisionHandler
    }
 
    @Override
-   public void addContactingExternalForcePoints(Link link, ArrayList<ContactingExternalForcePoint> contactingExternalForcePoints)
+   public void addContactingExternalForcePoints(Link link, List<ContactingExternalForcePoint> contactingExternalForcePoints)
    {
    }
 }

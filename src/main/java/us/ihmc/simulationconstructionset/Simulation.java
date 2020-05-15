@@ -2,6 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.graphicsDescription.HeightMap;
 import us.ihmc.jMonkeyEngineToolkit.Graphics3DAdapter;
@@ -46,11 +47,11 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    private YoVariableList myCombinedVarList = new YoVariableList("Combined");
 
-   private ArrayList<SimulationDoneListener> simulateDoneListeners = new ArrayList<>();
-   private ArrayList<SimulationDoneCriterion> simulateDoneCriterions;
+   private List<SimulationDoneListener> simulateDoneListeners = new ArrayList<>();
+   private List<SimulationDoneCriterion> simulateDoneCriterions;
 
    // private VarList robVarList, gcVarList; //controllerVarList,
-   // private ArrayList<VarList> controllerVarLists = new ArrayList<VarList>();
+   // private List<VarList> controllerVarLists = new ArrayList<VarList>();
 
    public void initPhysics(ScsPhysics physics)
    {
@@ -102,7 +103,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getAllVariables()
+   public List<YoVariable<?>> getAllVariables()
    {
       return myDataBuffer.getAllVariables();
    }
@@ -138,19 +139,19 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String nameSpace, String varname)
+   public List<YoVariable<?>> getVariables(String nameSpace, String varname)
    {
       return myDataBuffer.getVariables(nameSpace, varname);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String varname)
+   public List<YoVariable<?>> getVariables(String varname)
    {
       return myDataBuffer.getVariables(varname);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(NameSpace nameSpace)
+   public List<YoVariable<?>> getVariables(NameSpace nameSpace)
    {
       return myDataBuffer.getVariables(nameSpace);
    }
@@ -160,17 +161,17 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
       throw new RuntimeException("Do not register variables with a Simulation.java!");
    }
 
-   public ArrayList<YoVariable<?>> getVariablesThatContain(String searchString, boolean caseSensitive)
+   public List<YoVariable<?>> getVariablesThatContain(String searchString, boolean caseSensitive)
    {
       return myDataBuffer.getVariablesThatContain(searchString, caseSensitive, getAllVariables());
    }
 
-   public ArrayList<YoVariable<?>> getVariablesThatStartWith(String searchString)
+   public List<YoVariable<?>> getVariablesThatStartWith(String searchString)
    {
       return myDataBuffer.getVariablesThatStartWith(searchString);
    }
 
-   public ArrayList<YoVariable<?>> getVars(String[] varNames, String[] regularExpressions)
+   public List<YoVariable<?>> getVars(String[] varNames, String[] regularExpressions)
    {
       return myDataBuffer.getVars(varNames, regularExpressions);
    }
@@ -202,7 +203,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          for (Robot robot : robots)
          {
             YoVariableRegistry registry = robot.getRobotsYoVariableRegistry();
-            ArrayList<RewoundListener> simulationRewoundListners = registry.getAllSimulationRewoundListeners();
+            List<RewoundListener> simulationRewoundListners = registry.getAllSimulationRewoundListeners();
 
             myDataBuffer.attachSimulationRewoundListeners(simulationRewoundListners);
          }
@@ -412,7 +413,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
       simulate((int) (simulationTime / mySimulator.getDT()));
    }
 
-   public void setupSimulationGraphics(ArrayList<GraphicsRobot> graphicsRobotsToUpdate)
+   public void setupSimulationGraphics(List<GraphicsRobot> graphicsRobotsToUpdate)
    {
       // 3D Canvass Stuff goes here...
       // myGraphics = new StandardSimulationGraphics(this.rob, this.myCombinedVarList, null);

@@ -3,6 +3,7 @@ package us.ihmc.simulationconstructionset;
 import us.ihmc.euclid.axisAngle.AxisAngle;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.DummyOneDegreeOfFreedomJointPhysics;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
@@ -34,7 +35,7 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
 
    private YoVariableList jointVars;
 
-   public DummyOneDegreeOfFreedomJoint(String jname, Vector3DReadOnly offset, Robot rob, Vector3DReadOnly u_hat)
+   public DummyOneDegreeOfFreedomJoint(String jname, Tuple3DReadOnly offset, Robot rob, Vector3DReadOnly u_hat)
    {
       super(jname, offset, rob);
       physics = new DummyOneDegreeOfFreedomJointPhysics(this);

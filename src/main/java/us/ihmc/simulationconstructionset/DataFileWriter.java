@@ -11,7 +11,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
@@ -69,12 +68,12 @@ public class DataFileWriter
     * (IOException e){} }
     */
 
-   public void writeData(String model, double recordDT, DataBuffer dataBuffer, ArrayList<YoVariable<?>> vars, boolean binary, boolean compress)
+   public void writeData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean binary, boolean compress)
    {
       writeData(model, recordDT, dataBuffer, vars, binary, compress, null);
    }
 
-   public void writeData(String model, double recordDT, DataBuffer dataBuffer, ArrayList<YoVariable<?>> vars, boolean binary, boolean compress, Robot robot)
+   public void writeData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean binary, boolean compress, Robot robot)
    {
       if (binary)
          writeBinaryData(model, recordDT, dataBuffer, vars, compress, robot);
@@ -85,7 +84,7 @@ public class DataFileWriter
 
    }
 
-   public void writeState(String model, double recordDT, ArrayList<YoVariable<?>> variables, boolean binary, boolean compress)
+   public void writeState(String model, double recordDT, List<YoVariable<?>> variables, boolean binary, boolean compress)
    {
       if (binary)
          writeBinaryState(model, recordDT, variables, compress);
@@ -108,8 +107,8 @@ public class DataFileWriter
       return dataStream;
    }
 
-   private void writeHeaderInformation(DataOutput dataOutputStream, ArrayList<DataBufferEntry> entries, String model, double recordDT, DataBuffer dataBuffer,
-                                       ArrayList<YoVariable<?>> vars, boolean compress, Robot robot)
+   private void writeHeaderInformation(DataOutput dataOutputStream, List<DataBufferEntry> entries, String model, double recordDT, DataBuffer dataBuffer,
+                                       List<YoVariable<?>> vars, boolean compress, Robot robot)
          throws IOException
    {
       String columnFormatted = "$COLUMN";
@@ -118,8 +117,8 @@ public class DataFileWriter
       writeHeaderInformation(dataOutputStream, entries, model, columnFormatted, recordDT, bufferLength, vars, compress, robot);
    }
 
-   private void writeHeaderInformation(DataOutput dataOutputStream, ArrayList<DataBufferEntry> entries, String model, String columnOrRowFormatted,
-                                       double recordDT, int bufferLength, ArrayList<YoVariable<?>> vars, boolean compress, Robot robot)
+   private void writeHeaderInformation(DataOutput dataOutputStream, List<DataBufferEntry> entries, String model, String columnOrRowFormatted,
+                                       double recordDT, int bufferLength, List<YoVariable<?>> vars, boolean compress, Robot robot)
          throws IOException
    {
       //    if (DEBUG) System.out.println("Writing out $BEGIN_HEADER");
@@ -242,20 +241,20 @@ public class DataFileWriter
    }
 
    public DataOutputStream openDataOutputStreamAndWriteHeaderInformationForLoggingData(String model, double recordDT, DataBuffer dataBuffer,
-                                                                                       ArrayList<YoVariable<?>> vars, boolean compress) // , Robot robot
+                                                                                       List<YoVariable<?>> vars, boolean compress) // , Robot robot
    {
       return openDataOutputStreamAndWriteHeaderInformationForLoggingData(model, recordDT, dataBuffer, vars, compress, null);
    }
 
    private DataOutputStream openDataOutputStreamAndWriteHeaderInformationForLoggingData(String model, double recordDT, DataBuffer dataBuffer,
-                                                                                        ArrayList<YoVariable<?>> vars, boolean compress, Robot robot)
+                                                                                        List<YoVariable<?>> vars, boolean compress, Robot robot)
    {
       DataOutputStream dataOutputStream = null;
 
       try
       {
          dataOutputStream = openDataOutputStreamForWriting(outFile, compress);
-         ArrayList<DataBufferEntry> entries = null;
+         List<DataBufferEntry> entries = null;
 
          if (dataBuffer != null)
             entries = dataBuffer.getEntries();
@@ -274,7 +273,7 @@ public class DataFileWriter
       return dataOutputStream;
    }
 
-   public void writeOutOneRowOfLogData(DataOutput dataOutputStream, ArrayList<YoVariable<?>> variablesToWrite) throws IOException
+   public void writeOutOneRowOfLogData(DataOutput dataOutputStream, List<YoVariable<?>> variablesToWrite) throws IOException
    {
       for (YoVariable<?> variableToWrite : variablesToWrite)
       {
@@ -295,7 +294,7 @@ public class DataFileWriter
       }
    }
 
-   public void writeMatlabBinaryData(double recordDT, DataBuffer dataBufferSortedByNamespace, ArrayList<YoVariable<?>> vars)
+   public void writeMatlabBinaryData(double recordDT, DataBuffer dataBufferSortedByNamespace, List<YoVariable<?>> vars)
    {
       MatFileIncrementalWriter writer;
       try
@@ -303,7 +302,7 @@ public class DataFileWriter
          writer = new MatFileIncrementalWriter(outFile);
 
          int bufferLength = dataBufferSortedByNamespace.getBufferInOutLength();
-         ArrayList<DataBufferEntry> entries = dataBufferSortedByNamespace.getEntries();
+         List<DataBufferEntry> entries = dataBufferSortedByNamespace.getEntries();
 
          MLDouble dt = new MLDouble("DT", new double[][] {{recordDT}});
          writer.write(dt);
@@ -375,12 +374,12 @@ public class DataFileWriter
       }
    }
 
-   private void writeBinaryData(String model, double recordDT, DataBuffer dataBuffer, ArrayList<YoVariable<?>> vars, boolean compress, Robot robot)
+   private void writeBinaryData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean compress, Robot robot)
    {
       try
       {
          DataOutputStream dataOutputStream = openDataOutputStreamForWriting(outFile, compress);
-         ArrayList<DataBufferEntry> entries = dataBuffer.getEntries();
+         List<DataBufferEntry> entries = dataBuffer.getEntries();
          writeHeaderInformation(dataOutputStream, entries, model, recordDT, dataBuffer, vars, compress, robot);
 
          int bufferLength = dataBuffer.getBufferInOutLength();
@@ -410,9 +409,9 @@ public class DataFileWriter
       }
    }
 
-   private void writeASCIIData(String model, double recordDT, DataBuffer dataBuffer, ArrayList<YoVariable<?>> vars, boolean compress)
+   private void writeASCIIData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean compress)
    {
-      ArrayList<DataBufferEntry> entries = dataBuffer.getEntries();
+      List<DataBufferEntry> entries = dataBuffer.getEntries();
 
       try
       {
@@ -481,9 +480,9 @@ public class DataFileWriter
       }
    }
 
-   public void writeSpreadsheetFormattedData(DataBuffer dataBuffer, ArrayList<? extends YoVariable<?>> vars)
+   public void writeSpreadsheetFormattedData(DataBuffer dataBuffer, List<? extends YoVariable<?>> vars)
    {
-      ArrayList<DataBufferEntry> entries = dataBuffer.getEntries();
+      List<DataBufferEntry> entries = dataBuffer.getEntries();
 
       try
       {
@@ -560,7 +559,7 @@ public class DataFileWriter
 
    }
 
-   private void writeBinaryState(String model, double recordDT, ArrayList<YoVariable<?>> variables, boolean compress)
+   private void writeBinaryState(String model, double recordDT, List<YoVariable<?>> variables, boolean compress)
    {
       try
       {
@@ -616,7 +615,7 @@ public class DataFileWriter
       }
    }
 
-   private void writeASCIIState(String model, double recordDT, ArrayList<YoVariable<?>> variables, boolean compress)
+   private void writeASCIIState(String model, double recordDT, List<YoVariable<?>> variables, boolean compress)
    {
       try
       {
@@ -642,7 +641,7 @@ public class DataFileWriter
       }
    }
 
-   public void writeSpreadsheetFormattedState(DataBuffer dataBuffer, ArrayList<? extends YoVariable<?>> vars)
+   public void writeSpreadsheetFormattedState(DataBuffer dataBuffer, List<? extends YoVariable<?>> vars)
    {
       try
       {

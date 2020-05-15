@@ -2,6 +2,8 @@ package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeWithLink;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
@@ -83,7 +85,7 @@ public class ContactingExternalForcePoint extends ExternalForcePoint
    private final Vector3D tempSurfaceNormal = new Vector3D();
    private final RigidBodyTransform tempTransform = new RigidBodyTransform();
 
-   public void setSurfaceNormalInWorld(Vector3D surfaceNormalInWorld)
+   public void setSurfaceNormalInWorld(Vector3DReadOnly surfaceNormalInWorld)
    {
       //TODO: Make more efficient by having getTransformFromWorld() in Joint...
       tempSurfaceNormal.set(surfaceNormalInWorld);
@@ -96,7 +98,7 @@ public class ContactingExternalForcePoint extends ExternalForcePoint
       surfaceNormalInJointFrame.set(tempSurfaceNormal);
    }
 
-   public void getSurfaceNormalInWorld(Vector3D surfaceNormalInWorldToPack)
+   public void getSurfaceNormalInWorld(Vector3DBasics surfaceNormalInWorldToPack)
    {
       surfaceNormalInWorldToPack.set(surfaceNormalInJointFrame);
       parentJoint.getTransformToWorld(tempTransform);

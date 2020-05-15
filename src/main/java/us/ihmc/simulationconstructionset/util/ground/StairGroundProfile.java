@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 
 public class StairGroundProfile extends GroundProfileFromHeightMap
 {
@@ -40,7 +40,7 @@ public class StairGroundProfile extends GroundProfileFromHeightMap
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
@@ -60,7 +60,7 @@ public class StairGroundProfile extends GroundProfileFromHeightMap
 
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       normal.set(0.0, 0.0, 1.0);
    }

@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface GroundContactPointsHolder
 {
-   public ArrayList<GroundContactPoint> getGroundContactPoints(int groundContactGroupIdentifier);
+   public List<GroundContactPoint> getGroundContactPoints(int groundContactGroupIdentifier);
 }

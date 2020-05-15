@@ -9,6 +9,8 @@ import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -70,7 +72,7 @@ public class RotatableBoxTerrainObject implements TerrainObject3D, HeightMapWith
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double heightAt = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
@@ -132,26 +134,26 @@ public class RotatableBoxTerrainObject implements TerrainObject3D, HeightMapWith
    private final Point3D ignoreIntesectionPoint = new Point3D();
    private final Vector3D ignoreNormal = new Vector3D();
 
-   public void closestIntersectionTo(double x, double y, double z, Point3D intersectionToPack)
+   public void closestIntersectionTo(double x, double y, double z, Point3DBasics intersectionToPack)
    {
       tempPoint.set(x, y, z);
       box.evaluatePoint3DCollision(tempPoint, intersectionToPack, ignoreNormal);
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       tempPoint.set(x, y, z);
       box.evaluatePoint3DCollision(tempPoint, ignoreIntesectionPoint, normalToPack);
    }
 
-   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       tempPoint.set(x, y, z);
       box.evaluatePoint3DCollision(tempPoint, intersectionToPack, normalToPack);
    }
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       tempPoint.set(x, y, z);
 

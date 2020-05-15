@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -62,7 +63,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.addCameraKey();
    }
 
-   public ArrayList<Integer> getCameraKeyPoints()
+   public List<Integer> getCameraKeyPoints()
    {
       return standardSimulationGUI.getCameraKeyPoints();
    }
@@ -79,7 +80,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
     *
     * @return The current KeyPoints as an ArrayList of Integer
     */
-   public ArrayList<Integer> getKeyPoints()
+   public List<Integer> getKeyPoints()
    {
       return standardSimulationGUI.getKeyPoints();
    }

@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import us.ihmc.commons.RandomNumbers;
@@ -73,7 +74,7 @@ public class RandomRobotGenerator
 
    public static void setRandomJointPositions(Robot robot, Random random)
    {
-      ArrayList<Joint> rootJoints = robot.getRootJoints();
+      List<Joint> rootJoints = robot.getRootJoints();
 
       for (Joint rootJoint : rootJoints)
       {
@@ -91,7 +92,7 @@ public class RandomRobotGenerator
 
    public static void setRandomJointVelocities(Robot robot, Random random)
    {
-      ArrayList<Joint> rootJoints = robot.getRootJoints();
+      List<Joint> rootJoints = robot.getRootJoints();
 
       for (Joint rootJoint : rootJoints)
       {

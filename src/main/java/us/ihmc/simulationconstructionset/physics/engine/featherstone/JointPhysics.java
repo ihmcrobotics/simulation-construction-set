@@ -2,13 +2,17 @@ package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.Matrix3DBasics;
 import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.ExternalForcePoint;
@@ -52,12 +56,12 @@ public abstract class JointPhysics<J extends Joint>
    public SpatialVector s_hat_i = new SpatialVector(); // Spatial Joint Axis
    public double Q_i; // Joint Torque.
 
-   public ArrayList<KinematicPoint> kinematicPoints;
-   protected ArrayList<ExternalForcePoint> externalForcePoints;
-   protected ArrayList<ExternalTorque> externalTorques;
+   public List<KinematicPoint> kinematicPoints;
+   protected List<ExternalForcePoint> externalForcePoints;
+   protected List<ExternalTorque> externalTorques;
 
    public LinkedHashMap<Integer, GroundContactPointGroup> groundContactPointGroups;
-   public ArrayList<GroundContactPointGroup> groundContactPointGroupList;
+   public List<GroundContactPointGroup> groundContactPointGroupList;
 
    protected JointWrenchSensor jointWrenchSensor;
    private SpatialVector tempJointWrenchVector;
@@ -89,7 +93,7 @@ public abstract class JointPhysics<J extends Joint>
     * @param v_h  Linear velocity of joint i-1.
     * @param Rh_0 Rotation matrix between frame i-1 and the world.
     */
-   public void featherstonePassOne(Vector3D w_h, Vector3D v_h, RotationMatrix Rh_0)
+   public void featherstonePassOne(Vector3DReadOnly w_h, Vector3DReadOnly v_h, RotationMatrixReadOnly Rh_0)
    {
       // First set the transform (rotation matrix) for this joint.
       // (R <- rotation matrix from F_h to F_i
@@ -97,7 +101,7 @@ public abstract class JointPhysics<J extends Joint>
       // this.update(false);
       // this.jointTransform3D.get(Rh_i);
 
-      r_in.set(owner.offset);
+      r_in.set(owner.getOffset());
       if (owner.parentJoint != null)
       {
          r_in.sub(owner.parentJoint.link.getComOffset());
@@ -151,7 +155,7 @@ public abstract class JointPhysics<J extends Joint>
       {
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             for (int y = 0; y < groundContactPoints.size(); y++)
             {
                GroundContactPoint point = groundContactPoints.get(y);
@@ -197,7 +201,7 @@ public abstract class JointPhysics<J extends Joint>
     * @param w_previous The angular velocity of the previous joint represented in that joints
     *                   coordinates. This value is used in the calculation of the coriolis vector.
     */
-   public void featherstonePassTwo(Vector3D w_previous)
+   public void featherstonePassTwo(Vector3DReadOnly w_previous)
    {
       // First need to rotate w_previous into these coordinate system to get w_h:
       w_h.set(w_previous);
@@ -222,7 +226,7 @@ public abstract class JointPhysics<J extends Joint>
       {
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             for (int y = 0; y < groundContactPoints.size(); y++)
             {
                GroundContactPoint point = groundContactPoints.get(y);
@@ -490,7 +494,7 @@ public abstract class JointPhysics<J extends Joint>
       // Check for unreasonable accelerations:
       if (!jointDependentVerifyReasonableAccelerations())
       {
-         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<>();
+         List<Joint> unreasonableAccelerationJoints = new ArrayList<>();
          unreasonableAccelerationJoints.add(owner);
 
          throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
@@ -907,7 +911,7 @@ public abstract class JointPhysics<J extends Joint>
     * @param k_X_hat_coll Spatial transformation matrix between this joint and collision space.
     * @param kiToPack     Matrix3d in which the collision matrix will be stored.
     */
-   private void computeMultibodyKi(SpatialTransformationMatrix k_X_hat_coll, Matrix3D kiToPack)
+   private void computeMultibodyKi(SpatialTransformationMatrix k_X_hat_coll, Matrix3DBasics kiToPack)
    {
       // Mirtich p. 144.  Compute the multi-body Ki for this Joint, given the SpatialTransformationMatrix from the contact frame to the joint COM frame.
       // Articulated inertias are already computed from the dynamics.  k_X_hat_coll is given.
@@ -1163,7 +1167,7 @@ public abstract class JointPhysics<J extends Joint>
     *                 coordinates.
     * @return Double indicating the total mass of this joint and its children.
     */
-   public double recursiveComputeCenterOfMass(Point3D comPoint)
+   public double recursiveComputeCenterOfMass(Point3DBasics comPoint)
    {
       double totalMass = 0.0;
       comPoint.set(0.0, 0.0, 0.0);
@@ -1215,7 +1219,7 @@ public abstract class JointPhysics<J extends Joint>
     *                       coordinates.
     * @return The total mass of this subtree.
     */
-   public double recursiveComputeLinearMomentum(Vector3D linearMomentum)
+   public double recursiveComputeLinearMomentum(Vector3DBasics linearMomentum)
    {
       double totalMass = 0.0;
       linearMomentum.set(0.0, 0.0, 0.0);
@@ -1257,7 +1261,7 @@ public abstract class JointPhysics<J extends Joint>
     * 
     * @param angularMomentum Vector3d in which the total angular momentum will be stored.
     */
-   public void recursiveComputeAngularMomentum(Vector3D angularMomentum)
+   public void recursiveComputeAngularMomentum(Vector3DBasics angularMomentum)
    {
       angularMomentum.set(0.0, 0.0, 0.0);
       tempAngularMomentum.set(0.0, 0.0, 0.0);
@@ -1419,7 +1423,7 @@ public abstract class JointPhysics<J extends Joint>
 
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             for (int y = 0; y < groundContactPoints.size(); y++)
             {
                GroundContactPoint point = groundContactPoints.get(y);
@@ -1558,24 +1562,24 @@ public abstract class JointPhysics<J extends Joint>
    /**
     * Returns a list of the kinematic points associated with this joint. (Added by Stelian).
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see KinematicPoint KinematicPoint
     */
-   public void getKinematicPoints(ArrayList<KinematicPoint> list)
+   public void getKinematicPoints(List<KinematicPoint> list)
    {
       if (kinematicPoints != null)
          list.addAll(this.kinematicPoints);
    }
 
    /**
-    * Recurse over the children of this joint and add their KinematicPoints to the provided ArrayList.
+    * Recurse over the children of this joint and add their KinematicPoints to the provided List.
     * This list includes both KinematicPoints and ExternalForcePoints as the latter is a child of the
     * former.
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see KinematicPoint KinematicPoint
     */
-   protected void recursiveGetKinematicPoints(ArrayList<KinematicPoint> list)
+   protected void recursiveGetKinematicPoints(List<KinematicPoint> list)
    {
       if (kinematicPoints != null)
          list.addAll(this.kinematicPoints);
@@ -1591,12 +1595,12 @@ public abstract class JointPhysics<J extends Joint>
 
    /**
     * Recurse over the children of this joint and add their ExternalForcePoints to the provided
-    * ArrayList.
+    * List.
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see ExternalForcePoint ExternalForcePoint
     */
-   protected void recursiveGetExternalForcePoints(ArrayList<ExternalForcePoint> list)
+   protected void recursiveGetExternalForcePoints(List<ExternalForcePoint> list)
    {
       list.addAll(this.externalForcePoints);
 
@@ -1609,7 +1613,7 @@ public abstract class JointPhysics<J extends Joint>
       }
    }
 
-   public ArrayList<ExternalForcePoint> getExternalForcePoints()
+   public List<ExternalForcePoint> getExternalForcePoints()
    {
       return externalForcePoints;
    }
@@ -1631,12 +1635,12 @@ public abstract class JointPhysics<J extends Joint>
 
    /**
     * Recurse over the children of this joint and add their GroundContactPoints to the provided
-    * ArrayList.
+    * List.
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see GroundContactPoint GroundContactPoint
     */
-   public void recursiveGetGroundContactPoints(int groundContactGroupIdentifier, ArrayList<GroundContactPoint> list)
+   public void recursiveGetGroundContactPoints(int groundContactGroupIdentifier, List<GroundContactPoint> list)
    {
       if (groundContactPointGroups != null)
       {
@@ -1656,15 +1660,15 @@ public abstract class JointPhysics<J extends Joint>
       }
    }
 
-   public void recursiveGetAllGroundContactPointsGroupedByJoint(ArrayList<ArrayList<GroundContactPoint>> listOfLists)
+   public void recursiveGetAllGroundContactPointsGroupedByJoint(List<List<GroundContactPoint>> listOfLists)
    {
       if (groundContactPointGroupList != null)
       {
-         ArrayList<GroundContactPoint> listForThisJoint = new ArrayList<>();
+         List<GroundContactPoint> listForThisJoint = new ArrayList<>();
 
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             listForThisJoint.addAll(groundContactPoints);
          }
 
@@ -1683,13 +1687,13 @@ public abstract class JointPhysics<J extends Joint>
 
    }
 
-   public void recursiveGetAllGroundContactPoints(ArrayList<GroundContactPoint> list)
+   public void recursiveGetAllGroundContactPoints(List<GroundContactPoint> list)
    {
       if (groundContactPointGroupList != null)
       {
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             list.addAll(groundContactPoints);
          }
       }
@@ -1702,7 +1706,7 @@ public abstract class JointPhysics<J extends Joint>
       }
    }
 
-   public void recursiveGetAllExternalForcePoints(ArrayList<ExternalForcePoint> list)
+   public void recursiveGetAllExternalForcePoints(List<ExternalForcePoint> list)
    {
       if (externalForcePoints != null)
          list.addAll(externalForcePoints);
@@ -1715,7 +1719,7 @@ public abstract class JointPhysics<J extends Joint>
       }
    }
 
-   public void recursiveGetAllKinematicPoints(ArrayList<KinematicPoint> list)
+   public void recursiveGetAllKinematicPoints(List<KinematicPoint> list)
    {
       if (kinematicPoints != null)
          list.addAll(kinematicPoints);
@@ -1833,7 +1837,7 @@ public abstract class JointPhysics<J extends Joint>
     * @param Rh_i Matrix3d in which the rotation between from the previous joint space to the current
     *             will be stored.
     */
-   protected abstract void jointDependentSetAndGetRotation(RotationMatrix Rh_i);
+   protected abstract void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i);
 
    /**
     * The first featherstone pass handles velocity and position updates as it recurses down the tree.
@@ -1859,7 +1863,7 @@ public abstract class JointPhysics<J extends Joint>
     * @param w_h The angular velocity of the previous link in this links coordinate system. This value
     *            is necessary for the calculation of coriolis forces.
     */
-   protected abstract void jointDependentFeatherstonePassTwo(Vector3D w_h);
+   protected abstract void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h);
 
    // protected abstract void jointDependentComputeExternalForceR(Vector3d point_offset, Vector3d comOffset, Vector3d externalForceR);
 
@@ -1966,5 +1970,4 @@ public abstract class JointPhysics<J extends Joint>
 
       this.jointWrenchSensor.setWrench(tempJointWrenchVector);
    }
-
 }

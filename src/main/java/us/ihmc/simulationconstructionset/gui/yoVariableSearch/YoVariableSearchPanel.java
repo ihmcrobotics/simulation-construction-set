@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
@@ -383,7 +384,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          @Override
          public void run()
          {
-            final ArrayList<YoVariable<?>> matchedVariables = search(searchText);
+            final List<YoVariable<?>> matchedVariables = search(searchText);
 
             if (!stopSearch)
                yoVariableSearchResultsPanel.removeAllVariables();
@@ -399,10 +400,10 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
             }
          }
 
-         public ArrayList<YoVariable<?>> search(String searchText)
+         public List<YoVariable<?>> search(String searchText)
          {
-            ArrayList<YoVariable<?>> ret = new ArrayList<>();
-            ArrayList<DataBufferEntry> entries = dataBuffer.getEntries();
+            List<YoVariable<?>> ret = new ArrayList<>();
+            List<DataBufferEntry> entries = dataBuffer.getEntries();
             for (int i = 0; i < entries.size(); i++)
             {
                if (stopSearch)
@@ -430,7 +431,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          }
 
          // display matches in the order: exact, starts with, rest
-         private void sortList(ArrayList<YoVariable<?>> list)
+         private void sortList(List<YoVariable<?>> list)
          {
             YoVariable<?> temporaryYoVariable;
             String searchTextLowerCase = searchText.toLowerCase();

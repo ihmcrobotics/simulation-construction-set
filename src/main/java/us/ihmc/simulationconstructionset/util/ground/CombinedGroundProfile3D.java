@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.jMonkeyEngineToolkit.CombinedHeightMapWithNormals;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -70,7 +72,7 @@ public class CombinedGroundProfile3D implements GroundProfile3D
    private final Point3D tempPointToCheck = new Point3D();
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       double smallestDistance = Double.MAX_VALUE;
       Point3D localIntersection = new Point3D();

@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset.simulatedSensors;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.jMonkeyEngineToolkit.Graphics3DAdapter;
 import us.ihmc.simulationconstructionset.SimulatedSensor;
 
@@ -18,7 +19,7 @@ public abstract class AbstractSimulatedSensor implements SimulatedSensor
    }
 
    @Override
-   public void updateTransform(RigidBodyTransform transformToHere, double time)
+   public void updateTransform(RigidBodyTransformReadOnly transformToHere, double time)
    {
       this.transformToHere.set(transformToHere);
       this.transformToHere.multiply(transformFromJoint);

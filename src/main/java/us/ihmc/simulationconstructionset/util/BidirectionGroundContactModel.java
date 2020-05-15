@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -24,7 +24,7 @@ public class BidirectionGroundContactModel implements GroundContactModel
    private final YoDouble groundKz = new YoDouble("groundKz", "BidirectionalGroundContactModel z spring constant", registry);
    private final YoDouble groundBz = new YoDouble("groundBz", "BidirectionalGroundContactModel z damping constant", registry);
 
-   private ArrayList<GroundContactPoint> groundContactPoints;
+   private List<GroundContactPoint> groundContactPoints;
    private GroundProfile3D groundProfile3D;
 
    public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoVariableRegistry parentRegistry)

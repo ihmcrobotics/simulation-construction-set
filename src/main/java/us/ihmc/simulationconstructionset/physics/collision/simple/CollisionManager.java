@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
@@ -136,7 +135,7 @@ public class CollisionManager
    private static void createCollisionShapesFromLinks(Robot robot, CollisionShapeFactory collisionShapeFactory, CollisionHandler collisionHandler,
                                                       YoVariableRegistry registry)
    {
-      ArrayList<Joint> rootJoints = robot.getRootJoints();
+      List<Joint> rootJoints = robot.getRootJoints();
       for (int i = 0; i < rootJoints.size(); i++)
       {
          Joint rootJoint = rootJoints.get(i);
@@ -148,7 +147,7 @@ public class CollisionManager
                                                                  YoVariableRegistry registry)
    {
       Link link = joint.getLink();
-      ArrayList<CollisionMeshDescription> collisionMeshDescriptions = link.getCollisionMeshDescriptions();
+      List<CollisionMeshDescription> collisionMeshDescriptions = link.getCollisionMeshDescriptions();
 
       if (collisionMeshDescriptions != null)
       {
@@ -161,7 +160,7 @@ public class CollisionManager
          link.enableCollisions(collisionHandler);
       }
 
-      ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
+      List<Joint> childrenJoints = joint.getChildrenJoints();
       for (int i = 0; i < childrenJoints.size(); i++)
       {
          Joint childJoint = childrenJoints.get(i);

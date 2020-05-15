@@ -2,6 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.robotics.robotDescription.CameraSensorDescription;
@@ -21,7 +22,6 @@ import us.ihmc.robotics.robotDescription.LinkGraphicsDescription;
 import us.ihmc.robotics.robotDescription.PinJointDescription;
 import us.ihmc.robotics.robotDescription.RobotDescription;
 import us.ihmc.robotics.robotDescription.SliderJointDescription;
-import us.ihmc.robotics.robotDescription.SpringPinJointDescription;
 import us.ihmc.simulationconstructionset.simulatedSensors.CollisionShapeBasedWrenchCalculator;
 import us.ihmc.simulationconstructionset.simulatedSensors.FeatherStoneJointBasedWrenchCalculator;
 import us.ihmc.simulationconstructionset.simulatedSensors.GroundContactPointBasedWrenchCalculator;
@@ -194,7 +194,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
             if (forceSensorDescription.useShapeCollision())
             {
-               ArrayList<ExternalForcePoint> contactPoints = new ArrayList<>();
+               List<ExternalForcePoint> contactPoints = new ArrayList<>();
                contactPoints = joint.getExternalForcePoints();
                wrenchCalculator = new CollisionShapeBasedWrenchCalculator(forceSensorDescription.getName(),
                                                                           contactPoints,
@@ -225,7 +225,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
    private void addExternalForcePointsFromCollisionMesh(JointDescription jointDescription, Joint joint)
    {
       Link link = joint.getLink();
-      ArrayList<CollisionMeshDescription> collisionMeshDescriptions = link.getCollisionMeshDescriptions();
+      List<CollisionMeshDescription> collisionMeshDescriptions = link.getCollisionMeshDescriptions();
 
       if (collisionMeshDescriptions != null)
       {
@@ -450,40 +450,6 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
             Vector3D jointAxis = new Vector3D();
             pinJointDescription.getJointAxis(jointAxis);
             joint = new DummyOneDegreeOfFreedomJoint(jointDescription.getName(), offset, this, jointAxis);
-         }
-      }
-      else if (jointDescription instanceof SpringPinJointDescription)
-      {
-         SpringPinJointDescription pinJointDescription = (SpringPinJointDescription) jointDescription;
-         Vector3D offset = new Vector3D();
-         pinJointDescription.getOffsetFromParentJoint(offset);
-
-         Vector3D jointAxis = new Vector3D();
-         pinJointDescription.getJointAxis(jointAxis);
-         joint = new SpringPinJoint(jointDescription.getName(), offset, this, jointAxis);
-
-         SpringPinJoint pinJoint = (SpringPinJoint) joint;
-
-         if (pinJointDescription.containsLimitStops())
-         {
-            double[] limitStopParameters = pinJointDescription.getLimitStopParameters();
-
-            double qMin = limitStopParameters[0];
-            double qMax = limitStopParameters[1];
-            double kLimit = limitStopParameters[2];
-            double bLimit = limitStopParameters[3];
-
-            pinJoint.setLimitStops(qMin, qMax, kLimit, bLimit);
-         }
-
-         if (enableDamping)
-         {
-            pinJoint.setDamping(pinJointDescription.getDamping());
-            pinJoint.setStiction(pinJointDescription.getStiction());
-         }
-         if (enableJointTorqueAndVelocityLimits)
-         {
-            pinJoint.setVelocityLimits(pinJointDescription.getVelocityLimit(), pinJointDescription.getVelocityDamping());
          }
       }
       else if (jointDescription instanceof SliderJointDescription)

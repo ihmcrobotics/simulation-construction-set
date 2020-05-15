@@ -2,7 +2,8 @@ package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 
@@ -17,7 +18,7 @@ public class WavyGroundProfile implements GroundProfile3D, HeightMapWithNormals
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double heightAt = heightAt(x, y, z);
       surfaceNormalAt(x, y, heightAt, normalToPack);
@@ -33,28 +34,28 @@ public class WavyGroundProfile implements GroundProfile3D, HeightMapWithNormals
          return 0.0;
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       normal.setX(0.0);
       normal.setY(0.0);
       normal.setZ(1.0);
    }
 
-   public void closestIntersectionTo(double x, double y, double z, Point3D point)
+   public void closestIntersectionTo(double x, double y, double z, Point3DBasics point)
    {
       point.setX(x);
       point.setY(y);
       point.setZ(heightAt(x, y, z));
    }
 
-   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D point, Vector3D normal)
+   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics point, Vector3DBasics normal)
    {
       closestIntersectionTo(x, y, z, point);
       surfaceNormalAt(x, y, z, normal);
    }
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       closestIntersectionTo(x, y, z, intersectionToPack);
       surfaceNormalAt(x, y, z, normalToPack);

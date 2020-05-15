@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.dataBuffer;
 import static us.ihmc.robotics.Assert.assertFalse;
 import static us.ihmc.robotics.Assert.assertTrue;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,25 +65,25 @@ public class DataBufferToolsTest
       varGroupList.addVarGroup(varGroupTwo);
       varGroupList.addVarGroup(varGroupThree);
 
-      ArrayList<YoVariable<?>> allVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "all", varGroupList);
+      List<YoVariable<?>> allVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "all", varGroupList);
 
       assertTrue(allVarsFromGroup.contains(a));
       assertTrue(allVarsFromGroup.contains(b));
       assertTrue(allVarsFromGroup.contains(c));
 
-      ArrayList<YoVariable<?>> aVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupOne", varGroupList);
+      List<YoVariable<?>> aVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupOne", varGroupList);
 
       assertTrue(aVarsFromGroup.contains(a));
       assertFalse(aVarsFromGroup.contains(b));
       assertTrue(aVarsFromGroup.contains(c));
 
-      ArrayList<YoVariable<?>> regExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupTwo", varGroupList);
+      List<YoVariable<?>> regExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupTwo", varGroupList);
 
       assertTrue(regExpVarsFromGroup.contains(a));
       assertTrue(regExpVarsFromGroup.contains(b));
       assertTrue(regExpVarsFromGroup.contains(c));
 
-      ArrayList<YoVariable<?>> cRegExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupThree", varGroupList);
+      List<YoVariable<?>> cRegExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupThree", varGroupList);
 
       assertFalse(cRegExpVarsFromGroup.contains(a));
       assertFalse(cRegExpVarsFromGroup.contains(b));

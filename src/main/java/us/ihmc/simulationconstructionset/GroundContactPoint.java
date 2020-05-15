@@ -1,8 +1,11 @@
 package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
-import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
@@ -32,12 +35,12 @@ public class GroundContactPoint extends ExternalForcePoint
       this(name, null, registry);
    }
 
-   public GroundContactPoint(String name, Vector3D offset, Robot robot)
+   public GroundContactPoint(String name, Tuple3DReadOnly offset, Robot robot)
    {
       this(name, offset, robot.getRobotsYoVariableRegistry());
    }
 
-   public GroundContactPoint(String name, Vector3D offset, YoVariableRegistry registry)
+   public GroundContactPoint(String name, Tuple3DReadOnly offset, YoVariableRegistry registry)
    {
       super(name, offset, registry);
 
@@ -104,7 +107,7 @@ public class GroundContactPoint extends ExternalForcePoint
          setNotInContact();
    }
 
-   public void getTouchdownLocation(Point3D touchdownLocationToPack)
+   public void getTouchdownLocation(Point3DBasics touchdownLocationToPack)
    {
       touchdownLocationToPack.set(touchdownLocation);
    }
@@ -119,7 +122,7 @@ public class GroundContactPoint extends ExternalForcePoint
       return fs;
    }
 
-   public void setTouchdownLocation(Point3D touchdownLocation)
+   public void setTouchdownLocation(Point3DReadOnly touchdownLocation)
    {
       this.touchdownLocation.set(touchdownLocation);
    }
@@ -129,12 +132,12 @@ public class GroundContactPoint extends ExternalForcePoint
       touchdownLocation.set(getYoPosition());
    }
 
-   public void getSurfaceNormal(Vector3D vectorToPack)
+   public void getSurfaceNormal(Vector3DBasics vectorToPack)
    {
       vectorToPack.set(surfaceNormal);
    }
 
-   public void setSurfaceNormal(Vector3D surfaceNormal)
+   public void setSurfaceNormal(Vector3DReadOnly surfaceNormal)
    {
       this.surfaceNormal.set(surfaceNormal);
    }
@@ -148,5 +151,4 @@ public class GroundContactPoint extends ExternalForcePoint
    {
       return surfaceNormal;
    }
-
 }

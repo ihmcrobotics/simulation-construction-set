@@ -2,8 +2,10 @@ package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
 import java.util.ArrayList;
 
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.Joint;
 import us.ihmc.simulationconstructionset.KinematicPoint;
@@ -31,13 +33,13 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
    }
 
    @Override
-   protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
+   protected void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i)
    {
       Rh_i.set(owner.getRigidRotation());
    }
 
    @Override
-   public void featherstonePassOne(Vector3D w_h, Vector3D v_h, RotationMatrix Rh_0)
+   public void featherstonePassOne(Vector3DReadOnly w_h, Vector3DReadOnly v_h, RotationMatrixReadOnly Rh_0)
    {
       // First set the transform (rotation matrix) for this joint.
       // (R <- rotation matrix from F_h to F_i
@@ -45,7 +47,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
       // this.update(false);
       // this.jointTransform3D.get(Rh_i);
 
-      r_in.set(owner.offset);
+      r_in.set(owner.getOffset());
       if (owner.parentJoint != null)
       {
          r_in.sub(owner.parentJoint.link.getComOffset());
@@ -221,7 +223,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
    private Vector3D temp1 = new Vector3D();
 
    @Override
-   protected void jointDependentFeatherstonePassTwo(Vector3D w_h)
+   protected void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h)
    {
       // Coriolis Forces:
       c_hat_i.top.set(0.0, 0.0, 0.0);

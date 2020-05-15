@@ -1,7 +1,8 @@
 package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.Joint;
 import us.ihmc.simulationconstructionset.SliderJoint;
 
@@ -34,7 +35,7 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
     * @param Rh_i Matrix3d in which the rotation matrix is stored
     */
    @Override
-   protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
+   protected void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i)
    {
       Rh_i.setIdentity();
    }
@@ -122,7 +123,7 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
     * @param w_h Vector3d
     */
    @Override
-   protected void jointDependentFeatherstonePassTwo(Vector3D w_h)
+   protected void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h)
    {
       // Coriolis Forces:
 

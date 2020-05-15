@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 
 public class BumpyGroundProfile extends GroundProfileFromHeightMap
 {
@@ -60,7 +60,7 @@ public class BumpyGroundProfile extends GroundProfileFromHeightMap
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       if (Math.abs(x) < flatgroundBoxWidthAtZero / 2.0 && Math.abs(y) < flatgroundBoxWidthAtZero / 2.0)
       {

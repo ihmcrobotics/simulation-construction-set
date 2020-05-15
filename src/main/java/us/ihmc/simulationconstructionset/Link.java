@@ -1,13 +1,18 @@
 package us.ihmc.simulationconstructionset;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.ejml.data.DenseMatrix64F;
 
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.Matrix3DBasics;
+import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
@@ -58,8 +63,6 @@ public class Link implements java.io.Serializable
       setMomentOfInertia(linkDefinition.getInertia());
 
       linkGraphics = new Graphics3DObject(linkDefinition.getGraphicsDefinition().getGraphics3DInstructions());
-
-      // setLinkGraphics(linkGraphics);
    }
 
    /**
@@ -163,7 +166,7 @@ public class Link implements java.io.Serializable
     *
     * @param momentOfInertia Matrix3d representing the moment of inertia
     */
-   public void setMomentOfInertia(Matrix3D momentOfInertia)
+   public void setMomentOfInertia(Matrix3DReadOnly momentOfInertia)
    {
       Inertia.set(momentOfInertia);
       computePrincipalMomentsOfInertia();
@@ -215,7 +218,7 @@ public class Link implements java.io.Serializable
     *
     * @param comOffset Vector3d representing the offset.
     */
-   public void setComOffset(Vector3D comOffset)
+   public void setComOffset(Vector3DReadOnly comOffset)
    {
       this.comOffset.set(comOffset);
    }
@@ -247,7 +250,7 @@ public class Link implements java.io.Serializable
     *
     * @param linkTwo Link to be combined with this link.
     */
-   public static Link combineLinks(String name, Link linkOne, Link linkTwo, Vector3D linkOffset)
+   public static Link combineLinks(String name, Link linkOne, Link linkTwo, Vector3DReadOnly linkOffset)
    {
       // Compute the new center of mass:
 
@@ -324,7 +327,7 @@ public class Link implements java.io.Serializable
       return mass;
    }
 
-   public void getMomentOfInertia(Matrix3D momentOfInertiaToPack)
+   public void getMomentOfInertia(Matrix3DBasics momentOfInertiaToPack)
    {
       momentOfInertiaToPack.set(Inertia);
    }
@@ -361,7 +364,7 @@ public class Link implements java.io.Serializable
     * @param mass            Mass of the link.
     * @param radiiOfGyration Radii of gyration in the x, y, and z directions.
     */
-   public void setMassAndRadiiOfGyration(double mass, Vector3D radiiOfGyration)
+   public void setMassAndRadiiOfGyration(double mass, Vector3DReadOnly radiiOfGyration)
    {
       setMassAndRadiiOfGyration(mass, radiiOfGyration.getX(), radiiOfGyration.getY(), radiiOfGyration.getZ());
    }
@@ -397,7 +400,7 @@ public class Link implements java.io.Serializable
       return linkGraphics;
    }
 
-   public ArrayList<CollisionMeshDescription> getCollisionMeshDescriptions()
+   public List<CollisionMeshDescription> getCollisionMeshDescriptions()
    {
       return collisionMeshDescriptions;
    }
@@ -406,9 +409,9 @@ public class Link implements java.io.Serializable
    // ///////////// Collision Stuff Here /////////////
 
    //   public ExternalForcePoint ef_collision;
-   private ArrayList<ContactingExternalForcePoint> contactingExternalForcePoints;
+   private List<ContactingExternalForcePoint> contactingExternalForcePoints;
 
-   public ArrayList<ContactingExternalForcePoint> getContactingExternalForcePoints()
+   public List<ContactingExternalForcePoint> getContactingExternalForcePoints()
    {
       return contactingExternalForcePoints;
    }
@@ -481,7 +484,7 @@ public class Link implements java.io.Serializable
 
          joints.remove(lastIndex);
 
-         ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
+         List<Joint> childrenJoints = joint.getChildrenJoints();
          if (childrenJoints != null)
          {
             joints.addAll(childrenJoints);
@@ -685,7 +688,7 @@ public class Link implements java.io.Serializable
     *
     * @param comOffsetRet Vector3d in which the offset will be stored.
     */
-   public void getComOffset(Vector3D comOffsetRet)
+   public void getComOffset(Vector3DBasics comOffsetRet)
    {
       comOffsetRet.set(comOffset);
    }

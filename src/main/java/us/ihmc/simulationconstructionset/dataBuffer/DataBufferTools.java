@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.dataBuffer;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.simulationconstructionset.gui.config.VarGroup;
 import us.ihmc.simulationconstructionset.gui.config.VarGroupList;
@@ -9,7 +9,7 @@ import us.ihmc.yoVariables.variable.YoVariable;
 
 public class DataBufferTools
 {
-   public static ArrayList<YoVariable<?>> getVarsFromGroup(DataBuffer dataBuffer, String varGroupName, VarGroupList varGroupList)
+   public static List<YoVariable<?>> getVarsFromGroup(DataBuffer dataBuffer, String varGroupName, VarGroupList varGroupList)
    {
       if (varGroupName.equals("all"))
       {

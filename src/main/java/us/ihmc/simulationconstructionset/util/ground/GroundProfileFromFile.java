@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -220,7 +220,7 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
@@ -253,7 +253,7 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
     * kdTree.closestObject(new double[]{x, y}); return closest; }
     */
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D vector3d)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics vector3d)
    {
       vector3d.set(0.0, 0.0, 1.0);
    }

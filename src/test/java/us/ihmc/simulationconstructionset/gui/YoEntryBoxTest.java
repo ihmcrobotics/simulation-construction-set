@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.gui;
 import static us.ihmc.robotics.Assert.assertEquals;
 import static us.ihmc.robotics.Assert.assertFalse;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -162,7 +162,7 @@ public class YoEntryBoxTest
       scs.setupEntryBox("q_x");
       Thread.sleep(DELAY_TIME_FOR_HUMAN_CONVENIENT_VIEWING);
       scs.setupEntryBox("badGreekVariable");
-      ArrayList<YoEntryBox> entryBoxes = scsGUI.getEntryBoxArrayPanel().getEntryBoxesOnThisPanel();
+      List<YoEntryBox> entryBoxes = scsGUI.getEntryBoxArrayPanel().getEntryBoxesOnThisPanel();
 
       YoEnum<BadGreekEnum> badGreekVariable = controller.getBadGreekVariable();
       YoDouble numberVariable = controller.getNumberVariable();

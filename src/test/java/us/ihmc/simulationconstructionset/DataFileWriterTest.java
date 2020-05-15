@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -78,7 +78,7 @@ public class DataFileWriterTest
 
       Robot robot = new Robot("testRobot");
 
-      ArrayList<YoVariable<?>> allVariables = rootRegistry.getAllVariablesIncludingDescendants();
+      List<YoVariable<?>> allVariables = rootRegistry.getAllVariablesIncludingDescendants();
 
       boolean binary = false;
       boolean compress = false;
@@ -102,7 +102,7 @@ public class DataFileWriterTest
 
    }
 
-   private void testDataWriteReadIsTheSame(DataBuffer dataBuffer, ArrayList<YoVariable<?>> allVariables, boolean binary, boolean compress,
+   private void testDataWriteReadIsTheSame(DataBuffer dataBuffer, List<YoVariable<?>> allVariables, boolean binary, boolean compress,
                                            boolean spreadsheetFormatted, Robot robot)
          throws IOException, URISyntaxException
    {
@@ -254,7 +254,7 @@ public class DataFileWriterTest
       long seed = 1776L;
       int numberOfVariables = 2000; // 12000 for when testing long files for efficiency;
       Random random = new Random(seed);
-      ArrayList<YoVariable<?>> variables = createALargeNumberOfVariables(random, numberOfVariables);
+      List<YoVariable<?>> variables = createALargeNumberOfVariables(random, numberOfVariables);
       YoVariableList originalVarList = new YoVariableList("originalVarList");
       originalVarList.addVariables(variables);
 
@@ -295,7 +295,7 @@ public class DataFileWriterTest
       long seed = 1776L;
       int numberOfVariables = 2000; // 12000 for when testing long files for efficiency;
       Random random = new Random(seed);
-      ArrayList<YoVariable<?>> variables = createALargeNumberOfVariables(random, numberOfVariables);
+      List<YoVariable<?>> variables = createALargeNumberOfVariables(random, numberOfVariables);
       YoVariableList originalVarList = new YoVariableList("originalVarList");
       originalVarList.addVariables(variables);
 
@@ -340,7 +340,7 @@ public class DataFileWriterTest
       fileOne.delete();
    }
 
-   private void writeALongStateFile(File file, ArrayList<YoVariable<?>> variables)
+   private void writeALongStateFile(File file, List<YoVariable<?>> variables)
    {
       DataFileWriter dataFileWriter = new DataFileWriter(file);
 
@@ -350,7 +350,7 @@ public class DataFileWriterTest
       dataFileWriter.writeState("model", recordDT, variables, binary, compress);
    }
 
-   private void writeALongDataFile(File file, DataBuffer dataBuffer, ArrayList<YoVariable<?>> variables, Robot robot)
+   private void writeALongDataFile(File file, DataBuffer dataBuffer, List<YoVariable<?>> variables, Robot robot)
    {
       DataFileWriter dataFileWriter = new DataFileWriter(file);
 
@@ -360,7 +360,7 @@ public class DataFileWriterTest
       dataFileWriter.writeData("model", recordDT, dataBuffer, variables, binary, compress, robot);
    }
 
-   private ArrayList<YoVariable<?>> createALargeNumberOfVariables(Random random, int numberOfVariables)
+   private List<YoVariable<?>> createALargeNumberOfVariables(Random random, int numberOfVariables)
    {
       YoVariableRegistry rootRegistry = new YoVariableRegistry("rootRegistry");
       YoVariableRegistry registryOne = new YoVariableRegistry("registryOne");

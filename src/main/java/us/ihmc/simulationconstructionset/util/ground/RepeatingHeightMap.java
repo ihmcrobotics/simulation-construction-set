@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 
 public class RepeatingHeightMap implements HeightMapWithNormals
@@ -41,7 +41,7 @@ public class RepeatingHeightMap implements HeightMapWithNormals
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double localX = xLocal(x);
       double localY = yLocal(y);

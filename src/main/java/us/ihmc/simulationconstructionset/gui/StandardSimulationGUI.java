@@ -143,7 +143,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    private ConcurrentLinkedQueue<GraphicsUpdatable> graphicsUpdatables = new ConcurrentLinkedQueue<>();
    private LinkedHashMap<Robot, GraphicsRobot> graphicsRobots = new LinkedHashMap<>();
 
-   private ArrayList<ExitActionListener> exitActionListeners = new ArrayList<>();
+   private List<ExitActionListener> exitActionListeners = new ArrayList<>();
    private ConfigurationList configurationList = new ConfigurationList();
    private CameraMountList cameraMountList = new CameraMountList();
    private GraphGroupList graphGroupList = new GraphGroupList();
@@ -154,8 +154,8 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    private ExtraPanelConfigurationList extraPanelConfigurationList = new ExtraPanelConfigurationList();
    private int updateCounts = 0;
    private ViewportConfigurationList viewportConfigurationList = new ViewportConfigurationList();
-   private ArrayList<GraphArrayWindow> graphArrayWindows = new ArrayList<>();
-   private ArrayList<ViewportWindow> viewportWindows = new ArrayList<>();
+   private List<GraphArrayWindow> graphArrayWindows = new ArrayList<>();
+   private List<ViewportWindow> viewportWindows = new ArrayList<>();
    private boolean isViewportHidden = false;
 
    protected JPanel buttonPanel;
@@ -208,7 +208,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    private JSplitPane jSplitPane;
    private boolean rePaintOnSetPoint = true;
    private int multiViewCanvas = 0;
-   private ArrayList<Component> tempPanelsHolder = new ArrayList<>();
+   private List<Component> tempPanelsHolder = new ArrayList<>();
    private YoVariableRegistry rootRegistry;
    private String configFileName = "defaultRegistry.conf";
 
@@ -218,7 +218,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    private BookmarkedVariablesHolder bookmarkedVariablesHolder;
 
-   private ArrayList<TickUpdateListener> tickUpdateListeners = new ArrayList<>();
+   private List<TickUpdateListener> tickUpdateListeners = new ArrayList<>();
 
    private CloseableAndDisposableRegistry closeableAndDisposableRegistry = new CloseableAndDisposableRegistry();
 
@@ -1107,7 +1107,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
          standardGUIActions.notifySimulationStopped();
    }
 
-   public void addStaticLinkGraphics(ArrayList<Graphics3DObject> staticLinkGraphics)
+   public void addStaticLinkGraphics(List<Graphics3DObject> staticLinkGraphics)
    {
       for (Graphics3DObject graphics3dObject : staticLinkGraphics)
       {
@@ -1410,7 +1410,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
     *
     * @return The current KeyPoints as an ArrayList of Integer
     */
-   public ArrayList<Integer> getKeyPoints()
+   public List<Integer> getKeyPoints()
    {
       return myDataBuffer.getKeyPoints();
    }
@@ -1437,7 +1437,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       repaintWindows();
    }
 
-   public ArrayList<Integer> getCameraKeyPoints()
+   public List<Integer> getCameraKeyPoints()
    {
       ClassicCameraController classicCameraController = (ClassicCameraController) viewportPanel.getCamera();
 
@@ -1845,7 +1845,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       String[] varNames = group.getVars();
       String[] regularExpressions = group.getRegularExpressions();
-      ArrayList<YoVariable<?>> matchedVariables = rootRegistry.getMatchingVariables(varNames, regularExpressions);
+      List<YoVariable<?>> matchedVariables = rootRegistry.getMatchingVariables(varNames, regularExpressions);
       YoVariableList varList = new YoVariableList(name);
       varList.addVariables(matchedVariables);
 
@@ -1894,7 +1894,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
             myGraphArrayPanel.removeAllGraphs();
             myGraphArrayPanel.setNumColumns(group.getNumColumns());
 
-            ArrayList<String[][]> graphVars = group.getGraphVars();
+            List<String[][]> graphVars = group.getGraphVars();
 
             for (int i = 0; i < graphVars.size(); i++)
             {
@@ -1954,7 +1954,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       String[] entryBoxVars = group.getEntryBoxVars();
       String[] entryBoxRegularExpressions = group.getEntryBoxRegularExpressions();
-      ArrayList<YoVariable<?>> matchingVariables = rootRegistry.getMatchingVariables(entryBoxVars, entryBoxRegularExpressions);
+      List<YoVariable<?>> matchingVariables = rootRegistry.getMatchingVariables(entryBoxVars, entryBoxRegularExpressions);
 
       EntryBoxArrayPanel tmpEntryBoxArrayPanel = new EntryBoxArrayPanel(parentContainer, selectedVariableHolder, matchingVariables);
       tmpEntryBoxArrayPanel.setName(name);
@@ -1981,7 +1981,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       String[] entryBoxVars = group.getEntryBoxVars();
       String[] entryBoxRegularExpressions = group.getEntryBoxRegularExpressions();
-      ArrayList<YoVariable<?>> matchingVariables = rootRegistry.getMatchingVariables(entryBoxVars, entryBoxRegularExpressions);
+      List<YoVariable<?>> matchingVariables = rootRegistry.getMatchingVariables(entryBoxVars, entryBoxRegularExpressions);
 
       setupEntryBox(matchingVariables);
 
@@ -2014,7 +2014,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       // numericContentPane.updateUI();
    }
 
-   public void setupEntryBox(final ArrayList<YoVariable<?>> variables)
+   public void setupEntryBox(final List<? extends YoVariable<?>> variables)
    {
       if (variables == null)
       {
@@ -2152,7 +2152,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       }
       else
       {
-         ArrayList<JSplitPane> dividers = new ArrayList<>();
+         List<JSplitPane> dividers = new ArrayList<>();
          jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, viewportPanel, tempPanelsHolder.get(0));
          dividers.add(jSplitPane);
 
@@ -2486,12 +2486,12 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       this.viewportSelectorCommandListener = viewportSelectorCommandListener;
    }
 
-   public ArrayList<ViewportWindow> getViewportWindows()
+   public List<ViewportWindow> getViewportWindows()
    {
       return viewportWindows;
    }
 
-   public ArrayList<GraphArrayWindow> getGraphArrayWindows()
+   public List<GraphArrayWindow> getGraphArrayWindows()
    {
       return graphArrayWindows;
    }
@@ -2688,7 +2688,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       File loadFile = new File(defaultFile);
       if (loadFile.exists())
       {
-         ArrayList<YoVariableRegistry> treeNodes = rootRegistry.getAllRegistriesIncludingChildren();
+         List<YoVariableRegistry> treeNodes = rootRegistry.getAllRegistriesIncludingChildren();
 
          // getAllRegistrys(rootRegistry, treeNodes);
 
@@ -2741,7 +2741,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       }
    }
 
-   private YoVariableRegistry findRegistry(String name, ArrayList<YoVariableRegistry> allReg)
+   private YoVariableRegistry findRegistry(String name, List<YoVariableRegistry> allReg)
    {
       for (YoVariableRegistry reg : allReg)
       {
@@ -2761,7 +2761,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
          return;
 
       SimpleFileWriter writer = new SimpleFileWriter(new File(filename));
-      ArrayList<YoVariableRegistry> treeNodes = rootRegistry.getAllRegistriesIncludingChildren();
+      List<YoVariableRegistry> treeNodes = rootRegistry.getAllRegistriesIncludingChildren();
 
       String outString = "";
       for (YoVariableRegistry node : treeNodes)
