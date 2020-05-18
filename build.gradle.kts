@@ -47,7 +47,7 @@ mainDependencies {
    }
 
    api("us.ihmc.thirdparty.jinput:jinput:200128")
-   api("us.ihmc:ihmc-yovariables:0.6.0")
+   api("us.ihmc:ihmc-yovariables:0.7.0")
    api("us.ihmc:ihmc-video-codecs:2.1.5")
    api("us.ihmc:euclid:0.14.2")
    api("us.ihmc:euclid-frame:0.14.2")
@@ -68,5 +68,5 @@ testDependencies {
 
 utilitiesDependencies {
    api("us.ihmc:euclid:0.14.2")
-   api("us.ihmc:ihmc-yovariables:0.6.0")
+   api("us.ihmc:ihmc-yovariables:0.7.0")
 }
