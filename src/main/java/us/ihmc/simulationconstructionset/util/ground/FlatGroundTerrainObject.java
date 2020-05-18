@@ -11,22 +11,22 @@ public class FlatGroundTerrainObject extends FlatGroundProfile implements Terrai
 {
    private static final double groundSize = 20.0;
    private static final double groundThickness = 0.03;
-   
+
    private final Graphics3DObject groundGraphics;
-   
+
    private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
-   
+
    public FlatGroundTerrainObject()
    {
       groundGraphics = new Graphics3DObject();
       groundGraphics.translate(0.0, 0.0, -groundThickness);
       groundGraphics.addCube(groundSize, groundSize, groundThickness);
-      
+
       Box3D boxShape = new Box3D(groundSize, groundSize, groundThickness);
-      boxShape.getPose().getTranslation().set(0.0, 0.0, -groundThickness);  
-      this.terrainCollisionShapes.add(boxShape);
+      boxShape.getPose().getTranslation().set(0.0, 0.0, -groundThickness);
+      terrainCollisionShapes.add(boxShape);
    }
-   
+
    @Override
    public Graphics3DObject getLinkGraphics()
    {

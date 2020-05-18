@@ -12,11 +12,11 @@ public enum SupportedGraphics3DAdapter
    {
       switch (this)
       {
-         case JAVA_MONKEY_ENGINE :
+         case JAVA_MONKEY_ENGINE:
          {
             return JMEGraphics3DAdapter.class.getCanonicalName();
          }
-         default :
+         default:
          {
             return null;
          }
@@ -26,7 +26,7 @@ public enum SupportedGraphics3DAdapter
 
    public Graphics3DAdapter instantiateGraphics3DAdapter()
    {
-      String graphicsAdapter = this.getClassWithPackageName();
+      String graphicsAdapter = getClassWithPackageName();
       try
       {
          Graphics3DAdapter graphics3dAdapter = (Graphics3DAdapter) Class.forName(graphicsAdapter).newInstance();

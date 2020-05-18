@@ -7,12 +7,12 @@ import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.RigidJointPhysics;
 
 /**
- * RigidJoint is a Robot Joint which has no motion. It is used in order to create a transformation from the previous joint.
- * This is useful if you want to have the following joint axes at non pure X, Y, Z axes, for example if you have the zero 
- * positions of robot shoulders canted at 45 degrees, but want the rest of the joints to be straight off of that 45 degrees
- * when their joint angles are 0. You can achieve that without this class, by computing their joint axes, but it is more
- * convenient to use this class instead. 
- *
+ * RigidJoint is a Robot Joint which has no motion. It is used in order to create a transformation
+ * from the previous joint. This is useful if you want to have the following joint axes at non pure
+ * X, Y, Z axes, for example if you have the zero positions of robot shoulders canted at 45 degrees,
+ * but want the rest of the joints to be straight off of that 45 degrees when their joint angles are
+ * 0. You can achieve that without this class, by computing their joint axes, but it is more
+ * convenient to use this class instead.
  */
 public class RigidJoint extends Joint
 {
@@ -31,18 +31,18 @@ public class RigidJoint extends Joint
    @Override
    protected void update()
    {
-      this.jointTransform3D.getTranslation().set(rigidTranslation);
-      this.jointTransform3D.getRotation().set(rigidRotation);
+      jointTransform3D.getTranslation().set(rigidTranslation);
+      jointTransform3D.getRotation().set(rigidRotation);
    }
 
    public void setRigidTranslation(Vector3DReadOnly jointTranslation)
    {
-      this.rigidTranslation.set(jointTranslation);
+      rigidTranslation.set(jointTranslation);
    }
 
    public void setRigidRotation(RotationMatrixReadOnly jointRotation)
    {
-      this.rigidRotation.set(jointRotation);
+      rigidRotation.set(jointRotation);
    }
 
    public Vector3DReadOnly getRigidTranslation()

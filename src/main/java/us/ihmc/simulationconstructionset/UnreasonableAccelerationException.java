@@ -3,9 +3,12 @@ package us.ihmc.simulationconstructionset;
 import java.util.ArrayList;
 
 /**
- * <p>Title: SimulationConstructionSet</p>
- *
- * <p>Description: </p>
+ * <p>
+ * Title: SimulationConstructionSet
+ * </p>
+ * <p>
+ * Description:
+ * </p>
  *
  * @author not attributable
  * @version 1.0
@@ -17,7 +20,7 @@ public class UnreasonableAccelerationException extends Throwable
 
    public UnreasonableAccelerationException()
    {
-      this.unreasonableAccelerationJoints = null;
+      unreasonableAccelerationJoints = null;
    }
 
    public UnreasonableAccelerationException(ArrayList<Joint> unreasonableAccelerationJoints)

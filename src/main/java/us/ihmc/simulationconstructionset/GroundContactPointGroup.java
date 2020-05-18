@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class GroundContactPointGroup
 {
-   private ArrayList<GroundContactPoint> groundContactPoints = new ArrayList<GroundContactPoint>();
-   private ArrayList<GroundContactPoint> groundContactPointsInContact = new ArrayList<GroundContactPoint>();
-   private ArrayList<GroundContactPoint> groundContactPointsNotInContact = new ArrayList<GroundContactPoint>();
+   private ArrayList<GroundContactPoint> groundContactPoints = new ArrayList<>();
+   private ArrayList<GroundContactPoint> groundContactPointsInContact = new ArrayList<>();
+   private ArrayList<GroundContactPoint> groundContactPointsNotInContact = new ArrayList<>();
 
    public GroundContactPointGroup()
    {

@@ -1,14 +1,18 @@
 package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
 import org.ejml.data.DenseMatrix64F;
+
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.SpatialVector;
 
 /**
- * Title:        Simulation Construction Set<p>
- * Description:  Package for Simulating Dynamic Robots and Mechanisms<p>
+ * Title: Simulation Construction Set
+ * <p>
+ * Description: Package for Simulating Dynamic Robots and Mechanisms
+ * <p>
+ * 
  * @author Jerry Pratt
  * @version Beta 1.0
  */
@@ -152,20 +156,16 @@ public final class SpatialInertiaMatrix implements java.io.Serializable
    }
 
    /*
-    * public void setInitArticulatedInertia(double mass, double Ixx, double Iyy,
-    * double Izz) { A.setElement(0,0, 0.0); A.setElement(0,1, 0.0);
-    * A.setElement(0,2, 0.0); B.setElement(0,0, mass); B.setElement(0,1, 0.0 );
-    * B.setElement(0,2, 0.0); A.setElement(1,0, 0.0); A.setElement(1,1, 0.0);
-    * A.setElement(1,2, 0.0); B.setElement(1,0, 0.0 ); B.setElement(1,1, mass);
-    * B.setElement(1,2, 0.0); A.setElement(2,0, 0.0); A.setElement(2,1, 0.0);
-    * A.setElement(2,2, 0.0); B.setElement(2,0, 0.0 ); B.setElement(2,1, 0.0 );
-    * B.setElement(2,2, mass); C.setElement(0,0, Ixx); C.setElement(0,1, 0.0);
-    * C.setElement(0,2, 0.0); D.setElement(0,0, 0.0); D.setElement(0,1, 0.0);
-    * D.setElement(0,2, 0.0); C.setElement(1,0, 0.0); C.setElement(1,1, Iyy);
-    * C.setElement(1,2, 0.0); D.setElement(1,0, 0.0); D.setElement(1,1, 0.0);
-    * D.setElement(1,2, 0.0); C.setElement(2,0, 0.0); C.setElement(2,1, 0.0);
-    * C.setElement(2,2, Izz); D.setElement(2,0, 0.0); D.setElement(2,1, 0.0);
-    * D.setElement(2,2, 0.0); }
+    * public void setInitArticulatedInertia(double mass, double Ixx, double Iyy, double Izz) {
+    * A.setElement(0,0, 0.0); A.setElement(0,1, 0.0); A.setElement(0,2, 0.0); B.setElement(0,0, mass);
+    * B.setElement(0,1, 0.0 ); B.setElement(0,2, 0.0); A.setElement(1,0, 0.0); A.setElement(1,1, 0.0);
+    * A.setElement(1,2, 0.0); B.setElement(1,0, 0.0 ); B.setElement(1,1, mass); B.setElement(1,2, 0.0);
+    * A.setElement(2,0, 0.0); A.setElement(2,1, 0.0); A.setElement(2,2, 0.0); B.setElement(2,0, 0.0 );
+    * B.setElement(2,1, 0.0 ); B.setElement(2,2, mass); C.setElement(0,0, Ixx); C.setElement(0,1, 0.0);
+    * C.setElement(0,2, 0.0); D.setElement(0,0, 0.0); D.setElement(0,1, 0.0); D.setElement(0,2, 0.0);
+    * C.setElement(1,0, 0.0); C.setElement(1,1, Iyy); C.setElement(1,2, 0.0); D.setElement(1,0, 0.0);
+    * D.setElement(1,1, 0.0); D.setElement(1,2, 0.0); C.setElement(2,0, 0.0); C.setElement(2,1, 0.0);
+    * C.setElement(2,2, Izz); D.setElement(2,0, 0.0); D.setElement(2,1, 0.0); D.setElement(2,2, 0.0); }
     */
 
    public void setInitArticulatedInertia(double mass, Matrix3D Inertia)
@@ -201,25 +201,22 @@ public final class SpatialInertiaMatrix implements java.io.Serializable
       D.setM22(0.0);
 
       /*
-       * A.setElement(0,0, 0.0); A.setElement(0,1, 0.0); A.setElement(0,2, 0.0);
-       * B.setElement(0,0, mass); B.setElement(0,1, 0.0 ); B.setElement(0,2,
-       * 0.0); A.setElement(1,0, 0.0); A.setElement(1,1, 0.0); A.setElement(1,2,
-       * 0.0); B.setElement(1,0, 0.0 ); B.setElement(1,1, mass);
-       * B.setElement(1,2, 0.0); A.setElement(2,0, 0.0); A.setElement(2,1, 0.0);
-       * A.setElement(2,2, 0.0); B.setElement(2,0, 0.0 ); B.setElement(2,1, 0.0
-       * ); B.setElement(2,2, mass); C.set(Inertia); D.setElement(0,0, 0.0);
-       * D.setElement(0,1, 0.0); D.setElement(0,2, 0.0); D.setElement(1,0, 0.0);
-       * D.setElement(1,1, 0.0); D.setElement(1,2, 0.0); D.setElement(2,0, 0.0);
-       * D.setElement(2,1, 0.0); D.setElement(2,2, 0.0);
+       * A.setElement(0,0, 0.0); A.setElement(0,1, 0.0); A.setElement(0,2, 0.0); B.setElement(0,0, mass);
+       * B.setElement(0,1, 0.0 ); B.setElement(0,2, 0.0); A.setElement(1,0, 0.0); A.setElement(1,1, 0.0);
+       * A.setElement(1,2, 0.0); B.setElement(1,0, 0.0 ); B.setElement(1,1, mass); B.setElement(1,2, 0.0);
+       * A.setElement(2,0, 0.0); A.setElement(2,1, 0.0); A.setElement(2,2, 0.0); B.setElement(2,0, 0.0 );
+       * B.setElement(2,1, 0.0 ); B.setElement(2,2, mass); C.set(Inertia); D.setElement(0,0, 0.0);
+       * D.setElement(0,1, 0.0); D.setElement(0,2, 0.0); D.setElement(1,0, 0.0); D.setElement(1,1, 0.0);
+       * D.setElement(1,2, 0.0); D.setElement(2,0, 0.0); D.setElement(2,1, 0.0); D.setElement(2,2, 0.0);
        */
    }
 
    public void set(SpatialInertiaMatrix spatialInertiaMatrix)
    {
-      this.A.set(spatialInertiaMatrix.A);
-      this.B.set(spatialInertiaMatrix.B);
-      this.C.set(spatialInertiaMatrix.C);
-      this.D.set(spatialInertiaMatrix.D);
+      A.set(spatialInertiaMatrix.A);
+      B.set(spatialInertiaMatrix.B);
+      C.set(spatialInertiaMatrix.C);
+      D.set(spatialInertiaMatrix.D);
    }
 
    private final RotationMatrix ONE3d = new RotationMatrix(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
@@ -255,10 +252,10 @@ public final class SpatialInertiaMatrix implements java.io.Serializable
       v2.add(Ctop, Dbot);
       v2.scale(1.0 / sIs);
 
-      setInnerMul(this.A, v1, s_hat_i.bottom);
-      setInnerMul(this.B, v1, s_hat_i.top);
-      setInnerMul(this.C, v2, s_hat_i.bottom);
-      setInnerMul(this.D, v2, s_hat_i.top);
+      setInnerMul(A, v1, s_hat_i.bottom);
+      setInnerMul(B, v1, s_hat_i.top);
+      setInnerMul(C, v2, s_hat_i.bottom);
+      setInnerMul(D, v2, s_hat_i.top);
    }
 
    private Vector3D Atop = new Vector3D(), Bbot = new Vector3D(), Ctop = new Vector3D(), Dbot = new Vector3D();
@@ -304,10 +301,10 @@ public final class SpatialInertiaMatrix implements java.io.Serializable
       v3.add(botA, topC);
       v4.add(botB, topD);
 
-      setInnerMul(this.A, v1, v3);
-      setInnerMul(this.B, v1, v4);
-      setInnerMul(this.C, v2, v3);
-      setInnerMul(this.D, v2, v4);
+      setInnerMul(A, v1, v3);
+      setInnerMul(B, v1, v4);
+      setInnerMul(C, v2, v3);
+      setInnerMul(D, v2, v4);
 
    }
 

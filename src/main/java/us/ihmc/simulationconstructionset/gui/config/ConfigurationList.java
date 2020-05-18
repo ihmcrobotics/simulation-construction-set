@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ConfigurationList
 {
-   private ArrayList<Configuration> configs = new ArrayList<Configuration>();
+   private ArrayList<Configuration> configs = new ArrayList<>();
 
    public ConfigurationList()
    {
@@ -12,15 +12,18 @@ public class ConfigurationList
 
    public void addConfiguration(Configuration config)
    {
-      boolean add= true;
-	   for(Configuration configurations: configs){
-    	  if(configurations.getName().equals(config.getName())){
-    		  add=false;
-    	  }
+      boolean add = true;
+      for (Configuration configurations : configs)
+      {
+         if (configurations.getName().equals(config.getName()))
+         {
+            add = false;
+         }
       }
-	   if(add){
-		   configs.add(config);
-	   }
+      if (add)
+      {
+         configs.add(config);
+      }
 
    }
 

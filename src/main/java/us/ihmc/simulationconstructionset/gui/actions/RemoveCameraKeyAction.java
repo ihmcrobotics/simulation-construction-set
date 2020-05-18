@@ -18,11 +18,10 @@ public class RemoveCameraKeyAction extends AbstractAction
       super("Remove Camera Key");
       this.executor = executor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
-      this.putValue(Action.LONG_DESCRIPTION, "Removes the camera key that is stored at the time indicated on the graph when this button is pressed.");
-      this.putValue(Action.SHORT_DESCRIPTION, "removes current camera key");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
+      putValue(Action.LONG_DESCRIPTION, "Removes the camera key that is stored at the time indicated on the graph when this button is pressed.");
+      putValue(Action.SHORT_DESCRIPTION, "removes current camera key");
    }
-
 
    @Override
    public void actionPerformed(ActionEvent actionEvent)

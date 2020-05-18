@@ -14,13 +14,12 @@ public class OpenH264LicenseAction extends AbstractAction
    public OpenH264LicenseAction()
    {
       super("Show OpenH264 License...");
-      
 
-      this.putValue(Action.LONG_DESCRIPTION, "Display OpenH264 License");
-      this.putValue(Action.SHORT_DESCRIPTION, "OpenH264 License");
+      putValue(Action.LONG_DESCRIPTION, "Display OpenH264 License");
+      putValue(Action.SHORT_DESCRIPTION, "OpenH264 License");
 
    }
-   
+
    @Override
    public void actionPerformed(ActionEvent e)
    {

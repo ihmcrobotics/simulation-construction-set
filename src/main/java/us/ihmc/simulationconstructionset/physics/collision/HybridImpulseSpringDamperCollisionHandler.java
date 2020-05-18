@@ -44,7 +44,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
    private double velocityForMicrocollision = 0.05; //0.1; //0.1;//0.01;
    private int numberOfCyclesPerContactPair = 1;///4
    private double minDistanceToConsiderDifferent = 0.003; //0.003; //0.002; //0.02;
-   private double percentMoveTowardTouchdownWhenSamePoint = 0.2; //0.2; //0.05; //1.0; //0.05; 
+   private double percentMoveTowardTouchdownWhenSamePoint = 0.2; //0.2; //0.05; //1.0; //0.05;
 
    private static final boolean DEBUG = false;
 
@@ -75,7 +75,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
    private final Point3D tempPoint = new Point3D();
    private final Vector3D tempVectorForAveraging = new Vector3D();
 
-   private List<CollisionHandlerListener> listeners = new ArrayList<CollisionHandlerListener>();
+   private List<CollisionHandlerListener> listeners = new ArrayList<>();
 
    private final YoInteger numberOfContacts = new YoInteger("numberOfContacts", registry);
 
@@ -85,17 +85,16 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
    }
 
    /**
-    *
     * @param epsilon coefficent of restitution.
-    * @param mu coefficient of friction
-    * @param robot Robot model
+    * @param mu      coefficient of friction
+    * @param robot   Robot model
     */
    public HybridImpulseSpringDamperCollisionHandler(Random random, double epsilon, double mu, YoVariableRegistry parentRegistry,
                                                     YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this.random = random;
-      this.coefficientOfRestitution.set(epsilon);
-      this.coefficientOfFriction.set(mu);
+      coefficientOfRestitution.set(epsilon);
+      coefficientOfFriction.set(mu);
 
       rotationalCoefficientOfFrictionBeta.set(0.01);
       kpCollision.set(20000.0);
@@ -113,7 +112,8 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
          externalForcePointBalls = BagOfBalls.createPatrioticBag(500, 0.0008, "contactBalls", parentRegistry, yoGraphicsListRegistry);
          newCollisionBalls = new BagOfBalls(500, 0.001, "newCollisionBalls", YoAppearance.Black(), parentRegistry, yoGraphicsListRegistry);
          int maxNumberOfYoGraphicPositions = 500;
-         contactingExternalForcePointsVisualizer = new ContactingExternalForcePointsVisualizer(maxNumberOfYoGraphicPositions, yoGraphicsListRegistry,
+         contactingExternalForcePointsVisualizer = new ContactingExternalForcePointsVisualizer(maxNumberOfYoGraphicPositions,
+                                                                                               yoGraphicsListRegistry,
                                                                                                parentRegistry);
          contactingExternalForcePointsVisualizer.setForceVectorScale(0.25);
       }
@@ -373,7 +373,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
       totalForce.set(springForce);
       totalForce.add(damperForce);
 
-      double numberOfPointsContacting = (double) contactingExternalForcePointOne.getNumberOfPointsInContactWithSameShape();
+      double numberOfPointsContacting = contactingExternalForcePointOne.getNumberOfPointsInContactWithSameShape();
       if (numberOfPointsContacting < 1.0)
          numberOfPointsContacting = 1.0;
 
@@ -454,7 +454,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
       contactingExternalForcePointTwo.setImpulse(0.0, 0.0, 0.0);
    }
 
-   private final ArrayList<Contacts> shapesInContactList = new ArrayList<Contacts>();
+   private final ArrayList<Contacts> shapesInContactList = new ArrayList<>();
 
    @Override
    public void handle(Contacts contacts)
@@ -463,7 +463,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
       //      handleLocal(shape1, shape2, contacts);
    }
 
-   private final ArrayList<Integer> indices = new ArrayList<Integer>();
+   private final ArrayList<Integer> indices = new ArrayList<>();
 
    private final LinkedHashSet<Robot> robotsThatAreInContactntact = new LinkedHashSet<>();
    private final Vector3D tempForce = new Vector3D();
@@ -751,7 +751,12 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
             }
 
             if (resolveCollisionWithAnImpact && (!contactPairAlreadyExists || !performSpringDamper))
-               resolveCollisionWithAnImpact(shape1, shape2, shapeOneIsGround, shapeTwoIsGround, externalForcePointOne, externalForcePointTwo,
+               resolveCollisionWithAnImpact(shape1,
+                                            shape2,
+                                            shapeOneIsGround,
+                                            shapeTwoIsGround,
+                                            externalForcePointOne,
+                                            externalForcePointTwo,
                                             allowMicroCollisions);
 
          }
@@ -901,16 +906,23 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
 
          if ((!allowMicroCollisions) || (externalForcePointOne.getVelocityVector().lengthSquared() > velocityForMicrocollision * velocityForMicrocollision))
          {
-            collisionOccurred = externalForcePointOne.resolveCollision(velocityWorld, negative_normal, coefficientOfRestitution.getDoubleValue(),
-                                                                       coefficientOfFriction.getDoubleValue(), p_world); // link1.epsilon, link1.mu, p_world);
+            collisionOccurred = externalForcePointOne.resolveCollision(velocityWorld,
+                                                                       negative_normal,
+                                                                       coefficientOfRestitution.getDoubleValue(),
+                                                                       coefficientOfFriction.getDoubleValue(),
+                                                                       p_world); // link1.epsilon, link1.mu, p_world);
          }
 
          else
          {
             //               System.out.println("Microcollision");
             double penetrationSquared = point1.distanceSquared(point2);
-            externalForcePointOne.resolveMicroCollision(penetrationSquared, velocityWorld, negative_normal, coefficientOfRestitution.getDoubleValue(),
-                                                        coefficientOfFriction.getDoubleValue(), p_world);
+            externalForcePointOne.resolveMicroCollision(penetrationSquared,
+                                                        velocityWorld,
+                                                        negative_normal,
+                                                        coefficientOfRestitution.getDoubleValue(),
+                                                        coefficientOfFriction.getDoubleValue(),
+                                                        p_world);
             collisionOccurred = true;
          }
       }
@@ -920,16 +932,23 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
          Vector3D velocityWorld = new Vector3D(0.0, 0.0, 0.0);
          if ((!allowMicroCollisions) || (externalForcePointTwo.getVelocityVector().lengthSquared() > velocityForMicrocollision * velocityForMicrocollision))
          {
-            collisionOccurred = externalForcePointTwo.resolveCollision(velocityWorld, normal, coefficientOfRestitution.getDoubleValue(),
-                                                                       coefficientOfFriction.getDoubleValue(), p_world); // link1.epsilon, link1.mu, p_world);
+            collisionOccurred = externalForcePointTwo.resolveCollision(velocityWorld,
+                                                                       normal,
+                                                                       coefficientOfRestitution.getDoubleValue(),
+                                                                       coefficientOfFriction.getDoubleValue(),
+                                                                       p_world); // link1.epsilon, link1.mu, p_world);
          }
 
          else
          {
             //               System.out.println("Microcollision");
             double penetrationSquared = point1.distanceSquared(point2);
-            externalForcePointTwo.resolveMicroCollision(penetrationSquared, velocityWorld, normal, coefficientOfRestitution.getDoubleValue(),
-                                                        coefficientOfFriction.getDoubleValue(), p_world);
+            externalForcePointTwo.resolveMicroCollision(penetrationSquared,
+                                                        velocityWorld,
+                                                        normal,
+                                                        coefficientOfRestitution.getDoubleValue(),
+                                                        coefficientOfFriction.getDoubleValue(),
+                                                        p_world);
             collisionOccurred = true;
          }
 
@@ -946,16 +965,22 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
          if ((!allowMicroCollisions) || (velocityDifference.lengthSquared() > velocityForMicrocollision * velocityForMicrocollision))
          {
             //               System.out.println("Normal Collision");
-            collisionOccurred = externalForcePointOne.resolveCollision(externalForcePointTwo, negative_normal, coefficientOfRestitution.getDoubleValue(),
-                                                                       coefficientOfFriction.getDoubleValue(), p_world); // link1.epsilon, link1.mu, p_world);
+            collisionOccurred = externalForcePointOne.resolveCollision(externalForcePointTwo,
+                                                                       negative_normal,
+                                                                       coefficientOfRestitution.getDoubleValue(),
+                                                                       coefficientOfFriction.getDoubleValue(),
+                                                                       p_world); // link1.epsilon, link1.mu, p_world);
          }
 
          else
          {
             //               System.out.println("MicroCollision");
             double penetrationSquared = point1.distanceSquared(point2);
-            collisionOccurred = externalForcePointOne.resolveMicroCollision(penetrationSquared, externalForcePointTwo, negative_normal,
-                                                                            coefficientOfRestitution.getDoubleValue(), coefficientOfFriction.getDoubleValue(),
+            collisionOccurred = externalForcePointOne.resolveMicroCollision(penetrationSquared,
+                                                                            externalForcePointTwo,
+                                                                            negative_normal,
+                                                                            coefficientOfRestitution.getDoubleValue(),
+                                                                            coefficientOfFriction.getDoubleValue(),
                                                                             p_world); // link1.epsilon, link1.mu, p_world);
          }
       }
@@ -1063,7 +1088,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
       //TODO: Iterate until no collisions left for stacking problems...
       //      for (int j=0; j<10; j++)
       {
-         this.maintenanceBeforeCollisionDetection();
+         maintenanceBeforeCollisionDetection();
          detachNonContactingPairs(results);
 
          for (int i = 0; i < results.getNumberOfCollisions(); i++)
@@ -1072,7 +1097,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
             handle(collision);
          }
 
-         this.maintenanceAfterCollisionDetection();
+         maintenanceAfterCollisionDetection();
       }
    }
 
@@ -1133,7 +1158,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
          {
             boolean isPairedWhileNonContacting = contactingExternalForcePoint.getIndexOfContactingPair() != -1;
             if (isPairedWhileNonContacting)
-            {               
+            {
                //System.out.println("" + linkNamesOfForcePoints.get(i) + " is not contacting, but point is activated.");
                allContactingExternalForcePoints.get(contactingExternalForcePoint.getIndexOfContactingPair()).setIndexOfContactingPair(-1);
                contactingExternalForcePoint.setIndexOfContactingPair(-1);

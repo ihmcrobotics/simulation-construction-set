@@ -1,6 +1,12 @@
 package us.ihmc.simulationconstructionset.util.simulationRunner;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.assertTrue;
+
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
@@ -9,79 +15,75 @@ import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
-import java.util.ArrayList;
-
-import static us.ihmc.robotics.Assert.*;
-
 public class SimulationRewindabilityVerifierTest
 {
    private static final boolean SHOW_GUI = false;
    private static final boolean VERBOSE = false;
    private final double DT = 0.01;
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testRewindableSimulation() throws UnreasonableAccelerationException
    {
       SimulationConstructionSet scs1 = constructRewindableSimulationConstructionSet();
       SimulationConstructionSet scs2 = constructRewindableSimulationConstructionSet();
-      
-      ArrayList<String> exceptions = new ArrayList<String>();
-//      exceptions.add("ticks_till_control");
+
+      ArrayList<String> exceptions = new ArrayList<>();
+      //      exceptions.add("ticks_till_control");
       SimulationRewindabilityVerifier verifier = new SimulationRewindabilityVerifier(scs1, scs2, exceptions);
-      
+
       int numTests = 5000;
       double maxDifferenceAllowed = 1e-12;
-      
+
       ArrayList<VariableDifference> variableDifferences = verifier.checkRewindabilityWithSimpleMethod(numTests, maxDifferenceAllowed);
       assertTrue(variableDifferences.isEmpty());
-      
+
       scs1.closeAndDispose();
       scs2.closeAndDispose();
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testEasilyDetectableNonRewindableSimulation() throws UnreasonableAccelerationException
    {
       SimulationConstructionSet scs1 = constructEasilyDetectableNonRewindableSimulationConstructionSet();
       SimulationConstructionSet scs2 = constructEasilyDetectableNonRewindableSimulationConstructionSet();
-      
-      ArrayList<String> exceptions = new ArrayList<String>();
-//      exceptions.add("ticks_till_control");
+
+      ArrayList<String> exceptions = new ArrayList<>();
+      //      exceptions.add("ticks_till_control");
       SimulationRewindabilityVerifier verifier = new SimulationRewindabilityVerifier(scs1, scs2, exceptions);
-      
+
       int numTests = 5000;
       double maxDifferenceAllowed = 1e-12;
-      
+
       ArrayList<VariableDifference> variableDifferences = verifier.checkRewindabilityWithSimpleMethod(numTests, maxDifferenceAllowed);
-      
+
       if (VERBOSE)
       {
          System.out.println("\ntestEasilyDetectableNonRewindableSimulation differences:");
          System.out.println(VariableDifference.allVariableDifferencesToString(variableDifferences));
       }
       assertEquals(2, variableDifferences.size());
-      
+
       scs1.closeAndDispose();
       scs2.closeAndDispose();
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testDifficultToDetectNonRewindableSimulation() throws UnreasonableAccelerationException
    {
       SimulationConstructionSet scs1 = constructDifficultToDetectNonRewindableSimulationConstructionSet();
       SimulationConstructionSet scs2 = constructDifficultToDetectNonRewindableSimulationConstructionSet();
-      
-      ArrayList<String> exceptions = new ArrayList<String>();
-//      exceptions.add("ticks_till_control");
+
+      ArrayList<String> exceptions = new ArrayList<>();
+      //      exceptions.add("ticks_till_control");
       SimulationRewindabilityVerifier verifier = new SimulationRewindabilityVerifier(scs1, scs2, exceptions);
-      
+
       int numTests = 4000;
       int numTicksAhead = 800;
-      
+
       double maxDifferenceAllowed = 1e-12;
-      
+
       ArrayList<VariableDifference> variableDifferences = verifier.checkRewindabilityWithSimpleMethod(numTests, maxDifferenceAllowed);
-      
+
       if (VERBOSE)
       {
          System.out.println("\ntestDifficultToDetectNonRewindableSimulation differences with simple method:");
@@ -105,53 +107,52 @@ public class SimulationRewindabilityVerifierTest
       }
 
       assertEquals(2, variableDifferences.size());
-      
+
       scs1.closeAndDispose();
       scs2.closeAndDispose();
    }
-   
+
    private SimulationConstructionSet constructRewindableSimulationConstructionSet()
    {
       Robot robot = new Robot("Test");
       RobotController controller = new RewindableController(robot);
       robot.setController(controller);
-      
+
       return constructSimulationConstructionSet(robot, controller);
    }
-   
-   
+
    private SimulationConstructionSet constructEasilyDetectableNonRewindableSimulationConstructionSet()
    {
       Robot robot = new Robot("Test");
       RobotController controller = new EasilyDetectableNonRewindableController(robot);
       robot.setController(controller);
-      
+
       return constructSimulationConstructionSet(robot, controller);
    }
-   
+
    private SimulationConstructionSet constructDifficultToDetectNonRewindableSimulationConstructionSet()
    {
       Robot robot = new Robot("Test");
       RobotController controller = new DifficultToDetectNonRewindableController(robot);
       robot.setController(controller);
-      
+
       return constructSimulationConstructionSet(robot, controller);
    }
-   
+
    private SimulationConstructionSet constructSimulationConstructionSet(Robot robot, RobotController controller)
    {
-      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(SHOW_GUI);
-      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters); 
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(DT, 1);
-      
+
       Thread thread = new Thread(scs);
       thread.start();
 
       try
       {
          Thread.sleep(2000);
-      } 
+      }
       catch (InterruptedException e)
       {
       }
@@ -162,22 +163,22 @@ public class SimulationRewindabilityVerifierTest
    private static class RewindableController implements RobotController
    {
       protected final YoVariableRegistry registry = new YoVariableRegistry("controller");
-      
+
       protected final YoDouble variableOne = new YoDouble("variableOne", registry);
       protected final YoDouble variableTwo = new YoDouble("variableTwo", registry);
       protected final YoDouble variableThree = new YoDouble("variableThree", registry);
       protected final YoDouble variableFour = new YoDouble("variableFour", registry);
 
       protected final Robot robot;
-      
+
       public RewindableController(Robot robot)
       {
          this.robot = robot;
       }
-      
+
       @Override
       public void doControl()
-      {      
+      {
          variableOne.set(Math.cos(robot.getTime()));
          variableTwo.set(robot.getTime());
          variableThree.set(variableOne.getDoubleValue());
@@ -193,12 +194,12 @@ public class SimulationRewindabilityVerifierTest
       @Override
       public String getName()
       {
-        return "Test";
+         return "Test";
       }
-      
+
       @Override
       public void initialize()
-      {      
+      {
       }
 
       @Override
@@ -206,24 +207,23 @@ public class SimulationRewindabilityVerifierTest
       {
          return getName();
       }
-      
+
    }
-   
-   
+
    private static class EasilyDetectableNonRewindableController extends RewindableController
    {
       private double nonRegisteredVariable;
-      
+
       public EasilyDetectableNonRewindableController(Robot robot)
       {
          super(robot);
       }
-      
+
       @Override
       public void doControl()
       {
          super.doControl();
-         
+
          if (robot.getTime() >= 1.0)
          {
             nonRegisteredVariable = nonRegisteredVariable + 1.0;
@@ -232,46 +232,46 @@ public class SimulationRewindabilityVerifierTest
          }
       }
    }
-   
+
    private static class DifficultToDetectNonRewindableController extends RewindableController
    {
       private double nonRegisteredVariable = 5;
-     
+
       private double lastTimeChanged;
       private double timeBetweenChanges = 3.0;
-      
+
       private YoDouble lastTimeUpdated = new YoDouble("lastTimeUpdated", registry);
       private double timeBetweenUpdates = 5.0;
-      
+
       public DifficultToDetectNonRewindableController(Robot robot)
       {
          super(robot);
       }
-      
+
       @Override
       public void doControl()
       {
          super.doControl();
-         
+
          if (robot.getTime() > lastTimeChanged + timeBetweenChanges)
          {
             lastTimeChanged = robot.getTime();
             nonRegisteredVariable = nonRegisteredVariable + 1.0;
-            
-//            System.out.println("Changed nonRegisteredVariable to " + nonRegisteredVariable + ", time = " + robot.getTime());
+
+            //            System.out.println("Changed nonRegisteredVariable to " + nonRegisteredVariable + ", time = " + robot.getTime());
          }
-         
+
          if (robot.getTime() > lastTimeUpdated.getDoubleValue() + timeBetweenUpdates)
          {
             lastTimeUpdated.set(robot.getTime());
-            
+
             variableTwo.set(nonRegisteredVariable);
             variableThree.set(3.0);
             variableFour.set(nonRegisteredVariable * 2);
-            
-//            System.out.println("Changed a bunch of variables. time = " + robot.getTime());
+
+            //            System.out.println("Changed a bunch of variables. time = " + robot.getTime());
          }
       }
    }
-   
+
 }

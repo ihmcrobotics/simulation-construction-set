@@ -6,11 +6,10 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 
-
 public class WavyGroundProfile implements GroundProfile3D, HeightMapWithNormals
 {
    private double xMin = -2.0, xMax = 2.0, yMin = -2.0, yMax = 2.0, zMin = -10.0, zMax = 10.0;
-   
+
    private BoundingBox3D boundingBox = new BoundingBox3D(new Point3D(xMin, yMin, zMin), new Point3D(xMax, yMax, zMax));
 
    public WavyGroundProfile()
@@ -24,7 +23,7 @@ public class WavyGroundProfile implements GroundProfile3D, HeightMapWithNormals
       surfaceNormalAt(x, y, heightAt, normalToPack);
       return heightAt;
    }
-   
+
    @Override
    public double heightAt(double x, double y, double z)
    {
@@ -59,10 +58,10 @@ public class WavyGroundProfile implements GroundProfile3D, HeightMapWithNormals
    {
       closestIntersectionTo(x, y, z, intersectionToPack);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return (z < intersectionToPack.getZ());
    }
-   
+
    @Override
    public boolean isClose(double x, double y, double z)
    {
@@ -82,4 +81,3 @@ public class WavyGroundProfile implements GroundProfile3D, HeightMapWithNormals
    }
 
 }
-

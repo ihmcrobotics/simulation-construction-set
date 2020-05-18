@@ -8,7 +8,6 @@ public class GroundContactDefinitionFixedFrame
 
    Vector3D offset = null;
 
-
    public String getName()
    {
       return name;

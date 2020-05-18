@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.gui.config;
 
-
 public class Configuration
 {
    private String name;

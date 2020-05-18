@@ -22,7 +22,6 @@ public class CylinderJoint extends PinJoint
 
       joint2.parentJoint = this;
       childrenJoints.add(joint2);
-      
 
       // Set the child r_in value:
 
@@ -30,7 +29,6 @@ public class CylinderJoint extends PinJoint
       joint2.physics.r_in.setY(0.0);
       joint2.physics.r_in.setZ(0.0);
    }
-
 
    @Override
    public void addJoint(Joint nextJoint)
@@ -42,7 +40,7 @@ public class CylinderJoint extends PinJoint
    public void setLink(Link l)
    {
       // Set this joints real link to a null link and set the second Joints link to the given link...
-      Link nullLink = new Link("null");    // smallPiece();
+      Link nullLink = new Link("null"); // smallPiece();
       nullLink.setMass(0.0);
       nullLink.setMomentOfInertia(0.0, 0.0, 0.0);
       nullLink.setComOffset(0.0, 0.0, 0.0);
@@ -56,7 +54,7 @@ public class CylinderJoint extends PinJoint
    {
       joint2.addCameraMount(mount);
    }
-   
+
    @Override
    public void addIMUMount(IMUMount mount)
    {
@@ -111,6 +109,5 @@ public class CylinderJoint extends PinJoint
       state[2] = joint2.q.getDoubleValue();
       state[3] = joint2.qd.getDoubleValue();
    }
-
 
 }

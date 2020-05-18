@@ -15,10 +15,10 @@ public class MasterVariableChangedListener implements VariableChangedListener
    {
       this.slaves = slaves;
    }
-   
+
    public MasterVariableChangedListener(YoDouble slave)
    {
-      this.slaves = new ArrayList<YoDouble>(1);
+      slaves = new ArrayList<>(1);
       slaves.add(slave);
    }
 

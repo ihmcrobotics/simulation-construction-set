@@ -12,12 +12,12 @@ public class ExtraPanelConfiguration
    {
       this.name = name;
       this.panel = panel;
-      this.setShowOnStart(showOnStart);
+      setShowOnStart(showOnStart);
    }
 
    public void setName(String name)
    {
-	   this.panel.setName(name);
+      panel.setName(name);
    }
 
    public String getName()

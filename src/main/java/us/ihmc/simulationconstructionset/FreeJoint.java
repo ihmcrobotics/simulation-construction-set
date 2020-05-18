@@ -25,11 +25,12 @@ public class FreeJoint extends Joint
 
    YoVariableList freeJointVars;
 
-   public FreeJoint(String jname, Vector3DReadOnly offset, Robot rob, String xName, String yName, String zName, String yawName, String rollName, String pitchName)
+   public FreeJoint(String jname, Vector3DReadOnly offset, Robot rob, String xName, String yName, String zName, String yawName, String rollName,
+                    String pitchName)
    {
       super(jname, offset, rob, 6);
 
-//    VarList freeJointVars = new VarList(jname + " jointVars"); // rob.getVars();
+      //    VarList freeJointVars = new VarList(jname + " jointVars"); // rob.getVars();
 
       YoVariableRegistry registry = rob.getRobotsYoVariableRegistry();
 
@@ -47,23 +48,28 @@ public class FreeJoint extends Joint
       rollVar = new YoDouble(rollName, "FreeJoint roll rotation", registry);
       pitchVar = new YoDouble(pitchName, "FreeJoint pitch rotation", registry);
 
-//    rob.getVars().addVariables(freeJointVars);
+      //    rob.getVars().addVariables(freeJointVars);
 
       // this.setTransformAndGroup(freeTransform3D());
-      setFreeTransform3D(this.jointTransform3D);
+      setFreeTransform3D(jointTransform3D);
    }
 
    protected YoVariableList getJointVars()
    {
-      return this.freeJointVars;
+      return freeJointVars;
    }
 
    @Override
    public void update()
    {
-       setFreeTransform3D(this.jointTransform3D, xVar.getDoubleValue(), yVar.getDoubleValue(), zVar.getDoubleValue(), yawVar.getDoubleValue(), rollVar.getDoubleValue(), pitchVar.getDoubleValue());
+      setFreeTransform3D(jointTransform3D,
+                         xVar.getDoubleValue(),
+                         yVar.getDoubleValue(),
+                         zVar.getDoubleValue(),
+                         yawVar.getDoubleValue(),
+                         rollVar.getDoubleValue(),
+                         pitchVar.getDoubleValue());
    }
-
 
    public void setFreeTransform3D(RigidBodyTransform tTranslate)
    {
@@ -101,7 +107,6 @@ public class FreeJoint extends Joint
    {
       System.err.println("Error!!!! FreeJoint.jointDependentChangeVelocity should never be called!!!");
    }
-
 
    public void jointDependentFeatherstonePassOne()
    {

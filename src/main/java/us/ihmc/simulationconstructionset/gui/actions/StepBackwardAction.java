@@ -23,7 +23,7 @@ public class StepBackwardAction extends AbstractAction
       int shortKey = KeyEvent.VK_B;
       String longDescription = "Step Backward";
       String shortDescription = "Step Backward";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

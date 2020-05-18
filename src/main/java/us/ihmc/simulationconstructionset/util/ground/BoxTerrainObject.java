@@ -13,7 +13,6 @@ import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 
-
 public class BoxTerrainObject implements TerrainObject3D, HeightMapWithNormals
 {
    private final BoundingBox3D boundingBox;
@@ -22,76 +21,74 @@ public class BoxTerrainObject implements TerrainObject3D, HeightMapWithNormals
 
    public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd, AppearanceDefinition appearance)
    {
-     double xMin = Math.min(xStart, xEnd);
-     double xMax = Math.max(xStart, xEnd);
+      double xMin = Math.min(xStart, xEnd);
+      double xMax = Math.max(xStart, xEnd);
 
-     double yMin = Math.min(yStart, yEnd);
-     double yMax = Math.max(yStart, yEnd);
+      double yMin = Math.min(yStart, yEnd);
+      double yMax = Math.max(yStart, yEnd);
 
-     double zMin = Math.min(zStart, zEnd);
-     double zMax = Math.max(zStart, zEnd);
-     
-     Point3D minPoint = new Point3D(xMin, yMin, zMin);
-     Point3D maxPoint = new Point3D(xMax, yMax, zMax);
-     
-     boundingBox = new BoundingBox3D(minPoint, maxPoint);
-     
-     linkGraphics = new Graphics3DObject();
-          
-     linkGraphics.translate((xStart+xEnd)/2.0,(yStart+yEnd)/2.0, zMin);
+      double zMin = Math.min(zStart, zEnd);
+      double zMax = Math.max(zStart, zEnd);
 
-     linkGraphics.addCube(Math.abs(xEnd-xStart), Math.abs(yEnd-yStart), zMax-zMin, appearance);
-     
-     Box3D boxShape = new Box3D(Math.abs(xStart - xEnd), Math.abs(yStart - yEnd), Math.abs(zStart - zEnd));
-     boxShape.getPose().getTranslation().set((xStart+xEnd)/2.0, (yStart+yEnd)/2.0, (zStart+zEnd)/2.0);
-     
-     this.terrainCollisionShapes.add(boxShape);
- }
+      Point3D minPoint = new Point3D(xMin, yMin, zMin);
+      Point3D maxPoint = new Point3D(xMax, yMax, zMax);
 
- public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height, AppearanceDefinition appearance)
- {
-   this(xStart, yStart, xEnd, yEnd, 0.0, height, appearance);
- }
+      boundingBox = new BoundingBox3D(minPoint, maxPoint);
 
- public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height)
- {
-   this(xStart, yStart, xEnd, yEnd, height, YoAppearance.Gray());
- }
+      linkGraphics = new Graphics3DObject();
 
- public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd)
- {
-   this(xStart, yStart, xEnd, yEnd, zStart, zEnd, YoAppearance.Gray());
- }
+      linkGraphics.translate((xStart + xEnd) / 2.0, (yStart + yEnd) / 2.0, zMin);
 
+      linkGraphics.addCube(Math.abs(xEnd - xStart), Math.abs(yEnd - yStart), zMax - zMin, appearance);
 
- @Override
-public Graphics3DObject getLinkGraphics()
- {
-   return linkGraphics;
+      Box3D boxShape = new Box3D(Math.abs(xStart - xEnd), Math.abs(yStart - yEnd), Math.abs(zStart - zEnd));
+      boxShape.getPose().getTranslation().set((xStart + xEnd) / 2.0, (yStart + yEnd) / 2.0, (zStart + zEnd) / 2.0);
 
- }
-
- @Override
-public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
- {
-    double heightAt = this.heightAt(x, y, z);
-    this.surfaceNormalAt(x, y, z, normalToPack);
-    
-    return heightAt;
- }
- 
- @Override
-public double heightAt(double x, double y, double z)
- {
-   if ((x > boundingBox.getMinX()) && (x < boundingBox.getMaxX()) && (y > boundingBox.getMinY()) && (y < boundingBox.getMaxY()))
-   {
-     return boundingBox.getMaxZ();
+      terrainCollisionShapes.add(boxShape);
    }
 
-   return 0.0;
- }
- 
- 
+   public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height, AppearanceDefinition appearance)
+   {
+      this(xStart, yStart, xEnd, yEnd, 0.0, height, appearance);
+   }
+
+   public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height)
+   {
+      this(xStart, yStart, xEnd, yEnd, height, YoAppearance.Gray());
+   }
+
+   public BoxTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd)
+   {
+      this(xStart, yStart, xEnd, yEnd, zStart, zEnd, YoAppearance.Gray());
+   }
+
+   @Override
+   public Graphics3DObject getLinkGraphics()
+   {
+      return linkGraphics;
+
+   }
+
+   @Override
+   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   {
+      double heightAt = heightAt(x, y, z);
+      surfaceNormalAt(x, y, z, normalToPack);
+
+      return heightAt;
+   }
+
+   @Override
+   public double heightAt(double x, double y, double z)
+   {
+      if ((x > boundingBox.getMinX()) && (x < boundingBox.getMaxX()) && (y > boundingBox.getMinY()) && (y < boundingBox.getMaxY()))
+      {
+         return boundingBox.getMaxZ();
+      }
+
+      return 0.0;
+   }
+
    private void surfaceNormalAt(double x, double y, double z, Vector3D normal)
    {
       double threshhold = 0.015;
@@ -133,7 +130,7 @@ public double heightAt(double x, double y, double z)
 
    public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersection, Vector3D normal)
    {
-      intersection.setX(x);    // Go Straight Up for now...
+      intersection.setX(x); // Go Straight Up for now...
       intersection.setY(y);
       intersection.setZ(heightAt(x, y, z));
 
@@ -143,12 +140,12 @@ public double heightAt(double x, double y, double z)
    @Override
    public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
    {
-      intersectionToPack.setX(x);    // Go Straight Up for now...
+      intersectionToPack.setX(x); // Go Straight Up for now...
       intersectionToPack.setY(y);
       intersectionToPack.setZ(heightAt(x, y, z));
 
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return (z < intersectionToPack.getZ());
    }
 
@@ -157,7 +154,6 @@ public double heightAt(double x, double y, double z)
    {
       return (boundingBox.isXYInsideInclusive(x, y));
    }
-
 
    public double getXMin()
    {

@@ -29,23 +29,23 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    private Quaternion tempOrientation1 = new Quaternion();
    private Vector3D tempPosition1 = new Vector3D();
 
-   public YoDouble q_x, q_y, q_z;    // in world-fixed frame
+   public YoDouble q_x, q_y, q_z; // in world-fixed frame
    public YoDouble qd_x;
    public YoDouble qd_y;
-   public YoDouble qd_z;    // in world-fixed frame
+   public YoDouble qd_z; // in world-fixed frame
    public YoDouble q_qs;
    public YoDouble q_qx;
    public YoDouble q_qy;
-   public YoDouble q_qz;    // Unit quaternion (Euler parameters). q_qs is the 'scalar part', q_q{x,y,z} form the vector part
+   public YoDouble q_qz; // Unit quaternion (Euler parameters). q_qs is the 'scalar part', q_q{x,y,z} form the vector part
    public YoDouble qd_wx;
    public YoDouble qd_wy;
-   public YoDouble qd_wz;    // angular velocity, expressed in body-fixed frame.
-   public YoDouble qdd_x, qdd_y, qdd_z;    // in world-fixed frame
-   public YoDouble qdd_wx, qdd_wy, qdd_wz;    // angular acceleration, expressed in body-fixed frame.
+   public YoDouble qd_wz; // angular velocity, expressed in body-fixed frame.
+   public YoDouble qdd_x, qdd_y, qdd_z; // in world-fixed frame
+   public YoDouble qdd_wx, qdd_wy, qdd_wz; // angular acceleration, expressed in body-fixed frame.
 
    private final boolean createYawPitchRollYoVariable;
-   public YoDouble q_yaw, q_pitch, q_roll;    // in world-fixed frame.
-   
+   public YoDouble q_yaw, q_pitch, q_roll; // in world-fixed frame.
+
    public FloatingJoint(String jname, Vector3DReadOnly offset, Robot rob)
    {
       this(jname, null, offset, rob, false);
@@ -60,7 +60,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    {
       this(jname, varName, offset, rob, false);
    }
-   
+
    public FloatingJoint(String jname, String varName, Vector3DReadOnly offset, Robot rob, boolean createYawPitchRollYoVariable)
    {
       super(jname, offset, rob, 6);
@@ -70,7 +70,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       YoVariableRegistry registry = rob.getRobotsYoVariableRegistry();
 
       this.createYawPitchRollYoVariable = createYawPitchRollYoVariable;
-      
+
       if (varName == null)
       {
          varName = "";
@@ -79,7 +79,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       {
          varName += "_";
       }
-      
+
       q_x = new YoDouble("q_" + varName + "x", "FloatingJoint x position", registry);
       q_y = new YoDouble("q_" + varName + "y", "FloatingJoint y position", registry);
       q_z = new YoDouble("q_" + varName + "z", "FloatingJoint z position", registry);
@@ -101,7 +101,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       qdd_wy = new YoDouble("qdd_" + varName + "wy", "FloatingJoint rotational acceleration about y", registry);
       qdd_wz = new YoDouble("qdd_" + varName + "wz", "FloatingJoint rotational acceleration about z", registry);
 
-      if(createYawPitchRollYoVariable)
+      if (createYawPitchRollYoVariable)
       {
          q_yaw = new YoDouble("q_" + varName + "yaw", "FloatingJoint yaw orientation", registry);
          q_pitch = new YoDouble("q_" + varName + "pitch", "FloatingJoint pitch orientation", registry);
@@ -116,7 +116,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
 
       isPinned = new YoBoolean(jname + "IsPinned", "Whether this FloatingJoint is pinned or not", registry);
 
-      this.setFloatingTransform3D(this.jointTransform3D);
+      setFloatingTransform3D(jointTransform3D);
       physics.u_i = null;
    }
 
@@ -146,7 +146,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       q_y.set(position.getY());
       q_z.set(position.getZ());
    }
-   
+
    public void setPosition(double x, double y, double z)
    {
       q_x.set(x);
@@ -161,7 +161,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       qd_y.set(velocity.getY());
       qd_z.set(velocity.getZ());
    }
-   
+
    public void setVelocity(double xd, double yd, double zd)
    {
       qd_x.set(xd);
@@ -262,13 +262,12 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       yDot.set(qd_y.getDoubleValue());
       zDot.set(qd_z.getDoubleValue());
    }
-   
+
    @Override
    public void getVelocity(FrameVector3D linearVelocityToPack)
    {
       linearVelocityToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), qd_x.getDoubleValue(), qd_y.getDoubleValue(), qd_z.getDoubleValue());
    }
-   
 
    @Override
    public void getAngularVelocity(FrameVector3D angularVelocityToPack, ReferenceFrame bodyFrame)
@@ -286,7 +285,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    {
       position.set(q_x.getDoubleValue(), q_y.getDoubleValue(), q_z.getDoubleValue());
    }
-   
+
    public void getVelocity(Tuple3DBasics velocity)
    {
       velocity.set(qd_x.getDoubleValue(), qd_y.getDoubleValue(), qd_z.getDoubleValue());
@@ -367,7 +366,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    {
       return new Quaternion(q_qx.getDoubleValue(), q_qy.getDoubleValue(), q_qz.getDoubleValue(), q_qs.getDoubleValue());
    }
-   
+
    public void getQuaternion(QuaternionBasics quaternionToPack)
    {
       quaternionToPack.set(q_qx.getDoubleValue(), q_qy.getDoubleValue(), q_qz.getDoubleValue(), q_qs.getDoubleValue());
@@ -392,7 +391,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    {
       return new Vector3D(qd_wx.getDoubleValue(), qd_wy.getDoubleValue(), qd_wz.getDoubleValue());
    }
-   
+
    public void getAngularVelocityInBody(Vector3DBasics vectorToPack)
    {
       vectorToPack.set(qd_wx.getDoubleValue(), qd_wy.getDoubleValue(), qd_wz.getDoubleValue());
@@ -417,7 +416,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    {
       return new Vector3D(qdd_wx.getDoubleValue(), qdd_wy.getDoubleValue(), qdd_wz.getDoubleValue());
    }
-   
+
    public void getAngularAccelerationInBody(Vector3DBasics angularAccelerationInBodyToPack)
    {
       angularAccelerationInBodyToPack.set(qdd_wx.getDoubleValue(), qdd_wy.getDoubleValue(), qdd_wz.getDoubleValue());
@@ -425,17 +424,17 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
 
    public void getAngularAcceleration(FrameVector3DBasics angularAccelerationToPack, ReferenceFrame bodyFrame)
    {
-      angularAccelerationToPack.setIncludingFrame(bodyFrame, qdd_wx.getDoubleValue(), qdd_wy.getDoubleValue(), qdd_wz.getDoubleValue());      
+      angularAccelerationToPack.setIncludingFrame(bodyFrame, qdd_wx.getDoubleValue(), qdd_wy.getDoubleValue(), qdd_wz.getDoubleValue());
    }
-   
+
    public void getLinearAccelerationInWorld(Vector3DBasics accelerationInWorldToPack)
    {
-      accelerationInWorldToPack.set(qdd_x.getDoubleValue(), qdd_y.getDoubleValue(), qdd_z.getDoubleValue()); 
+      accelerationInWorldToPack.set(qdd_x.getDoubleValue(), qdd_y.getDoubleValue(), qdd_z.getDoubleValue());
    }
-   
+
    public void getLinearAcceleration(FrameVector3DBasics linearAccelerationToPack)
    {
-      linearAccelerationToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), qdd_x.getDoubleValue(), qdd_y.getDoubleValue(), qdd_z.getDoubleValue()); 
+      linearAccelerationToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), qdd_x.getDoubleValue(), qdd_y.getDoubleValue(), qdd_z.getDoubleValue());
    }
 
    public void getYawPitchRoll(YoDouble yaw, YoDouble pitch, YoDouble roll)
@@ -448,9 +447,9 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       if (Math.abs(pitch.getDoubleValue()) < 0.49 * Math.PI)
       {
          yaw.set(FastMath.atan2(2.0 * q_qx.getDoubleValue() * q_qy.getDoubleValue() + 2.0 * q_qz.getDoubleValue() * q_qs.getDoubleValue(),
-                            1.0 - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue() - 2.0 * q_qz.getDoubleValue() * q_qz.getDoubleValue()));    // Math.asin(q_qs.val * q_qz.val * 2.0);
+                                1.0 - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue() - 2.0 * q_qz.getDoubleValue() * q_qz.getDoubleValue())); // Math.asin(q_qs.val * q_qz.val * 2.0);
          roll.set(FastMath.atan2(2.0 * q_qy.getDoubleValue() * q_qz.getDoubleValue() + 2.0 * q_qx.getDoubleValue() * q_qs.getDoubleValue(),
-                             1.0 - 2.0 * q_qx.getDoubleValue() * q_qx.getDoubleValue() - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue()));    // Math.asin(q_qs.val * q_qx.val * 2.0);
+                                 1.0 - 2.0 * q_qx.getDoubleValue() * q_qx.getDoubleValue() - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue())); // Math.asin(q_qs.val * q_qx.val * 2.0);
       }
       else
       {
@@ -458,41 +457,40 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
          roll.set(0.0);
       }
    }
-   
+
    public double[] getYawPitchRoll()
    {
       double[] yawPitchRollToReturn = new double[3];
-      
+
       double pitchArgument = -2.0 * q_qx.getDoubleValue() * q_qz.getDoubleValue() + 2.0 * q_qs.getDoubleValue() * q_qy.getDoubleValue();
 
       double pitch = 0.0, roll = 0.0, yaw = 0.0;
-      
+
       pitch = FastMath.asin(pitchArgument);
 
       if (Math.abs(pitch) < 0.49 * Math.PI)
       {
          yaw = FastMath.atan2(2.0 * q_qx.getDoubleValue() * q_qy.getDoubleValue() + 2.0 * q_qz.getDoubleValue() * q_qs.getDoubleValue(),
-                            1.0 - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue() - 2.0 * q_qz.getDoubleValue() * q_qz.getDoubleValue());    // Math.asin(q_qs.val * q_qz.val * 2.0);
+                              1.0 - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue() - 2.0 * q_qz.getDoubleValue() * q_qz.getDoubleValue()); // Math.asin(q_qs.val * q_qz.val * 2.0);
          roll = FastMath.atan2(2.0 * q_qy.getDoubleValue() * q_qz.getDoubleValue() + 2.0 * q_qx.getDoubleValue() * q_qs.getDoubleValue(),
-                             1.0 - 2.0 * q_qx.getDoubleValue() * q_qx.getDoubleValue() - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue());    // Math.asin(q_qs.val * q_qx.val * 2.0);
+                               1.0 - 2.0 * q_qx.getDoubleValue() * q_qx.getDoubleValue() - 2.0 * q_qy.getDoubleValue() * q_qy.getDoubleValue()); // Math.asin(q_qs.val * q_qx.val * 2.0);
       }
       else
       {
          yaw = 2.0 * FastMath.atan2(q_qz.getDoubleValue(), q_qs.getDoubleValue());
          roll = 0.0;
       }
-      
+
       yawPitchRollToReturn[0] = yaw;
       yawPitchRollToReturn[1] = pitch;
       yawPitchRollToReturn[2] = roll;
-      
+
       return yawPitchRollToReturn;
    }
 
    /**
     * Indicates whether this floating joint is fixed or not. This field differs from
-    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is
-    * still simulated.
+    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is still simulated.
     */
    public boolean isPinned()
    {
@@ -501,8 +499,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
 
    /**
     * Indicates whether this floating joint is fixed or not. This field differs from
-    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is
-    * still simulated.
+    * {@link #isDynamic()} as when it is pinned, the subtree attached to this joint is still simulated.
     */
    public void setPinned(boolean isPinned)
    {
@@ -512,14 +509,14 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
    @Override
    public void update()
    {
-      this.setFloatingTransform3D(this.jointTransform3D);
-      if(createYawPitchRollYoVariable)
+      setFloatingTransform3D(jointTransform3D);
+      if (createYawPitchRollYoVariable)
       {
          getYawPitchRoll(q_yaw, q_pitch, q_roll);
       }
    }
 
-// private Matrix3d tempRotationMatrix = new Matrix3d();
+   // private Matrix3d tempRotationMatrix = new Matrix3d();
    protected void setFloatingTransform3D(RigidBodyTransform t1)
    {
       // position.set(q_x.val + offset.x, q_y.val + offset.y, q_z.val + offset.z);
@@ -527,30 +524,30 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
       tempOrientation1.set(q_qx.getDoubleValue(), q_qy.getDoubleValue(), q_qz.getDoubleValue(), q_qs.getDoubleValue());
       t1.set(tempOrientation1, tempPosition1);
 
-//    // An alternate way is to hardcode from http://www.genesis3d.com/~kdtop/Quaternions-UsingToRepresentRotation.htm (except do the transpose):
-//    double w2 = q_qs.val * q_qs.val;
-//    double x2 = q_qx.val * q_qx.val;
-//    double y2 = q_qy.val * q_qy.val;
-//    double z2 = q_qz.val * q_qz.val;
-//
-//    double wx = q_qs.val * q_qx.val;
-//    double wy = q_qs.val * q_qy.val;
-//    double wz = q_qs.val * q_qz.val;
-//
-//    double xy = q_qx.val * q_qy.val;
-//    double xz = q_qx.val * q_qz.val;
-//    double yz = q_qy.val * q_qz.val;
-//
-//
-////    Matrix3d rotationMatrix = new Matrix3d
-//
-//        tempRotationMatrix = new Matrix3d(
-//        w2+x2-y2-z2, 2.0*(xy - wz), 2.0*(xz + wy),
-//        2.0*(xy+wz), w2-x2+y2-z2, 2.0*(yz-wx),
-//        2.0*(xz-wy), 2.0*(yz+wx), w2-x2-y2+z2
-//        );
-//
-//    t1.set(tempRotationMatrix, tempPosition1, 1.0);
+      //    // An alternate way is to hardcode from http://www.genesis3d.com/~kdtop/Quaternions-UsingToRepresentRotation.htm (except do the transpose):
+      //    double w2 = q_qs.val * q_qs.val;
+      //    double x2 = q_qx.val * q_qx.val;
+      //    double y2 = q_qy.val * q_qy.val;
+      //    double z2 = q_qz.val * q_qz.val;
+      //
+      //    double wx = q_qs.val * q_qx.val;
+      //    double wy = q_qs.val * q_qy.val;
+      //    double wz = q_qs.val * q_qz.val;
+      //
+      //    double xy = q_qx.val * q_qy.val;
+      //    double xz = q_qx.val * q_qz.val;
+      //    double yz = q_qy.val * q_qz.val;
+      //
+      //
+      ////    Matrix3d rotationMatrix = new Matrix3d
+      //
+      //        tempRotationMatrix = new Matrix3d(
+      //        w2+x2-y2-z2, 2.0*(xy - wz), 2.0*(xz + wy),
+      //        2.0*(xy+wz), w2-x2+y2-z2, 2.0*(yz-wx),
+      //        2.0*(xz-wy), 2.0*(yz+wx), w2-x2-y2+z2
+      //        );
+      //
+      //    t1.set(tempRotationMatrix, tempPosition1, 1.0);
    }
 
 }

@@ -13,20 +13,20 @@ import us.ihmc.yoVariables.variable.YoInteger;
 public class GroundContactPoint extends ExternalForcePoint
 {
    private static final long serialVersionUID = 2334921180229856021L;
- 
+
    private final YoFramePoint3D touchdownLocation;
-   
-   private final YoDouble fs;    // Foot Switch TODO: YoBoolean or YoEnum
+
+   private final YoDouble fs; // Foot Switch TODO: YoBoolean or YoEnum
    private final YoFrameVector3D surfaceNormal;
 
-   private final YoBoolean slip;    // Whether or not it is slipping.
+   private final YoBoolean slip; // Whether or not it is slipping.
    private final YoInteger collisionCount;
 
    public GroundContactPoint(String name, Robot robot)
    {
       this(name, null, robot.getRobotsYoVariableRegistry());
    }
-   
+
    public GroundContactPoint(String name, YoVariableRegistry registry)
    {
       this(name, null, registry);
@@ -36,7 +36,7 @@ public class GroundContactPoint extends ExternalForcePoint
    {
       this(name, offset, robot.getRobotsYoVariableRegistry());
    }
-   
+
    public GroundContactPoint(String name, Vector3D offset, YoVariableRegistry registry)
    {
       super(name, offset, registry);
@@ -47,7 +47,7 @@ public class GroundContactPoint extends ExternalForcePoint
 
       slip = new YoBoolean(name + "_slip", "GroundContactPoint slipping", registry);
       collisionCount = new YoInteger(name + "_coll", "GroundContactPoint colliding", registry);
-      
+
       surfaceNormal = new YoFrameVector3D(name + "_n", "", ReferenceFrame.getWorldFrame(), registry);
    }
 
@@ -55,17 +55,17 @@ public class GroundContactPoint extends ExternalForcePoint
    {
       return slip.getBooleanValue();
    }
-   
+
    public boolean isInContact()
    {
       return (fs.getDoubleValue() > 0.5);
    }
-   
+
    public void disable()
    {
       fs.set(-1.0);
    }
-   
+
    public boolean isDisabled()
    {
       return (fs.getDoubleValue() < -0.5);
@@ -75,17 +75,17 @@ public class GroundContactPoint extends ExternalForcePoint
    {
       slip.set(isSlipping);
    }
-   
+
    public int getCollisionCount()
    {
       return collisionCount.getIntegerValue();
    }
-   
+
    public void incrementCollisionCount()
    {
-      this.collisionCount.increment();
+      collisionCount.increment();
    }
-   
+
    public void setInContact()
    {
       fs.set(1.0);
@@ -95,23 +95,25 @@ public class GroundContactPoint extends ExternalForcePoint
    {
       fs.set(0.0);
    }
-   
+
    public void setIsInContact(boolean isInContact)
    {
-      if (isInContact) setInContact();
-      else setNotInContact();
+      if (isInContact)
+         setInContact();
+      else
+         setNotInContact();
    }
 
    public void getTouchdownLocation(Point3D touchdownLocationToPack)
    {
       touchdownLocationToPack.set(touchdownLocation);
    }
-   
+
    public YoFramePoint3D getYoTouchdownLocation()
    {
       return touchdownLocation;
    }
-   
+
    public YoDouble getYoFootSwitch()
    {
       return fs;
@@ -124,10 +126,9 @@ public class GroundContactPoint extends ExternalForcePoint
 
    public void setTouchdownToCurrentLocation()
    {
-      this.touchdownLocation.set(this.getYoPosition());
+      touchdownLocation.set(getYoPosition());
    }
 
-   
    public void getSurfaceNormal(Vector3D vectorToPack)
    {
       vectorToPack.set(surfaceNormal);
@@ -140,12 +141,12 @@ public class GroundContactPoint extends ExternalForcePoint
 
    public void setSurfaceNormal(double fx, double fy, double fz)
    {
-      this.surfaceNormal.set(fx, fy, fz);
+      surfaceNormal.set(fx, fy, fz);
    }
-   
+
    public YoFrameVector3D getYoSurfaceNormal()
    {
-	   return this.surfaceNormal;
+      return surfaceNormal;
    }
 
 }

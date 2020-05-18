@@ -2,7 +2,6 @@ package us.ihmc.simulationconstructionset;
 
 import us.ihmc.yoVariables.variable.YoDouble;
 
-
 public class FunctionIntegrator
 {
    private FunctionToIntegrate function;
@@ -13,7 +12,6 @@ public class FunctionIntegrator
    private double[] tempDerivative;
 
    private YoDouble[] outputs;
-
 
    public FunctionIntegrator(FunctionToIntegrate function)
    {
@@ -34,7 +32,6 @@ public class FunctionIntegrator
          q_n[i] = outputs[i].getDoubleValue();
       }
    }
-
 
    public void doDynamics(int passNumber)
    {
@@ -69,6 +66,5 @@ public class FunctionIntegrator
          outputs[i].set(q_n[i] + stepSize * (k[0][i] / 6.0 + k[1][i] / 3.0 + k[2][i] / 3.0 + k[3][i] / 6.0));
       }
    }
-
 
 }

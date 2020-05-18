@@ -18,9 +18,9 @@ public class CreateNewViewportWindowAction extends AbstractAction
       super("New Viewport Window");
       this.executor = executor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
-      this.putValue(Action.LONG_DESCRIPTION, "Creates a new Viewport Window for showing 3D Graphics in SCS.");
-      this.putValue(Action.SHORT_DESCRIPTION, "Creates a new Viewport Window.");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
+      putValue(Action.LONG_DESCRIPTION, "Creates a new Viewport Window for showing 3D Graphics in SCS.");
+      putValue(Action.SHORT_DESCRIPTION, "Creates a new Viewport Window.");
    }
 
    @Override

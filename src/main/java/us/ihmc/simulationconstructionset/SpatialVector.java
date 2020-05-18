@@ -9,54 +9,55 @@ import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 
 /**
- * Title:        Simulation Construction Set<p>
- * Description:  Package for Simulating Dynamic Robots and Mechanisms<p>
+ * Title: Simulation Construction Set
+ * <p>
+ * Description: Package for Simulating Dynamic Robots and Mechanisms
+ * <p>
+ * 
  * @author Jerry Pratt
  * @version Beta 1.0
  */
-
 
 public final class SpatialVector implements java.io.Serializable
 {
    private static final long serialVersionUID = 971129051271759424L;
    public Vector3D top = new Vector3D(), bottom = new Vector3D();
 
-
    public void getTop(Vector3DBasics topToPack)
    {
       topToPack.set(top);
    }
-   
+
    public void getBottom(Vector3DBasics bottomToPack)
    {
       bottomToPack.set(bottom);
    }
-   
+
    public double getTopX()
    {
       return top.getX();
    }
-   
+
    public double getTopY()
    {
       return top.getY();
    }
-   
+
    public double getTopZ()
    {
       return top.getZ();
    }
-   
+
    public double getBottomX()
    {
       return bottom.getX();
    }
-   
+
    public double getBottomY()
    {
       return bottom.getY();
    }
-   
+
    public double getBottomZ()
    {
       return bottom.getZ();
@@ -142,21 +143,14 @@ public final class SpatialVector implements java.io.Serializable
    Vector3D temp1 = new Vector3D();
 
    /*
-    * public void setInitArticulatedZeroAccel(double mass, Vector3d w_i, double Ixx, double Iyy, double Izz, Matrix3d Ri_0, double gX, double gY, double gZ)
-    * {
-    * top.x = -gX * mass; top.y = -gY * mass; top.z = -gZ * mass;
-    *
-    * Ri_0.transform(top);
-    *
-    * temp1.x = Ixx * w_i.x;
-    * temp1.y = Iyy * w_i.y;
-    * temp1.z = Izz * w_i.z;
-    *
-    * bottom.cross(w_i, temp1);
-    * }
+    * public void setInitArticulatedZeroAccel(double mass, Vector3d w_i, double Ixx, double Iyy, double
+    * Izz, Matrix3d Ri_0, double gX, double gY, double gZ) { top.x = -gX * mass; top.y = -gY * mass;
+    * top.z = -gZ * mass; Ri_0.transform(top); temp1.x = Ixx * w_i.x; temp1.y = Iyy * w_i.y; temp1.z =
+    * Izz * w_i.z; bottom.cross(w_i, temp1); }
     */
 
-   public void setInitArticulatedZeroAccel(double mass, Vector3DReadOnly w_i, Matrix3DReadOnly Inertia, RotationMatrixReadOnly Ri_0, double gX, double gY, double gZ)
+   public void setInitArticulatedZeroAccel(double mass, Vector3DReadOnly w_i, Matrix3DReadOnly Inertia, RotationMatrixReadOnly Ri_0, double gX, double gY,
+                                           double gZ)
    {
       top.setX(-gX * mass);
       top.setY(-gY * mass);
@@ -176,8 +170,10 @@ public final class SpatialVector implements java.io.Serializable
 
    public boolean containsNaN()
    {
-      if (top.containsNaN()) return true;
-      if (bottom.containsNaN()) return true;
+      if (top.containsNaN())
+         return true;
+      if (bottom.containsNaN())
+         return true;
       return false;
    }
 }

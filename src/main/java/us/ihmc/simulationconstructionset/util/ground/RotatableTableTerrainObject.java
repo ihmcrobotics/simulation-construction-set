@@ -10,7 +10,6 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 
-
 public class RotatableTableTerrainObject extends RotatableBoxTerrainObject
 {
    double tableTopThickness = 1.0;
@@ -27,7 +26,7 @@ public class RotatableTableTerrainObject extends RotatableBoxTerrainObject
    {
       RotationMatrixReadOnly rotation = box.getOrientation();
       Tuple3DReadOnly center = box.getPosition();
-      
+
       linkGraphics = new Graphics3DObject();
       FrameQuaternion orientation = new FrameQuaternion(ReferenceFrame.getWorldFrame(), rotation);
       linkGraphics.identity();
@@ -43,6 +42,5 @@ public class RotatableTableTerrainObject extends RotatableBoxTerrainObject
       linkGraphics.addModelFile("models/FoldingTableLegs.obj");
 
    }
-
 
 }

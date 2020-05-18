@@ -42,7 +42,7 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
       this.forceTorqueSensorJoint = forceTorqueSensorJoint;
       this.transformToParentJoint = transformToParentJoint;
 
-      this.sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
+      sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
       {
          @Override
          protected void updateTransformToParent(RigidBodyTransform transformToParent)
@@ -123,7 +123,7 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    @Override
    public void corruptWrenchElement(int row, double value)
    {
-      this.corruptionMatrix.add(row, 0, value);
+      corruptionMatrix.add(row, 0, value);
    }
 
    @Override

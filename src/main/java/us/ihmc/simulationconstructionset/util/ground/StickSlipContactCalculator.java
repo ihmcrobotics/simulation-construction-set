@@ -56,8 +56,8 @@ public class StickSlipContactCalculator
       applyContactForces(contactPointA, contactPointB);
    }
 
-   private void computeSpringDamperAndTotalForces(ExternalForcePoint contactPointA, Contactable contactableB, GroundContactPoint contactPointB,
-         double kContact, double bContact)
+   private void computeSpringDamperAndTotalForces(ExternalForcePoint contactPointA, Contactable contactableB, GroundContactPoint contactPointB, double kContact,
+                                                  double bContact)
    {
       contactPointA.getPosition(contactAPosition);
       contactPointB.getPosition(contactBPosition);

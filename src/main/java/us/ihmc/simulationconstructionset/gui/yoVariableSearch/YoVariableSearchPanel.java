@@ -68,12 +68,12 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
    private boolean showOnlyParameters = false;
 
    public YoVariableSearchPanel(SelectedVariableHolder holder, DataBuffer dataBuffer, GraphArrayPanel graphArrayPanel,
-                              EntryBoxArrayTabbedPanel entryBoxArrayPanel, BookmarkedVariablesHolder bookmarkedVariablesHolder,
-                              YoVariableExplorerTabbedPane combinedVarPanel)
+                                EntryBoxArrayTabbedPanel entryBoxArrayPanel, BookmarkedVariablesHolder bookmarkedVariablesHolder,
+                                YoVariableExplorerTabbedPane combinedVarPanel)
    {
       super(new BorderLayout());
 
-      this.setName("SearchPanel");
+      setName("SearchPanel");
 
       if (bookmarkedVariablesHolder == null)
       {
@@ -81,13 +81,19 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       }
 
       // Setup a scroll panel for the VarPanel, then add it to the center of the display
-      this.yoVariableSearchResultsPanel = new YoVariableListPanel("Search", holder,
-                                          new YoVariablePanelJPopupMenu(graphArrayPanel, entryBoxArrayPanel, holder, combinedVarPanel, bookmarkedVariablesHolder),
-                                          this);
+      yoVariableSearchResultsPanel = new YoVariableListPanel("Search",
+                                                             holder,
+                                                             new YoVariablePanelJPopupMenu(graphArrayPanel,
+                                                                                           entryBoxArrayPanel,
+                                                                                           holder,
+                                                                                           combinedVarPanel,
+                                                                                           bookmarkedVariablesHolder),
+                                                             this);
       this.holder = yoVariableSearchResultsPanel.getVariableHolder();
       this.holder.addChangeListener(this);
 
-      JScrollPane searchResultScrollPane = new JScrollPane(yoVariableSearchResultsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+      JScrollPane searchResultScrollPane = new JScrollPane(yoVariableSearchResultsPanel,
+                                                           ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                                            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
       searchResultScrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_PANE_INCREMENT);
       searchResultScrollPane.getVerticalScrollBar().setBlockIncrement(SCROLL_PANE_INCREMENT);
@@ -97,8 +103,11 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       JSplitPane splitPane = null;
       if (USE_BOOKMARKS_PANEL)
       {
-         BookmarkedVariablesPanel bookmarkedVariablesPanel = new BookmarkedVariablesPanel("Bookmarks", yoVariableSearchResultsPanel.selectedVariableHolder, bookmarkedVariablesHolder);
-         JScrollPane bookMarkScrollPane = new JScrollPane(bookmarkedVariablesPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+         BookmarkedVariablesPanel bookmarkedVariablesPanel = new BookmarkedVariablesPanel("Bookmarks",
+                                                                                          yoVariableSearchResultsPanel.selectedVariableHolder,
+                                                                                          bookmarkedVariablesHolder);
+         JScrollPane bookMarkScrollPane = new JScrollPane(bookmarkedVariablesPanel,
+                                                          ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
          bookMarkScrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_PANE_INCREMENT);
          bookMarkScrollPane.getVerticalScrollBar().setBlockIncrement(SCROLL_PANE_INCREMENT);
@@ -247,14 +256,14 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       entryBox.updateActiveContainer();
    }
 
-
    public void setShowOnlyParameters(boolean showOnlyParameters)
    {
-      if(this.showOnlyParameters != showOnlyParameters)
+      if (this.showOnlyParameters != showOnlyParameters)
       {
          this.showOnlyParameters = showOnlyParameters;
 
-         SwingUtilities.invokeLater(() -> {
+         SwingUtilities.invokeLater(() ->
+         {
             if (variableSearchBox.hasSearched())
             {
                variableSearchBox.findMatchingVariablesRegularExpression();
@@ -299,7 +308,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
 
       public VariableSearchBox()
       {
-         this.setLayout(new GridLayout(1, 1));
+         setLayout(new GridLayout(1, 1));
          searchTextField = new JTextField();
          searchTextField.setName("SearchTextField");
 
@@ -363,8 +372,8 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       {
          private String searchText;
          private boolean stopSearch = false;
-         private ArrayList<YoVariable<?>> startsWithSearchTextList = new ArrayList<YoVariable<?>>();
-         private ArrayList<YoVariable<?>> doesNotStartWithSearchTextList = new ArrayList<YoVariable<?>>();
+         private ArrayList<YoVariable<?>> startsWithSearchTextList = new ArrayList<>();
+         private ArrayList<YoVariable<?>> doesNotStartWithSearchTextList = new ArrayList<>();
 
          public Searcher(String searchText)
          {
@@ -392,7 +401,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
 
          public ArrayList<YoVariable<?>> search(String searchText)
          {
-            ArrayList<YoVariable<?>> ret = new ArrayList<YoVariable<?>>();
+            ArrayList<YoVariable<?>> ret = new ArrayList<>();
             ArrayList<DataBufferEntry> entries = dataBuffer.getEntries();
             for (int i = 0; i < entries.size(); i++)
             {
@@ -404,7 +413,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
                DataBufferEntry entry = entries.get(i);
                boolean match = RegularExpression.check(entry.getVariable().getName(), searchText);
 
-               if(match && showOnlyParameters)
+               if (match && showOnlyParameters)
                {
                   match = entry.getVariable().isParameter();
                }

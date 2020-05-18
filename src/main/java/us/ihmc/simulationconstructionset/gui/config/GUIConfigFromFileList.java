@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class GUIConfigFromFileList
 {
-   private ArrayList<GUIConfigFromFile> configs = new ArrayList<GUIConfigFromFile>();
+   private ArrayList<GUIConfigFromFile> configs = new ArrayList<>();
 
    public GUIConfigFromFileList()
    {
@@ -12,15 +12,18 @@ public class GUIConfigFromFileList
 
    public void addConfiguration(GUIConfigFromFile config)
    {
-      boolean add= true;
-	   for(GUIConfigFromFile configurations: configs){
-    	  if(configurations.getFileName().equals(config.getFileName())){
-    		  add=false;
-    	  }
+      boolean add = true;
+      for (GUIConfigFromFile configurations : configs)
+      {
+         if (configurations.getFileName().equals(config.getFileName()))
+         {
+            add = false;
+         }
       }
-	   if(add){
-		   configs.add(config);
-	   }
+      if (add)
+      {
+         configs.add(config);
+      }
    }
 
    public String[] getConfigurationNames()
@@ -42,7 +45,7 @@ public class GUIConfigFromFileList
 
       for (int i = 0; i < n; i++)
       {
-    	  GUIConfigFromFile config = (configs.get(i));
+         GUIConfigFromFile config = (configs.get(i));
 
          if (config.getFileName().equals(name))
             return config;

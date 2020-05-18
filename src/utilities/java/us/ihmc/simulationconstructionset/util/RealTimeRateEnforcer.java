@@ -1,13 +1,10 @@
 package us.ihmc.simulationconstructionset.util;
 
 /**
- * Class for enforcing that a simulation or other computational process doesn't run any faster than real time.
- * Of course, if it runs slower than real time, nothing you can do about it except speed up the algorithm
- * or buy a faster computer. 
- * 
- * Make sure to call reset() whenever the simulated clock and the wall clock become out of synch (for example, 
- * stopping or rewinding a simulation). 
- * 
+ * Class for enforcing that a simulation or other computational process doesn't run any faster than
+ * real time. Of course, if it runs slower than real time, nothing you can do about it except speed
+ * up the algorithm or buy a faster computer. Make sure to call reset() whenever the simulated clock
+ * and the wall clock become out of synch (for example, stopping or rewinding a simulation).
  */
 public class RealTimeRateEnforcer
 {

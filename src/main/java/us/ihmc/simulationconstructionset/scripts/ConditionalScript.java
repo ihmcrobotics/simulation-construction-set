@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 public class ConditionalScript implements Script
 {
-   private ArrayList<ConditionalScriptEntry> conditionalScriptEntries = new ArrayList<ConditionalScriptEntry>();
+   private ArrayList<ConditionalScriptEntry> conditionalScriptEntries = new ArrayList<>();
 
    public ConditionalScript()
    {
    }
-
 
    @Override
    public void doScript(double t)
@@ -53,7 +52,6 @@ public class ConditionalScript implements Script
    {
       if (cse == null)
          return;
-
 
       cse.removeParentsAndChildren();
       conditionalScriptEntries.remove(cse);

@@ -15,8 +15,7 @@ public class CameraPropertiesDialogGenerator implements CameraPropertiesDialogCo
    private Container parentContainer;
    private JFrame frame;
 
-   public CameraPropertiesDialogGenerator(ActiveCameraHolder cameraHolder, Container parentContainer,
-                                          JFrame frame)
+   public CameraPropertiesDialogGenerator(ActiveCameraHolder cameraHolder, Container parentContainer, JFrame frame)
    {
       this.parentContainer = parentContainer;
       this.frame = frame;

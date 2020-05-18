@@ -31,7 +31,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
    Point3D pointToTransform = new Point3D();
 
    private Graphics3DObject linkGraphics;
-   
+
    private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
    /**
@@ -84,10 +84,10 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
       Point3D maxPoint = new Point3D(xGlobalMax, yGlobalMax, height);
 
       boundingBox = new BoundingBox3D(minPoint, maxPoint);
-      
+
       Ramp3D ramp3DShape = new Ramp3D(transform, absRun, width, height);
-      
-      this.terrainCollisionShapes.add(ramp3DShape);
+
+      terrainCollisionShapes.add(ramp3DShape);
    }
 
    public RotatableRampTerrainObject(double xCenter, double yCenter, double run, double width, double height, double degreesYaw)
@@ -162,8 +162,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
          return;
 
       /*
-       * if (Math.abs(x-xMin) < threshhold) { normal.x = -1.0;normal.y =
-       * 0.0;normal.z = 0.0; }
+       * if (Math.abs(x-xMin) < threshhold) { normal.x = -1.0;normal.y = 0.0;normal.z = 0.0; }
        */
 
       else if (z > heightAt(xGlobal, yGlobal, z) - threshhold)
@@ -244,7 +243,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
    {
       return this;
    }
-   
+
    @Override
    public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {

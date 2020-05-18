@@ -5,10 +5,8 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.DummyOneDegreeOfFreedomJoint;
 import us.ihmc.simulationconstructionset.Joint;
 
-
 public class DummyOneDegreeOfFreedomJointPhysics extends JointPhysics<DummyOneDegreeOfFreedomJoint>
 {
-
 
    public DummyOneDegreeOfFreedomJointPhysics(DummyOneDegreeOfFreedomJoint owner)
    {
@@ -22,24 +20,15 @@ public class DummyOneDegreeOfFreedomJointPhysics extends JointPhysics<DummyOneDe
    }
 
    /*
-    * protected void jointDependentSetAndGetRotation(Matrix3d Rh_i) {
-    * Rh_i.setIdentity(); // We probably can rely on Rh_i not changing its 1 and
-    * 0 elements but let's just be safe.
-    *
-    * double cosQ = Math.cos(q.getDoubleValue()), sinQ =
-    * Math.sin(q.getDoubleValue());
-    *
-    * if (this.axis == Axis.X)
+    * protected void jointDependentSetAndGetRotation(Matrix3d Rh_i) { Rh_i.setIdentity(); // We
+    * probably can rely on Rh_i not changing its 1 and 0 elements but let's just be safe. double cosQ =
+    * Math.cos(q.getDoubleValue()), sinQ = Math.sin(q.getDoubleValue()); if (this.axis == Axis.X)
     * {Rh_i.setElement(1,1,cosQ);Rh_i.setElement(2,2,cosQ
-    * );Rh_i.setElement(1,2,-sinQ);Rh_i.setElement(2,1,sinQ);} else if
-    * (this.axis == Axis.Y)
+    * );Rh_i.setElement(1,2,-sinQ);Rh_i.setElement(2,1,sinQ);} else if (this.axis == Axis.Y)
     * {Rh_i.setElement(0,0,cosQ);Rh_i.setElement(2,2,cosQ);
-    * Rh_i.setElement(0,2,sinQ);Rh_i.setElement(2,0,-sinQ);} else if (this.axis
-    * == Axis.Z)
+    * Rh_i.setElement(0,2,sinQ);Rh_i.setElement(2,0,-sinQ);} else if (this.axis == Axis.Z)
     * {Rh_i.setElement(0,0,cosQ);Rh_i.setElement(1,1,cosQ);Rh_i.setElement
-    * (0,1,-sinQ);Rh_i.setElement(1,0,sinQ);}
-    *
-    * }
+    * (0,1,-sinQ);Rh_i.setElement(1,0,sinQ);} }
     */
 
    @Override

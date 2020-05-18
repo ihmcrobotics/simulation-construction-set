@@ -7,14 +7,14 @@ import java.util.Map;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoBoolean;
-import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.simulationconstructionset.GroundContactModel;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.MovingGroundContactModel;
 import us.ihmc.simulationconstructionset.MovingGroundProfile;
 import us.ihmc.simulationconstructionset.Robot;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoBoolean;
+import us.ihmc.yoVariables.variable.YoDouble;
 
 public class CollisionGroundContactModel implements GroundContactModel, MovingGroundContactModel
 {
@@ -22,10 +22,10 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
 
    private static final double defaultCoefficientOfRestitution = 0.5;
    private static final double defaultCoefficientOfFriction = 0.7;
-   
+
    private final YoVariableRegistry registry = new YoVariableRegistry("CollisionGroundContactModel");
    private YoDouble groundRestitution, groundFriction;
-   
+
    private ArrayList<GroundContactPoint> gcPoints;
    private GroundProfile3D profile3D;
    private MovingGroundProfile movingProfile;
@@ -44,13 +44,12 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
    {
       this(rob, defaultCoefficientOfRestitution, defaultCoefficientOfFriction, parentRegistry);
    }
-   
+
    public CollisionGroundContactModel(Robot rob, double epsilon, double mu, YoVariableRegistry parentRegistry)
    {
       this(rob, 0, epsilon, mu, parentRegistry);
    }
-   
-   
+
    public CollisionGroundContactModel(Robot robot, int groundContactGroupIdentifier, double epsilon, double mu, YoVariableRegistry parentRegistry)
    {
       this(robot.getGroundContactPoints(groundContactGroupIdentifier), epsilon, mu, parentRegistry);
@@ -65,7 +64,7 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
    {
       this.gcPoints = gcPoints;
 
-      for(GroundContactPoint groundContactPoint : gcPoints)
+      for (GroundContactPoint groundContactPoint : gcPoints)
       {
          isInsideSpies.put(groundContactPoint, new YoBoolean(groundContactPoint.getName() + "_isInsideSpy", registry));
          microCollisionSpies.put(groundContactPoint, new YoBoolean(groundContactPoint.getName() + "_microCollisionSpy", registry));
@@ -81,16 +80,16 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
       groundRestitution.set(epsilon);
       groundFriction.set(mu);
 
-      this.initGroundContact();
+      initGroundContact();
    }
-   
+
    @Override
    public void setGroundProfile3D(GroundProfile3D profile3D)
    {
       this.profile3D = profile3D;
-      this.movingProfile = null;
+      movingProfile = null;
    }
-   
+
    @Override
    public GroundProfile3D getGroundProfile3D()
    {
@@ -100,8 +99,8 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
    @Override
    public void setGroundProfile(MovingGroundProfile profile)
    {
-      this.profile3D = profile;
-      this.movingProfile = null;
+      profile3D = profile;
+      movingProfile = null;
    }
 
    private void initGroundContact()
@@ -116,20 +115,10 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
 
    int jj = 0;
 
-/*   public void doGroundContact2()
-   {
-     jj++;
-     if (jj == gcPoints.size()) jj = 0;
-
-
-         GroundContactPoint gc = (GroundContactPoint) gcPoints.get(jj);
-         doGroundContact(gc);
-
-
-
-   }
-*/
-
+   /*
+    * public void doGroundContact2() { jj++; if (jj == gcPoints.size()) jj = 0; GroundContactPoint gc =
+    * (GroundContactPoint) gcPoints.get(jj); doGroundContact(gc); }
+    */
 
    @Override
    public void doGroundContact()
@@ -153,7 +142,6 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
             doGroundContact(gc);
          }
       }
-
 
    }
 
@@ -211,12 +199,12 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
 
       if (gc.isInContact())
       {
-//         if (profile3D != null)
-//         {
-//            profile3D.closestIntersectionAndNormalAt(gc.getX(), gc.getY(), gc.getZ(), closestIntersection, normalVector);
-//         }
-//         else
-//            normalVector.set(0.0, 0.0, 1.0);
+         //         if (profile3D != null)
+         //         {
+         //            profile3D.closestIntersectionAndNormalAt(gc.getX(), gc.getY(), gc.getZ(), closestIntersection, normalVector);
+         //         }
+         //         else
+         //            normalVector.set(0.0, 0.0, 1.0);
 
          if (movingProfile != null)
          {
@@ -231,19 +219,24 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
             if (profile3D != null)
             {
                penetration_squared = (gc.getX() - closestIntersection.getX()) * (gc.getX() - closestIntersection.getX())
-                                     + (gc.getY() - closestIntersection.getY()) * (gc.getY() - closestIntersection.getY())
-                                     + (gc.getZ() - closestIntersection.getZ()) * (gc.getZ() - closestIntersection.getZ());
+                     + (gc.getY() - closestIntersection.getY()) * (gc.getY() - closestIntersection.getY())
+                     + (gc.getZ() - closestIntersection.getZ()) * (gc.getZ() - closestIntersection.getZ());
             }
             else
                penetration_squared = gc.getZ() * gc.getZ();
 
-            gc.resolveMicroCollision(penetration_squared, velocityVector, normalVector, groundRestitution.getDoubleValue(), groundFriction.getDoubleValue(), p_world);
+            gc.resolveMicroCollision(penetration_squared,
+                                     velocityVector,
+                                     normalVector,
+                                     groundRestitution.getDoubleValue(),
+                                     groundFriction.getDoubleValue(),
+                                     p_world);
 
             // gc.resolveMicroCollision(velocityVector, normalVector, 3.5, mu, p_world);
             // gc.resolveCollision(velocityVector, normalVector, epsilon, mu, p_world);
 
             double RATE = 0.0;
-            
+
             gc.getForce(tempForceOne);
             tempForceTwo.set(p_world);
             tempForceTwo.scale(RATE);
@@ -253,19 +246,16 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
          }
          else
          {
-            if(gc.getParentJoint() != null)
+            if (gc.getParentJoint() != null)
                gc.resolveCollision(velocityVector, normalVector, groundRestitution.getDoubleValue(), groundFriction.getDoubleValue(), p_world);
          }
-
 
          gc.incrementCollisionCount();
 
          // Put the impulse in f so I can see it:
 
          /*
-          * gc.fx.set(p_world.x);
-          * gc.fy.set(p_world.y);
-          * gc.fz.set(p_world.z);
+          * gc.fx.set(p_world.x); gc.fy.set(p_world.y); gc.fz.set(p_world.z);
           */
 
          if (p_world.getZ() < 0.0)
@@ -275,22 +265,13 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
             // System.exit(0);
          }
 
-
-
          /*
-          * gc.fx.set(K_XY * (gc.tdx.getDoubleValue()- gc.getX()) - B_XY * gc.getXVelocity());
-          * gc.fy.set(K_XY * (gc.tdy.getDoubleValue()- gc.getY()) - B_XY * gc.getYVelocity());
-          *
-          * if (NOMLEN + (gc.getZ() - gc.tdz.getDoubleValue()) > 0.002)
-          * {
-          * gc.fz.set(-K_Z * (gc.getZ() - gc.tdz.getDoubleValue())/(NOMLEN + (gc.getZ() - gc.tdz.getDoubleValue())) - B_Z * gc.getZVelocity());
-          * }
-          * else
-          * {
-          * gc.fz.set(-K_Z * (gc.getZ() - gc.tdz.getDoubleValue())/(0.002) - B_Z * gc.getZVelocity());
-          * }
-          *
-          * if (gc.fz.getDoubleValue() < 0.0) gc.fz.set(0.0);
+          * gc.fx.set(K_XY * (gc.tdx.getDoubleValue()- gc.getX()) - B_XY * gc.getXVelocity()); gc.fy.set(K_XY
+          * * (gc.tdy.getDoubleValue()- gc.getY()) - B_XY * gc.getYVelocity()); if (NOMLEN + (gc.getZ() -
+          * gc.tdz.getDoubleValue()) > 0.002) { gc.fz.set(-K_Z * (gc.getZ() -
+          * gc.tdz.getDoubleValue())/(NOMLEN + (gc.getZ() - gc.tdz.getDoubleValue())) - B_Z *
+          * gc.getZVelocity()); } else { gc.fz.set(-K_Z * (gc.getZ() - gc.tdz.getDoubleValue())/(0.002) - B_Z
+          * * gc.getZVelocity()); } if (gc.fz.getDoubleValue() < 0.0) gc.fz.set(0.0);
           */
       }
       else
@@ -300,7 +281,7 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
          gc.setImpulse(0.0, 0.0, 0.0);
       }
    }
-   
+
    private void addRegistryToParent(YoVariableRegistry parentRegistry)
    {
       if (parentRegistry != null)

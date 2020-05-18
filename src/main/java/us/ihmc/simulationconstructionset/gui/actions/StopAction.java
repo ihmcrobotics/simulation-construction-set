@@ -23,7 +23,7 @@ public class StopAction extends AbstractAction
       int shortKey = KeyEvent.VK_T;
       String longDescription = "Stop playing simulation.";
       String shortDescription = "Stop";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

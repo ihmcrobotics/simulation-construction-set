@@ -31,11 +31,10 @@ import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
 
 public class RobotDefinitionFixedFrame
 {
-   private final ArrayList<JointDefinitionFixedFrame> rootJointDefinitions = new ArrayList<JointDefinitionFixedFrame>();
+   private final ArrayList<JointDefinitionFixedFrame> rootJointDefinitions = new ArrayList<>();
    private String robotName = "defaultName";
 
    // used when recreating a definition from a file.
-
 
    public void createRobotDefinitionFromRobot(Robot r)
    {
@@ -72,7 +71,6 @@ public class RobotDefinitionFixedFrame
          {
             System.out.println(tempLine);
             xmlRepresentation += tempLine;
-
 
             if (tempLine.contains("$MODEL"))
             {
@@ -136,14 +134,12 @@ public class RobotDefinitionFixedFrame
 
    public void createRobotDefinitionFromRobotConfigurationString(String xmlString)
    {
-      ArrayList<JointDefinitionFixedFrame> allJoints = new ArrayList<JointDefinitionFixedFrame>();
+      ArrayList<JointDefinitionFixedFrame> allJoints = new ArrayList<>();
       String jointString = "";
       int currentJointIndex = 0;
       while ((jointString = XMLReaderUtility.getMiddleString(currentJointIndex, xmlString, "<Joint>", "</Joint>")) != null)
       {
          currentJointIndex = XMLReaderUtility.getEndIndexOfSubString(currentJointIndex, xmlString, "</Joint>");
-
-
 
          String type = XMLReaderUtility.getMiddleString(0, jointString, "<Type>", "</Type>");
          String name = XMLReaderUtility.getMiddleString(0, jointString, "<Name>", "</Name>");
@@ -151,7 +147,6 @@ public class RobotDefinitionFixedFrame
          String rootJoint = XMLReaderUtility.getMiddleString(0, jointString, "<RootJoint>", "</RootJoint>");
          Vector3D offset = XMLReaderUtility.parseVector3d(XMLReaderUtility.getMiddleString(0, jointString, "<Offset>", "</Offset>"));
          Vector3D axis = XMLReaderUtility.parseVector3d(XMLReaderUtility.getMiddleString(0, jointString, "<Axis>", "</Axis>"));
-
 
          JointDefinitionFixedFrame joint = new JointDefinitionFixedFrame();
          if (type.equals("FLOATING_JOINT"))
@@ -192,9 +187,7 @@ public class RobotDefinitionFixedFrame
 
          joint.setJointAxis(axis);
 
-
          String GcString = XMLReaderUtility.getMiddleString(0, jointString, "<GroundContactPoints>", "</GroundContactPoints>");
-
 
          createGroundContactPointDefinitionsFromString(GcString, joint);
 
@@ -221,8 +214,10 @@ public class RobotDefinitionFixedFrame
       int currentGroundContactPointIndex = 0;
       if (xmlString != null)
       {
-         while ((jointString = XMLReaderUtility.getMiddleString(currentGroundContactPointIndex, xmlString, "<GroundContactPoint>", "</GroundContactPoint>"))
-                != null)
+         while ((jointString = XMLReaderUtility.getMiddleString(currentGroundContactPointIndex,
+                                                                xmlString,
+                                                                "<GroundContactPoint>",
+                                                                "</GroundContactPoint>")) != null)
          {
             currentGroundContactPointIndex = XMLReaderUtility.getEndIndexOfSubString(currentGroundContactPointIndex, xmlString, "</GroundContactPoint>");
             String name = XMLReaderUtility.getMiddleString(0, jointString, "<Name>", "</Name>");
@@ -242,8 +237,10 @@ public class RobotDefinitionFixedFrame
       int currentExternalForcePointIndex = 0;
       if (xmlString != null)
       {
-         while ((jointString = XMLReaderUtility.getMiddleString(currentExternalForcePointIndex, xmlString, "<ExternalForcePoint>", "</ExternalForcePoint>"))
-                != null)
+         while ((jointString = XMLReaderUtility.getMiddleString(currentExternalForcePointIndex,
+                                                                xmlString,
+                                                                "<ExternalForcePoint>",
+                                                                "</ExternalForcePoint>")) != null)
          {
             currentExternalForcePointIndex = XMLReaderUtility.getEndIndexOfSubString(currentExternalForcePointIndex, xmlString, "</ExternalForcePoint>");
             String name = XMLReaderUtility.getMiddleString(0, jointString, "<Name>", "</Name>");
@@ -256,7 +253,6 @@ public class RobotDefinitionFixedFrame
          }
       }
    }
-
 
    private void setParentsAndChildren(ArrayList<JointDefinitionFixedFrame> allJoints)
    {
@@ -312,14 +308,14 @@ public class RobotDefinitionFixedFrame
             Graphics3DAddModelFileInstruction t = new Graphics3DAddModelFileInstruction(name);
             def.addInstruction(t);
 
-//          System.out.println("Add3DSFile");
+            //          System.out.println("Add3DSFile");
             currentTypeIndex = XMLReaderUtility.getEndIndexOfSubString(currentTypeIndex, graphicsString, "</Add3DSFile>");
          }
          else if (type.equals("Identity"))
          {
             def.addInstruction(new Graphics3DIdentityInstruction());
 
-//          System.out.println("Identity");
+            //          System.out.println("Identity");
             currentTypeIndex = XMLReaderUtility.getEndIndexOfSubString(currentTypeIndex, graphicsString, "<Identity>");
          }
          else if (type.equals("Translate"))
@@ -329,7 +325,7 @@ public class RobotDefinitionFixedFrame
             Graphics3DTranslateInstruction t = new Graphics3DTranslateInstruction(translation);
             def.addInstruction(t);
 
-//          System.out.println("Translate");
+            //          System.out.println("Translate");
             currentTypeIndex = XMLReaderUtility.getEndIndexOfSubString(currentTypeIndex, graphicsString, "</Translate>");
          }
          else
@@ -341,8 +337,6 @@ public class RobotDefinitionFixedFrame
 
       return def;
    }
-
-
 
    public void addRootJoint(JointDefinitionFixedFrame jointDef)
    {
@@ -429,9 +423,9 @@ public class RobotDefinitionFixedFrame
       }
       else
       {
-         throw new RuntimeException("Only Pin, Slider, Floating, and Floating Planar joints implemented right now. joint = " + joint + ", joint class = " + joint.getClass());
+         throw new RuntimeException("Only Pin, Slider, Floating, and Floating Planar joints implemented right now. joint = " + joint + ", joint class = "
+               + joint.getClass());
       }
-
 
       Link link = joint.getLink();
       LinkDefinitionFixedFrame linkDef = createLinkDefinition(link);
@@ -471,8 +465,6 @@ public class RobotDefinitionFixedFrame
       return linkDef;
    }
 
-
-
    public ArrayList<JointDefinitionFixedFrame> getRootJointDefinitions()
    {
       return rootJointDefinitions;
@@ -483,13 +475,12 @@ public class RobotDefinitionFixedFrame
       String returnString = "";
       ArrayList<JointDefinitionFixedFrame> childrenJoints = currentJoint.getChildrenJoints();
 
-//    if (parent == null)
-//       returnString += "Found Root Joint";
-//    else
-//       returnString += "Found Child Joint of " + parent.getJointName() + ".\n";
+      //    if (parent == null)
+      //       returnString += "Found Root Joint";
+      //    else
+      //       returnString += "Found Child Joint of " + parent.getJointName() + ".\n";
 
       returnString += currentJoint.toString();
-
 
       for (JointDefinitionFixedFrame childJoint : childrenJoints)
       {

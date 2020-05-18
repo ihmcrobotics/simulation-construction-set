@@ -38,7 +38,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
       this.contactPoints = contactPoints;
       this.forceTorqueSensorJoint = forceTorqueSensorJoint;
       this.transformToParentJoint = new RigidBodyTransform(transformToParentJoint);
-      this.sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
+      sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
       {
          @Override
          protected void updateTransformToParent(RigidBodyTransform transformToParent)
@@ -55,7 +55,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
             String namePrefix = contactPointName + "_ForceInSensorFrame";
             // Checking if that variable does already exist for some reason.
             if (registry.getVariable(namePrefix + "X") == null)
-               this.yoContactForceInSensorFrame.put(contactPointName, new YoFrameVector3D(namePrefix, sensorFrame, registry));
+               yoContactForceInSensorFrame.put(contactPointName, new YoFrameVector3D(namePrefix, sensorFrame, registry));
          }
       }
    }
@@ -142,7 +142,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
    @Override
    public void corruptWrenchElement(int row, double value)
    {
-      this.corruptionMatrix.add(row, 0, value);
+      corruptionMatrix.add(row, 0, value);
    }
 
    @Override

@@ -14,18 +14,16 @@ public class LoadParametersGenerator implements LoadParametersConstructor
    private final SimulationConstructionSet scs;
    private ParameterFileChooser fileChooser;
 
-   
    public LoadParametersGenerator(SimulationConstructionSet scs)
    {
       this.scs = scs;
-      this.fileChooser = new ParameterFileChooser();
+      fileChooser = new ParameterFileChooser();
    }
 
    @Override
    public void constructDialog()
    {
-      
-      
+
       if (fileChooser.showDialog(scs.getJFrame(), scs.getRootRegistry(), scs.getParameterRootPath(), scs.getDefaultParameterFile(), false))
       {
          try
@@ -41,7 +39,10 @@ public class LoadParametersGenerator implements LoadParametersConstructor
          }
          catch (IOException e)
          {
-            JOptionPane.showMessageDialog(scs.getJFrame(), "Cannot read from " + fileChooser.getFile() + "\n" + e.getMessage(), "Cannot read from file", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(scs.getJFrame(),
+                                          "Cannot read from " + fileChooser.getFile() + "\n" + e.getMessage(),
+                                          "Cannot read from file",
+                                          JOptionPane.ERROR_MESSAGE);
          }
       }
    }

@@ -16,15 +16,15 @@ public class MultiButtonSelectionDeselectionAction extends AbstractMultiButtonAc
    public MultiButtonSelectionDeselectionAction(String name)
    {
       super(name);
-      this.enableAll = false;
+      enableAll = false;
 
    }
 
    public void setShowHideAllMenuItem(JMenuItem menuItem, String enableAllText, String disableAllText)
    {
       this.menuItem = menuItem;
-      this.enableAllText=enableAllText;
-      this.disableAllText=disableAllText;
+      this.enableAllText = enableAllText;
+      this.disableAllText = disableAllText;
       setText();
    }
 
@@ -46,17 +46,16 @@ public class MultiButtonSelectionDeselectionAction extends AbstractMultiButtonAc
       menuItem.updateUI();
    }
 
-   
    public void hideAllGraphics()
    {
       enableAll = false;
       actionPerformed(null);
    }
-   
+
    @Override
    public void actionPerformed(ActionEvent e)
    {
-//      System.out.println(e.getActionCommand());
+      //      System.out.println(e.getActionCommand());
 
       if (enableAll)
       {

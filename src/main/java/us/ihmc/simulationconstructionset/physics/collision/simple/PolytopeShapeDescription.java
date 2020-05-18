@@ -21,7 +21,7 @@ public class PolytopeShapeDescription<T extends PolytopeShapeDescription<T>> imp
    public PolytopeShapeDescription<T> copy()
    {
       ConvexPolytope3D polytopeCopy = new ConvexPolytope3D(polytope);
-      PolytopeShapeDescription<T> copy = new PolytopeShapeDescription<T>(polytopeCopy);
+      PolytopeShapeDescription<T> copy = new PolytopeShapeDescription<>(polytopeCopy);
       copy.setSmoothingRadius(smoothingRadius);
       return copy;
    }
@@ -72,7 +72,7 @@ public class PolytopeShapeDescription<T extends PolytopeShapeDescription<T>> imp
       {
          throw new RuntimeException("Implement me for nonzero smoothing radius!");
       }
-      
+
       return false;
    }
 

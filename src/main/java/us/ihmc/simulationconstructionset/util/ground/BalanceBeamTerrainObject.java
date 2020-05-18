@@ -41,7 +41,7 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
       Point3D minPoint = new Point3D(xMin, yMin, zMin);
       Point3D maxPoint = new Point3D(xMax, yMax, zMax);
 
-      this.boundingBox = new BoundingBox3D(minPoint, maxPoint);
+      boundingBox = new BoundingBox3D(minPoint, maxPoint);
 
       this.direction = direction;
       this.width = width;
@@ -59,8 +59,8 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
    @Override
    public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
    {
-      double heightAt = this.heightAt(x, y, z);
-      this.surfaceNormalAt(x, y, z, normalToPack);
+      double heightAt = heightAt(x, y, z);
+      surfaceNormalAt(x, y, z, normalToPack);
 
       return heightAt;
    }

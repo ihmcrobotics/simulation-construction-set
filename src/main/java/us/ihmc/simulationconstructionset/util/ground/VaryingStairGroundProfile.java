@@ -20,7 +20,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
 
       if (stepRises.length != stepTreads.length + 1)
          throw new RuntimeException("stepHeights.length != stepTreads.length + 1");
-      
+
       double[] xCumulativeSum = MathTools.cumulativeSum(stepTreads);
       stepStartXValues = new double[xCumulativeSum.length + 1];
       System.arraycopy(xCumulativeSum, 0, stepStartXValues, 1, xCumulativeSum.length);
@@ -40,10 +40,10 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
 
       double yMin = -1.0;
       double yMax = 1.0;
-      
+
       double zMin = Double.NEGATIVE_INFINITY;
       double zMax = Double.POSITIVE_INFINITY;
-      
+
       boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
    }
 
@@ -52,7 +52,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return height;
    }
 
@@ -94,7 +94,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
    {
       return groundHeights[index];
    }
-   
+
    @Override
    public BoundingBox3D getBoundingBox()
    {

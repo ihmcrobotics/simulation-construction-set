@@ -4,10 +4,10 @@ import us.ihmc.euclid.axisAngle.AxisAngle;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
+import us.ihmc.simulationconstructionset.physics.engine.featherstone.DummyOneDegreeOfFreedomJointPhysics;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariableList;
-import us.ihmc.simulationconstructionset.physics.engine.featherstone.DummyOneDegreeOfFreedomJointPhysics;
 
 public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
 {
@@ -49,18 +49,18 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
       qdd = new YoDouble("qdd_" + jname, "PinJoint angular acceleration", registry);
       tau = new YoDouble("tau_" + jname, "PinJoint torque", registry);
 
-      this.setPinTransform3D(this.jointTransform3D, physics.u_i); // jaxis);
+      this.setPinTransform3D(jointTransform3D, physics.u_i); // jaxis);
    }
 
    protected YoVariableList getJointVars()
    {
-      return this.jointVars;
+      return jointVars;
    }
 
    @Override
    protected void update()
    {
-      this.setPinTransform3D(this.jointTransform3D, physics.u_i, q.getDoubleValue());
+      this.setPinTransform3D(jointTransform3D, physics.u_i, q.getDoubleValue());
    }
 
    protected void setPinTransform3D(RigidBodyTransform t1, Vector3D u_i) // int rotAxis)
@@ -155,13 +155,13 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
    {
       return Double.POSITIVE_INFINITY;
    }
-   
+
    @Override
    public double getJointLowerLimit()
    {
       return Double.NEGATIVE_INFINITY;
    }
-   
+
    @Override
    public double getJointStiction()
    {

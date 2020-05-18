@@ -10,7 +10,10 @@ public interface CreateNewYoVariableSliderWindowCommandExecutor
 {
    //TODO: change this from Viewport to Slider GUI
    public abstract YoVariableSliderWindow createNewYoVariableSliderWindow();
+
    public abstract YoVariableSliderWindow createNewYoVariableSliderWindow(String viewportName);
+
    public abstract YoVariableSliderWindow createNewYoVariableSliderWindow(String viewportName, int screenID, boolean maximizeWindow);
+
    public abstract YoVariableSliderWindow getParameterSliderWindow(String windowName);
 }

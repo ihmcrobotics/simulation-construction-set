@@ -12,7 +12,7 @@ public class TimerScript implements Script
    private final YoBoolean timerEnabled;
    private final YoDouble timeElapsed;
    private final YoDouble startTime;
-   
+
    public TimerScript(String name, YoVariableRegistry parentRegistry)
    {
       registry = new YoVariableRegistry(name);
@@ -22,21 +22,21 @@ public class TimerScript implements Script
       startTime = new YoDouble("startTime", registry);
       parentRegistry.addChild(registry);
    }
-   
+
    @Override
    public void doScript(double t)
    {
-      if(startTimer.getBooleanValue())
+      if (startTimer.getBooleanValue())
       {
          startTimer.set(false);
          startTime.set(t);
          timerEnabled.set(true);
       }
-      
-      if(timerEnabled.getBooleanValue())
+
+      if (timerEnabled.getBooleanValue())
          timeElapsed.set(t - startTime.getDoubleValue());
    }
-   
+
    public void startTimer()
    {
       startTimer.set(true);

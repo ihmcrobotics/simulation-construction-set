@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.simulationconstructionset.GroundContactModel;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.GroundContactPointsHolder;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoDouble;
 
 public class BidirectionGroundContactModel implements GroundContactModel
 {
@@ -33,15 +33,15 @@ public class BidirectionGroundContactModel implements GroundContactModel
    }
 
    public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double groundKxy, double groundBxy, double groundKz,
-         double groundBz, YoVariableRegistry parentRegistry)
+                                        double groundBz, YoVariableRegistry parentRegistry)
    {
       this(groundContactPointsHolder, 0, groundKxy, groundBxy, groundKz, groundBz, parentRegistry);
    }
 
    public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy,
-         double groundBxy, double groundKz, double groundBz, YoVariableRegistry parentRegistry)
+                                        double groundBxy, double groundKz, double groundBz, YoVariableRegistry parentRegistry)
    {
-      this.groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
+      groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
 
       this.groundKxy.set(groundKxy);
       this.groundBxy.set(groundBxy);
@@ -53,28 +53,28 @@ public class BidirectionGroundContactModel implements GroundContactModel
 
    public void setXYStiffness(double xyStiffness)
    {
-      this.groundKxy.set(xyStiffness);
+      groundKxy.set(xyStiffness);
    }
 
    public void setZStiffness(double zStiffness)
    {
-      this.groundKz.set(zStiffness);
+      groundKz.set(zStiffness);
    }
 
    public void setXYDamping(double xyDamping)
    {
-      this.groundBxy.set(xyDamping);
+      groundBxy.set(xyDamping);
    }
 
    public void setZDamping(double zDamping)
    {
-      this.groundBz.set(zDamping);
+      groundBz.set(zDamping);
    }
 
    @Override
    public void setGroundProfile3D(GroundProfile3D profile3D)
    {
-      this.groundProfile3D = profile3D;
+      groundProfile3D = profile3D;
    }
 
    @Override

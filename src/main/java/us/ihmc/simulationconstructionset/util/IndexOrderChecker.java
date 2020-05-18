@@ -10,7 +10,7 @@ public class IndexOrderChecker
    private final YoInteger missedIndices;
    private final YoBoolean hasBeenUpdated;
    private int increment;
-   
+
    public IndexOrderChecker(String name, YoVariableRegistry registry, int increment)
    {
       previousIndex = new YoInteger(name + "PrevIndex", registry);
@@ -18,7 +18,7 @@ public class IndexOrderChecker
       hasBeenUpdated = new YoBoolean(name + "HasBeenUpdated", registry);
       this.increment = increment;
    }
-   
+
    public void update(int newIndex)
    {
       if (hasBeenUpdated.getBooleanValue())

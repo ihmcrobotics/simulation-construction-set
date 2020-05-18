@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -34,7 +35,7 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
    public YoSliderpanel(YoVariable<?> var)
    {
       this.var = var;
-      this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       setup();
       var.addVariableChangedListener(this);
    }
@@ -53,7 +54,6 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
          newVal = newVal.substring(0, decimalLocal);
       }
 
-
       System.out.println("newVal" + newVal);
 
       return new Integer(newVal);
@@ -65,7 +65,9 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
       min = var.getValueAsDouble() - defaultMinMaxOffset;
       max = var.getValueAsDouble() + defaultMinMaxOffset;
 
-      slider = new JSlider(JSlider.VERTICAL, convertDoubleToPrecisionInt(min), convertDoubleToPrecisionInt(max),
+      slider = new JSlider(SwingConstants.VERTICAL,
+                           convertDoubleToPrecisionInt(min),
+                           convertDoubleToPrecisionInt(max),
                            convertDoubleToPrecisionInt(var.getValueAsDouble()));
       setUpMax();
       setUpMin();
@@ -137,7 +139,6 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
       });
    }
 
-
    @Override
    public void mouseClicked(MouseEvent e)
    {
@@ -195,6 +196,5 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
       setSliderValueOnVariableChange();
 
    }
-
 
 }

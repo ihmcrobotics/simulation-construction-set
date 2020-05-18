@@ -7,7 +7,10 @@ import us.ihmc.robotics.robotDescription.Plane;
 
 public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixedFrame>
 {
-   public enum JointType {PIN_JOINT, SLIDER_JOINT, FLOATING_JOINT, FLOATING_PLANAR_JOINT}
+   public enum JointType
+   {
+      PIN_JOINT, SLIDER_JOINT, FLOATING_JOINT, FLOATING_PLANAR_JOINT
+   }
 
    private String jointName;
 
@@ -33,13 +36,13 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
    private Vector3D offset;
    private Vector3D jointAxis;
 
-   private ArrayList<JointDefinitionFixedFrame> childrenJoints = new ArrayList<JointDefinitionFixedFrame>();
+   private ArrayList<JointDefinitionFixedFrame> childrenJoints = new ArrayList<>();
 
    // only used for planar joints.
    private Plane planarType = Plane.YZ;
 
-   private ArrayList<GroundContactDefinitionFixedFrame> groundContactDefinitionsFixedFrame = new ArrayList<GroundContactDefinitionFixedFrame>();
-   private ArrayList<ExternalForcePointDefinitionFixedFrame> externalForcePointDefinitionsFixedFrame = new ArrayList<ExternalForcePointDefinitionFixedFrame>();
+   private ArrayList<GroundContactDefinitionFixedFrame> groundContactDefinitionsFixedFrame = new ArrayList<>();
+   private ArrayList<ExternalForcePointDefinitionFixedFrame> externalForcePointDefinitionsFixedFrame = new ArrayList<>();
 
    public Plane getPlanarType()
    {
@@ -56,7 +59,6 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
       return rootJoint;
    }
 
-
    public ArrayList<GroundContactDefinitionFixedFrame> getGroundContactDefinitionsFixedFrame()
    {
       return groundContactDefinitionsFixedFrame;
@@ -66,7 +68,6 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
    {
       groundContactDefinitionsFixedFrame.add(groundContactDefinitionFixedFrame);
    }
-
 
    public ArrayList<ExternalForcePointDefinitionFixedFrame> getExternalForcePointDefinitionsFixedFrame()
    {
@@ -78,10 +79,9 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
       externalForcePointDefinitionsFixedFrame.add(externalForcePointDefinitionFixedFrame);
    }
 
-
    public void setPlanarType(Plane type)
    {
-      this.planarType = type;
+      planarType = type;
    }
 
    public int getNumberOfChildJoints()
@@ -94,7 +94,6 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
 
       return numberOfJoints;
    }
-
 
    public String getJointName()
    {
@@ -166,15 +165,13 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
       childrenJoints.add(jointDef);
    }
 
-
    @Override
    public String toString()
    {
       String returnString = "";
 
-//    if (parentJoint == null)
-//       returnString += "Found Root Joint.\n";
-
+      //    if (parentJoint == null)
+      //       returnString += "Found Root Joint.\n";
 
       returnString += "<Joint>\n";
       returnString += "\t<Name>" + jointName + "</Name>\n";
@@ -186,47 +183,41 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
          returnString += "null";
       returnString += "</Parent>\n";
 
-
-
       returnString += "\t<RootJoint>" + rootJoint + "</RootJoint>\n";
 
-
-//    returnString += "Joint name = " + jointName + "\n";
-
-
+      //    returnString += "Joint name = " + jointName + "\n";
 
       returnString += "\t<Offset>" + offset + "</Offset>\n";
 
-//    returnString += "Joint offset = " + offset + "\n";
-
+      //    returnString += "Joint offset = " + offset + "\n";
 
       returnString += "\t<Axis>" + jointAxis + "</Axis>\n";
 
-//    returnString += "Joint axis = " + jointAxis + "\n";
+      //    returnString += "Joint axis = " + jointAxis + "\n";
 
       returnString += "\t<Type>" + type + "</Type>\n";
 
       if (type == JointType.PIN_JOINT)
       {
-//       returnString += "Joint is a Pin Joint.\n";
-//       returnString += "Its q variable is named q_" + jointName + "\n";
+         //       returnString += "Joint is a Pin Joint.\n";
+         //       returnString += "Its q variable is named q_" + jointName + "\n";
       }
 
       else if (type == JointType.SLIDER_JOINT)
       {
-//       returnString += "Joint is a Slider Joint.\n";
+         //       returnString += "Joint is a Slider Joint.\n";
 
-//       returnString += "Its q variable is named q_" + jointName + "\n";
+         //       returnString += "Its q variable is named q_" + jointName + "\n";
       }
 
       else if (type == JointType.FLOATING_JOINT)
       {
-//       returnString += "Joint is a Floating Joint.\n";
+         //       returnString += "Joint is a Floating Joint.\n";
       }
 
       else if (type == JointType.FLOATING_PLANAR_JOINT)
       {
-//       returnString += "Joint is a Floating Planar Joint.\n";
+         //       returnString += "Joint is a Floating Planar Joint.\n";
       }
 
       else
@@ -234,11 +225,10 @@ public class JointDefinitionFixedFrame implements Comparable<JointDefinitionFixe
          throw new RuntimeException("Only Pin, Slider, Floating, and Floating Planar joints implemented right now");
       }
 
-
-//    for (GroundContactDefinitionFixedFrame gcDefinition : groundContactDefinitionsFixedFrame)
-//    {
-//       returnString += gcDefinition.toString();
-//    }
+      //    for (GroundContactDefinitionFixedFrame gcDefinition : groundContactDefinitionsFixedFrame)
+      //    {
+      //       returnString += gcDefinition.toString();
+      //    }
 
       returnString += getGroundContactPointsString();
       returnString += getExternalForcePointsString();

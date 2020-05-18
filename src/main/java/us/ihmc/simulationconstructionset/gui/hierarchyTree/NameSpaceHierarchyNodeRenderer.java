@@ -40,7 +40,6 @@ public class NameSpaceHierarchyNodeRenderer extends JPanel implements TreeCellRe
          String stringValue = tree.convertValueToText(value, isSelected, expanded, leaf, row, hasFocus);
          setEnabled(tree.isEnabled());
 
-
          // check.setSelected(((CheckNode) value).isSelected());
          label.setFont(tree.getFont());
          label.setText(stringValue);

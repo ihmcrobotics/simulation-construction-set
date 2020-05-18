@@ -14,8 +14,8 @@ import us.ihmc.graphicsDescription.plotting.PlotterColors;
 import us.ihmc.plotting.Plotter;
 import us.ihmc.plotting.PlotterLegendPanel;
 import us.ihmc.plotting.PlotterShowHideMenu;
-import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.simulationconstructionset.PlaybackListener;
+import us.ihmc.yoVariables.variable.YoDouble;
 
 public class SimulationOverheadPlotter implements PlaybackListener
 {
@@ -68,7 +68,7 @@ public class SimulationOverheadPlotter implements PlaybackListener
          @Override
          public void windowClosing(WindowEvent e)
          {
-//          System.exit(0);
+            //          System.exit(0);
          }
       });
 
@@ -76,7 +76,7 @@ public class SimulationOverheadPlotter implements PlaybackListener
 
       JPanel plotterAndLegendPanel = plotter.createAndAttachPlotterLegendPanel();
 
-//    jFrame.getContentPane().add(plotter, BorderLayout.CENTER);
+      //    jFrame.getContentPane().add(plotter, BorderLayout.CENTER);
       jFrame.getContentPane().add(plotterAndLegendPanel, BorderLayout.CENTER);
 
       jFrame.pack();
@@ -94,7 +94,7 @@ public class SimulationOverheadPlotter implements PlaybackListener
    {
       this.yVariableToTrack = yVariableToTrack;
    }
-   
+
    public void setYawVariableToTrack(YoDouble yawVariableToTrack)
    {
       this.yawVariableToTrack = yawVariableToTrack;

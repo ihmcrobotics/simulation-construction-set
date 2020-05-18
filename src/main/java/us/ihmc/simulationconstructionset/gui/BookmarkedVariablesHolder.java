@@ -7,12 +7,12 @@ import us.ihmc.yoVariables.variable.YoVariable;
 public class BookmarkedVariablesHolder
 {
    private ArrayList<YoVariable<?>> bookmarkedVariables = new ArrayList<>(0);
-   private ArrayList<BookmarkedVariableAddedListener> listeners = new ArrayList<BookmarkedVariableAddedListener>(0);
-   private ArrayList<BookmarkedVariableRemovedListener> removedListeners = new ArrayList<BookmarkedVariableRemovedListener>(0);
+   private ArrayList<BookmarkedVariableAddedListener> listeners = new ArrayList<>(0);
+   private ArrayList<BookmarkedVariableRemovedListener> removedListeners = new ArrayList<>(0);
 
    public ArrayList<YoVariable<?>> getBookMarkedVariables()
    {
-      return new ArrayList<YoVariable<?>>(bookmarkedVariables);
+      return new ArrayList<>(bookmarkedVariables);
    }
 
    public void addBookmark(YoVariable<?> variable)

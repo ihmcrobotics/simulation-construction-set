@@ -15,8 +15,8 @@ import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
 /**
- * This class runs a PD controller between two external force points with
- * distinct x, y, and z gains. The reference frame provided defines these axes
+ * This class runs a PD controller between two external force points with distinct x, y, and z
+ * gains. The reference frame provided defines these axes
  */
 public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIntegrate
 {
@@ -58,7 +58,7 @@ public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIn
    private final Matrix3D dampingMatrix = new Matrix3D();
 
    public EfpAxisDependentGainPDConstraintToIntegrate(String name, ExternalForcePoint connectionPointA, ExternalForcePoint connectionPointB,
-         ReferenceFrame stiffnessFrame, YoVariableRegistry parentRegistry)
+                                                      ReferenceFrame stiffnessFrame, YoVariableRegistry parentRegistry)
    {
       registry = new YoVariableRegistry(name);
 
@@ -93,12 +93,12 @@ public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIn
    {
       switch (axis)
       {
-      case X:
-         stiffnessX.set(stiffness);
-      case Y:
-         stiffnessY.set(stiffness);
-      case Z:
-         stiffnessZ.set(stiffness);
+         case X:
+            stiffnessX.set(stiffness);
+         case Y:
+            stiffnessY.set(stiffness);
+         case Z:
+            stiffnessZ.set(stiffness);
       }
    }
 
@@ -106,12 +106,12 @@ public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIn
    {
       switch (axis)
       {
-      case X:
-         dampingX.set(damping);
-      case Y:
-         dampingY.set(damping);
-      case Z:
-         dampingZ.set(damping);
+         case X:
+            dampingX.set(damping);
+         case Y:
+            dampingY.set(damping);
+         case Z:
+            dampingZ.set(damping);
       }
    }
 
@@ -154,7 +154,7 @@ public class EfpAxisDependentGainPDConstraintToIntegrate implements FunctionToIn
       totalForce.setToZero(worldFrame);
       totalForce.add(springForce);
       totalForce.add(damperForce);
-      
+
       System.out.println("total force = " + totalForce);
 
       connectionPointA.setForce(totalForce);

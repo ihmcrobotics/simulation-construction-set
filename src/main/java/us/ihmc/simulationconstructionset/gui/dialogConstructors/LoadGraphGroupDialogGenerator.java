@@ -24,8 +24,8 @@ public class LoadGraphGroupDialogGenerator implements LoadGraphGroupDialogConstr
    private StandardSimulationGUI myGUI;
    private GraphGroupSelector graphGroupSelector;
 
-
-   public LoadGraphGroupDialogGenerator(GUIEnablerAndDisabler guiEnablerAndDisabler, StandardSimulationGUI myGUI, GraphGroupSelector graphGroupSelector, JFrame frame, GraphArrayPanel graphArrayPanel)
+   public LoadGraphGroupDialogGenerator(GUIEnablerAndDisabler guiEnablerAndDisabler, StandardSimulationGUI myGUI, GraphGroupSelector graphGroupSelector,
+                                        JFrame frame, GraphArrayPanel graphArrayPanel)
    {
       this.graphGroupSelector = graphGroupSelector;
       this.frame = frame;
@@ -66,7 +66,6 @@ public class LoadGraphGroupDialogGenerator implements LoadGraphGroupDialogConstr
    public void constructDialog()
    {
       guiEnablerAndDisabler.disableGUIComponents();
-
 
       if (dataFileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
       {
@@ -170,13 +169,13 @@ public class LoadGraphGroupDialogGenerator implements LoadGraphGroupDialogConstr
 
    @Override
    public void closeAndDispose()
-   {      
-       dataFileFilter = null;
-       dataFileChooser = null;
-       frame = null;
-       guiEnablerAndDisabler = null;
-       myGUI = null;
-       graphGroupSelector = null;
+   {
+      dataFileFilter = null;
+      dataFileChooser = null;
+      frame = null;
+      guiEnablerAndDisabler = null;
+      myGUI = null;
+      graphGroupSelector = null;
    }
 
 }

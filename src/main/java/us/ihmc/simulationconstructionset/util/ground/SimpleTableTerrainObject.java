@@ -18,9 +18,9 @@ public class SimpleTableTerrainObject implements TerrainObject3D, HeightMapWithN
 
    public SimpleTableTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd)
    {
-      this.TABLE_LENGTH = Math.abs(xStart - xEnd);
-      this.TABLE_WIDTH = Math.abs(yStart - yEnd);
-      this.TABLE_THICKNESS = Math.abs(zStart - zEnd);
+      TABLE_LENGTH = Math.abs(xStart - xEnd);
+      TABLE_WIDTH = Math.abs(yStart - yEnd);
+      TABLE_THICKNESS = Math.abs(zStart - zEnd);
 
       double xMin = Math.min(xStart, xEnd);
       double xMax = Math.max(xStart, xEnd);
@@ -50,17 +50,17 @@ public class SimpleTableTerrainObject implements TerrainObject3D, HeightMapWithN
 
    public double getWidth()
    {
-      return this.TABLE_WIDTH;
+      return TABLE_WIDTH;
    }
 
    public double getThickness()
    {
-      return this.TABLE_THICKNESS;
+      return TABLE_THICKNESS;
    }
 
    public double getLength()
    {
-      return this.TABLE_LENGTH;
+      return TABLE_LENGTH;
    }
 
    @Override

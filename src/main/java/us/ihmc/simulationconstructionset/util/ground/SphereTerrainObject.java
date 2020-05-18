@@ -55,8 +55,8 @@ public class SphereTerrainObject implements TerrainObject3D, HeightMapWithNormal
    @Override
    public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
    {
-      double heightAt = this.heightAt(x, y, z);
-      this.surfaceNormalAt(x, y, z, normalToPack);
+      double heightAt = heightAt(x, y, z);
+      surfaceNormalAt(x, y, z, normalToPack);
 
       return heightAt;
    }

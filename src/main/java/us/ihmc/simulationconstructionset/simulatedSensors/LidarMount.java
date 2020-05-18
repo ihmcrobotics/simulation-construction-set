@@ -9,7 +9,7 @@ import us.ihmc.simulationconstructionset.SimulatedSensor;
 
 public class LidarMount implements SimulatedSensor
 {
-   
+
    private final LidarSensorDescription description;
    protected RigidBodyTransform transformToHere = new RigidBodyTransform();
    private final RigidBodyTransform transformFromJoint;
@@ -17,12 +17,12 @@ public class LidarMount implements SimulatedSensor
    private final String lidarName;
 
    private Joint parentJoint;
-   
+
    public LidarMount(LidarSensorDescription description)
    {
       this.description = description;
-      this.transformFromJoint = new RigidBodyTransform(description.getTransformToJoint());
-      this.lidarName = description.getName();
+      transformFromJoint = new RigidBodyTransform(description.getTransformToJoint());
+      lidarName = description.getName();
    }
 
    @Override
@@ -31,18 +31,18 @@ public class LidarMount implements SimulatedSensor
       this.transformToHere.set(transformToHere);
       this.transformToHere.multiply(transformFromJoint);
 
-      if(lidar != null)
+      if (lidar != null)
       {
          lidar.setTransformFromWorld(this.transformToHere, time);
       }
    }
-   
+
    @Override
    public String getName()
    {
       return lidarName;
    }
-   
+
    public void setLidar(GPULidar lidar)
    {
       this.lidar = lidar;
@@ -52,16 +52,16 @@ public class LidarMount implements SimulatedSensor
    {
       return description;
    }
-   
+
    @Override
    public void setWorld(Graphics3DAdapter graphics3dAdapter)
    {
-      
+
    }
-   
+
    public void setParentJoint(Joint parent)
    {
-      this.parentJoint = parent;
+      parentJoint = parent;
    }
 
    public Joint getParentJoint()

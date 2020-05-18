@@ -4,5 +4,3 @@ public interface ThinBufferCommandExecutor
 {
    public abstract void thinBuffer(int keepEveryNthPoint);
 }
-
-

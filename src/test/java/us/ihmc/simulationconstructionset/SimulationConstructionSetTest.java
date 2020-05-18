@@ -1,13 +1,14 @@
 package us.ihmc.simulationconstructionset;
 
+import java.awt.AWTException;
+
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
-
-import java.awt.*;
 
 public class SimulationConstructionSetTest
 {
@@ -25,7 +26,7 @@ public class SimulationConstructionSetTest
    }
 
    @Disabled //org.junit.runners.model.TestTimedOutException: test timed out after 300000 milliseconds
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testSimulationConstructionSetNewViewportWindowUsingGUITestFixture() throws AWTException
    {
       Assumptions.assumeTrue(!isGradleBuild());
@@ -39,14 +40,14 @@ public class SimulationConstructionSetTest
 
       ThreadTools.sleep(2000);
       SimulationGUITestFixture testFixture = new SimulationGUITestFixture(scs);
-      
+
       testFixture.closeAllViewportWindows();
       testFixture.selectNewViewportWindowMenu();
-      
+
       testFixture.focusNthViewportWindow(0);
 
       ThreadTools.sleepForever();
-      
+
       testFixture.closeAndDispose();
       scs.closeAndDispose();
       scs = null;
@@ -55,7 +56,7 @@ public class SimulationConstructionSetTest
    }
 
    @Disabled //org.junit.runners.model.TestTimedOutException: test timed out after 300000 milliseconds
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testSimulationConstructionSetVideoGenerationUsingGUITestFixture() throws AWTException
    {
       Assumptions.assumeTrue(!isGradleBuild());
@@ -70,12 +71,12 @@ public class SimulationConstructionSetTest
       SimulationGUITestFixture testFixture = new SimulationGUITestFixture(scs);
       testFixture.clickSimulateButton();
       ThreadTools.sleep(1000);
-      
+
       testFixture.clickMediaCaptureButton();
 
       testFixture.focusDialog("Export Video");
       testFixture.clickPlayButton();
-      
+
       ThreadTools.sleepForever();
 
       testFixture.closeAndDispose();

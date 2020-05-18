@@ -28,12 +28,14 @@ public class CameraMount implements CameraMountInterface
 
    public CameraMount(String name, Vector3D offsetVector, Robot rob)
    {
-      this(name, offsetVector, CameraConfiguration.DEFAULT_FIELD_OF_VIEW, CameraConfiguration.DEFAULT_CLIP_DISTANCE_NEAR, CameraConfiguration.DEFAULT_CLIP_DISTANCE_FAR, rob);
+      this(name, offsetVector, CameraConfiguration.DEFAULT_FIELD_OF_VIEW, CameraConfiguration.DEFAULT_CLIP_DISTANCE_NEAR,
+           CameraConfiguration.DEFAULT_CLIP_DISTANCE_FAR, rob);
    }
 
    public CameraMount(String name, RigidBodyTransform camRotation, Robot rob)
    {
-      this(name, camRotation, CameraConfiguration.DEFAULT_FIELD_OF_VIEW, CameraConfiguration.DEFAULT_CLIP_DISTANCE_NEAR, CameraConfiguration.DEFAULT_CLIP_DISTANCE_FAR, rob);
+      this(name, camRotation, CameraConfiguration.DEFAULT_FIELD_OF_VIEW, CameraConfiguration.DEFAULT_CLIP_DISTANCE_NEAR,
+           CameraConfiguration.DEFAULT_CLIP_DISTANCE_FAR, rob);
    }
 
    public CameraMount(String name, Vector3D offsetVector, double fieldOfView, double clipDistanceNear, double clipDistanceFar, Robot rob)
@@ -61,7 +63,7 @@ public class CameraMount implements CameraMountInterface
 
    protected void setParentJoint(Joint parent)
    {
-      this.parentJoint = parent;
+      parentJoint = parent;
    }
 
    public Joint getParentJoint()
@@ -118,18 +120,17 @@ public class CameraMount implements CameraMountInterface
       lookAtTransform3D.set(transformToMount);
       lookAtTransform3D.invert();
 
-      lookAtTransform3D.transform(tempPoint3d);    // Put center from world coordinates to mount coordinates.
+      lookAtTransform3D.transform(tempPoint3d); // Put center from world coordinates to mount coordinates.
 
       // Compute pan and tilt to get there.
       pan.set(Math.atan2(tempPoint3d.getY(), tempPoint3d.getX()));
       tilt.set(Math.atan2(-tempPoint3d.getZ(), Math.sqrt(tempPoint3d.getX() * tempPoint3d.getX() + tempPoint3d.getY() * tempPoint3d.getY())));
    }
 
-
    protected void updateTransform(RigidBodyTransform t1)
    {
-      transformToMount.set(t1);    // transformToMount. = t1 * offsetTransform;
-      transformToMount.multiply(offsetTransform);    // transformToMount. = t1 * offsetTransform;
+      transformToMount.set(t1); // transformToMount. = t1 * offsetTransform;
+      transformToMount.multiply(offsetTransform); // transformToMount. = t1 * offsetTransform;
 
       if (enablePanTiltRoll)
       {
@@ -166,7 +167,7 @@ public class CameraMount implements CameraMountInterface
 
    public void getOffsetTransform(RigidBodyTransform offsetTransformToPack)
    {
-      offsetTransformToPack.set(this.offsetTransform);
+      offsetTransformToPack.set(offsetTransform);
    }
 
    public void setOffset(RigidBodyTransform newOffsetTransform)
@@ -176,7 +177,7 @@ public class CameraMount implements CameraMountInterface
 
    public void setRoll(double roll)
    {
-      if(enablePanTiltRoll)
+      if (enablePanTiltRoll)
       {
          this.roll.set(roll);
       }
@@ -184,7 +185,7 @@ public class CameraMount implements CameraMountInterface
 
    public void setPan(double pan)
    {
-      if(enablePanTiltRoll)
+      if (enablePanTiltRoll)
       {
          this.pan.set(pan);
       }
@@ -192,7 +193,7 @@ public class CameraMount implements CameraMountInterface
 
    public void setTilt(double tilt)
    {
-      if(enablePanTiltRoll)
+      if (enablePanTiltRoll)
       {
          this.tilt.set(tilt);
       }
@@ -226,7 +227,7 @@ public class CameraMount implements CameraMountInterface
    {
       fieldOfView = fieldOfView + amount;
 
-      if(fieldOfView < 0.01)
+      if (fieldOfView < 0.01)
       {
          fieldOfView = 0.01;
       }
@@ -235,7 +236,7 @@ public class CameraMount implements CameraMountInterface
          fieldOfView = 3.0;
       }
 
-//      System.out.println("Zoom. Field of View = " + fieldOfView);
+      //      System.out.println("Zoom. Field of View = " + fieldOfView);
    }
 
    public int getImageWidth()

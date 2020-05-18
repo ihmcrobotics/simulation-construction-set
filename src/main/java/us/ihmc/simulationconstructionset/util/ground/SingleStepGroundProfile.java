@@ -3,7 +3,6 @@ package us.ihmc.simulationconstructionset.util.ground;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 
-
 public class SingleStepGroundProfile extends GroundProfileFromHeightMap
 {
    private final BoundingBox3D boundingBox;

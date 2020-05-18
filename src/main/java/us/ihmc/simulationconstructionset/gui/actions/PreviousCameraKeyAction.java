@@ -19,11 +19,10 @@ public class PreviousCameraKeyAction extends AbstractAction
 
       this.executor = executor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
-      this.putValue(Action.LONG_DESCRIPTION, "Procedes to the prvious chronological CameraKey.");
-      this.putValue(Action.SHORT_DESCRIPTION, "previous camera key");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
+      putValue(Action.LONG_DESCRIPTION, "Procedes to the prvious chronological CameraKey.");
+      putValue(Action.SHORT_DESCRIPTION, "previous camera key");
    }
-
 
    @Override
    public void actionPerformed(ActionEvent actionEvent)

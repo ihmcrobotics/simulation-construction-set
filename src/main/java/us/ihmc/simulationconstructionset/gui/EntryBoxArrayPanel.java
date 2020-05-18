@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.yoVariables.variable.YoVariable;
 
-
 public class EntryBoxArrayPanel extends JPanel
 {
    private static final long serialVersionUID = 269886151605236788L;
@@ -31,19 +30,19 @@ public class EntryBoxArrayPanel extends JPanel
    private Timer alertChangeListenersTimer;
    private TimerTask alertChangeListenersTask;
    private final long OBSERVER_NOTIFICATION_PERIOD = 250;
-   
+
    public EntryBoxArrayPanel(Container frame, SelectedVariableHolder holder, ArrayList<YoVariable<?>> varsToEnter)
    {
-      this.setName("EntryBoxArrayPanel");
+      setName("EntryBoxArrayPanel");
 
       layout = new FlowLayout(FlowLayout.LEFT, 0, 0);
-      this.setLayout(layout);
+      setLayout(layout);
 
-      this.selectedVariableHolder = holder;
-      this.setBackground(Color.lightGray);
+      selectedVariableHolder = holder;
+      setBackground(Color.lightGray);
 
-      this.setOpaque(true);
-      this.entryBoxesOnThisPanel = new ArrayList<YoEntryBox>();
+      setOpaque(true);
+      entryBoxesOnThisPanel = new ArrayList<>();
 
       this.addEntryBox(new YoEntryBox(this, selectedVariableHolder));
 
@@ -59,9 +58,8 @@ public class EntryBoxArrayPanel extends JPanel
       }
 
       createAndStartPeriodicUIUpdateThread();
-      this.validate();
+      validate();
    }
-   
 
    private void createAndStartPeriodicUIUpdateThread()
    {
@@ -71,7 +69,7 @@ public class EntryBoxArrayPanel extends JPanel
          @Override
          public void run()
          {
-            final ArrayList<YoEntryBox> entryBoxes = new ArrayList<YoEntryBox>(entryBoxesOnThisPanel);
+            final ArrayList<YoEntryBox> entryBoxes = new ArrayList<>(entryBoxesOnThisPanel);
             if (entryBoxes.size() > 0)
             {
                EventDispatchThreadHelper.justRun(new Runnable()
@@ -95,8 +93,8 @@ public class EntryBoxArrayPanel extends JPanel
    public void closeAndDispose()
    {
       printIfDebug("Closing and Disposing " + getClass().getSimpleName());
-      
-      this.removeAll();
+
+      removeAll();
 
       if (entryBoxesOnThisPanel != null)
       {
@@ -111,7 +109,7 @@ public class EntryBoxArrayPanel extends JPanel
          alertChangeListenersTask.cancel();
          alertChangeListenersTask = null;
       }
-      
+
       if (alertChangeListenersTimer != null)
       {
          alertChangeListenersTimer.cancel();
@@ -120,14 +118,13 @@ public class EntryBoxArrayPanel extends JPanel
          alertChangeListenersTimer = null;
       }
 
-
    }
 
    private void printIfDebug(String string)
    {
-      if (DEBUG) System.out.println(string);
+      if (DEBUG)
+         System.out.println(string);
    }
-
 
    public boolean isHoldingVariable(YoVariable<?> v)
    {
@@ -152,28 +149,28 @@ public class EntryBoxArrayPanel extends JPanel
    public synchronized void addEntryBox(YoEntryBox entryBox)
    {
       selectedVariableHolder.addChangeListener(entryBox);
-      int numBoxes = this.entryBoxesOnThisPanel.size();
+      int numBoxes = entryBoxesOnThisPanel.size();
       if (numBoxes > EntryBoxArrayPanel.MAX_ENTRY_BOXES)
          return;
       else if (numBoxes < EntryBoxArrayPanel.MAX_ENTRY_BOXES)
       {
-         this.entryBoxesOnThisPanel.add(entryBox);
+         entryBoxesOnThisPanel.add(entryBox);
          this.add(entryBox);
       }
       else
       {
-         YoEntryBox lastEntryBox = this.entryBoxesOnThisPanel.get(numBoxes - 1);
+         YoEntryBox lastEntryBox = entryBoxesOnThisPanel.get(numBoxes - 1);
          if (lastEntryBox.getNumVars() == 0)
          {
-            this.entryBoxesOnThisPanel.remove(lastEntryBox);
+            entryBoxesOnThisPanel.remove(lastEntryBox);
             this.remove(lastEntryBox);
 
-            this.entryBoxesOnThisPanel.add(entryBox);
+            entryBoxesOnThisPanel.add(entryBox);
             this.add(entryBox);
          }
       }
 
-      this.checkStatus();
+      checkStatus();
    }
 
    public void addEntryBox(final YoVariable<?> v)
@@ -198,17 +195,16 @@ public class EntryBoxArrayPanel extends JPanel
 
    public void removeEntryBox(YoEntryBox entryBox)
    {
-      this.entryBoxesOnThisPanel.remove(entryBox);
+      entryBoxesOnThisPanel.remove(entryBox);
       this.remove(entryBox);
-      this.checkStatus();
+      checkStatus();
    }
 
    public void removeAllEntryBoxes()
    {
-      this.entryBoxesOnThisPanel.clear();
-      this.removeAll();
+      entryBoxesOnThisPanel.clear();
+      removeAll();
 
-    
       updateRowsColumns();
 
    }
@@ -243,7 +239,7 @@ public class EntryBoxArrayPanel extends JPanel
       if (dirtyEntryBox != null)
       {
          this.remove(dirtyEntryBox);
-         this.entryBoxesOnThisPanel.remove(dirtyEntryBox);
+         entryBoxesOnThisPanel.remove(dirtyEntryBox);
          checkStatus();
       }
 
@@ -255,7 +251,7 @@ public class EntryBoxArrayPanel extends JPanel
          }
          else if (numEntryBoxes < EntryBoxArrayPanel.MAX_ENTRY_BOXES)
          {
-            YoEntryBox lastEntryBox = this.entryBoxesOnThisPanel.get(numEntryBoxes - 1);
+            YoEntryBox lastEntryBox = entryBoxesOnThisPanel.get(numEntryBoxes - 1);
             if (lastEntryBox.getNumVars() > 0)
                addEntryBox(new YoEntryBox(this, selectedVariableHolder));
          }
@@ -268,8 +264,8 @@ public class EntryBoxArrayPanel extends JPanel
    {
       int numRows = 1;
       int accumulatedWidth = 0;
-    
-      int panelWidth = this.getWidth();
+
+      int panelWidth = getWidth();
       if (panelWidth == 0)
       {
          panelWidth = 1428;
@@ -283,7 +279,7 @@ public class EntryBoxArrayPanel extends JPanel
             accumulatedWidth = box.getPreferredSize().width;
          }
       }
-      this.setPreferredSize(new Dimension(panelWidth, numRows * ENTRY_BOX_HEIGHT));
+      setPreferredSize(new Dimension(panelWidth, numRows * ENTRY_BOX_HEIGHT));
    }
 
    public String getXMLRepresentationOfClass()

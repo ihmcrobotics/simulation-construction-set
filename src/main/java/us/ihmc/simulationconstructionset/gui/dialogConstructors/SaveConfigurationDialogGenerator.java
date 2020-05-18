@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.gui.dialogConstructors;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -21,7 +20,6 @@ public class SaveConfigurationDialogGenerator implements SaveConfigurationDialog
    private JFrame frame;
    private StandardSimulationGUI myGUI;
    private SimulationConstructionSet sim;
-
 
    public SaveConfigurationDialogGenerator(SimulationConstructionSet sim, JFrame frame, StandardSimulationGUI myGUI)
    {
@@ -126,4 +124,3 @@ public class SaveConfigurationDialogGenerator implements SaveConfigurationDialog
    }
 
 }
-

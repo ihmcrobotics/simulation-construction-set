@@ -30,19 +30,19 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
-import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 import us.ihmc.simulationconstructionset.gui.DoubleClickListener;
 import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
 import us.ihmc.simulationconstructionset.gui.HorizontalSpinnerUI;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
+import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.variable.YoVariable;
+import us.ihmc.yoVariables.variable.YoVariableList;
 
 public abstract class YoVariablePanel extends JPanel implements KeyListener, MouseListener, FocusListener, ComponentListener
 {
    private static final long serialVersionUID = -5860355582880221731L;
 
-   private static ArrayList<VariableChangedListener> variableChangedListeners = new ArrayList<VariableChangedListener>();
+   private static ArrayList<VariableChangedListener> variableChangedListeners = new ArrayList<>();
 
    protected static final int SPINNER_HEIGHT = 16;
    protected static final int MINIMUM_TOTAL_WIDTH = 220;
@@ -54,7 +54,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
    protected int selectedVariableIndex = -1;
    private boolean hasFocus = false;
 
-   private final ArrayList<JSpinner> yoVariableSpinners = new ArrayList<JSpinner>(0);
+   private final ArrayList<JSpinner> yoVariableSpinners = new ArrayList<>(0);
    private final NumberFormat numberFormat;
    private DoubleClickListener doubleClickListener;
 
@@ -89,15 +89,15 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
    public YoVariablePanel(String name, SelectedVariableHolder holder, YoVariablePanelJPopupMenu varPanelJPopupMenu, YoVariableSearchPanel searchPanel)
    {
-      this.selectedVariableHolder = holder;
-      this.setName(name);
+      selectedVariableHolder = holder;
+      setName(name);
       this.varPanelJPopupMenu = varPanelJPopupMenu;
       varPanelJPopupMenu.addFocusListener(this);
 
-      this.numberFormat = NumberFormat.getInstance();
-      this.numberFormat.setMaximumFractionDigits(4);
-      this.numberFormat.setMinimumFractionDigits(1);
-      this.numberFormat.setGroupingUsed(false);
+      numberFormat = NumberFormat.getInstance();
+      numberFormat.setMaximumFractionDigits(4);
+      numberFormat.setMinimumFractionDigits(1);
+      numberFormat.setGroupingUsed(false);
 
       this.searchPanel = searchPanel;
 
@@ -126,17 +126,17 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
    private void init()
    {
-      this.setLayout(null);
-      this.addMouseListener(this);
-      this.addMouseMotionListener(new ToolTipMouseMotionListener());
-      this.addKeyListener(this);
-      this.setRequestFocusEnabled(true);
-      this.setTransferHandler(new YoVariablePanelTransferHandler());
-      this.setMinimumSize(new Dimension(MINIMUM_TOTAL_WIDTH, SPINNER_HEIGHT));
-      this.addComponentListener(this);
+      setLayout(null);
+      addMouseListener(this);
+      addMouseMotionListener(new ToolTipMouseMotionListener());
+      addKeyListener(this);
+      setRequestFocusEnabled(true);
+      setTransferHandler(new YoVariablePanelTransferHandler());
+      setMinimumSize(new Dimension(MINIMUM_TOTAL_WIDTH, SPINNER_HEIGHT));
+      addComponentListener(this);
       selectedVariableHolder.addChangeListener(new UpdateUIChangeListener());
-   
-      this.addFocusListener(this);
+
+      addFocusListener(this);
    }
 
    protected void clearAndSetUpTextFields()
@@ -147,7 +147,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          public void run()
          {
             yoVariableSpinners.clear();
-   
+
             for (int i = 0; i < getNumberOfYoVariables(); i++)
             {
                addTextFieldForVariable(getYoVariable(i));
@@ -164,7 +164,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          yoVariableSpinners.add(spinner);
       }
       add(spinner);
-      
+
       setPanelSize(getNumberOfYoVariables());
    }
 
@@ -173,10 +173,10 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
       SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
       spinnerNumberModel.setStepSize(yoVariable.getStepSize());
       spinnerNumberModel.setValue(yoVariable.getValueAsDouble());
-      
+
       final JSpinner spinner = new JSpinner(spinnerNumberModel);
       spinner.setName(yoVariable.getFullNameWithNameSpace());
-      
+
       String tooltip = "<html>You can scroll to modify the current value<br />Press shift to be more precise OR Control to change by bigger increments</html>";
       spinner.setToolTipText(tooltip);
       spinner.addMouseWheelListener(new MouseWheelListener()
@@ -196,7 +196,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          }
       });
       spinner.setUI(new HorizontalSpinnerUI());
-      
+
       spinner.setBorder(null);
       spinner.setBackground(getBackground());
 
@@ -211,7 +211,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
       return spinner;
    }
-   
+
    public void refreshPanelWidth()
    {
       for (int i = 0; i < yoVariableSpinners.size(); i++)
@@ -222,14 +222,14 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
    public boolean isEmpty()
    {
-      return (this.getNumberOfYoVariables() == 0);
+      return (getNumberOfYoVariables() == 0);
    }
 
    public void setPanelSize(int nVars)
    {
       setPreferredSize(new Dimension(getViewableWidth() < MINIMUM_TOTAL_WIDTH ? MINIMUM_TOTAL_WIDTH : getViewableWidth(), SPINNER_HEIGHT * nVars));
    }
-   
+
    public int getViewableWidth()
    {
       return (int) getVisibleRect().getWidth();
@@ -242,7 +242,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
       int xStringStart = 2;
       int yStringStart = 10;
-      if (this.isEmpty())
+      if (isEmpty())
       {
          graphics.setColor(EMPTY_COLOR);
          String text = new String("Empty");
@@ -254,12 +254,11 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          graphics.setColor(REGULAR_COLOR);
 
          YoVariable<?> selectedVariable = selectedVariableHolder.getSelectedVariable();
-         Rectangle rectangle = this.getVisibleRect();
+         Rectangle rectangle = getVisibleRect();
          int minIndexOfVisibleVariables = getMinIndexOfVisibleVariables(rectangle);
          int maxIndexOfVisibleVariables = getMaxIndexOfVisibleVariables(rectangle);
 
-         int longestLengthAllowed = this.getWidth() - (SPINNER_WIDTH + yStringStart);
-
+         int longestLengthAllowed = getWidth() - (SPINNER_WIDTH + yStringStart);
 
          for (int i = minIndexOfVisibleVariables; i < maxIndexOfVisibleVariables; i++)
          {
@@ -297,7 +296,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
                   double value = v.getValueAsDouble();
                   String text = formatDouble(value);
 
-                  if (!text.equals(jTextField.getText()))    // otherwise there will be an infinite update loop
+                  if (!text.equals(jTextField.getText())) // otherwise there will be an infinite update loop
                   {
                      jTextField.setText(text);
                      jTextField.setCaretPosition(0);
@@ -377,7 +376,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
    {
       return selectedVariableHolder;
    }
-   
+
    protected List<JSpinner> getYoVariableSpinners()
    {
       return yoVariableSpinners;
@@ -386,7 +385,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
    @Override
    public void mousePressed(MouseEvent event)
    {
-      if (!this.isFocusOwner())
+      if (!isFocusOwner())
       {
          if (!this.requestFocusInWindow())
          {
@@ -396,7 +395,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
       varPanelJPopupMenu.setVisible(false);
 
-      if (!event.isMetaDown() &&!event.isAltDown())
+      if (!event.isMetaDown() && !event.isAltDown())
       {
          int indexOfSelectedVariable = getIndexOfClickedVariable(event.getY());
          if ((indexOfSelectedVariable >= 0) && (indexOfSelectedVariable < yoVariableSpinners.size()))
@@ -416,7 +415,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
             repaint();
          }
       }
-      else if (event.isMetaDown() &&!event.isAltDown())
+      else if (event.isMetaDown() && !event.isAltDown())
       {
          YoVariable<?> selectedVariable = getClickedYoVariable(event.getY());
 
@@ -444,7 +443,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
    private int getIndexOfClickedVariable(int mouseY)
    {
       int indexOfClickedVariable = mouseY / SPINNER_HEIGHT;
-      if ((indexOfClickedVariable >= 0) && (indexOfClickedVariable < this.getNumberOfYoVariables()))
+      if ((indexOfClickedVariable >= 0) && (indexOfClickedVariable < getNumberOfYoVariables()))
       {
          return indexOfClickedVariable;
       }
@@ -479,16 +478,16 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
       selectedVariableIndex = y / SPINNER_HEIGHT;
 
-      if (this.isEmpty())
+      if (isEmpty())
       {
          selectedVariableIndex = -1;
       }
-      else if (selectedVariableIndex > this.getNumberOfYoVariables())
+      else if (selectedVariableIndex > getNumberOfYoVariables())
       {
          selectedVariableIndex = -1;
       }
 
-      if ((selectedVariableIndex >= 0) && (selectedVariableIndex < this.getNumberOfYoVariables()))
+      if ((selectedVariableIndex >= 0) && (selectedVariableIndex < getNumberOfYoVariables()))
       {
          YoVariable<?> selectedVariable = getYoVariable(selectedVariableIndex);
 
@@ -512,7 +511,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
    public void setDoubleClickListener(DoubleClickListener listener)
    {
-      this.doubleClickListener = listener;
+      doubleClickListener = listener;
    }
 
    @Override
@@ -532,18 +531,18 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
       switch (code)
       {
-         case KeyEvent.VK_UP :
+         case KeyEvent.VK_UP:
             selectedVariableIndex = Math.max(0, selectedVariableIndex - 1);
 
             break;
 
-         case KeyEvent.VK_DOWN :
+         case KeyEvent.VK_DOWN:
             selectedVariableIndex = Math.min(getNumberOfYoVariables() - 1, selectedVariableIndex + 1);
 
             break;
       }
 
-      if ((selectedVariableIndex < 0) || (selectedVariableIndex > this.getNumberOfYoVariables()))
+      if ((selectedVariableIndex < 0) || (selectedVariableIndex > getNumberOfYoVariables()))
       {
          setSelected(null);
       }
@@ -575,7 +574,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          JSpinner spinner = (JSpinner) e.getSource();
          JTextField textField = ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
 
-         Rectangle rectangle = this.getVisibleRect();
+         Rectangle rectangle = getVisibleRect();
          int minIndexOfVisibleVariables = getMinIndexOfVisibleVariables(rectangle);
          int maxIndexOfVisibleVariables = getMaxIndexOfVisibleVariables(rectangle);
 
@@ -583,7 +582,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          int focusedTextFieldYPositionOnPanel = indexOfFocusedTextField * SPINNER_HEIGHT;
          if ((indexOfFocusedTextField <= minIndexOfVisibleVariables) || (indexOfFocusedTextField >= maxIndexOfVisibleVariables))
          {
-            this.scrollRectToVisible(new Rectangle(0, focusedTextFieldYPositionOnPanel, spinner.getBounds().width, SPINNER_HEIGHT));
+            scrollRectToVisible(new Rectangle(0, focusedTextFieldYPositionOnPanel, spinner.getBounds().width, SPINNER_HEIGHT));
          }
 
          YoVariable<?> yoVariable = getYoVariable(indexOfFocusedTextField);
@@ -602,7 +601,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
    private int getMinIndexOfVisibleVariables(Rectangle rectangle)
    {
-      int size = this.getNumberOfYoVariables();
+      int size = getNumberOfYoVariables();
       int minIndexOfVisibleVariables = rectangle.y / SPINNER_HEIGHT;
       minIndexOfVisibleVariables = Math.max(minIndexOfVisibleVariables, 0);
       minIndexOfVisibleVariables = Math.min(minIndexOfVisibleVariables, size);
@@ -612,7 +611,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
    private int getMaxIndexOfVisibleVariables(Rectangle rectangle)
    {
-      int size = this.getNumberOfYoVariables();
+      int size = getNumberOfYoVariables();
       int maxIndexOfVisibleVariables = (rectangle.y + rectangle.height) / SPINNER_HEIGHT;
       maxIndexOfVisibleVariables = Math.max(maxIndexOfVisibleVariables, 0);
       maxIndexOfVisibleVariables = Math.min(maxIndexOfVisibleVariables, size);
@@ -674,14 +673,14 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
                displayText += "\nDescription: (" + descriptionText + ")";
             }
 
-            if(searchPanel != null && searchPanel.showInitStackTrace())
+            if (searchPanel != null && searchPanel.showInitStackTrace())
             {
                displayText += "\n Initialized " + yoVariable.getStackTraceAtInitialization();
             }
 
             displayText = displayText.replaceAll("\n", "<br>");
             displayText = "<html>" + displayText + "</html>";
-            
+
             setToolTipText(displayText);
          }
 
@@ -692,7 +691,6 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
       {
       }
    }
-
 
    private final class UpdateUIChangeListener implements ChangeListener
    {

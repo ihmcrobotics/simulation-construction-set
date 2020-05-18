@@ -13,16 +13,16 @@ public class PlaybackPropertiesAction extends AbstractAction
    private static final long serialVersionUID = 4669984581518228636L;
 
    private final PlaybackPropertiesDialogConstructor constructor;
-   
+
    public PlaybackPropertiesAction(PlaybackPropertiesDialogConstructor constructor)
    {
       super("Playback Properties...");
-      
+
       this.constructor = constructor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_B));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_B));
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
    }
 
    @Override

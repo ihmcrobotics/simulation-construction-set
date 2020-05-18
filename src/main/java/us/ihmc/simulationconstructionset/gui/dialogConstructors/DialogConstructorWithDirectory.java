@@ -4,7 +4,7 @@ import java.io.File;
 
 public interface DialogConstructorWithDirectory
 {
-    void setCurrentDirectory(File directory);
+   void setCurrentDirectory(File directory);
 
-    void setCurrentDirectory(String directory);
+   void setCurrentDirectory(String directory);
 }

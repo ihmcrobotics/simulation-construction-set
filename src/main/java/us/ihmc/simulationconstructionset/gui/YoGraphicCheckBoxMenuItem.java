@@ -11,7 +11,7 @@ import us.ihmc.graphicsDescription.yoGraphics.YoGraphic;
 public class YoGraphicCheckBoxMenuItem extends JCheckBoxMenuItem implements ItemListener
 {
    private static final long serialVersionUID = -1641762511153430886L;
-   private ArrayList<YoGraphic> yoGraphics = new ArrayList<YoGraphic>();
+   private ArrayList<YoGraphic> yoGraphics = new ArrayList<>();
 
    public YoGraphicCheckBoxMenuItem(String label, ArrayList<YoGraphic> yoGraphics)
    {
@@ -22,7 +22,7 @@ public class YoGraphicCheckBoxMenuItem extends JCheckBoxMenuItem implements Item
    {
       super(label, selectedState);
       this.yoGraphics = yoGraphics;
-      this.addItemListener(this);
+      addItemListener(this);
    }
 
    public void addYoGraphics(ArrayList<YoGraphic> yoGraphics)
@@ -45,7 +45,7 @@ public class YoGraphicCheckBoxMenuItem extends JCheckBoxMenuItem implements Item
 
    public void showYoGraphics()
    {
-      this.setSelected(true);
+      setSelected(true);
 
       for (int i = 0; i < yoGraphics.size(); i++)
       {
@@ -56,7 +56,7 @@ public class YoGraphicCheckBoxMenuItem extends JCheckBoxMenuItem implements Item
 
    public void hideYoGraphics()
    {
-      this.setSelected(false);
+      setSelected(false);
 
       for (int i = 0; i < yoGraphics.size(); i++)
       {

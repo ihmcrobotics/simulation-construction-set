@@ -18,15 +18,15 @@ import com.jmatio.types.MLDouble;
 import us.ihmc.commons.exception.DefaultExceptionHandler;
 import us.ihmc.commons.nio.FileTools;
 import us.ihmc.commons.nio.WriteOption;
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
-import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.gui.GraphArrayPanel;
 import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
 import us.ihmc.tools.gui.MyFileFilter;
+import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.DataEntry;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructor
 {
@@ -43,29 +43,27 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
 
    private JPanel accessory;
    private JCheckBox saveAllGraphs;
-   
+
    private DataBuffer dataBuffer;
 
    public ExportGraphsToFileGenerator(SimulationConstructionSet scs, JFrame frame, GraphArrayPanel graphArrayPanel, StandardSimulationGUI myGUI)
    {
       this.frame = frame;
-      this.guiEnablerAndDisabler = scs;
+      guiEnablerAndDisabler = scs;
       this.graphArrayPanel = graphArrayPanel;
       this.myGUI = myGUI;
-      this.dataBuffer = scs.getDataBuffer();
-      
-      
-      
-      this.dataFileChooser = new JFileChooser();
-      this.dataFileChooser.setAcceptAllFileFilterUsed(false);
-      this.dataFileChooser.addChoosableFileFilter(matFileFilter);
-      this.dataFileChooser.addChoosableFileFilter(csvFileFilter);
-      this.accessory = new JPanel();
-      this.saveAllGraphs = new JCheckBox("Save graphs in all graph windows");
-      this.accessory.setLayout(new BorderLayout());
-      this.accessory.add(this.saveAllGraphs, BorderLayout.SOUTH);
-      this.dataFileChooser.setAccessory(accessory);
-      
+      dataBuffer = scs.getDataBuffer();
+
+      dataFileChooser = new JFileChooser();
+      dataFileChooser.setAcceptAllFileFilterUsed(false);
+      dataFileChooser.addChoosableFileFilter(matFileFilter);
+      dataFileChooser.addChoosableFileFilter(csvFileFilter);
+      accessory = new JPanel();
+      saveAllGraphs = new JCheckBox("Save graphs in all graph windows");
+      accessory.setLayout(new BorderLayout());
+      accessory.add(saveAllGraphs, BorderLayout.SOUTH);
+      dataFileChooser.setAccessory(accessory);
+
    }
 
    @Override
@@ -73,25 +71,25 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
    {
       guiEnablerAndDisabler.disableGUIComponents();
 
-      this.saveAllGraphs.setSelected(false);
+      saveAllGraphs.setSelected(false);
       if (dataFileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION)
       {
-         
+
          ArrayList<DataEntry> entriesToExport = new ArrayList<>();
-         
-         if(saveAllGraphs.isSelected())
+
+         if (saveAllGraphs.isSelected())
          {
             for (YoGraph graph : myGUI.getGraphArrayPanel().getGraphsOnThisPanel())
             {
                entriesToExport.addAll(graph.getEntriesOnThisGraph());
             }
-            
-            for(GraphArrayWindow graphArrayWindow : myGUI.getGraphArrayWindows())
+
+            for (GraphArrayWindow graphArrayWindow : myGUI.getGraphArrayWindows())
             {
                for (YoGraph graph : graphArrayWindow.getGraphArrayPanel().getGraphsOnThisPanel())
                {
                   entriesToExport.addAll(graph.getEntriesOnThisGraph());
-               }   
+               }
             }
          }
          else
@@ -102,9 +100,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
             }
          }
 
-         
-         
-         if(dataFileChooser.getFileFilter() == matFileFilter)
+         if (dataFileChooser.getFileFilter() == matFileFilter)
          {
             exportToMAT(dataFileChooser.getSelectedFile(), entriesToExport);
          }
@@ -116,7 +112,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
          {
             throw new RuntimeException("Unknown data type selected " + dataFileChooser.getFileFilter());
          }
-         
+
       }
       guiEnablerAndDisabler.enableGUIComponents();
    }
@@ -129,30 +125,29 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       {
          chosenFile = new File(chosenFile.getParent(), filename.concat(csvEnding));
       }
-      
-      
+
       PrintWriter writer = FileTools.newPrintWriter(chosenFile.toPath(), WriteOption.TRUNCATE, DefaultExceptionHandler.PRINT_STACKTRACE);
-      
+
       for (DataEntry dataEntry : entriesToExport)
       {
          writer.print(dataEntry.getVariableName() + ",");
       }
-      
+
       writer.println();
-      
+
       for (int i = dataBuffer.getInPoint(); i < dataBuffer.getOutPoint(); i++)
       {
          for (DataEntry dataEntry : entriesToExport)
          {
             writer.print(dataEntry.getData()[i] + ",");
          }
-         
+
          writer.println();
       }
-      
+
       writer.close();
    }
-   
+
    private void exportToMAT(File chosenFile, ArrayList<DataEntry> entriesToExport)
    {
       String filename = chosenFile.getName();
@@ -161,15 +156,14 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       {
          chosenFile = new File(chosenFile.getParent(), filename.concat(matEnding));
       }
-      
-      
-      ArrayList<MLArray>  matlabData = new ArrayList<>();
 
-      for(DataEntry entry : entriesToExport)
+      ArrayList<MLArray> matlabData = new ArrayList<>();
+
+      for (DataEntry entry : entriesToExport)
       {
          matlabData.add(convertToMatlabArray(entry, dataBuffer.getInPoint(), dataBuffer.getOutPoint()));
       }
-      
+
       try
       {
          new MatFileWriter(chosenFile, matlabData);
@@ -188,25 +182,25 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       dataFileChooser = null;
       frame = null;
       myGUI = null;
-      
+
       accessory = null;
-      saveAllGraphs = null; 
+      saveAllGraphs = null;
    }
 
    public static MLDouble convertToMatlabArray(DataEntry entry, int inPoint, int outPoint)
    {
       YoVariable<?> variable = entry.getVariable();
-      
+
       double[] inData = entry.getData();
       double[] data;
-      
-      if(inPoint == outPoint)
+
+      if (inPoint == outPoint)
       {
          // Edge case, export one element
          data = new double[1];
          data[0] = inData[inPoint];
       }
-      else if(inPoint < outPoint)
+      else if (inPoint < outPoint)
       {
          // Data is not wrapped
          data = new double[outPoint + 1 - inPoint];
@@ -215,16 +209,14 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       else
       {
          // Data is wrapped
-         int length = inData.length - inPoint + outPoint  + 1;
+         int length = inData.length - inPoint + outPoint + 1;
          data = new double[length];
          System.arraycopy(inData, inPoint, data, 0, inData.length - inPoint);
          System.arraycopy(inData, 0, data, inData.length - inPoint, outPoint + 1);
       }
-      
 
       return new MLDouble(variable.getName(), data, 1);
-      
-   }
 
+   }
 
 }

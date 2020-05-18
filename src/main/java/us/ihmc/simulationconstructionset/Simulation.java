@@ -46,7 +46,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    private YoVariableList myCombinedVarList = new YoVariableList("Combined");
 
-   private ArrayList<SimulationDoneListener> simulateDoneListeners = new ArrayList<SimulationDoneListener>();
+   private ArrayList<SimulationDoneListener> simulateDoneListeners = new ArrayList<>();
    private ArrayList<SimulationDoneCriterion> simulateDoneCriterions;
 
    // private VarList robVarList, gcVarList; //controllerVarList,
@@ -98,7 +98,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public void addScript(Script script)
    {
-      this.mySimulator.addScript(script);
+      mySimulator.addScript(script);
    }
 
    @Override
@@ -187,7 +187,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public Simulation(Robot[] robots, int dataBufferSize)
    {
-      this.simulationSynchronizer = new SimulationSynchronizer();
+      simulationSynchronizer = new SimulationSynchronizer();
 
       // Make sure robots actually has some robots in it
       if ((robots != null) && (robots[0] == null))
@@ -223,7 +223,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    {
       this.robots = robots;
       mySimulator = new Simulator(simulationSynchronizer, robots, SIMULATION_DT);
-      this.setDT(SIMULATION_DT, RECORD_FREQ);
+      setDT(SIMULATION_DT, RECORD_FREQ);
 
       if (robots != null)
       {
@@ -255,7 +255,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          newRobots[newRobots.length - 1] = robot;
       }
 
-      this.robots = newRobots;
+      robots = newRobots;
 
       if (mySimulator == null)
       {
@@ -266,7 +266,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          mySimulator.setRobots(robots);
       }
 
-      this.setDT(SIMULATION_DT, RECORD_FREQ);
+      setDT(SIMULATION_DT, RECORD_FREQ);
       addVariablesFromARobot(robot);
 
       myDataBuffer.copyValuesThrough();
@@ -312,7 +312,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          return;
 
       if (simulateDoneCriterions == null)
-         simulateDoneCriterions = new ArrayList<SimulationDoneCriterion>();
+         simulateDoneCriterions = new ArrayList<>();
       simulateDoneCriterions.add(criterion);
    }
 
@@ -416,9 +416,9 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    {
       // 3D Canvass Stuff goes here...
       // myGraphics = new StandardSimulationGraphics(this.rob, this.myCombinedVarList, null);
-      if (this.robots.length > 0)
+      if (robots.length > 0)
       {
-         GroundContactModel groundContactModel = this.robots[0].getGroundContactModel();
+         GroundContactModel groundContactModel = robots[0].getGroundContactModel();
          //         GroundProfile groundProfile = null;
          HeightMap heightMap = null;
 
@@ -445,7 +445,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public Graphics3DAdapter getSimulationGraphics()
    {
-      return this.myGraphics;
+      return myGraphics;
    }
 
    public void addVarList(YoVariableList newVarList)
@@ -465,7 +465,10 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
       collisionManager.setUpEnvironment();
 
       CollisionArbiter collisionArbiter = new DoNothingCollisionArbiter();
-      this.initPhysics(new ScsPhysics(null, collisionManager.getCollisionDetector(), collisionArbiter, collisionManager.getCollisionHandler(),
-                                      collisionManager.getCollisionVisualizer()));
+      initPhysics(new ScsPhysics(null,
+                                 collisionManager.getCollisionDetector(),
+                                 collisionArbiter,
+                                 collisionManager.getCollisionHandler(),
+                                 collisionManager.getCollisionVisualizer()));
    }
 }

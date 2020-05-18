@@ -1,8 +1,12 @@
 package us.ihmc.simulationconstructionset;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.assertTrue;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
@@ -11,8 +15,6 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
-
-import static us.ihmc.robotics.Assert.*;
 
 @Tag("gui")
 public class SimulationConstructionSetFestTest
@@ -29,15 +31,16 @@ public class SimulationConstructionSetFestTest
 
       return false;
    }
+
    @Disabled //java.lang.AssertionError: expected:<4> but was:<909>
-	@Test// timeout=100000
+   @Test // timeout=100000
    public void testSimulationConstructionSetUsingGUITestFixture()
    {
       FallingBrickRobot robot = new FallingBrickRobot();
 
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       YoVariableRegistry registryOne = new YoVariableRegistry("RegistryOne");
-      YoEnum<Axis3D> enumForTests = new YoEnum<Axis3D>("enumForTests", registryOne, Axis3D.class);
+      YoEnum<Axis3D> enumForTests = new YoEnum<>("enumForTests", registryOne, Axis3D.class);
       YoVariableRegistry registryTwo = new YoVariableRegistry("RegistryTwo");
       YoBoolean booleanForTests = new YoBoolean("booleanForTests", registryTwo);
       registryOne.addChild(registryTwo);
@@ -46,8 +49,7 @@ public class SimulationConstructionSetFestTest
       scs.setFrameMaximized();
       scs.startOnAThread();
       scs.setSimulateDuration(2.0);
-//      scs.hideViewport();
-
+      //      scs.hideViewport();
 
       SimulationGUITestFixture testFixture = new SimulationGUITestFixture(scs);
 
@@ -71,7 +73,6 @@ public class SimulationConstructionSetFestTest
       testFixture.findEntryBoxAndEnterValue("booleanForTests", 1.0);
       assertTrue(booleanForTests.getBooleanValue() == true);
 
-
       testFixture.selectSearchTab();
       testFixture.enterSearchText("q_");
 
@@ -84,7 +85,6 @@ public class SimulationConstructionSetFestTest
       testFixture.middleClickInEmptyGraph();
 
       testFixture.removeAllGraphs();
-
 
       // Setup a few entry boxes:
       enumForTests.set(Axis3D.X);
@@ -102,8 +102,8 @@ public class SimulationConstructionSetFestTest
       assertTrue(enumForTests.getEnumValue() == Axis3D.Z);
 
       // Search for variables, change their values, and plot them:
-//    testFixture.selectNameSpaceTab();
-//    ThreadTools.sleep(1000);
+      //    testFixture.selectNameSpaceTab();
+      //    ThreadTools.sleep(1000);
 
       testFixture.selectSearchTab();
 
@@ -141,7 +141,6 @@ public class SimulationConstructionSetFestTest
       // Remove variables from graphs:
       testFixture.removeVariableFromNthGraph("q_y", 2);
       testFixture.clickRemoveEmptyGraphButton();
-
 
       // Go to In/out points, step through data. Add KeyPoints, Verify at the expected indices
       testFixture.clickGotoInPointButton();
@@ -238,9 +237,10 @@ public class SimulationConstructionSetFestTest
       scs = null;
       testFixture = null;
    }
-   @Disabled  //org.fest.swing.exception.ComponentLookupException: Unable to find component using matcher
-            // us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture$JSpinnerNameEndsWithMatcher@22212533.
-	@Test// timeout=45000
+
+   @Disabled //org.fest.swing.exception.ComponentLookupException: Unable to find component using matcher
+             // us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture$JSpinnerNameEndsWithMatcher@22212533.
+   @Test // timeout=45000
    public void testSimulationConstructionSetNewGraphWindowUsingGUITestFixture()
    {
       FallingBrickRobot robot = new FallingBrickRobot();

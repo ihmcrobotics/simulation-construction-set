@@ -12,16 +12,15 @@ public class PrintGraphsDialogGenerator implements PrintGraphsDialogConstructor
 
    public PrintGraphsDialogGenerator(GraphArrayPanel graphArrayPanel)
    {
-      this.myGraphArrayPanel = graphArrayPanel;
+      myGraphArrayPanel = graphArrayPanel;
    }
 
-   
    @Override
    public void closeAndDispose()
    {
       myGraphArrayPanel = null;
    }
-   
+
    @Override
    public void constructDialog()
    {

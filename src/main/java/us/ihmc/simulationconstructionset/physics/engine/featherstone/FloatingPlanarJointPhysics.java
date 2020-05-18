@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
+
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.robotics.robotDescription.Plane;
@@ -15,7 +16,6 @@ import us.ihmc.simulationconstructionset.Joint;
 import us.ihmc.simulationconstructionset.KinematicPoint;
 import us.ihmc.simulationconstructionset.SpatialVector;
 import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
-
 
 public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint>
 {
@@ -44,7 +44,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
    {
       // this.update(false);
       // this.jointTransform3D.get(Ri_0);
-      this.jointDependentSetAndGetRotation(Ri_0);
+      jointDependentSetAndGetRotation(Ri_0);
 
       Ri_0.transpose();
 
@@ -60,8 +60,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
 
       // Now do the joint dependent stuff...
 
-      this.jointDependentFeatherstonePassOne();
-
+      jointDependentFeatherstonePassOne();
 
       // Now update the points attached to the joint:
       R0_i.set(Ri_0);
@@ -100,7 +99,6 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
       }
    }
 
-
    @Override
    protected void jointDependentFeatherstonePassOne()
    {
@@ -121,7 +119,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          v_i.set(owner.qd_t1.getDoubleValue(), 0.0, owner.qd_t2.getDoubleValue());
       }
 
-      else    // (type == XY)
+      else // (type == XY)
       {
          w_i.set(0.0, 0.0, owner.qd_rot.getDoubleValue());
          v_i.set(owner.qd_t1.getDoubleValue(), owner.qd_t2.getDoubleValue(), 0.0);
@@ -150,7 +148,6 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
       s_hat_i.bottom = null;
    }
 
-
    @Override
    public void featherstonePassThree()
    {
@@ -165,6 +162,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
    }
 
    private Vector3D wdXr = new Vector3D(), wXr = new Vector3D(), wXwXr = new Vector3D();
+
    @Override
    public void featherstonePassFour(SpatialVector a_hat_h, int passNumber) throws UnreasonableAccelerationException
    {
@@ -198,7 +196,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          a_hat_i.bottom.set(-a_hat_matrix.get(1, 0), 0.0, -a_hat_matrix.get(2, 0));
       }
 
-      else    // if (type == YZ)
+      else // if (type == YZ)
       {
          I_hat_i.getPlanarYZMatrix(I_hat_matrix);
 
@@ -237,23 +235,22 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
       {
          owner.qdd_t1.set(a_hat_world_bot.getY());
          owner.qdd_t2.set(a_hat_world_bot.getZ());
-         owner.qdd_rot.set(a_hat_i.top.getX());    // a_hat_world_top.x;  // Don't need to do this since planar!
+         owner.qdd_rot.set(a_hat_i.top.getX()); // a_hat_world_top.x;  // Don't need to do this since planar!
       }
 
       else if (owner.type == Plane.XZ)
       {
          owner.qdd_t1.set(a_hat_world_bot.getX());
          owner.qdd_t2.set(a_hat_world_bot.getZ());
-         owner.qdd_rot.set(a_hat_i.top.getY());    // a_hat_world_top.y;  // Don't need to do this since planar!
+         owner.qdd_rot.set(a_hat_i.top.getY()); // a_hat_world_top.y;  // Don't need to do this since planar!
       }
 
-      else    // if (type == XY)
+      else // if (type == XY)
       {
          owner.qdd_t1.set(a_hat_world_bot.getX());
          owner.qdd_t2.set(a_hat_world_bot.getY());
-         owner.qdd_rot.set(a_hat_i.top.getZ());    // a_hat_world_top.z;  // Don't need to do this since planar!
+         owner.qdd_rot.set(a_hat_i.top.getZ()); // a_hat_world_top.z;  // Don't need to do this since planar!
       }
-
 
       k_qdd_t1[passNumber] = owner.qdd_t1.getDoubleValue();
       k_qdd_t2[passNumber] = owner.qdd_t2.getDoubleValue();
@@ -262,11 +259,10 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
       k_qdd_rot[passNumber] = owner.qdd_rot.getDoubleValue();
       k_qd_rot[passNumber] = owner.qd_rot.getDoubleValue();
 
-
       //Check for unreasonable accelerations:
       if (!jointDependentVerifyReasonableAccelerations())
       {
-         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<Joint>();
+         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<>();
          unreasonableAccelerationJoints.add(owner);
          throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
       }
@@ -279,7 +275,6 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
 
       // System.out.println(this);
    }
-
 
    @Override
    protected void jointDependentRecordK(int passNumber)
@@ -337,8 +332,6 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
       }
    }
 
-
-
    @Override
    public void recursiveSaveTempState()
    {
@@ -376,7 +369,6 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          child.physics.recursiveRestoreTempState();
       }
    }
-
 
    @Override
    protected void impulseResponseComputeDeltaV(SpatialVector delta_v_parent, SpatialVector delta_v_me)
@@ -417,9 +409,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          delta_v_me.bottom.set(0.0, -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
       }
 
-
    }
-
 
    private Vector3D delta_qd_xyz = new Vector3D();
 
@@ -488,14 +478,14 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
 
    }
 
-   private DenseMatrix64F I_hat_matrix = new DenseMatrix64F(3, 3);    // Matrix(6,6);
-   private DenseMatrix64F Z_hat_matrix = new DenseMatrix64F(3, 1);    // new Matrix(6,1);
-   private DenseMatrix64F a_hat_matrix = new DenseMatrix64F(3, 1);    // new Matrix(6,1);
+   private DenseMatrix64F I_hat_matrix = new DenseMatrix64F(3, 3); // Matrix(6,6);
+   private DenseMatrix64F Z_hat_matrix = new DenseMatrix64F(3, 1); // new Matrix(6,1);
+   private DenseMatrix64F a_hat_matrix = new DenseMatrix64F(3, 1); // new Matrix(6,1);
 
    // private Matrix3d R0_i = new Matrix3d();
    private final Vector3D a_hat_world_bot = new Vector3D();
 
-   private DenseMatrix64F Y_hat_matrix = new DenseMatrix64F(3, 1);    // new Matrix(6,1);
+   private DenseMatrix64F Y_hat_matrix = new DenseMatrix64F(3, 1); // new Matrix(6,1);
    private DenseMatrix64F I_hat_inverse = new DenseMatrix64F(3, 3);
 
    @Override
@@ -514,20 +504,20 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
    @Override
    protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
    {
-      Rh_i.setIdentity();    // We probably can rely on Rh_i not changing its 1 and 0 elements but let's just be safe.
+      Rh_i.setIdentity(); // We probably can rely on Rh_i not changing its 1 and 0 elements but let's just be safe.
 
       if (owner.type == Plane.YZ)
       {
          Rh_i.setToRollOrientation(owner.q_rot.getDoubleValue());
-         
-      }    // Rotation about X
+
+      } // Rotation about X
       else if (owner.type == Plane.XZ)
       {
          Rh_i.setToPitchOrientation(owner.q_rot.getDoubleValue());
-      }    // Rotation about Y
+      } // Rotation about Y
       else
       {
          Rh_i.setToYawOrientation(owner.q_rot.getDoubleValue());
-      }    // Rotation about Z
+      } // Rotation about Z
    }
 }

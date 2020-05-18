@@ -54,7 +54,7 @@ public class CollisionManager
 
    public void setUpCollisionVisualizer(SimulationConstructionSet scs)
    {
-      this.collisionVisualizer = new DefaultCollisionVisualizer(forceScale, impulseScale, collisionBallRadius, scs, numberOfVectorsToCreate);
+      collisionVisualizer = new DefaultCollisionVisualizer(forceScale, impulseScale, collisionBallRadius, scs, numberOfVectorsToCreate);
 
       if (collisionHandler != null)
          addListener();

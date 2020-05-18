@@ -15,8 +15,8 @@ public class GraphicsRobot implements GraphicsUpdatable
 {
    private final Graphics3DNode rootNode;
 
-   private final LinkedHashMap<CommonJoint, GraphicsJoint> allJoints = new LinkedHashMap<CommonJoint, GraphicsJoint>();
-   private final ArrayList<GraphicsJoint> graphicsJoints = new ArrayList<GraphicsJoint>();
+   private final LinkedHashMap<CommonJoint, GraphicsJoint> allJoints = new LinkedHashMap<>();
+   private final ArrayList<GraphicsJoint> graphicsJoints = new ArrayList<>();
 
    public GraphicsRobot(Robot robot)
    {

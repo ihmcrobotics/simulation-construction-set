@@ -17,7 +17,6 @@ public class SaveRobotConfigurationDialogGenerator implements SaveRobotConfigura
    private JFrame frame;
    private SimulationConstructionSet sim;
 
-
    public SaveRobotConfigurationDialogGenerator(SimulationConstructionSet sim, JFrame frame)
    {
       this.frame = frame;

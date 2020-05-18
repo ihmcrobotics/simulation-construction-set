@@ -9,6 +9,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 public interface Contacts
 {
    public abstract CollisionShape getShapeA();
+
    public abstract CollisionShape getShapeB();
 
    /**
@@ -17,18 +18,18 @@ public interface Contacts
    public int getNumberOfContacts();
 
    /**
-    * Location on shapeA that the contact occurred.  World coordinates.
+    * Location on shapeA that the contact occurred. World coordinates.
     *
-    * @param which Contact index.
-    * @param location Storage for location.  If null a new instance will be declared.
+    * @param which    Contact index.
+    * @param location Storage for location. If null a new instance will be declared.
     */
    public void getWorldA(int which, Point3D locationAToPack);
 
    /**
-    * Location on shapeB that the contact occurred.  World coordinates.
+    * Location on shapeB that the contact occurred. World coordinates.
     *
-    * @param which Contact index.
-    * @param location Storage for location.  If null a new instance will be declared.
+    * @param which    Contact index.
+    * @param location Storage for location. If null a new instance will be declared.
     */
    public void getWorldB(int which, Point3D locationBToPack);
 
@@ -38,8 +39,8 @@ public interface Contacts
    public double getDistance(int which);
 
    /**
-    * The normal between the collision in world coordinates.  The normal can be in reference to object A or B.  Call {@link #isNormalOnA()}  to
-    * determin which one it is.
+    * The normal between the collision in world coordinates. The normal can be in reference to object A
+    * or B. Call {@link #isNormalOnA()} to determin which one it is.
     *
     * @param which Contact index.
     * @return Normal in world coordinates.
@@ -54,6 +55,6 @@ public interface Contacts
    public boolean isNormalOnA();
 
    public abstract void set(Contacts contacts);
+
    public abstract void addAll(Contacts contacts);
 }
-

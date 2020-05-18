@@ -10,7 +10,6 @@ public class ExportSimulationTo3DMaxAction extends AbstractAction
 {
    private static final long serialVersionUID = 7582935737436636441L;
    private ExportSimulationTo3DMaxDialogConstructor constructor;
-   
 
    public ExportSimulationTo3DMaxAction(ExportSimulationTo3DMaxDialogConstructor constructor)
    {

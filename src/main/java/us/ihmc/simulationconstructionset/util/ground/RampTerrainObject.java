@@ -60,7 +60,7 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
          transform.appendYawRotation(Math.PI);
 
       Ramp3D ramp3DShape = new Ramp3D(transform, Math.abs(xEnd - xStart), Math.abs(yEnd - yStart), height);
-      this.terrainCollisionShapes.add(ramp3DShape);
+      terrainCollisionShapes.add(ramp3DShape);
    }
 
    public RampTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height)
@@ -104,8 +104,7 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
          return;
 
       /*
-       * if (Math.abs(x-xMin) < threshhold) { normal.x = -1.0;normal.y =
-       * 0.0;normal.z = 0.0; }
+       * if (Math.abs(x-xMin) < threshhold) { normal.x = -1.0;normal.y = 0.0;normal.z = 0.0; }
        */
 
       else if (z > heightAt(x, y, z) - threshhold)

@@ -139,7 +139,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
 
       //    rob.getVars().addVariables(floatingJointVars);
 
-      this.setFloatingTransform3D(this.jointTransform3D);
+      setFloatingTransform3D(jointTransform3D);
 
       physics.u_i = null;
    }
@@ -195,7 +195,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
 
       //    rob.getVars().addVariables(floatingJointVars);
 
-      this.setFloatingTransform3D(this.jointTransform3D);
+      setFloatingTransform3D(jointTransform3D);
 
       physics.u_i = null;
    }
@@ -236,29 +236,29 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
 
    public void setRotation(double theta)
    {
-      this.q_rot.set(theta);
+      q_rot.set(theta);
    }
 
    public void setRotation(double theta, double thetaDot)
    {
-      this.q_rot.set(theta);
-      this.qd_rot.set(thetaDot);
+      q_rot.set(theta);
+      qd_rot.set(thetaDot);
    }
 
    public void setRotationalVelocity(double thetaDot)
    {
-      this.qd_rot.set(thetaDot);
+      qd_rot.set(thetaDot);
    }
 
    protected YoVariableList getJointVars()
    {
-      return this.floatingJointVars;
+      return floatingJointVars;
    }
 
    @Override
    protected void update()
    {
-      this.setFloatingTransform3D(this.jointTransform3D);
+      setFloatingTransform3D(jointTransform3D);
    }
 
    private Vector3D position = new Vector3D();
@@ -304,18 +304,18 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
 
       switch (type)
       {
-      case XY:
-         setRotation(yawPitchRoll.getRoll());
-         setCartesianPosition(translation.getX(), translation.getY());
-         break;
-      case XZ:
-         setRotation(yawPitchRoll.getPitch());
-         setCartesianPosition(translation.getX(), translation.getZ());
-         break;
-      default:
-         setRotation(yawPitchRoll.getYaw());
-         setCartesianPosition(translation.getY(), translation.getZ());
-         break;
+         case XY:
+            setRotation(yawPitchRoll.getRoll());
+            setCartesianPosition(translation.getX(), translation.getY());
+            break;
+         case XZ:
+            setRotation(yawPitchRoll.getPitch());
+            setCartesianPosition(translation.getX(), translation.getZ());
+            break;
+         default:
+            setRotation(yawPitchRoll.getYaw());
+            setCartesianPosition(translation.getY(), translation.getZ());
+            break;
       }
    }
 
@@ -324,15 +324,15 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
    {
       switch (type)
       {
-      case XY:
-         setCartesianVelocity(velocity.getX(), velocity.getY());
-         break;
-      case XZ:
-         setCartesianVelocity(velocity.getX(), velocity.getZ());
-         break;
-      default:
-         setCartesianVelocity(velocity.getY(), velocity.getZ());
-         break;
+         case XY:
+            setCartesianVelocity(velocity.getX(), velocity.getY());
+            break;
+         case XZ:
+            setCartesianVelocity(velocity.getX(), velocity.getZ());
+            break;
+         default:
+            setCartesianVelocity(velocity.getY(), velocity.getZ());
+            break;
       }
    }
 
@@ -341,15 +341,15 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
    {
       switch (type)
       {
-      case XY:
-         setRotationalVelocity(angularVelocityInBody.getZ());
-         break;
-      case XZ:
-         setRotationalVelocity(angularVelocityInBody.getY());
-         break;
-      default:
-         setRotationalVelocity(angularVelocityInBody.getX());
-         break;
+         case XY:
+            setRotationalVelocity(angularVelocityInBody.getZ());
+            break;
+         case XZ:
+            setRotationalVelocity(angularVelocityInBody.getY());
+            break;
+         default:
+            setRotationalVelocity(angularVelocityInBody.getX());
+            break;
       }
    }
 
@@ -358,15 +358,15 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
    {
       switch (type)
       {
-      case XY:
-         linearVelocityToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), qd_t1.getDoubleValue(), qd_t2.getDoubleValue(), 0.0);
-         break;
-      case XZ:
-         linearVelocityToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), qd_t1.getDoubleValue(), 0.0, qd_t2.getDoubleValue());
-         break;
-      default:
-         linearVelocityToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), 0.0, qd_t1.getDoubleValue(), qd_t2.getDoubleValue());
-         break;
+         case XY:
+            linearVelocityToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), qd_t1.getDoubleValue(), qd_t2.getDoubleValue(), 0.0);
+            break;
+         case XZ:
+            linearVelocityToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), qd_t1.getDoubleValue(), 0.0, qd_t2.getDoubleValue());
+            break;
+         default:
+            linearVelocityToPack.setIncludingFrame(ReferenceFrame.getWorldFrame(), 0.0, qd_t1.getDoubleValue(), qd_t2.getDoubleValue());
+            break;
       }
    }
 
@@ -375,15 +375,15 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
    {
       switch (type)
       {
-      case XY:
-         angularVelocityToPack.setIncludingFrame(bodyFrame, 0.0, 0.0, qd_rot.getDoubleValue());
-         break;
-      case XZ:
-         angularVelocityToPack.setIncludingFrame(bodyFrame, 0.0, qd_rot.getDoubleValue(), 0.0);
-         break;
-      default:
-         angularVelocityToPack.setIncludingFrame(bodyFrame, qd_rot.getDoubleValue(), 0.0, 0.0);
-         break;
+         case XY:
+            angularVelocityToPack.setIncludingFrame(bodyFrame, 0.0, 0.0, qd_rot.getDoubleValue());
+            break;
+         case XZ:
+            angularVelocityToPack.setIncludingFrame(bodyFrame, 0.0, qd_rot.getDoubleValue(), 0.0);
+            break;
+         default:
+            angularVelocityToPack.setIncludingFrame(bodyFrame, qd_rot.getDoubleValue(), 0.0, 0.0);
+            break;
       }
    }
 }

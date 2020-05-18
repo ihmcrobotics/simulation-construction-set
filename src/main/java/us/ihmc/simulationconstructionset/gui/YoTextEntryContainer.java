@@ -32,7 +32,6 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
       return variableInThisBox;
    }
 
-
    @Override
    public synchronized void update(YoEntryBox yoEntryBox)
    {
@@ -56,7 +55,6 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
 
             jTextField.setText(textForTextField);
 
-
             // jTextField.setText("  " + numFormat.format(variableInThisBox.val));
          }
          else
@@ -73,7 +71,7 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
    {
       String text = jTextField.getText();
 
-//    System.out.println("YoTextEntryContainer: Hey, I haz an actionPerformed!");
+      //    System.out.println("YoTextEntryContainer: Hey, I haz an actionPerformed!");
 
       try
       {
@@ -98,7 +96,6 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
 
    }
 
-
    @Override
    public void removeVariable(YoVariable<?> variable)
    {
@@ -107,7 +104,6 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
 
       label.setText(YoEntryBox.DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
    }
-
 
    @Override
    public void setup(YoEntryBox yoEntryBox)
@@ -122,7 +118,6 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
       jTextField.setHorizontalAlignment(SwingConstants.LEFT);
       jTextField.addActionListener(yoEntryBox);
       jTextField.addFocusListener(yoEntryBox);
-
 
       yoEntryBox.add(label);
       yoEntryBox.add(jTextField);
@@ -139,12 +134,11 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
       jTextField = null;
    }
 
-
    @Override
    public void bindToVariable(YoEntryBox yoEntryBox, YoVariable<?> variable)
    {
       variableInThisBox = variable;
-      label.setText("  "+variable.getName()+"  ");
+      label.setText("  " + variable.getName() + "  ");
 
       String labelText = label.getText();
 
@@ -152,12 +146,9 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
 
       int stringWidth = label.getFontMetrics(labelFont).stringWidth(labelText);
 
-      
-//      updateJLabelTextSize(label,yoEntryBox);
+      //      updateJLabelTextSize(label,yoEntryBox);
 
-      
       yoEntryBox.setPreferredSize(new Dimension(stringWidth + TEXT_BOX_WIDTH, BOX_HEIGHT));
-
 
    }
 
@@ -187,8 +178,6 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
       System.out.println("New " + fontSizeToUse);
 
    }
-
-
 
    @Override
    public boolean isEventSource(YoEntryBox yoEntryBox, FocusEvent evt)

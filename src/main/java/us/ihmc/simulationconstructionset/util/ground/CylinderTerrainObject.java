@@ -28,7 +28,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
 
    private final Point3D tempPoint = new Point3D();
    private final Vector3D zVector = new Vector3D(0.0, 0.0, -1.0);
-   
+
    private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
    // TODO: change box based surface equations to cylinder surface equations
@@ -61,11 +61,11 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
       boundingBox = new BoundingBox3D(minPoint, maxPoint);
 
       addGraphics(appearance);
-      
+
       Cylinder3D cylinderShape = new Cylinder3D(height, radius);
       cylinderShape.applyTransform(location);
-      
-      this.terrainCollisionShapes.add(cylinderShape);
+
+      terrainCollisionShapes.add(cylinderShape);
    }
 
    public CylinderTerrainObject(Vector3D center, double pitchDownDegrees, double yawDegrees, double height, double radius, AppearanceDefinition app)
@@ -136,9 +136,8 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
       else
       {
          /*
-          * TODO Review the following.
-          * I think it should return only the highest of the two intersections which always
-          * is intersection1.
+          * TODO Review the following. I think it should return only the highest of the two intersections
+          * which always is intersection1.
           */
          if (testPoint.distanceSquared(intersection1) < testPoint.distanceSquared(intersection2))
             return intersection1.getZ();
@@ -223,7 +222,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    {
       return this;
    }
-   
+
    @Override
    public List<Shape3DReadOnly> getTerrainCollisionShapes()
    {

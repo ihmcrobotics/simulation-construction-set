@@ -7,18 +7,18 @@ import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 /**
- * creates a pin joint with a pd controller built in.
- * This calls compute on the pd controller every time getTau is called.
+ * creates a pin joint with a pd controller built in. This calls compute on the pd controller every
+ * time getTau is called.
+ * 
  * @author steel
- *
  */
 @SuppressWarnings("serial")
 public class SpringPinJoint extends PinJoint
 {
-   
+
    private final YoDouble kp;
    private final YoDouble kd;
-   
+
    public SpringPinJoint(String jname, Vector3DReadOnly offset, Robot rob, Vector3DReadOnly u_hat)
    {
       super(jname, offset, rob, u_hat);
@@ -26,7 +26,7 @@ public class SpringPinJoint extends PinJoint
       kd = new YoDouble(jname + "_kd", registry);
       setKp(8000.0);
       setKd(200.0);
-//      setChangeListeners();
+      //      setChangeListeners();
    }
 
    public SpringPinJoint(String jname, Vector3DReadOnly offset, Robot rob, Axis3D jaxis)
@@ -36,9 +36,9 @@ public class SpringPinJoint extends PinJoint
       kd = new YoDouble(jname + "_kd", registry);
       setKp(10000.0);
       setKd(200.0);
-//      setChangeListeners();
+      //      setChangeListeners();
    }
-   
+
    private void setChangeListeners()
    {
       kp.addVariableChangedListener(new VariableChangedListener()
@@ -58,21 +58,21 @@ public class SpringPinJoint extends PinJoint
          }
       });
    }
-   
+
    @Override
    public void setKp(double kp)
    {
       super.setKp(kp);
       this.kp.set(kp, false);
    }
-   
+
    @Override
    public void setKd(double kd)
    {
       super.setKd(kd);
       this.kd.set(kd, false);
    }
-   
+
    @Override
    public double getTau()
    {

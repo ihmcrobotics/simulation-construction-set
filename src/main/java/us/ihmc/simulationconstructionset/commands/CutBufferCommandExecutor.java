@@ -4,5 +4,3 @@ public interface CutBufferCommandExecutor
 {
    public abstract void cutBuffer();
 }
-
-

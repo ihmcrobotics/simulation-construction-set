@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class EntryBoxGroupList
 {
-   private final ArrayList<EntryBoxGroup> groups = new ArrayList<EntryBoxGroup>();
+   private final ArrayList<EntryBoxGroup> groups = new ArrayList<>();
 
    public EntryBoxGroupList()
    {
@@ -19,7 +19,7 @@ public class EntryBoxGroupList
    {
       groups.remove(group);
    }
-   
+
    public String[] getEntryBoxGroupNames()
    {
       int n = groups.size();

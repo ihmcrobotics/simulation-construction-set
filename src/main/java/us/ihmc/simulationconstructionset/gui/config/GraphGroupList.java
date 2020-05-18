@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class GraphGroupList
 {
-   private ArrayList<GraphGroup> groups = new ArrayList<GraphGroup>();
+   private ArrayList<GraphGroup> groups = new ArrayList<>();
 
    public GraphGroupList()
    {

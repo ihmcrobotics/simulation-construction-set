@@ -8,7 +8,7 @@ import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 
 public abstract class GroundProfileFromHeightMap implements HeightMapWithNormals, GroundProfile3D
-{   
+{
    public GroundProfileFromHeightMap()
    {
    }
@@ -22,24 +22,24 @@ public abstract class GroundProfileFromHeightMap implements HeightMapWithNormals
    @Override
    public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
    {
-      double heightAt = this.heightAndNormalAt(x, y, z, normalToPack);
+      double heightAt = heightAndNormalAt(x, y, z, normalToPack);
       intersectionToPack.set(x, y, heightAt);
-      
+
       return (z < heightAt);
    }
-   
+
    public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
    {
-      double heightAt = this.heightAndNormalAt(x, y, z, normalToPack);
+      double heightAt = heightAndNormalAt(x, y, z, normalToPack);
       intersectionToPack.set(x, y, heightAt);
    }
-   
+
    @Override
    public HeightMapWithNormals getHeightMapIfAvailable()
    {
       return this;
    }
-   
+
    public static GroundProfileFromHeightMap createAGroundProfileFromAHeightMap(final HeightMap heightMap)
    {
       GroundProfileFromHeightMap ret = new GroundProfileFromHeightMap()
@@ -67,7 +67,7 @@ public abstract class GroundProfileFromHeightMap implements HeightMapWithNormals
 
       return ret;
    }
-   
+
    public static GroundProfileFromHeightMap createAGroundProfileFromAHeightMapWithNormals(final HeightMapWithNormals heightMap)
    {
       GroundProfileFromHeightMap ret = new GroundProfileFromHeightMap()

@@ -30,7 +30,7 @@ public class DefaultCollisionHandler implements CollisionHandler
    private Point3D point1 = new Point3D();
    private Point3D point2 = new Point3D();
 
-   private List<CollisionHandlerListener> listeners = new ArrayList<CollisionHandlerListener>();
+   private List<CollisionHandlerListener> listeners = new ArrayList<>();
 
    // Coefficent of restitution.
    private final double epsilon;
@@ -44,10 +44,9 @@ public class DefaultCollisionHandler implements CollisionHandler
    }
 
    /**
-    *
     * @param epsilon coefficent of restitution.
-    * @param mu coefficient of friction
-    * @param robot Robot model
+    * @param mu      coefficient of friction
+    * @param robot   Robot model
     */
    public DefaultCollisionHandler(Random random, double epsilon, double mu)
    {
@@ -84,7 +83,7 @@ public class DefaultCollisionHandler implements CollisionHandler
       }
    }
 
-   private final ArrayList<Contacts> shapesInContactList = new ArrayList<Contacts>();
+   private final ArrayList<Contacts> shapesInContactList = new ArrayList<>();
 
    @Override
    public void handle(Contacts contacts)
@@ -93,7 +92,7 @@ public class DefaultCollisionHandler implements CollisionHandler
       //      handleLocal(shape1, shape2, contacts);
    }
 
-   private final ArrayList<Integer> indices = new ArrayList<Integer>();
+   private final ArrayList<Integer> indices = new ArrayList<>();
 
    private void handleLocal(CollisionShapeWithLink shape1, CollisionShapeWithLink shape2, Contacts contacts)
    {
@@ -257,7 +256,11 @@ public class DefaultCollisionHandler implements CollisionHandler
                {
                   // MicroCollision
                   double penetrationSquared = point1.distanceSquared(point2);
-                  collisionOccurred = externalForcePointOne.resolveMicroCollision(penetrationSquared, externalForcePointTwo, negative_normal, epsilon, mu,
+                  collisionOccurred = externalForcePointOne.resolveMicroCollision(penetrationSquared,
+                                                                                  externalForcePointTwo,
+                                                                                  negative_normal,
+                                                                                  epsilon,
+                                                                                  mu,
                                                                                   p_world); // link1.epsilon, link1.mu, p_world);
                }
             }
@@ -289,7 +292,7 @@ public class DefaultCollisionHandler implements CollisionHandler
       //TODO: Iterate until no collisions left for stacking problems...
       //      for (int j=0; j<10; j++)
       {
-         this.maintenanceBeforeCollisionDetection();
+         maintenanceBeforeCollisionDetection();
 
          for (int i = 0; i < results.getNumberOfCollisions(); i++)
          {
@@ -297,7 +300,7 @@ public class DefaultCollisionHandler implements CollisionHandler
             handle(collision);
          }
 
-         this.maintenanceAfterCollisionDetection();
+         maintenanceAfterCollisionDetection();
       }
    }
 

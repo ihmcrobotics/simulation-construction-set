@@ -27,7 +27,7 @@ public class FlatGroundProfile extends GroundProfileFromHeightMap
    {
       this.zHeight = zHeight;
 
-      this.boundingBox = new BoundingBox3D(xMin, yMin, zHeight - 1.0, xMax, yMax, zHeight + 0.01);
+      boundingBox = new BoundingBox3D(xMin, yMin, zHeight - 1.0, xMax, yMax, zHeight + 0.01);
    }
 
    @Override

@@ -4,7 +4,6 @@ import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.util.ground.GroundProfileFromHeightMap;
 
-
 public class InclinedGroundProfile extends GroundProfileFromHeightMap
 {
    private static final double xMinDefault = -20.0, xMaxDefault = 20.0, yMinDefault = -20.0, yMaxDefault = 20.0;
@@ -29,7 +28,7 @@ public class InclinedGroundProfile extends GroundProfileFromHeightMap
       this.angleOfInclination = angleOfInclination;
       double zMin = Double.NEGATIVE_INFINITY;
       double zMax = Double.POSITIVE_INFINITY;
-      this.boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
+      boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
    }
 
    @Override
@@ -37,10 +36,10 @@ public class InclinedGroundProfile extends GroundProfileFromHeightMap
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return height;
    }
-   
+
    @Override
    public double heightAt(double x, double y, double z)
    {

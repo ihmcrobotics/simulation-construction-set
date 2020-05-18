@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class VarGroup
 {
-   private ArrayList<String> variables = new ArrayList<String>();
-   private ArrayList<String> expressions = new ArrayList<String>();
+   private ArrayList<String> variables = new ArrayList<>();
+   private ArrayList<String> expressions = new ArrayList<>();
    private String name;
 
    public VarGroup(String name)
@@ -55,10 +55,8 @@ public class VarGroup
    }
 
    /*
-    * public void addRegularExpression(String regularExpression)
-    * {
-    * regularExpressions.add(regularExpression);
-    * }
+    * public void addRegularExpression(String regularExpression) {
+    * regularExpressions.add(regularExpression); }
     */
    public void removeVar(String varName)
    {

@@ -25,16 +25,16 @@ public class RepeatingGroundProfile implements GroundProfile3D
       this.yMin = yMin;
       this.yMax = yMax;
 
-      this.xDistance = this.xMax - this.xMin;
-      this.yDistance = this.yMax - this.yMin;
+      xDistance = this.xMax - this.xMin;
+      yDistance = this.yMax - this.yMin;
 
       this.groundProfile = groundProfile;
 
       double zMin = groundProfile.getBoundingBox().getMinZ();
       double zMax = groundProfile.getBoundingBox().getMaxZ();
-      this.boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
+      boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
 
-      this.heightMap = new RepeatingHeightMap(groundProfile.getHeightMapIfAvailable(), xMin, xMax, yMin, yMax);
+      heightMap = new RepeatingHeightMap(groundProfile.getHeightMapIfAvailable(), xMin, xMax, yMin, yMax);
    }
 
    private double xLocal(double xGlobal)

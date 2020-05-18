@@ -23,7 +23,7 @@ public class ExportDataAction extends AbstractAction
       int shortKey = KeyEvent.VK_E;
       String longDescription = "Export simulation data to a file.";
       String shortDescription = "Export Data";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

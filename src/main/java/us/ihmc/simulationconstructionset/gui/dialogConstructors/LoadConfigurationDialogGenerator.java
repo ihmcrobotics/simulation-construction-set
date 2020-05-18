@@ -171,7 +171,6 @@ public class LoadConfigurationDialogGenerator implements LoadConfigurationDialog
    {
       sim.disableGUIComponents();
 
-
       if (dataFileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
       {
          File chosenFile = dataFileChooser.getSelectedFile();
@@ -183,10 +182,9 @@ public class LoadConfigurationDialogGenerator implements LoadConfigurationDialog
    }
 
    /*
-    *  Note that this method is called on startup of SCS
-    * Therefore, if you want to load a configuration on start up,
-    * you need to wait a few seconds until SCS has started before
-    * calling this method with the desired GUI config.
+    * Note that this method is called on startup of SCS Therefore, if you want to load a configuration
+    * on start up, you need to wait a few seconds until SCS has started before calling this method with
+    * the desired GUI config.
     */
    @Override
    public synchronized void loadGUIConfigurationFile(File file)
@@ -371,9 +369,9 @@ public class LoadConfigurationDialogGenerator implements LoadConfigurationDialog
 
       if (XMLData == null)
          return;
-         
+
       while ((XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") <= XMLData.length())
-             && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
+            && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
       {
          currentNumberOfVariables++;
          index++;
@@ -387,7 +385,7 @@ public class LoadConfigurationDialogGenerator implements LoadConfigurationDialog
       index = 0;
 
       while ((XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") <= XMLData.length())
-             && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
+            && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
       {
          int endIndex = XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",");
 
@@ -417,4 +415,3 @@ public class LoadConfigurationDialogGenerator implements LoadConfigurationDialog
       sim = null;
    }
 }
-

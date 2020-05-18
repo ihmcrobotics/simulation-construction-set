@@ -22,7 +22,8 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
    private final double lengthCoM1 = 0.3, lengthCoM2 = 0.25;
 
    /**
-    * Moment of inertia. The equations below use the inertia about the joints, so this specifies it's in body frame
+    * Moment of inertia. The equations below use the inertia about the joints, so this specifies it's
+    * in body frame
     */
    private final double Ixx1CoM = 0.4, Ixx2CoM = 0.5;
 
@@ -34,7 +35,8 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
    private final PinJoint pinJoint2;
 
    /**
-    * Manipulator equation matrices, for matrix definitions see {@link #assertStateIsCloseToClosedFormCalculation}
+    * Manipulator equation matrices, for matrix definitions see
+    * {@link #assertStateIsCloseToClosedFormCalculation}
     */
    private final DenseMatrix64F H = new DenseMatrix64F(2, 2);
    private final DenseMatrix64F C = new DenseMatrix64F(2, 2);
@@ -52,7 +54,7 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
       Link link1 = new Link(name + "Link1");
       link1.setMass(mass1);
       link1.setMomentOfInertia(Ixx1CoM, 0.0, 0.0);
-      link1.setComOffset(0.0, 0.0, - lengthCoM1);
+      link1.setComOffset(0.0, 0.0, -lengthCoM1);
 
       pinJoint1.setLink(link1);
       pinJoint1.setDamping(damping1);
@@ -62,7 +64,7 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
       Link link2 = new Link(name + "Link2");
       link2.setMass(mass2);
       link2.setMomentOfInertia(Ixx2CoM, 0.0, 0.0);
-      link2.setComOffset(0.0, 0.0, - lengthCoM2);
+      link2.setComOffset(0.0, 0.0, -lengthCoM2);
 
       pinJoint2.setLink(link2);
       pinJoint2.setDamping(damping2);
@@ -79,7 +81,9 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
 
    /**
     * Solves the equations of motions outlined here:
-    * @see <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-832-underactuated-robotics-spring-2009/readings/MIT6_832s09_read_ch03.pdf</a>
+    * 
+    * @see <a
+    *      href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-832-underactuated-robotics-spring-2009/readings/MIT6_832s09_read_ch03.pdf</a>
     */
    @Override
    public void assertStateIsCloseToClosedFormCalculation(double epsilon)
@@ -102,7 +106,7 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
       double H11 = Ixx2;
 
       double C00 = -2.0 * mass2 * length1 * lengthCoM2 * Math.sin(q2) * qd2 + damping1;
-      double C01 = - mass2 * length1 * lengthCoM2 * Math.sin(q2) * qd2;
+      double C01 = -mass2 * length1 * lengthCoM2 * Math.sin(q2) * qd2;
       double C10 = mass2 * length1 * lengthCoM2 * Math.sin(q2) * qd1;
       double C11 = damping2;
 
@@ -130,12 +134,11 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
       CommonOps.scale(-1.0, rightHandSide);
       CommonOps.solve(H, rightHandSide, qdd);
 
-      if(Math.abs(qdd.get(0, 0) - qdd1) > epsilon || Math.abs(qdd.get(1, 0) - qdd2) > epsilon)
+      if (Math.abs(qdd.get(0, 0) - qdd1) > epsilon || Math.abs(qdd.get(1, 0) - qdd2) > epsilon)
       {
-         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. "
-                                        + "\nAt t=" + getTime()
-                                        + "\nSimulated joint accelerations: (" + qdd1 + ", " + qdd2 + ")"
-                                        + "\nLagrangian accelerations: (" + qdd.get(0, 0) + ", " + qdd.get(1, 0) + ")");
+         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. " + "\nAt t=" + getTime()
+               + "\nSimulated joint accelerations: (" + qdd1 + ", " + qdd2 + ")" + "\nLagrangian accelerations: (" + qdd.get(0, 0) + ", " + qdd.get(1, 0)
+               + ")");
       }
    }
 }

@@ -40,7 +40,7 @@ public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> imp
    @Override
    public CylinderShapeDescription<T> copy()
    {
-      CylinderShapeDescription<T> copy = new CylinderShapeDescription<T>(cylinder3d.getRadius(), cylinder3d.getLength());
+      CylinderShapeDescription<T> copy = new CylinderShapeDescription<>(cylinder3d.getRadius(), cylinder3d.getLength());
       copy.set(copy);
       return copy;
    }
@@ -98,8 +98,8 @@ public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> imp
     * how the curved surface is contacting another surface, as when the two surfaces roll on each
     * other.
     *
-    * @param surfaceNormal defining another surface in which this object is in rolling contact on
-    *           the other surface.
+    * @param surfaceNormal  defining another surface in which this object is in rolling contact on the
+    *                       other surface.
     * @param pointToProject point to project to the bottom of the curved surface.
     * @return true if the point was projected. Otherwise false.
     */
@@ -111,7 +111,7 @@ public class CylinderShapeDescription<T extends CylinderShapeDescription<T>> imp
       boolean wasRolling = Math.abs(orthogonalComponent.getX()) >= 1e-7 || Math.abs(orthogonalComponent.getY()) >= 1e-7;
 
       orthogonalComponent.normalize();
-      
+
       double positionAlongAxis = EuclidGeometryTools.percentageAlongLine3D(pointToProject, cylinder3d.getPosition(), cylinder3d.getAxis());
       pointToProject.set(cylinder3d.getPosition());
       pointToProject.scaleAdd(cylinder3d.getRadius(), orthogonalComponent, pointToProject);

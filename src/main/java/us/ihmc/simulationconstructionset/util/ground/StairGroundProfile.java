@@ -3,7 +3,6 @@ package us.ihmc.simulationconstructionset.util.ground;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 
-
 public class StairGroundProfile extends GroundProfileFromHeightMap
 {
    private final BoundingBox3D boundingBox;
@@ -18,16 +17,15 @@ public class StairGroundProfile extends GroundProfileFromHeightMap
       double yMin = -1.0;
       double yMax = 1.0;
 
-      this.startStairsAtX = 0.0;
+      startStairsAtX = 0.0;
 
       this.groundXStep = groundXStep;
       this.groundZStep = groundZStep;
 
       double zMin = Double.NEGATIVE_INFINITY;
       double zMax = Double.POSITIVE_INFINITY;
-      this.boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
+      boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
    }
-
 
    public StairGroundProfile(double groundXStep, double groundZStep, double xMin, double xMax, double yMin, double yMax, double startStairsAtX)
    {
@@ -38,7 +36,7 @@ public class StairGroundProfile extends GroundProfileFromHeightMap
 
       double zMin = Double.NEGATIVE_INFINITY;
       double zMax = Double.POSITIVE_INFINITY;
-      this.boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
+      boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
    }
 
    @Override
@@ -53,7 +51,7 @@ public class StairGroundProfile extends GroundProfileFromHeightMap
    @Override
    public double heightAt(double x, double y, double z)
    {
-      int stairNumber = (int) Math.ceil((x - startStairsAtX / groundXStep));    // the ceil ensures that the fist step is always at x = 0.0, which simplifies initial robot setup
+      int stairNumber = (int) Math.ceil((x - startStairsAtX / groundXStep)); // the ceil ensures that the fist step is always at x = 0.0, which simplifies initial robot setup
 
       if ((x < startStairsAtX) || (y < boundingBox.getMinY()) || (y > boundingBox.getMaxY()))
          return 0.0;

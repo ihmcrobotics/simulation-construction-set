@@ -18,48 +18,50 @@ public class CombinedGroundProfile3D implements GroundProfile3D
    public CombinedGroundProfile3D(GroundProfile3D[] groundProfiles)
    {
       this.groundProfiles = groundProfiles;
-      this.heightMap = new CombinedHeightMapWithNormals();
+      heightMap = new CombinedHeightMapWithNormals();
 
       BoundingBox3D boundingBox = null;
       for (GroundProfile3D groundProfile : groundProfiles)
       {
-         if (boundingBox == null) boundingBox = groundProfile.getBoundingBox();
+         if (boundingBox == null)
+            boundingBox = groundProfile.getBoundingBox();
          else
          {
             boundingBox = BoundingBox3D.union(boundingBox, groundProfile.getBoundingBox());
          }
-         
+
          HeightMapWithNormals heightMapIfAvailable = groundProfile.getHeightMapIfAvailable();
          if (heightMapIfAvailable != null)
-            this.heightMap.addHeightMap(heightMapIfAvailable);
+            heightMap.addHeightMap(heightMapIfAvailable);
       }
-      
+
       this.boundingBox = boundingBox;
    }
 
    public CombinedGroundProfile3D(ArrayList<GroundProfile3D> groundProfilesArrayList)
    {
-      this.groundProfiles = new GroundProfile3D[groundProfilesArrayList.size()];
-      this.heightMap = new CombinedHeightMapWithNormals();
+      groundProfiles = new GroundProfile3D[groundProfilesArrayList.size()];
+      heightMap = new CombinedHeightMapWithNormals();
 
       BoundingBox3D boundingBox = null;
       for (GroundProfile3D groundProfile : groundProfiles)
       {
-         if (boundingBox == null) boundingBox = groundProfile.getBoundingBox();
+         if (boundingBox == null)
+            boundingBox = groundProfile.getBoundingBox();
          else
          {
             boundingBox = BoundingBox3D.union(boundingBox, groundProfile.getBoundingBox());
          }
-         
+
          HeightMapWithNormals heightMapIfAvailable = groundProfile.getHeightMapIfAvailable();
          if (heightMapIfAvailable != null)
-            this.heightMap.addHeightMap(heightMapIfAvailable);
+            heightMap.addHeightMap(heightMapIfAvailable);
       }
       this.boundingBox = boundingBox;
 
       groundProfilesArrayList.toArray(groundProfiles);
    }
-   
+
    public GroundProfile3D[] getGroundProfiles()
    {
       return groundProfiles;
@@ -106,11 +108,12 @@ public class CombinedGroundProfile3D implements GroundProfile3D
    @Override
    public boolean isClose(double x, double y, double z)
    {
-      if (boundingBox == null) return false;
-      
+      if (boundingBox == null)
+         return false;
+
       return boundingBox.isInsideInclusive(x, y, z);
    }
-   
+
    @Override
    public BoundingBox3D getBoundingBox()
    {
@@ -123,4 +126,3 @@ public class CombinedGroundProfile3D implements GroundProfile3D
       return heightMap;
    }
 }
-

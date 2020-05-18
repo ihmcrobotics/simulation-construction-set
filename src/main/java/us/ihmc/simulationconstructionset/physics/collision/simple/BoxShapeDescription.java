@@ -14,8 +14,12 @@ public class BoxShapeDescription<T extends BoxShapeDescription<T>> implements Co
 
    private final RigidBodyTransform transform = new RigidBodyTransform();
 
-   private final BoundingBox3D boundingBox = new BoundingBox3D(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
-                                                               Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+   private final BoundingBox3D boundingBox = new BoundingBox3D(Double.NEGATIVE_INFINITY,
+                                                               Double.NEGATIVE_INFINITY,
+                                                               Double.NEGATIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY);
    private boolean boundingBoxNeedsUpdating = true;
 
    public BoxShapeDescription(double halfLengthX, double halfWidthY, double halfHeightZ)
@@ -29,7 +33,7 @@ public class BoxShapeDescription<T extends BoxShapeDescription<T>> implements Co
    @Override
    public BoxShapeDescription<T> copy()
    {
-      BoxShapeDescription<T> copy = new BoxShapeDescription<T>(halfLengthX, halfWidthY, halfHeightZ);
+      BoxShapeDescription<T> copy = new BoxShapeDescription<>(halfLengthX, halfWidthY, halfHeightZ);
       copy.transform.set(this.transform);
       copy.boundingBox.set(this.boundingBox);
       return copy;
@@ -86,7 +90,7 @@ public class BoxShapeDescription<T extends BoxShapeDescription<T>> implements Co
 
    private void updateBoundingBox()
    {
-      throw new RuntimeException("Implement Me!");      
+      throw new RuntimeException("Implement Me!");
    }
 
    @Override
@@ -97,11 +101,12 @@ public class BoxShapeDescription<T extends BoxShapeDescription<T>> implements Co
 
    /**
     * Box shape will not roll, so this method always returns false.
+    * 
     * @return false
     */
    @Override
    public boolean rollContactIfRolling(Vector3D surfaceNormal, Point3D pointToRoll)
-   { 
+   {
       return false;
    }
 }

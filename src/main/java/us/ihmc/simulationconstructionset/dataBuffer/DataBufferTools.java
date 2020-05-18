@@ -1,11 +1,11 @@
 package us.ihmc.simulationconstructionset.dataBuffer;
 
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import java.util.ArrayList;
+
 import us.ihmc.simulationconstructionset.gui.config.VarGroup;
 import us.ihmc.simulationconstructionset.gui.config.VarGroupList;
+import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.variable.YoVariable;
-
-import java.util.ArrayList;
 
 public class DataBufferTools
 {

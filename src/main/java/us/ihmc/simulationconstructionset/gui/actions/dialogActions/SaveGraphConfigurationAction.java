@@ -15,7 +15,7 @@ public class SaveGraphConfigurationAction extends AbstractAction
    public SaveGraphConfigurationAction(SaveGraphConfigurationDialogConstructor constructor)
    {
       super("Save GraphGroup Configuration");
-      this.constructor= constructor;
+      this.constructor = constructor;
    }
 
    public void setCurrentDirectory(File directory)

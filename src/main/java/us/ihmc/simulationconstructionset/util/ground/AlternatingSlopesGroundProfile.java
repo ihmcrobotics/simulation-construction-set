@@ -4,11 +4,10 @@ import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 
-
 public class AlternatingSlopesGroundProfile extends GroundProfileFromHeightMap
 {
    private BoundingBox3D boundingBox;
-   
+
    private static final double defaultXMin = -10.0, defaultXMax = 10.0, defaultYMin = -10.0, defaultYMax = 10.0;
 
    private final double[][] xSlopePairs;
@@ -28,28 +27,28 @@ public class AlternatingSlopesGroundProfile extends GroundProfileFromHeightMap
 
       xzPairs = createXZPairsFromXSlopePairs(xSlopePairs);
       verifyXOrdering();
-      
+
    }
 
    private void modifyXMinMaxIfNecessary()
    {
       double xMin = boundingBox.getMinX();
       double xMax = boundingBox.getMaxX();
-      
+
       boolean changed = false;
-      
+
       if (xMin > xSlopePairs[0][0] - 1e-7)
       {
          xMin = xSlopePairs[0][0] - 1e-7;
          changed = true;
       }
-      
+
       if (xMax < xSlopePairs[xSlopePairs.length - 1][0] + 1e-7)
       {
          xMax = xSlopePairs[xSlopePairs.length - 1][0] + 1e-7;
          changed = true;
       }
-      
+
       if (changed)
       {
          boundingBox = new BoundingBox3D(xMin, boundingBox.getMinY(), boundingBox.getMinZ(), xMax, boundingBox.getMaxY(), boundingBox.getMaxZ());
@@ -60,7 +59,7 @@ public class AlternatingSlopesGroundProfile extends GroundProfileFromHeightMap
    {
       double x = boundingBox.getMinX();
 
-      for (int i=0; i<xSlopePairs.length; i++)
+      for (int i = 0; i < xSlopePairs.length; i++)
       {
          if (x + 1e-7 > xSlopePairs[i][0])
          {
@@ -127,10 +126,10 @@ public class AlternatingSlopesGroundProfile extends GroundProfileFromHeightMap
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return height;
    }
-   
+
    @Override
    public double heightAt(double x, double y, double z)
    {

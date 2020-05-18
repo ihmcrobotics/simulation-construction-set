@@ -17,20 +17,20 @@ public class CameraPropertiesAction extends AbstractAction
    private final CameraPropertiesDialogConstructor constructor;
    private final TrackCheckBox trackCheckBox;
    private final DollyCheckBox dollyCheckBox;
-   
+
    public CameraPropertiesAction(CameraPropertiesDialogConstructor constructor, TrackCheckBox trackCheckBox, DollyCheckBox dollyCheckBox)
    {
       super("Camera Properties...");
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
-      
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
+
       this.constructor = constructor;
       this.trackCheckBox = trackCheckBox;
       this.dollyCheckBox = dollyCheckBox;
    }
-   
+
    @Override
    public void actionPerformed(ActionEvent actionEvent)
    {

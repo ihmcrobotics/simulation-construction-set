@@ -7,9 +7,9 @@ import java.util.List;
 import javax.swing.event.ChangeListener;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
+import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
-import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
 
 public class YoVariableListPanel extends YoVariablePanel
 {
@@ -21,10 +21,11 @@ public class YoVariableListPanel extends YoVariablePanel
       this(new YoVariableList(name), holder, varPanelJPopupMenu, searchPanel);
    }
 
-   public YoVariableListPanel(YoVariableList list, SelectedVariableHolder holder, YoVariablePanelJPopupMenu varPanelJPopupMenu, YoVariableSearchPanel searchPanel)
+   public YoVariableListPanel(YoVariableList list, SelectedVariableHolder holder, YoVariablePanelJPopupMenu varPanelJPopupMenu,
+                              YoVariableSearchPanel searchPanel)
    {
       super(list.getName(), holder, varPanelJPopupMenu, searchPanel);
-      this.varList = list;
+      varList = list;
       clearAndSetUpTextFields();
    }
 
@@ -56,7 +57,7 @@ public class YoVariableListPanel extends YoVariablePanel
    @Override
    protected List<YoVariable<?>> getAllYoVariablesCopy()
    {
-      return new ArrayList<YoVariable<?>> (varList.getVariables());
+      return new ArrayList<>(varList.getVariables());
    }
 
    @Override
@@ -99,9 +100,9 @@ public class YoVariableListPanel extends YoVariablePanel
       }
 
       varList.removeVariable(v);
-      this.invalidate();
-      this.revalidate();
-      this.updateUI();
+      invalidate();
+      revalidate();
+      updateUI();
       this.repaint();
    }
 

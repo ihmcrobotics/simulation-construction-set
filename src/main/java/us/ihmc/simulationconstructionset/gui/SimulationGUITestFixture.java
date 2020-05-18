@@ -1,6 +1,10 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
 
 import org.fest.swing.core.GenericTypeMatcher;
 import org.fest.swing.core.MouseButton;
@@ -24,9 +28,9 @@ import org.fest.swing.fixture.JTabbedPaneFixture;
 import org.fest.swing.fixture.JTextComponentFixture;
 import org.fest.swing.fixture.JTreeFixture;
 
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
-import us.ihmc.commons.thread.ThreadTools;
 
 public class SimulationGUITestFixture
 {
@@ -37,7 +41,7 @@ public class SimulationGUITestFixture
    {
       if (System.getProperty("java.vendor").toLowerCase().contains("oracle"))
       {
-         FailOnThreadViolationRepaintManager.install();  // does not work on OpenJDK
+         FailOnThreadViolationRepaintManager.install(); // does not work on OpenJDK
       }
 
       JFrame frame = GuiActionRunner.execute(new GuiQuery<JFrame>()
@@ -51,13 +55,12 @@ public class SimulationGUITestFixture
          }
       });
       focusedWindow = new FrameFixture(frame);
-      
+
       ThreadTools.sleep(1000);
       focusedWindow.focus();
 
       mainSCSWindow = focusedWindow;
    }
-   
 
    public void closeAllViewportWindows()
    {
@@ -74,7 +77,7 @@ public class SimulationGUITestFixture
          window.focus();
          window.close();
       }
-      
+
    }
 
    public void focusNthViewportWindow(int n)
@@ -84,7 +87,7 @@ public class SimulationGUITestFixture
       FrameFixture frameFixture = findFrame.using(focusedWindow.robot);
       focusedWindow = frameFixture;
       focusedWindow.focus();
-      
+
    }
 
    public void closeAllGraphArrayWindows()
@@ -112,15 +115,14 @@ public class SimulationGUITestFixture
       focusedWindow = frameFixture;
       focusedWindow.focus();
    }
-   
+
    public void focusWindow(String name)
    {
       FrameFinder findFrame = WindowFinder.findFrame(name);
       FrameFixture frameFixture = findFrame.using(focusedWindow.robot);
       focusedWindow = frameFixture;
-      focusedWindow.focus();      
+      focusedWindow.focus();
    }
-   
 
    public void focusDialog(String name)
    {
@@ -265,7 +267,6 @@ public class SimulationGUITestFixture
       dollyCheckBox.click();
    }
 
-
    // Menus
    public void selectFileMenu()
    {
@@ -290,7 +291,6 @@ public class SimulationGUITestFixture
       JMenuItemFixture graphsMenu = focusedWindow.menuItem("Graphs");
       graphsMenu.click();
    }
-
 
    public void selectDataBufferMenu()
    {
@@ -433,7 +433,7 @@ public class SimulationGUITestFixture
 
    public void removeAllGraphs()
    {
-      this.clickRemoveEmptyGraphButton();
+      clickRemoveEmptyGraphButton();
 
       while (true)
       {
@@ -466,7 +466,7 @@ public class SimulationGUITestFixture
 
       return null;
    }
-   
+
    private JPanelFixture getPanelIfItExists(GenericTypeMatcher<JPanel> matcher)
    {
       try
@@ -479,7 +479,6 @@ public class SimulationGUITestFixture
 
       return null;
    }
-
 
    public void removeVariableFromNthGraph(String variableName, int nThToFind)
    {
@@ -563,7 +562,6 @@ public class SimulationGUITestFixture
       comboBox.selectItem(value);
    }
 
-
    public void clickNewGraphButton()
    {
       JButtonFixture newGraphButton = focusedWindow.button("New Graph");
@@ -588,7 +586,6 @@ public class SimulationGUITestFixture
       subGraphColumnButton.click();
    }
 
-
    private class MenuItemTextTypeMatcher extends GenericTypeMatcher<JMenuItem>
    {
       private final String text;
@@ -606,7 +603,6 @@ public class SimulationGUITestFixture
       }
    }
 
-
    private class JSpinnerNameEndsWithMatcher extends GenericTypeMatcher<JSpinner>
    {
       private final String nameEnding;
@@ -623,7 +619,6 @@ public class SimulationGUITestFixture
          return component.getName().endsWith(nameEnding);
       }
    }
-
 
    private class YoGraphIsEmptyMatcher extends GenericTypeMatcher<JPanel>
    {
@@ -648,7 +643,6 @@ public class SimulationGUITestFixture
          return yoGraph.isEmpty();
       }
    }
-
 
    private class NthYoGraphMatcher extends GenericTypeMatcher<JPanel>
    {
@@ -685,7 +679,6 @@ public class SimulationGUITestFixture
       }
    }
 
-
    private class NthEntryBoxMatcher extends GenericTypeMatcher<JPanel>
    {
       private final int nThToFind;
@@ -721,8 +714,6 @@ public class SimulationGUITestFixture
       }
    }
 
-
-
    private class LabelTextMatcher extends GenericTypeMatcher<JLabel>
    {
       private final String labelText;
@@ -739,7 +730,6 @@ public class SimulationGUITestFixture
          return label.getText().equals(labelText);
       }
    }
-
 
    private class NthGraphArrayWindowMatcher extends GenericTypeMatcher<JFrame>
    {
@@ -763,8 +753,9 @@ public class SimulationGUITestFixture
          if (!isAGraphWindow)
             return false;
 
-         if (!component.isVisible()) return false;
-         
+         if (!component.isVisible())
+            return false;
+
          if (currentIndex == nThToFind)
          {
             currentIndex++;
@@ -777,7 +768,7 @@ public class SimulationGUITestFixture
          return false;
       }
    }
-   
+
    private class NthViewportWindowMatcher extends GenericTypeMatcher<JFrame>
    {
       private final int nThToFind;
@@ -800,8 +791,9 @@ public class SimulationGUITestFixture
          if (!isAGraphWindow)
             return false;
 
-         if (!component.isVisible()) return false;
-         
+         if (!component.isVisible())
+            return false;
+
          if (currentIndex == nThToFind)
          {
             currentIndex++;

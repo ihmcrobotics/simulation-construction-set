@@ -37,13 +37,13 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    private static final long serialVersionUID = -3403238490036872889L;
 
    private final YoVariableRegistry rootRegistry;
-   private final LinkedHashMap<JComponent, Integer> tabIndices = new LinkedHashMap<JComponent, Integer>();
-   
+   private final LinkedHashMap<JComponent, Integer> tabIndices = new LinkedHashMap<>();
+
    private JTabbedPane tabPane;
-   
+
    private YoVariablePanel visibleVarPanel;
    private YoVariableRegistry visibleVarPanelRegistry;
-   
+
    private JScrollPane scrollPane;
    private NameSpaceHierarchyTree nameSpaceHierarchyTree;
    private JSplitPane splitPane;
@@ -60,22 +60,21 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    private final SelectedVariableHolder selectedVariableHolder;
    private YoVariablePanelJPopupMenu varPanelJPopupMenu;
    private int tabIndex = 0;
-   
 
-  
-   public YoVariableExplorerTabbedPane(YoVariableDoubleClickListener yoVariableDoubleClickListener, JFrame frame, BookmarkedVariablesHolder bookmarkedVariablesHolder,
-                           final SelectedVariableHolder selectedVariableHolder, EntryBoxArrayPanel entryBoxArrayPanel,
-                           WriteDataCommandExecutor writeDataCommandExecutor, YoVariableRegistry rootRegistry)
+   public YoVariableExplorerTabbedPane(YoVariableDoubleClickListener yoVariableDoubleClickListener, JFrame frame,
+                                       BookmarkedVariablesHolder bookmarkedVariablesHolder, final SelectedVariableHolder selectedVariableHolder,
+                                       EntryBoxArrayPanel entryBoxArrayPanel, WriteDataCommandExecutor writeDataCommandExecutor,
+                                       YoVariableRegistry rootRegistry)
    {
-      this.setName("CombinedVarPanel");
-      this.setLayout(new BorderLayout());
-      
+      setName("CombinedVarPanel");
+      setLayout(new BorderLayout());
+
       this.rootRegistry = rootRegistry;
       this.selectedVariableHolder = selectedVariableHolder;
-      this.tabPane = new JTabbedPane();
+      tabPane = new JTabbedPane();
       tabPane.setName("CombinedVarPanel");
-      this.tabPane.addChangeListener(new TabChangedAction());
-      
+      tabPane.addChangeListener(new TabChangedAction());
+
       entryBox = new YoEntryBox(entryBoxArrayPanel, selectedVariableHolder);
 
       if (selectedVariableHolder != null)
@@ -104,10 +103,12 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       nameSpaceHierarchyTree = new NameSpaceHierarchyTree(this, frame, writeDataCommandExecutor, rootRegistry);
       NameSpaceSearchPanel nameSpaceSearchPanel = new NameSpaceSearchPanel(nameSpaceHierarchyTree);
 
-      BookmarkedVariablesPanel bookmarkedVariablesPanel = new BookmarkedVariablesPanel(new YoVariableList("Bookmarked Variables"), selectedVariableHolder,
-                                                             bookmarkedVariablesHolder);
-      bookmarkedVariablesScrollPane = new JScrollPane(bookmarkedVariablesPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-              ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+      BookmarkedVariablesPanel bookmarkedVariablesPanel = new BookmarkedVariablesPanel(new YoVariableList("Bookmarked Variables"),
+                                                                                       selectedVariableHolder,
+                                                                                       bookmarkedVariablesHolder);
+      bookmarkedVariablesScrollPane = new JScrollPane(bookmarkedVariablesPanel,
+                                                      ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                                      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
       splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, scrollPane, bookmarkedVariablesScrollPane);
       splitPane.setDividerSize(3);
@@ -120,15 +121,14 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       insertTab("Variables", variableDisplayPanel, tabIndex++);
 
       tabPane.setSelectedIndex(0);
-      
+
       this.add(onlyParameters, BorderLayout.NORTH);
       this.add(tabPane, BorderLayout.CENTER);
 
       tabPane.setMinimumSize(new Dimension(400, 100));
-      
+
       createAndStartPeriodicUIUpdateThread();
    }
-
 
    public void addVariableSearchPanel(YoVariableSearchPanel variableSearchPanel)
    {
@@ -144,20 +144,20 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       tabIndices.put(component, tabIndex);
    }
 
-// public void addVisibleVarPanel(VarPanel varPanel)
-// {
-//    // ***jjc removed this because the tree is now generated based on the root tree
-//    // nameSpaceHierarchyTree.addNode(varPanel);
-//    
-////     System.out.println("Adding visible varPanel: " + varPanel.getName());
-////     varPanels.put(varPanel.getName(), varPanel);
-//
-//    if (visibleVarPanel == null)
-//    {
-////        setVisibleVarPanel(varPanel.getName());
-//       setVisibleVarPanel(varPanel);
-//    }
-// }
+   // public void addVisibleVarPanel(VarPanel varPanel)
+   // {
+   //    // ***jjc removed this because the tree is now generated based on the root tree
+   //    // nameSpaceHierarchyTree.addNode(varPanel);
+   //    
+   ////     System.out.println("Adding visible varPanel: " + varPanel.getName());
+   ////     varPanels.put(varPanel.getName(), varPanel);
+   //
+   //    if (visibleVarPanel == null)
+   //    {
+   ////        setVisibleVarPanel(varPanel.getName());
+   //       setVisibleVarPanel(varPanel);
+   //    }
+   // }
 
    public void addExtraVarPanel(YoVariablePanel extraVarPanel)
    {
@@ -181,7 +181,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    public void setVisibleVarPanel(YoVariableRegistry registry)
    {
       YoVariablePanel varPanel;
-      if(onlyParameters.isSelected())
+      if (onlyParameters.isSelected())
       {
          varPanel = new YoVariableRegistryParameterPanel(registry, selectedVariableHolder, varPanelJPopupMenu);
       }
@@ -242,7 +242,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
                   entryBox.updateActiveContainer();
                }
             });
-         } 
+         }
 
       };
       alertChangeListenersTimer.schedule(alertChangeListenersTask, 1000, OBSERVER_NOTIFICATION_PERIOD);
@@ -259,21 +259,21 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
          }
       });
    }
-   
+
    private void closeAndDisposeLocal()
    {
-      this.removeAll();
+      removeAll();
 
-//    if (varPanels != null)
-//    {
-//       varPanels.clear();
-//       varPanels = null;
-//    }
+      //    if (varPanels != null)
+      //    {
+      //       varPanels.clear();
+      //       varPanels = null;
+      //    }
 
       visibleVarPanel = null;
 
       onlyParameters = null;
-      
+
       if (scrollPane != null)
       {
          scrollPane.removeAll();
@@ -335,7 +335,6 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    {
       this.varPanelJPopupMenu = varPanelJPopupMenu;
    }
-
 
    public YoVariableSearchPanel getYoVariableSearchPanel()
    {

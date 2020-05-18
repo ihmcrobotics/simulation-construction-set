@@ -6,7 +6,6 @@ import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 
-
 public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
 {
    private double resolution;
@@ -19,12 +18,9 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
 
    private float minRockHeight, maxRockHeight;
 
-
    private final BoundingBox3D boundingBox;
 
-
    private float[][] terrainMap;
-
 
    Random rand = new Random(1000);
 
@@ -56,7 +52,6 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
            0.01);
    }
 
-
    public RandomRockyGroundProfile(double fieldLength, int numberOfRocks, double minRockHeight, double maxRockHeight, double minRockRadius,
                                    double maxRockRadius, double minRockLength, double maxRockLength, double minRockWidth, double maxRockWidth,
                                    double resolution)
@@ -80,8 +75,8 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
       double yMin = -(this.fieldLength) * resolution / 2.0;
       double yMax = (this.fieldLength) * resolution / 2.0;
 
-      this.boundingBox = new BoundingBox3D(xMin, yMin, Double.NEGATIVE_INFINITY, xMax, yMax, Double.POSITIVE_INFINITY);
-      
+      boundingBox = new BoundingBox3D(xMin, yMin, Double.NEGATIVE_INFINITY, xMax, yMax, Double.POSITIVE_INFINITY);
+
       terrainMap = new float[this.fieldLength][this.fieldLength];
 
       for (int i = 0; i < numberOfRocks; i++)
@@ -97,7 +92,6 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
             // Cylinder
             int radius = rand.nextInt(this.maxRockRadius - this.minRockRadius) + this.minRockRadius;
 
-
             for (int x = xPos - radius; x <= xPos + radius; x++)
             {
                if ((x >= this.fieldLength) || (x < 0))
@@ -108,14 +102,13 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
                   if ((y >= this.fieldLength) || (y < 0))
                      continue;
 
-                  if (((x-xPos) * (x-xPos) + (y-yPos) * (y-yPos)) < radius * radius)
+                  if (((x - xPos) * (x - xPos) + (y - yPos) * (y - yPos)) < radius * radius)
                   {
                      terrainMap[x][y] = height;
                   }
 
                }
             }
-
 
          }
          else
@@ -152,10 +145,10 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return height;
    }
-   
+
    @Override
    public double heightAt(double x_world, double y_world, double z_world)
    {
@@ -164,7 +157,7 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
       int xPos2 = (int) Math.ceil((x_world - boundingBox.getMinX()) / resolution);
       int yPos2 = (int) Math.ceil((y_world - boundingBox.getMinY()) / resolution);
 
-      if (!withinBounds(xPos1, yPos1) ||!withinBounds(xPos2, yPos2))
+      if (!withinBounds(xPos1, yPos1) || !withinBounds(xPos2, yPos2))
          return 0.0;
 
       if (x_world < startRocksAtX)
@@ -172,7 +165,6 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
 
       return (terrainMap[xPos1][yPos1] + terrainMap[xPos2][yPos2]) / 2.0;
    }
-
 
    public void surfaceNormalAt(double x_world, double y_world, double z_world, Vector3D normal)
    {
@@ -185,9 +177,8 @@ public class RandomRockyGroundProfile extends GroundProfileFromHeightMap
       int xPos2 = (int) Math.ceil((x_world - boundingBox.getMinX()) / resolution);
       int yPos2 = (int) Math.ceil((y_world - boundingBox.getMinY()) / resolution);
 
-      if (!withinBounds(xPos1, yPos1) ||!withinBounds(xPos2, yPos2))
+      if (!withinBounds(xPos1, yPos1) || !withinBounds(xPos2, yPos2))
          return;
-
 
       double h1 = terrainMap[xPos1][yPos1];
       double h2 = terrainMap[xPos2][yPos2];

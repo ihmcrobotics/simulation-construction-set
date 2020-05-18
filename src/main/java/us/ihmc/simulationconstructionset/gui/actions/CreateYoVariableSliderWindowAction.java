@@ -1,10 +1,12 @@
 package us.ihmc.simulationconstructionset.gui.actions;
 
-import us.ihmc.simulationconstructionset.commands.CreateNewYoVariableSliderWindowCommandExecutor;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
+import us.ihmc.simulationconstructionset.commands.CreateNewYoVariableSliderWindowCommandExecutor;
 
 /**
  * Created by Peter on 8/29/2017.
@@ -20,9 +22,9 @@ public class CreateYoVariableSliderWindowAction extends AbstractAction
       super("New Slider Window");
       this.executor = executor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
-      this.putValue(Action.LONG_DESCRIPTION, "Creates a new YoVariable Slider window for change yoVariables");
-      this.putValue(Action.SHORT_DESCRIPTION, "New YoVariable Slider Window");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
+      putValue(Action.LONG_DESCRIPTION, "Creates a new YoVariable Slider window for change yoVariables");
+      putValue(Action.SHORT_DESCRIPTION, "New YoVariable Slider Window");
    }
 
    @Override
@@ -31,4 +33,3 @@ public class CreateYoVariableSliderWindowAction extends AbstractAction
       executor.createNewYoVariableSliderWindow();
    }
 }
-

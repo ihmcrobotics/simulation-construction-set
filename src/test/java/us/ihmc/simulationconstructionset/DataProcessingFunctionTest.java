@@ -1,6 +1,9 @@
 package us.ihmc.simulationconstructionset;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
@@ -8,13 +11,11 @@ import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
-import static us.ihmc.robotics.Assert.*;
-
 public class DataProcessingFunctionTest
 {
    private static final boolean SHOW_GUI = false;
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testSimpleDataProcessingFunction() throws SimulationExceededMaximumTimeException, ControllerFailureException
    {
       final Robot robot = new Robot("DataProcessingFunctionTestRobot");
@@ -27,7 +28,7 @@ public class DataProcessingFunctionTest
 
       robot.addYoVariableRegistry(registry);
 
-      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(SHOW_GUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.001, 1);
@@ -36,7 +37,6 @@ public class DataProcessingFunctionTest
 
       BlockingSimulationRunner runner = new BlockingSimulationRunner(scs, 100.0);
       runner.simulateAndBlock(2.0);
-
 
       DataProcessingFunction dataProcessingFunction = new DataProcessingFunction()
       {
@@ -71,7 +71,5 @@ public class DataProcessingFunctionTest
       assertEquals(variableTwo.getDoubleValue(), 1.1, 1e-7);
       assertEquals(variableThree.getDoubleValue(), 9.23, 1e-7);
    }
-
-
 
 }

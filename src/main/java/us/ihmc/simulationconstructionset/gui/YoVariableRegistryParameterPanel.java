@@ -15,22 +15,22 @@ public class YoVariableRegistryParameterPanel extends YoVariablePanel
 {
    private static final long serialVersionUID = -4138864557620938578L;
    private final List<YoVariable<?>> parameters = new ArrayList<>();
-   
+
    public YoVariableRegistryParameterPanel(YoVariableRegistry registry, SelectedVariableHolder holder, YoVariablePanelJPopupMenu varPanelJPopupMenu)
    {
       super(registry.getName(), holder, varPanelJPopupMenu);
-      
+
       List<YoVariable<?>> registryVariables = registry.getAllVariablesInThisListOnly();
-      for(YoVariable<?> var : registryVariables)
+      for (YoVariable<?> var : registryVariables)
       {
-         if(var.isParameter())
+         if (var.isParameter())
          {
             parameters.add(var);
          }
       }
       clearAndSetUpTextFields();
    }
-   
+
    @Override
    protected YoVariable<?> getYoVariable(int index)
    {
@@ -40,7 +40,7 @@ public class YoVariableRegistryParameterPanel extends YoVariablePanel
    @Override
    protected List<YoVariable<?>> getAllYoVariablesCopy()
    {
-      return new ArrayList<YoVariable<?>> (parameters);
+      return new ArrayList<>(parameters);
    }
 
    @Override
@@ -48,13 +48,13 @@ public class YoVariableRegistryParameterPanel extends YoVariablePanel
    {
       return parameters.size();
    }
-   
+
    @Override
    public YoVariable<?> getYoVariable(String name)
    {
-      for(YoVariable<?> var : parameters)
+      for (YoVariable<?> var : parameters)
       {
-         if(var.getName().equals(name))
+         if (var.getName().equals(name))
          {
             return var;
          }

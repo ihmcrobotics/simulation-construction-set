@@ -13,7 +13,7 @@ public class ExportSnapshotAction extends AbstractAction
    private static final long serialVersionUID = 958525206323850018L;
 
    private final ExportSnapshotDialogConstructor constructor;
-   
+
    public ExportSnapshotAction(ExportSnapshotDialogConstructor constructor)
    {
       super("Export Snapshot...");
@@ -23,7 +23,7 @@ public class ExportSnapshotAction extends AbstractAction
       int shortKey = KeyEvent.VK_S;
       String longDescription = "Export snapshot to a file.";
       String shortDescription = "Export Snapshot";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 
@@ -40,6 +40,6 @@ public class ExportSnapshotAction extends AbstractAction
    @Override
    public void actionPerformed(ActionEvent actionEvent)
    {
-     constructor.constructDialog();
+      constructor.constructDialog();
    }
 }

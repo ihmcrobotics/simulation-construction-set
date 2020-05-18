@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class EntryBoxGroup
 {
    private String name;
-   private ArrayList<String> variables = new ArrayList<String>();
-   private ArrayList<String> regularExpressions = new ArrayList<String>();
+   private ArrayList<String> variables = new ArrayList<>();
+   private ArrayList<String> regularExpressions = new ArrayList<>();
 
    public EntryBoxGroup(String name)
    {
@@ -44,7 +44,6 @@ public class EntryBoxGroup
       }
    }
 
-
    public void removeEntryBoxVar(String varName)
    {
       variables.remove(varName);
@@ -67,6 +66,5 @@ public class EntryBoxGroup
 
       return ret;
    }
-
 
 }

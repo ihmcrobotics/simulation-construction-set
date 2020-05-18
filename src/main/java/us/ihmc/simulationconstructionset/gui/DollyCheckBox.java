@@ -7,7 +7,6 @@ import javax.swing.JCheckBox;
 
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 
-
 public class DollyCheckBox extends JCheckBox implements ActionListener
 {
    private static final String DOLLY = "Dolly";
@@ -17,12 +16,12 @@ public class DollyCheckBox extends JCheckBox implements ActionListener
    public DollyCheckBox(ActiveCameraHolder cameraHolder)
    {
       super(DOLLY);
-      this.setName(DOLLY);
+      setName(DOLLY);
 
       this.cameraHolder = cameraHolder;
 
       CameraPropertiesHolder camera = cameraHolder.getCameraPropertiesForActiveCamera();
-      this.setSelected(camera.isDolly());
+      setSelected(camera.isDolly());
       addActionListener(this);
    }
 
@@ -30,7 +29,7 @@ public class DollyCheckBox extends JCheckBox implements ActionListener
    public void actionPerformed(ActionEvent actionEvent)
    {
       CameraPropertiesHolder camera = cameraHolder.getCameraPropertiesForActiveCamera();
-      camera.setDolly(this.isSelected());
+      camera.setDolly(isSelected());
    }
 
    public void makeCameraConsistent()
@@ -55,7 +54,8 @@ public class DollyCheckBox extends JCheckBox implements ActionListener
          public void run()
          {
             CameraPropertiesHolder camera = cameraHolder.getCameraPropertiesForActiveCamera();
-            if (camera != null) setSelected(camera.isDolly());
+            if (camera != null)
+               setSelected(camera.isDolly());
          }
 
       });

@@ -40,7 +40,6 @@ public class GimbalJoint extends PinJoint
       joint3.physics.r_in.setZ(0.0);
    }
 
-
    @Override
    public void addJoint(Joint nextJoint)
    {
@@ -72,7 +71,7 @@ public class GimbalJoint extends PinJoint
    {
       joint3.addCameraMount(mount);
    }
-   
+
    @Override
    public void addIMUMount(IMUMount mount)
    {
@@ -142,7 +141,5 @@ public class GimbalJoint extends PinJoint
       state[4] = joint3.q.getDoubleValue();
       state[5] = joint3.qd.getDoubleValue();
    }
-
-
 
 }

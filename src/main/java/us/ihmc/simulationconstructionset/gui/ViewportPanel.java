@@ -32,8 +32,8 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
 {
    private static final long serialVersionUID = -2903057563160516887L;
    private static final boolean DEBUG_CLOSE_AND_DISPOSE = false;
-   private ArrayList<ViewportAdapterAndCameraControllerHolder> standard3DViews = new ArrayList<ViewportAdapterAndCameraControllerHolder>();
-   private ArrayList<Canvas3DPanel> canvasPanels = new ArrayList<Canvas3DPanel>();
+   private ArrayList<ViewportAdapterAndCameraControllerHolder> standard3DViews = new ArrayList<>();
+   private ArrayList<Canvas3DPanel> canvasPanels = new ArrayList<>();
    private ViewportAdapterAndCameraControllerHolder activeView;
    private CameraConfigurationList cameraConfigurationList;
    private CameraMountList cameraMountList;
@@ -44,14 +44,14 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
    private StandardGUIActions standardGUIActions;
 
    public ViewportPanel(YoVariableHolder yoVariableHolder, RunCommandsExecutor runCommandsExecutor, StandardGUIActions standardGUIActions,
-         CameraConfigurationList cameraConfigurationList, CameraMountList cameraMountList, Graphics3DAdapter graphics3DAdapater)
+                        CameraConfigurationList cameraConfigurationList, CameraMountList cameraMountList, Graphics3DAdapter graphics3DAdapater)
    {
       this.yoVariableHolder = yoVariableHolder;
       this.runCommandsExecutor = runCommandsExecutor;
       this.standardGUIActions = standardGUIActions;
       this.cameraConfigurationList = cameraConfigurationList;
       this.cameraMountList = cameraMountList;
-      this.graphics3DAdapter = graphics3DAdapater;
+      graphics3DAdapter = graphics3DAdapater;
 
    }
 
@@ -60,7 +60,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
    {
       return activeView.getCameraController();
    }
-   
+
    public void setupViews(GraphicsDevice graphicsDevice, ViewportConfiguration viewportConfig)
    {
       setupViews(graphicsDevice, viewportConfig, null);
@@ -68,26 +68,32 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
 
    public void setupViews(GraphicsDevice graphicsDevice, ViewportConfiguration viewportConfig, JFrame jFrame)
    {
-      this.removeAll();
+      removeAll();
 
       clearStandard3DViews();
       canvasPanels.clear();
 
       if (viewportConfig == null)
       {
-         this.setLayout(new GridLayout(1, 1));
+         setLayout(new GridLayout(1, 1));
 
          CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyYoVariablesHolder = new CameraTrackAndDollyYoVariablesHolder(yoVariableHolder);
 
          ViewportAdapter standard3DView = graphics3DAdapter.createNewViewport(graphicsDevice, false, false);
-         
+
          ClassicCameraController classicCameraController;
          if (jFrame != null)
-            classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView, cameraTrackAndDollyYoVariablesHolder, graphics3DAdapter, jFrame);
+            classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
+                                                                                                           cameraTrackAndDollyYoVariablesHolder,
+                                                                                                           graphics3DAdapter,
+                                                                                                           jFrame);
          else
-            classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView, cameraTrackAndDollyYoVariablesHolder, graphics3DAdapter);  
-         
-         ViewportAdapterAndCameraControllerHolder viewportAdapterAndCameraControllerHolder = new ViewportAdapterAndCameraControllerHolder(standard3DView, classicCameraController);
+            classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
+                                                                                                           cameraTrackAndDollyYoVariablesHolder,
+                                                                                                           graphics3DAdapter);
+
+         ViewportAdapterAndCameraControllerHolder viewportAdapterAndCameraControllerHolder = new ViewportAdapterAndCameraControllerHolder(standard3DView,
+                                                                                                                                          classicCameraController);
          standard3DView.setCameraController(classicCameraController);
 
          standard3DViews.add(viewportAdapterAndCameraControllerHolder);
@@ -103,22 +109,23 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
       ArrayList<ViewportPanelConfiguration> panelConfigs = viewportConfig.getPanelConfigurations();
 
       GridBagLayout gridBag = new GridBagLayout();
-      this.setLayout(gridBag);
+      setLayout(gridBag);
 
       GridBagConstraints c;
 
       for (int i = 0; i < panelConfigs.size(); i++)
       {
          c = new GridBagConstraints();
-         ViewportPanelConfiguration panelConfiguration = (ViewportPanelConfiguration) panelConfigs.get(i);
+         ViewportPanelConfiguration panelConfiguration = panelConfigs.get(i);
 
          CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyYoVariablesHolder = new CameraTrackAndDollyYoVariablesHolder(yoVariableHolder);
 
          ViewportAdapter standard3DView = graphics3DAdapter.createNewViewport(graphicsDevice, false, false);
          ClassicCameraController classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
-               cameraTrackAndDollyYoVariablesHolder, graphics3DAdapter);
+                                                                                                                                cameraTrackAndDollyYoVariablesHolder,
+                                                                                                                                graphics3DAdapter);
          ViewportAdapterAndCameraControllerHolder viewportAdapterAndCameraControllerHolder = new ViewportAdapterAndCameraControllerHolder(standard3DView,
-               classicCameraController);
+                                                                                                                                          classicCameraController);
          standard3DView.setCameraController(classicCameraController);
 
          standard3DViews.add(viewportAdapterAndCameraControllerHolder);
@@ -146,14 +153,14 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
          c.weightx = panelConfiguration.gridwidth;
          c.weighty = panelConfiguration.gridheight;
          // c.weightx = 0.5;
-         // c.weighty = 0.5; 
+         // c.weighty = 0.5;
          // c.anchor = GridBagConstraints.CENTER;
          c.fill = GridBagConstraints.BOTH;
 
          gridBag.setConstraints(panel_j, c);
-         
+
          this.add(panel_j);
-         
+
          if (i == 0)
          {
             activeView = viewportAdapterAndCameraControllerHolder;
@@ -167,133 +174,66 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
    }
 
    /*
-    * public JPanel setupViewsCaching(GraphicsDevice graphicsDevice,
-    * ViewportConfiguration viewportConfig, Locale locale, PreRenderer
-    * preRenderer, ViewportPanelUpdateBehavior viewportPanelUpdateBehavior) {
-    * JPanel panel = null;
-    * 
-    * if (viewportConfig != null) panel =
-    * viewportConfig.getCachedViewportPanel(); if (panel != null)return panel;
-    * 
-    * if (panel == null) panel = new JPanel();
-    * 
-    * // Remove all from the locale: for (Standard3DView standard3DView :
-    * standard3DViews) //++++++ { //standard3DView.detachAll();
-    * //standard3DView.detach();
-    * //++++++locale.removeBranchGraph(standard3DView); }
-    * 
-    * panel.removeAll(); //standard3DViews.clear(); clearStandard3DViews();
-    * canvasPanels.clear();
-    * 
-    * //standard3DViews = new ArrayList(); //canvasPanels = new ArrayList();
-    * 
-    * // "Force" Garbage Collection: System.gc();
-    * 
-    * if (viewportConfig == null) { panel.setLayout(new GridLayout(1, 1));
-    * Standard3DView standard3DView = new Standard3DView(graphicsDevice,
-    * navigatingCameraHolder, rob, locale, preRenderer);
+    * public JPanel setupViewsCaching(GraphicsDevice graphicsDevice, ViewportConfiguration
+    * viewportConfig, Locale locale, PreRenderer preRenderer, ViewportPanelUpdateBehavior
+    * viewportPanelUpdateBehavior) { JPanel panel = null; if (viewportConfig != null) panel =
+    * viewportConfig.getCachedViewportPanel(); if (panel != null)return panel; if (panel == null) panel
+    * = new JPanel(); // Remove all from the locale: for (Standard3DView standard3DView :
+    * standard3DViews) //++++++ { //standard3DView.detachAll(); //standard3DView.detach();
+    * //++++++locale.removeBranchGraph(standard3DView); } panel.removeAll(); //standard3DViews.clear();
+    * clearStandard3DViews(); canvasPanels.clear(); //standard3DViews = new ArrayList(); //canvasPanels
+    * = new ArrayList(); // "Force" Garbage Collection: System.gc(); if (viewportConfig == null) {
+    * panel.setLayout(new GridLayout(1, 1)); Standard3DView standard3DView = new
+    * Standard3DView(graphicsDevice, navigatingCameraHolder, rob, locale, preRenderer);
     * standard3DViews.add(standard3DView); activeView = standard3DView;
     * navigatingCameraHolder.setNavigatingCamera(activeView.getCamera());
-    * 
-    * locale.addBranchGraph(standard3DView); YoCanvas3D canvas =
-    * standard3DView.getCanvas3D();
-    * 
-    * //panel.add(canvas);
-    * 
-    * Canvas3DPanel panel_j = new Canvas3DPanel(canvas, standard3DView, this);
-    * panel.add(panel_j);
-    * 
-    * viewportPanelUpdateBehavior.attachViewportPanel(this);
-    * 
-    * 
+    * locale.addBranchGraph(standard3DView); YoCanvas3D canvas = standard3DView.getCanvas3D();
+    * //panel.add(canvas); Canvas3DPanel panel_j = new Canvas3DPanel(canvas, standard3DView, this);
+    * panel.add(panel_j); viewportPanelUpdateBehavior.attachViewportPanel(this); return panel; }
+    * //ArrayList cachedViews = viewportConfig.getCached3DViews(); // if (cachedViews != null) // { //
+    * for(int i=0; i<cachedViews.size(); i++) // { // Standard3DView cachedView = (Standard3DView)
+    * cachedViews.get(i); // locale.addBranchGraph(cachedView); // } // return; // }
+    * //CameraConfiguration[][] configs = windowConfig.getCameraLayout(); ArrayList panelConfigs =
+    * viewportConfig.getPanelConfigurations(); //activeView = null; GridBagLayout gridBag = new
+    * GridBagLayout(); GridBagConstraints c = new GridBagConstraints(); panel.setLayout(gridBag);
+    * c.fill = GridBagConstraints.BOTH; ArrayList cachedViews = viewportConfig.getCached3DViews();
+    * ArrayList cachedPanels = viewportConfig.getCachedCanvas3DPanels(); for (int i = 0; i <
+    * panelConfigs.size(); i++) { ViewportPanelConfiguration panelConfiguration =
+    * (ViewportPanelConfiguration) panelConfigs.get(i); Standard3DView standard3DView; if (cachedViews
+    * != null) standard3DView = (Standard3DView) cachedViews.get(i); else standard3DView = new
+    * Standard3DView(graphicsDevice, navigatingCameraHolder, rob, locale, preRenderer);
+    * standard3DViews.add(standard3DView); if (cachedViews == null)
+    * locale.addBranchGraph(standard3DView); //++++++ Only need to add to the locale once. Otherwise
+    * keep it there. CameraConfiguration cameraConfig = cameraConfigurationList.getCameraConfiguration
+    * (panelConfiguration.cameraName); standard3DView.setCameraConfiguration(cameraConfig,
+    * allVariables, cameraMountList); YoCanvas3D canvas = standard3DView.getCanvas3D(); Canvas3DPanel
+    * panel_j; // = new Canvas3DPanel(canvas, standard3DView, this); if (cachedPanels != null) {
+    * panel_j = (Canvas3DPanel) cachedPanels.get(i); panel_j.setCanvasAndView(canvas, standard3DView);
+    * } else panel_j = new Canvas3DPanel(canvas, standard3DView, this); canvasPanels.add(panel_j);
+    * //standard3DView.setPanel(panel_j); c.gridx = panelConfiguration.gridx; c.gridy =
+    * panelConfiguration.gridy; c.gridwidth = panelConfiguration.gridwidth; c.gridheight =
+    * panelConfiguration.gridheight; c.weightx = 0.5; //++++++ c.weighty = 0.5; c.anchor = c.CENTER;
+    * gridBag.setConstraints(panel_j, c); panel.add(panel_j); //if (activeView == null) if (i == 0) {
+    * activeView = standard3DView; navigatingCameraHolder.setNavigatingCamera(activeView.getCamera());
+    * panel_j.setActive(true); //activeView.setActive(true); } else { panel_j.setActive(false); } }
+    * viewportConfig.cache3DViews(standard3DViews); viewportConfig.cacheCanvas3DPanels(canvasPanels);
+    * viewportConfig.cacheViewportPanel(panel); viewportPanelUpdateBehavior.attachViewportPanel(this);
     * return panel; }
-    * 
-    * //ArrayList cachedViews = viewportConfig.getCached3DViews(); // if
-    * (cachedViews != null) // { // for(int i=0; i<cachedViews.size(); i++) // {
-    * // Standard3DView cachedView = (Standard3DView) cachedViews.get(i); //
-    * locale.addBranchGraph(cachedView); // } // return; // }
-    * 
-    * //CameraConfiguration[][] configs = windowConfig.getCameraLayout();
-    * 
-    * ArrayList panelConfigs = viewportConfig.getPanelConfigurations();
-    * 
-    * //activeView = null;
-    * 
-    * GridBagLayout gridBag = new GridBagLayout(); GridBagConstraints c = new
-    * GridBagConstraints(); panel.setLayout(gridBag); c.fill =
-    * GridBagConstraints.BOTH;
-    * 
-    * ArrayList cachedViews = viewportConfig.getCached3DViews(); ArrayList
-    * cachedPanels = viewportConfig.getCachedCanvas3DPanels();
-    * 
-    * for (int i = 0; i < panelConfigs.size(); i++) { ViewportPanelConfiguration
-    * panelConfiguration = (ViewportPanelConfiguration) panelConfigs.get(i);
-    * 
-    * Standard3DView standard3DView;
-    * 
-    * if (cachedViews != null) standard3DView = (Standard3DView)
-    * cachedViews.get(i); else standard3DView = new
-    * Standard3DView(graphicsDevice, navigatingCameraHolder, rob, locale,
-    * preRenderer);
-    * 
-    * standard3DViews.add(standard3DView);
-    * 
-    * if (cachedViews == null) locale.addBranchGraph(standard3DView); //++++++
-    * Only need to add to the locale once. Otherwise keep it there.
-    * CameraConfiguration cameraConfig =
-    * cameraConfigurationList.getCameraConfiguration
-    * (panelConfiguration.cameraName);
-    * 
-    * standard3DView.setCameraConfiguration(cameraConfig, allVariables,
-    * cameraMountList);
-    * 
-    * YoCanvas3D canvas = standard3DView.getCanvas3D();
-    * 
-    * Canvas3DPanel panel_j; // = new Canvas3DPanel(canvas, standard3DView,
-    * this);
-    * 
-    * if (cachedPanels != null) { panel_j = (Canvas3DPanel) cachedPanels.get(i);
-    * panel_j.setCanvasAndView(canvas, standard3DView); } else panel_j = new
-    * Canvas3DPanel(canvas, standard3DView, this);
-    * 
-    * canvasPanels.add(panel_j); //standard3DView.setPanel(panel_j);
-    * 
-    * c.gridx = panelConfiguration.gridx; c.gridy = panelConfiguration.gridy;
-    * c.gridwidth = panelConfiguration.gridwidth; c.gridheight =
-    * panelConfiguration.gridheight; c.weightx = 0.5; //++++++ c.weighty = 0.5;
-    * c.anchor = c.CENTER;
-    * 
-    * gridBag.setConstraints(panel_j, c);
-    * 
-    * panel.add(panel_j);
-    * 
-    * //if (activeView == null) if (i == 0) { activeView = standard3DView;
-    * navigatingCameraHolder.setNavigatingCamera(activeView.getCamera());
-    * 
-    * panel_j.setActive(true); //activeView.setActive(true); } else {
-    * panel_j.setActive(false); } }
-    * 
-    * viewportConfig.cache3DViews(standard3DViews);
-    * viewportConfig.cacheCanvas3DPanels(canvasPanels);
-    * 
-    * viewportConfig.cacheViewportPanel(panel);
-    * 
-    * viewportPanelUpdateBehavior.attachViewportPanel(this); return panel; }
     */
    public ViewportAdapter getActiveView()
    {
-      return this.activeView.getViewportAdapter();
+      return activeView.getViewportAdapter();
    }
 
    public void setActiveView(ViewportAdapterAndCameraControllerHolder view, Canvas3DPanel activePanel)
    {
-      if (this.activeView == view)
+      if (activeView == view)
       {
          return;
       }
 
       view.getCameraController().reset(); // Reset camera so drags are forgotten and do not move the new cameras fix/pos.
-      this.activeView = view;
+      activeView = view;
 
       for (Canvas3DPanel canvas3DPanel : canvasPanels)
       {
@@ -316,13 +256,14 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
 
    public ArrayList<ViewportAdapterAndCameraControllerHolder> getCameraAdapters()
    {
-      return this.standard3DViews;
+      return standard3DViews;
    }
 
    public void closeAndDispose()
    {
-      if (DEBUG_CLOSE_AND_DISPOSE) System.out.println("Closing and Disposing things in " + getClass().getSimpleName());
-      
+      if (DEBUG_CLOSE_AND_DISPOSE)
+         System.out.println("Closing and Disposing things in " + getClass().getSimpleName());
+
       if (standard3DViews != null)
       {
          clearStandard3DViews();
@@ -335,7 +276,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
          {
             canvas3dPanel.closeAndDispose();
          }
-         
+
          canvasPanels.clear();
          canvasPanels = null;
       }
@@ -383,7 +324,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
    public void setCameraTrackingVars(YoDouble xVar, YoDouble yVar, YoDouble zVar)
    {
       CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyVariablesHolder = (CameraTrackAndDollyYoVariablesHolder) activeView.getCameraController()
-            .getCameraTrackAndDollyVariablesHolder();
+                                                                                                                                 .getCameraTrackAndDollyVariablesHolder();
       cameraTrackAndDollyVariablesHolder.setTrackingVars(xVar, yVar, zVar);
 
       //    activeView.getCamera().setTrackingVars(xVar, yVar, zVar);
@@ -392,7 +333,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
    public void setCameraDollyVars(YoDouble xVar, YoDouble yVar, YoDouble zVar)
    {
       CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyVariablesHolder = (CameraTrackAndDollyYoVariablesHolder) activeView.getCameraController()
-            .getCameraTrackAndDollyVariablesHolder();
+                                                                                                                                 .getCameraTrackAndDollyVariablesHolder();
       cameraTrackAndDollyVariablesHolder.setDollyVars(xVar, yVar, zVar);
 
       //    activeView.getCamera().setDollyVars(xVar, yVar, zVar);
@@ -415,7 +356,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
 
    public void setCameraFix(Tuple3DBasics cameraFix)
    {
-      activeView.getCameraController().setFixPosition(cameraFix.getX(), cameraFix.getY(), cameraFix.getZ());      
+      activeView.getCameraController().setFixPosition(cameraFix.getX(), cameraFix.getY(), cameraFix.getZ());
    }
 
    public void setCameraPosition(double posX, double posY, double posZ)
@@ -425,7 +366,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
 
    public void setCameraPosition(Tuple3DBasics cameraPosition)
    {
-      activeView.getCameraController().setCameraPosition(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());      
+      activeView.getCameraController().setCameraPosition(cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ());
    }
 
    public void setCameraTracking(boolean track, boolean trackX, boolean trackY, boolean trackZ)
@@ -462,7 +403,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
    @Override
    public CaptureDevice getActiveCaptureDevice()
    {
-      return this.getActiveView().getCaptureDevice();
+      return getActiveView().getCaptureDevice();
    }
 
    public void selectActiveCanvas3D(int canvasIndex)
@@ -472,7 +413,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
          return;
       }
 
-      Canvas3DPanel canvasPanel = this.canvasPanels.get(canvasIndex);
+      Canvas3DPanel canvasPanel = canvasPanels.get(canvasIndex);
 
       setActiveView(canvasPanel.getStandard3DView(), canvasPanel);
    }
@@ -512,9 +453,9 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
                + canvasPanels.get(i).getStandard3DView().getCameraController().isDollyY() + "</Dolly Y>" + "\n<Dolly Z>"
                + canvasPanels.get(i).getStandard3DView().getCameraController().isDollyY() + "</Dolly Z>" + "\n</Dolly Booleans>";
          textToWrite += "\n</Dolly data>";
-         textToWrite += "\n <Track data> \n <Position X>" + canvasPanels.get(i).getStandard3DView().getCameraController().getTrackingXOffset()
-               + "</Position X>" + "\n <Position Y>" + canvasPanels.get(i).getStandard3DView().getCameraController().getTrackingYOffset() + "</Position Y>"
-               + "\n <Position Z>" + canvasPanels.get(i).getStandard3DView().getCameraController().getTrackingZOffset() + "</Position Z>";
+         textToWrite += "\n <Track data> \n <Position X>" + canvasPanels.get(i).getStandard3DView().getCameraController().getTrackingXOffset() + "</Position X>"
+               + "\n <Position Y>" + canvasPanels.get(i).getStandard3DView().getCameraController().getTrackingYOffset() + "</Position Y>" + "\n <Position Z>"
+               + canvasPanels.get(i).getStandard3DView().getCameraController().getTrackingZOffset() + "</Position Z>";
          textToWrite += "\n <Track Booleans>" + "\n<Track>" + canvasPanels.get(i).getStandard3DView().getCameraController().isTracking() + "</Track>"
                + "\n<Track X>" + canvasPanels.get(i).getStandard3DView().getCameraController().isTrackingX() + "</Track X>" + "\n<Track Y>"
                + canvasPanels.get(i).getStandard3DView().getCameraController().isTrackingY() + "</Track Y>" + "\n<Track Z>"
@@ -534,8 +475,8 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
                + getCameraPropertiesForActiveCamera().getDollyYOffset() + "</Position Y>" + "\n <Position Z>"
                + getCameraPropertiesForActiveCamera().getDollyZOffset() + "</Position Z>";
          textToWrite += "\n<Dolly Booleans>" + "\n<Dolly>" + getCameraPropertiesForActiveCamera().isDolly() + "</Dolly>" + "\n<Dolly X>"
-               + getCameraPropertiesForActiveCamera().isDollyX() + "</Dolly X>" + "\n<Dolly Y>" + getCameraPropertiesForActiveCamera().isDollyY()
-               + "</Dolly Y>" + "\n<Dolly Z>" + getCameraPropertiesForActiveCamera().isDollyY() + "</Dolly Z>" + "\n</Dolly Booleans>";
+               + getCameraPropertiesForActiveCamera().isDollyX() + "</Dolly X>" + "\n<Dolly Y>" + getCameraPropertiesForActiveCamera().isDollyY() + "</Dolly Y>"
+               + "\n<Dolly Z>" + getCameraPropertiesForActiveCamera().isDollyY() + "</Dolly Z>" + "\n</Dolly Booleans>";
          textToWrite += "\n</Dolly data>";
          textToWrite += "\n <Track data> \n <Position X>" + getCameraPropertiesForActiveCamera().getTrackingXOffset() + "</Position X>" + "\n <Position Y>"
                + getCameraPropertiesForActiveCamera().getTrackingYOffset() + "</Position Y>" + "\n <Position Z>"
@@ -834,8 +775,7 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
    {
       camera.setConfiguration(config, mountList);
 
-      CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyYoVariablesHolder = (CameraTrackAndDollyYoVariablesHolder) camera
-            .getCameraTrackAndDollyVariablesHolder();
+      CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyYoVariablesHolder = (CameraTrackAndDollyYoVariablesHolder) camera.getCameraTrackAndDollyVariablesHolder();
 
       YoDouble trackXVar = (YoDouble) holder.getVariable(config.getTrackXVar());
       YoDouble trackYVar = (YoDouble) holder.getVariable(config.getTrackYVar());
@@ -858,6 +798,5 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
          standardGUIActions.makeCheckBoxesConsistentWithCamera();
       }
    }
-
 
 }

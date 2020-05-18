@@ -17,12 +17,12 @@ public class SelectCameraAction extends AbstractAction
    {
       super(name);
 
-      this.cameraSelector = selector;
+      cameraSelector = selector;
       this.name = name;
 
       // this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_E));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
    }
 
    @Override

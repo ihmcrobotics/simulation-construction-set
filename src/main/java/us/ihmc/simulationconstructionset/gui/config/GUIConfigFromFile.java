@@ -8,7 +8,7 @@ public class GUIConfigFromFile
    public GUIConfigFromFile(String name, String fileURI)
    {
       this.name = name;
-      this.fileURI= fileURI;
+      this.fileURI = fileURI;
    }
 
    public void setFileName(String name)

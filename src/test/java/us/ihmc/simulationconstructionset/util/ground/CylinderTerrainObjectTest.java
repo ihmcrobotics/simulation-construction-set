@@ -1,6 +1,10 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.assertTrue;
+
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -8,49 +12,47 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 
-import static us.ihmc.robotics.Assert.*;
-
 public class CylinderTerrainObjectTest
 {
    private static final double errEpsilon = 1e-14;
    private static final double testDelta = .0001;
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testSimpleCylinder()
    {
       double height = 1.3;
       double radius = 0.2;
       RigidBodyTransform location = new RigidBodyTransform();
-      location.getTranslation().set(new Vector3D(0.0, 0.0, height/2.0));
+      location.getTranslation().set(new Vector3D(0.0, 0.0, height / 2.0));
 
       CylinderTerrainObject cylinderTerrainObject = new CylinderTerrainObject(location, height, radius, YoAppearance.Red());
-      
+
       Vector3D surfaceNormal = new Vector3D();
       double heightAt = cylinderTerrainObject.heightAndNormalAt(0.0, 0.0, 0.0, surfaceNormal);
       assertEquals(height, heightAt, 1e-7);
       EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 1.0), surfaceNormal, 1e-7);
-      
+
       heightAt = cylinderTerrainObject.heightAndNormalAt(0.0, radius - 1e-7, 0.0, surfaceNormal);
       assertEquals(height, heightAt, 1e-7);
-      
+
       heightAt = cylinderTerrainObject.heightAndNormalAt(0.0, radius + 1e-7, 0.0, surfaceNormal);
       assertEquals(0.0, heightAt, 1e-7);
-      
+
       heightAt = cylinderTerrainObject.heightAndNormalAt(radius + 1e-7, 0.0, 0.0, surfaceNormal);
       assertEquals(0.0, heightAt, 1e-7);
-      
+
       Point3D intersection = new Point3D();
-      boolean isInside = cylinderTerrainObject.checkIfInside(0.0, 0.0, height-0.01, intersection, surfaceNormal);
-      
+      boolean isInside = cylinderTerrainObject.checkIfInside(0.0, 0.0, height - 0.01, intersection, surfaceNormal);
+
       assertTrue(isInside);
-      
+
       //TODO: FIXME!!!
       EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 1.0), surfaceNormal, 1e-7);
       EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, height), intersection, 1e-7);
 
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtTranslatedRot90TallHorizontalCylinderJustInsideAndOutside()
    {
       double slopeDegrees = 0.0;
@@ -65,8 +67,12 @@ public class CylinderTerrainObjectTest
       slopeDegrees = 90.0;
       yawDegrees = 90.0;
       double tallHeight = 2 * height;
-      CylinderTerrainObject translatedRot90TallHorizontalCylinder = new CylinderTerrainObject(translatedCenter, slopeDegrees, yawDegrees, tallHeight, radius,
-                                                                       app);
+      CylinderTerrainObject translatedRot90TallHorizontalCylinder = new CylinderTerrainObject(translatedCenter,
+                                                                                              slopeDegrees,
+                                                                                              yawDegrees,
+                                                                                              tallHeight,
+                                                                                              radius,
+                                                                                              app);
 
       double expectedHeight = radius + translatedCenter.getZ();
       double expectedMiss = 0.0;
@@ -89,7 +95,7 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtRot90TallHorizontalCylinderJustInsideAndOutside()
    {
       Vector3D center = new Vector3D(0, 0, 0);
@@ -126,7 +132,7 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtTranslatedVerticalCylinderJustInside()
    {
       double slopeDegrees = 0.0;
@@ -154,7 +160,7 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtTranslatedHorizontalCylinderJustInside()
    {
       double slopeDegrees = 0.0;
@@ -169,7 +175,6 @@ public class CylinderTerrainObjectTest
       slopeDegrees = 90.0;
       CylinderTerrainObject translatedHorizontalCylinder = new CylinderTerrainObject(translatedCenter, slopeDegrees, yawDegrees, height, radius, app);
 
-
       double expectedHeight = translatedCenter.getZ() + radius;
       double[] signX = {-1, 0, 1};
 
@@ -183,7 +188,7 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtTranslatedVerticalCylinderJustOutside()
    {
       double slopeDegrees = 0.0;
@@ -209,7 +214,7 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtTranslatedHorizontalCylinderJustOutside()
    {
       double slopeDegrees = 0.0;
@@ -237,7 +242,7 @@ public class CylinderTerrainObjectTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtVerticalCylinderOutside()
    {
       Vector3D center = new Vector3D(0, 0, 0);
@@ -256,8 +261,8 @@ public class CylinderTerrainObjectTest
       assertEquals(0, verticalCylinder.heightAt(-height / 2 * 1.5, 0, 0), errEpsilon);
       assertEquals(0, verticalCylinder.heightAt(0, -height / 2 * 1.5, 0), errEpsilon);
       assertEquals(0, verticalCylinder.heightAt(0, height / 2 * 1.5, 0), errEpsilon);
-      assertEquals(0, horizontalCylinder.heightAt(height / 2 * 1.5, 0, 0), errEpsilon);    // fails with only test outside to side
-      assertEquals(0, horizontalCylinder.heightAt(-height / 2 * 1.5, 0, 0), errEpsilon);    // fails with only test outside to side
+      assertEquals(0, horizontalCylinder.heightAt(height / 2 * 1.5, 0, 0), errEpsilon); // fails with only test outside to side
+      assertEquals(0, horizontalCylinder.heightAt(-height / 2 * 1.5, 0, 0), errEpsilon); // fails with only test outside to side
       assertEquals(0, horizontalCylinder.heightAt(0, radius * 1.5, 0), errEpsilon);
       assertEquals(0, horizontalCylinder.heightAt(0, -radius * 1.5, 0), errEpsilon);
       assertEquals(height / 2.0, verticalCylinder.heightAt(0, 0, height / 2.0), errEpsilon);
@@ -275,7 +280,7 @@ public class CylinderTerrainObjectTest
       assertEquals(expectedHeightOnCircle, horizontalCylinder.heightAt(height / 4, radius / 2, radius), errEpsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtSlopedRotatedTwoSidesTop()
    {
       Vector3D center = new Vector3D(0, 0, 0);
@@ -304,7 +309,7 @@ public class CylinderTerrainObjectTest
       assertEquals(z, slopedRotatedCylinder.heightAt(x, y, z + 1), errEpsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtSlopedRotatedTwoSidesBottom()
    {
       Vector3D center = new Vector3D(0, 0, 0);
@@ -321,10 +326,9 @@ public class CylinderTerrainObjectTest
       double angleAxisFromXRadians = Math.toRadians(yawDegrees);
       CylinderTerrainObject slopedRotatedCylinder = new CylinderTerrainObject(center, slopeDegrees, yawDegrees, height, radius, app);
 
-
       double distanceAlongAxis = height / 2;
       double dCenterToContact = Math.sqrt(distanceAlongAxis * distanceAlongAxis + radius * radius);
-      double angleFromAxisToD = Math.atan(radius / distanceAlongAxis);    // Should Be 45 for expectedHeight below to work
+      double angleFromAxisToD = Math.atan(radius / distanceAlongAxis); // Should Be 45 for expectedHeight below to work
       double dHorizontal = dCenterToContact * Math.cos(angleAxisDownRadians + angleFromAxisToD);
       double dVertical = dCenterToContact * Math.sin(angleAxisDownRadians + angleFromAxisToD);
       double x = dHorizontal * Math.cos(angleAxisFromXRadians);
@@ -335,7 +339,7 @@ public class CylinderTerrainObjectTest
       assertEquals(expectedHeight, slopedRotatedCylinder.heightAt(x, y, -1), errEpsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtSlopedRotatedEndAndSideTop()
    {
       Vector3D center = new Vector3D(0, 0, 0);
@@ -363,7 +367,7 @@ public class CylinderTerrainObjectTest
       assertEquals(expectedHeight, slopedRotatedCylinder.heightAt(x, y, 2), errEpsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testHeightAtSlopedRotatedEndAndSideBottom()
    {
       Vector3D center = new Vector3D(0, 0, 0);

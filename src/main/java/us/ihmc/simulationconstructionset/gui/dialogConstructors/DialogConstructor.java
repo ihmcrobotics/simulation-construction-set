@@ -5,5 +5,5 @@ package us.ihmc.simulationconstructionset.gui.dialogConstructors;
  */
 public interface DialogConstructor
 {
-    void constructDialog();
+   void constructDialog();
 }

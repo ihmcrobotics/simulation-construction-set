@@ -38,10 +38,9 @@ public class ExportVideo implements ExportVideoCommandExecutor
    private final GUIEnablerAndDisabler guiEnablerAndDisabler;
    private final RunCommandsExecutor runCommandsExecutor;
 
-
    public ExportVideo(TimeHolder timeHolder, StandardSimulationGUI standardSimulationGUI, DataBufferCommandsExecutor dataBufferCommandsExecutor,
-         RunCommandsExecutor runCommandsExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler, ActiveCanvas3DHolder activeCanvas3DHolder,
-         SimulationSynchronizer simulationSynchronizer)
+                      RunCommandsExecutor runCommandsExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler, ActiveCanvas3DHolder activeCanvas3DHolder,
+                      SimulationSynchronizer simulationSynchronizer)
    {
       this.timeHolder = timeHolder;
       this.simulationSynchronizer = simulationSynchronizer;
@@ -56,7 +55,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
    public void createVideo(File selectedFile)
    {
       Dimension dimension = new Dimension(1280, 720); // Default to 720p
-//      Dimension dimension = new Dimension(1920, 1080); // Default to 1080p
+      //      Dimension dimension = new Dimension(1920, 1080); // Default to 1080p
 
       Boolean isSequanceSelected = false;
       double playBackRate = 1.0;
@@ -68,7 +67,8 @@ public class ExportVideo implements ExportVideoCommandExecutor
    }
 
    @Override
-   public void createVideo(CameraController cameraController, File selectedFile, Dimension dimension, Boolean isSequanceSelected, double playBackRate, double frameRate)
+   public void createVideo(CameraController cameraController, File selectedFile, Dimension dimension, Boolean isSequanceSelected, double playBackRate,
+                           double frameRate)
    {
       Graphics3DAdapter graphics3dAdapter = standardSimulationGUI.getGraphics3dAdapter();
 
@@ -89,7 +89,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
    {
       printIfDebug("Creating Video. File = " + selected);
 
-      Vector<BufferedImage> imageVector = new Vector<BufferedImage>();
+      Vector<BufferedImage> imageVector = new Vector<>();
       int currentTick = 1;
       File selectedFile = selected;
 
@@ -146,7 +146,6 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
       Graphics3DAdapter graphics3dAdapter = standardSimulationGUI.getGraphics3dAdapter();
       graphics3dAdapter.play();
-
 
       //      BufferedImage buffer = canvas3D.getBufferedImage();
 
@@ -207,7 +206,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
          settings.setBitrate(bufferedImage.getWidth() * bufferedImage.getHeight() / 100);
          settings.setUsageType(EUsageType.CAMERA_VIDEO_REAL_TIME);
          settings.setProfileIdc(EProfileIdc.PRO_HIGH);
-         
+
          movieBuilder = new MP4H264MovieBuilder(new File(file), bufferedImage.getWidth(), bufferedImage.getHeight(), (int) frameRate, settings);
 
          movieBuilder.encodeFrame(bufferedImage);
@@ -218,7 +217,6 @@ public class ExportVideo implements ExportVideoCommandExecutor
          {
             printIfDebug("ExportVideo: Capturing Frame");
 
-
             movieBuilder.encodeFrame(captureDevice.exportSnapshotAsBufferedImage());
 
             printIfDebug("Waiting For simulationSynchronizer 1");
@@ -227,7 +225,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
                printIfDebug("Done Waiting For simulationSynchronizer 1");
 
                double currentTime = timeHolder.getTime();
-               while(timeHolder.getTime() < currentTime + playBackRate/frameRate && !reachedEndPoint)
+               while (timeHolder.getTime() < currentTime + playBackRate / frameRate && !reachedEndPoint)
                {
                   reachedEndPoint = dataBufferCommandsExecutor.tick(1);
                }
@@ -240,13 +238,13 @@ public class ExportVideo implements ExportVideoCommandExecutor
             standardSimulationGUI.updateGraphs();
          }
       }
-      catch(IOException e)
+      catch (IOException e)
       {
          LogTools.error("Could not crate movie.  " + e.getMessage());
       }
       finally
       {
-         if(movieBuilder != null)
+         if (movieBuilder != null)
          {
             try
             {
@@ -271,7 +269,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
       {
       }
 
-      Vector<File> output = new Vector<File>();
+      Vector<File> output = new Vector<>();
 
       int last = 0; // This keeps track of what the previous index was to stop the playback when it starts to loop back.
       if (standardSimulationGUI == null)

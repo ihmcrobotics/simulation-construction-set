@@ -16,7 +16,6 @@ import javax.swing.SwingConstants;
 import us.ihmc.yoVariables.variable.YoEnum;
 import us.ihmc.yoVariables.variable.YoVariable;
 
-
 public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionListener
 {
    private static final int ENTRY_BOX_HEIGHT = YoEntryBox.COMPONENT_HEIGHT;
@@ -24,11 +23,11 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    private static final int MAX_TOTAL_LENGTH = YoEntryBox.MAX_COMPONENT_LENGTH;
    private static final int HORIZONTAL_ENTRYBOX_SLOP = 6;
    private static final int COMBO_BOX_MIN_LENGTH = 28;
-   
+
    private YoEnum<?> variableInThisBox;
-//   private LinkedHashMap<E, String> enumToNameMap;
-//   private LinkedHashMap<Integer, E> indexToEnumMap;
-//   private LinkedHashMap<E, Integer> enumToIndexMap;
+   //   private LinkedHashMap<E, String> enumToNameMap;
+   //   private LinkedHashMap<Integer, E> indexToEnumMap;
+   //   private LinkedHashMap<E, Integer> enumToIndexMap;
    private YoEntryBox yoEntryBox;
    private JLabel label;
    private JComboBox<String> comboBox;
@@ -44,7 +43,6 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    {
       return variableInThisBox;
    }
-
 
    @Override
    public synchronized void update(YoEntryBox yoEntryBox)
@@ -66,9 +64,8 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    @Override
    public void actionPerformed(YoEntryBox yoEntryBox, ActionEvent evt)
    {
-//      System.out.println("YoEnumEntryContainer: someone gave me an actionPerformed!");
+      //      System.out.println("YoEnumEntryContainer: someone gave me an actionPerformed!");
    }
-
 
    @Override
    public void removeVariable(YoVariable<?> variable)
@@ -80,15 +77,14 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
       label.setName(""); //YoEntryBox.DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
    }
 
-
    @Override
    public void setup(YoEntryBox yoEntryBox)
    {
       this.yoEntryBox = yoEntryBox;
       label = new JLabel(YoEntryBox.DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
-//      label.setName(YoEntryBox.DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
+      //      label.setName(YoEntryBox.DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
       label.setHorizontalAlignment(SwingConstants.RIGHT);
-      comboBox = new JComboBox<String>(new String[]{YoEntryBox.DEFAULT_UNBOUND_ENTRY_BOX_LABEL});
+      comboBox = new JComboBox<>(new String[] {YoEntryBox.DEFAULT_UNBOUND_ENTRY_BOX_LABEL});
       this.yoEntryBox = yoEntryBox;
 
       BoxLayout mgr = new BoxLayout(yoEntryBox, BoxLayout.X_AXIS);
@@ -113,17 +109,17 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
       if (variable instanceof YoEnum<?>)
       {
          YoEnum<?> yoEnum = (YoEnum<?>) variable;
-//         if (yoEnum.getEnumType() == enumType)
-//         {
-            variableInThisBox = (YoEnum<?>) yoEnum;
-            label.setText(variableInThisBox.getName());
-            labelTextLength = label.getFontMetrics(label.getFont()).stringWidth(label.getText());
-            setupComboBox();
-//         }
-//         else
-//         {
-//            throw new RuntimeException("Variable " + variable.getName() + " does not have correct enum type");
-//         }
+         //         if (yoEnum.getEnumType() == enumType)
+         //         {
+         variableInThisBox = yoEnum;
+         label.setText(variableInThisBox.getName());
+         labelTextLength = label.getFontMetrics(label.getFont()).stringWidth(label.getText());
+         setupComboBox();
+         //         }
+         //         else
+         //         {
+         //            throw new RuntimeException("Variable " + variable.getName() + " does not have correct enum type");
+         //         }
       }
       else
       {
@@ -136,16 +132,16 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
       comboBox.setVisible(false);
 
       ArrayList<String> stringCollection = new ArrayList<>();
-      stringCollection.addAll(Arrays.asList(this.variableInThisBox.getEnumValuesAsString()));
-      if(this.variableInThisBox.getAllowNullValue())
+      stringCollection.addAll(Arrays.asList(variableInThisBox.getEnumValuesAsString()));
+      if (variableInThisBox.getAllowNullValue())
       {
          stringCollection.add("null");
       }
-      
+
       calculateStringFoldingParameters(stringCollection);
       String[] stringsArray = new String[stringCollection.size()];
       stringCollection.toArray(stringsArray);
-      comboBox = new JComboBox<String>(stringsArray);
+      comboBox = new JComboBox<>(stringsArray);
 
       comboBox.setSelectedIndex(getIndexOf(variableInThisBox.getOrdinal()));
       yoEntryBox.add(comboBox);
@@ -157,7 +153,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    private void doLayout()
    {
       int desiredLabelLength = labelTextLength + HORIZONTAL_LABEL_BORDER;
-     
+
       Dimension labelDimension = new Dimension(desiredLabelLength, ENTRY_BOX_HEIGHT);
       label.setPreferredSize(labelDimension);
       int remainingSpace = MAX_TOTAL_LENGTH - desiredLabelLength;
@@ -166,7 +162,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
          desiredComboBoxLength = remainingSpace;
       Dimension comboBoxDimension = new Dimension(desiredComboBoxLength, ENTRY_BOX_HEIGHT);
       comboBox.setPreferredSize(comboBoxDimension);
-      this.yoEntryBox.setPreferredSize(new Dimension(desiredLabelLength + desiredComboBoxLength + HORIZONTAL_ENTRYBOX_SLOP, ENTRY_BOX_HEIGHT));
+      yoEntryBox.setPreferredSize(new Dimension(desiredLabelLength + desiredComboBoxLength + HORIZONTAL_ENTRYBOX_SLOP, ENTRY_BOX_HEIGHT));
    }
 
    private int calculateStringLengthInComboBox(String string)
@@ -193,7 +189,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      if(!updating)
+      if (!updating)
       {
          int selectedIndex = comboBox.getSelectedIndex();
          int ordinal = getOrdinalOf(selectedIndex);
@@ -201,32 +197,32 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
          YoEntryBox.informVariableChangedListeners(getVariable());
       }
       // System.out.println("YoEnumEntryContainer: actionPerformed ActionEvent e has source: "+e.getSource());
-//      System.out.println("YoEnumEntryContainer: Hey, I haz an actionPerformed!");
+      //      System.out.println("YoEnumEntryContainer: Hey, I haz an actionPerformed!");
 
       // modifier = 16 means mouse click generated action. Other than that is key based. enter key does not generate an action, when it really should.
    }
 
-//   private void setUpMaps(Class<E> enumType)
-//   {
-//      E[] enumConstants = enumType.getEnumConstants();
-//      enumToNameMap = new LinkedHashMap<E, String>();
-//      indexToEnumMap = new LinkedHashMap<Integer, E>();
-//      enumToIndexMap = new LinkedHashMap<E, Integer>();
-//      int i = 0;
-//      for (E enumConstant : enumConstants)
-//      {
-//         enumToNameMap.put(enumConstant, enumConstant.toString());
-//         indexToEnumMap.put(i, enumConstant);
-//         enumToIndexMap.put(enumConstant, i);
-//         i++;
-//      }
-//      if (this.variableInThisBox.getAllowNullValue())
-//      {
-//         enumToNameMap.put(null, "null");
-//         indexToEnumMap.put(i, null);
-//         enumToIndexMap.put(null, i);
-//      }
-//   }
+   //   private void setUpMaps(Class<E> enumType)
+   //   {
+   //      E[] enumConstants = enumType.getEnumConstants();
+   //      enumToNameMap = new LinkedHashMap<E, String>();
+   //      indexToEnumMap = new LinkedHashMap<Integer, E>();
+   //      enumToIndexMap = new LinkedHashMap<E, Integer>();
+   //      int i = 0;
+   //      for (E enumConstant : enumConstants)
+   //      {
+   //         enumToNameMap.put(enumConstant, enumConstant.toString());
+   //         indexToEnumMap.put(i, enumConstant);
+   //         enumToIndexMap.put(enumConstant, i);
+   //         i++;
+   //      }
+   //      if (this.variableInThisBox.getAllowNullValue())
+   //      {
+   //         enumToNameMap.put(null, "null");
+   //         indexToEnumMap.put(i, null);
+   //         enumToIndexMap.put(null, i);
+   //      }
+   //   }
 
    private int pixelLengthOfLongestComboBoxEntry = 10;
    public static final int STRING_LENGTH_CAP = 10;
@@ -246,12 +242,12 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
 
       pixelLengthOfLongestComboBoxEntry = maxSize;
    }
-   
+
    private int getOrdinalOf(int index)
    {
-      if (this.variableInThisBox.getAllowNullValue())
+      if (variableInThisBox.getAllowNullValue())
       {
-         if(index == this.variableInThisBox.getEnumSize())
+         if (index == variableInThisBox.getEnumSize())
          {
             return -1;
          }
@@ -261,11 +257,11 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
 
    private int getIndexOf(int ordinal)
    {
-      if (this.variableInThisBox.getAllowNullValue())
+      if (variableInThisBox.getAllowNullValue())
       {
-         if(ordinal == YoEnum.NULL_VALUE)
+         if (ordinal == YoEnum.NULL_VALUE)
          {
-            return this.variableInThisBox.getEnumSize();
+            return variableInThisBox.getEnumSize();
          }
       }
       return ordinal;

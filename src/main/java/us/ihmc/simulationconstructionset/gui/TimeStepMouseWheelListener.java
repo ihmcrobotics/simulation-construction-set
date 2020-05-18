@@ -5,13 +5,11 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 /**
- * @author jcarff
- * Mouse Wheel Listener for time step incrementing
+ * @author jcarff Mouse Wheel Listener for time step incrementing
  */
 public class TimeStepMouseWheelListener implements MouseWheelListener
 {
    private StandardSimulationGUI standardSimulationGUI;
-
 
    public TimeStepMouseWheelListener(StandardSimulationGUI standardSimulationGUI)
    {
@@ -19,8 +17,8 @@ public class TimeStepMouseWheelListener implements MouseWheelListener
    }
 
    /*
-    * on wheel up time step 1 forward on wheel down time step 1 back.
-    * While holding control time steps are incremented by 20.
+    * on wheel up time step 1 forward on wheel down time step 1 back. While holding control time steps
+    * are incremented by 20.
     */
    @Override
    public void mouseWheelMoved(MouseWheelEvent event)
@@ -40,7 +38,7 @@ public class TimeStepMouseWheelListener implements MouseWheelListener
             standardSimulationGUI.stepBackward();
       }
    }
-   
+
    public void closeAndDispose()
    {
       standardSimulationGUI = null;

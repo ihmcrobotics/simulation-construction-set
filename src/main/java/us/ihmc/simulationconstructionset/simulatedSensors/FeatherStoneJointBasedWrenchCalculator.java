@@ -93,6 +93,6 @@ public class FeatherStoneJointBasedWrenchCalculator implements WrenchCalculatorI
    @Override
    public void setDoWrenchCorruption(boolean value)
    {
-      this.doWrenchCorruption = value;
+      doWrenchCorruption = value;
    }
 }
