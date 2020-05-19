@@ -3,6 +3,7 @@ package us.ihmc.simulationconstructionset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.robotics.robotDescription.CameraSensorDescription;
@@ -30,24 +31,24 @@ import us.ihmc.simulationconstructionset.simulatedSensors.WrenchCalculatorInterf
 
 public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJointHolder
 {
-   private LinkedHashMap<String, Joint> jointNameMap = new LinkedHashMap<>();
-   private LinkedHashMap<JointDescription, Joint> jointDescriptionMap = new LinkedHashMap<>();
+   private final Map<String, Joint> jointNameMap = new LinkedHashMap<>();
+   private final Map<JointDescription, Joint> jointDescriptionMap = new LinkedHashMap<>();
 
-   private final LinkedHashMap<String, OneDegreeOfFreedomJoint> oneDegreeOfFreedomJoints = new LinkedHashMap<>();
+   private final Map<String, OneDegreeOfFreedomJoint> oneDegreeOfFreedomJoints = new LinkedHashMap<>();
 
-   private LinkedHashMap<String, CameraMount> cameraNameMap = new LinkedHashMap<>();
-   private LinkedHashMap<CameraSensorDescription, CameraMount> cameraDescriptionMap = new LinkedHashMap<>();
+   private final Map<String, CameraMount> cameraNameMap = new LinkedHashMap<>();
+   private final Map<CameraSensorDescription, CameraMount> cameraDescriptionMap = new LinkedHashMap<>();
 
-   private LinkedHashMap<String, LidarMount> lidarNameMap = new LinkedHashMap<>();
-   private LinkedHashMap<LidarSensorDescription, LidarMount> lidarDescriptionMap = new LinkedHashMap<>();
+   private final Map<String, LidarMount> lidarNameMap = new LinkedHashMap<>();
+   private final Map<LidarSensorDescription, LidarMount> lidarDescriptionMap = new LinkedHashMap<>();
 
-   private LinkedHashMap<String, IMUMount> imuNameMap = new LinkedHashMap<>();
-   private LinkedHashMap<IMUSensorDescription, IMUMount> imuDescriptionMap = new LinkedHashMap<>();
+   private final Map<String, IMUMount> imuNameMap = new LinkedHashMap<>();
+   private final Map<IMUSensorDescription, IMUMount> imuDescriptionMap = new LinkedHashMap<>();
 
-   private LinkedHashMap<String, JointWrenchSensor> wrenchSensorNameMap = new LinkedHashMap<>();
-   private LinkedHashMap<JointWrenchSensorDescription, JointWrenchSensor> wrenchSensorDescriptionMap = new LinkedHashMap<>();
+   private final Map<String, JointWrenchSensor> wrenchSensorNameMap = new LinkedHashMap<>();
+   private final Map<JointWrenchSensorDescription, JointWrenchSensor> wrenchSensorDescriptionMap = new LinkedHashMap<>();
 
-   private final LinkedHashMap<Joint, ArrayList<GroundContactPoint>> jointToGroundContactPointsMap = new LinkedHashMap<>();
+   private final Map<Joint, ArrayList<GroundContactPoint>> jointToGroundContactPointsMap = new LinkedHashMap<>();
 
    public RobotFromDescription(RobotDescription description)
    {
@@ -58,8 +59,6 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
    {
       super(description.getName());
       constructRobotFromDescription(description, enableDamping, enableJointTorqueAndVelocityLimits);
-
-      //      System.out.println(this);
    }
 
    @Override
@@ -121,7 +120,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void constructRobotFromDescription(RobotDescription description, boolean enableDamping, boolean enableJointTorqueAndVelocityLimits)
    {
-      ArrayList<JointDescription> rootJointDescriptions = description.getRootJoints();
+      List<JointDescription> rootJointDescriptions = description.getRootJoints();
 
       for (JointDescription rootJointDescription : rootJointDescriptions)
       {
@@ -153,7 +152,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
       //addForceSensors(jointDescription, joint);
 
       // Iterate over the children
-      ArrayList<JointDescription> childrenJoints = jointDescription.getChildrenJoints();
+      List<JointDescription> childrenJoints = jointDescription.getChildrenJoints();
       for (JointDescription childJointDescription : childrenJoints)
       {
          Joint childJoint = constructJointRecursively(childJointDescription, enableDamping, enableJointTorqueAndVelocityLimits);
@@ -175,7 +174,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
    {
       Joint joint = jointNameMap.get(jointDescription.getName());
 
-      ArrayList<ForceSensorDescription> forceSensorDescriptions = jointDescription.getForceSensors();
+      List<ForceSensorDescription> forceSensorDescriptions = jointDescription.getForceSensors();
 
       for (ForceSensorDescription forceSensorDescription : forceSensorDescriptions)
       {
@@ -216,7 +215,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
          joint.addForceSensor(wrenchCalculator);
       }
 
-      ArrayList<JointDescription> childrenJoints = jointDescription.getChildrenJoints();
+      List<JointDescription> childrenJoints = jointDescription.getChildrenJoints();
 
       for (JointDescription childJointDescription : childrenJoints)
          addForceSensorRecursively(childJointDescription);
@@ -243,7 +242,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addLidarMounts(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<LidarSensorDescription> lidarSensorDescriptions = jointDescription.getLidarSensors();
+      List<LidarSensorDescription> lidarSensorDescriptions = jointDescription.getLidarSensors();
 
       for (LidarSensorDescription lidarSensorDescription : lidarSensorDescriptions)
       {
@@ -261,7 +260,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addCameraMounts(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<CameraSensorDescription> cameraSensorDescriptions = jointDescription.getCameraSensors();
+      List<CameraSensorDescription> cameraSensorDescriptions = jointDescription.getCameraSensors();
       for (CameraSensorDescription cameraSensorDescription : cameraSensorDescriptions)
       {
          CameraMount cameraMount = new CameraMount(cameraSensorDescription.getName(),
@@ -282,7 +281,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addIMUMounts(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<IMUSensorDescription> imuSensorDescriptions = jointDescription.getIMUSensors();
+      List<IMUSensorDescription> imuSensorDescriptions = jointDescription.getIMUSensors();
       for (IMUSensorDescription imuSensorDescription : imuSensorDescriptions)
       {
          IMUMount imuMount = new IMUMount(imuSensorDescription.getName(), imuSensorDescription.getTransformToJoint(), this);
@@ -295,7 +294,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addJointWrenchSensors(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<JointWrenchSensorDescription> jointWrenchSensorDescriptions = jointDescription.getWrenchSensors();
+      List<JointWrenchSensorDescription> jointWrenchSensorDescriptions = jointDescription.getWrenchSensors();
       for (JointWrenchSensorDescription jointWrenchSensorDescription : jointWrenchSensorDescriptions)
       {
          JointWrenchSensor jointWrenchSensor = new JointWrenchSensor(jointWrenchSensorDescription.getName(),
@@ -310,7 +309,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addForceSensors(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<ForceSensorDescription> forceSensorDescriptions = jointDescription.getForceSensors();
+      List<ForceSensorDescription> forceSensorDescriptions = jointDescription.getForceSensors();
 
       for (ForceSensorDescription forceSensorDescription : forceSensorDescriptions)
       {
@@ -347,7 +346,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addGroundContactPoints(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<GroundContactPointDescription> groundContactPointDescriptions = jointDescription.getGroundContactPoints();
+      List<GroundContactPointDescription> groundContactPointDescriptions = jointDescription.getGroundContactPoints();
 
       for (GroundContactPointDescription groundContactPointDescription : groundContactPointDescriptions)
       {
@@ -366,7 +365,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addExternalForcePoints(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<ExternalForcePointDescription> ExternalForcePointDescriptions = jointDescription.getExternalForcePoints();
+      List<ExternalForcePointDescription> ExternalForcePointDescriptions = jointDescription.getExternalForcePoints();
 
       for (ExternalForcePointDescription ExternalForcePointDescription : ExternalForcePointDescriptions)
       {
@@ -379,7 +378,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void addKinematicPoints(JointDescription jointDescription, Joint joint)
    {
-      ArrayList<KinematicPointDescription> KinematicPointDescriptions = jointDescription.getKinematicPoints();
+      List<KinematicPointDescription> KinematicPointDescriptions = jointDescription.getKinematicPoints();
 
       for (KinematicPointDescription KinematicPointDescription : KinematicPointDescriptions)
       {
@@ -509,7 +508,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
       LinkGraphicsDescription linkGraphics = linkDescription.getLinkGraphics();
       link.setLinkGraphics(linkGraphics);
 
-      ArrayList<CollisionMeshDescription> collisonMeshDescriptions = linkDescription.getCollisionMeshes();
+      List<CollisionMeshDescription> collisonMeshDescriptions = linkDescription.getCollisionMeshes();
 
       for (int i = 0; i < collisonMeshDescriptions.size(); i++)
       {
