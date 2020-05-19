@@ -273,11 +273,6 @@ public class KinematicPoint implements java.io.Serializable
       velocityInWorld.set(velocity);
    }
 
-   public Vector3DReadOnly getAngularVelocity()
-   {
-      return angularVelocityInWorld;
-   }
-
    public void getAngularVelocity(Vector3DBasics angularVelocityInWorldToPack)
    {
       angularVelocityInWorldToPack.set(angularVelocityInWorld);
