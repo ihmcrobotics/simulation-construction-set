@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.robotics.robotDescription.CameraSensorDescription;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
 import us.ihmc.robotics.robotDescription.ExternalForcePointDescription;
@@ -20,6 +23,7 @@ import us.ihmc.robotics.robotDescription.KinematicPointDescription;
 import us.ihmc.robotics.robotDescription.LidarSensorDescription;
 import us.ihmc.robotics.robotDescription.LinkDescription;
 import us.ihmc.robotics.robotDescription.LinkGraphicsDescription;
+import us.ihmc.robotics.robotDescription.LoopClosureConstraintDescription;
 import us.ihmc.robotics.robotDescription.PinJointDescription;
 import us.ihmc.robotics.robotDescription.RobotDescription;
 import us.ihmc.robotics.robotDescription.SliderJointDescription;
@@ -33,6 +37,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 {
    private final Map<String, Joint> jointNameMap = new LinkedHashMap<>();
    private final Map<JointDescription, Joint> jointDescriptionMap = new LinkedHashMap<>();
+   private final Map<LinkDescription, Link> linkDescriptionMap = new LinkedHashMap<>();
 
    private final Map<String, OneDegreeOfFreedomJoint> oneDegreeOfFreedomJoints = new LinkedHashMap<>();
 
@@ -130,6 +135,11 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
       for (JointDescription rootJointDescription : rootJointDescriptions)
       {
+         addLoopClosureConstraintsRecursively(rootJointDescription);
+      }
+
+      for (JointDescription rootJointDescription : rootJointDescriptions)
+      {
          addForceSensorRecursively(rootJointDescription);
       }
    }
@@ -161,6 +171,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
       jointNameMap.put(joint.getName(), joint);
       jointDescriptionMap.put(jointDescription, joint);
+      linkDescriptionMap.put(jointDescription.getLink(), joint.getLink());
 
       if (joint instanceof OneDegreeOfFreedomJoint)
       {
@@ -219,6 +230,39 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
       for (JointDescription childJointDescription : childrenJoints)
          addForceSensorRecursively(childJointDescription);
+   }
+
+   private void addLoopClosureConstraintsRecursively(JointDescription jointDescription)
+   {
+      Joint joint = jointNameMap.get(jointDescription.getName());
+
+      List<LoopClosureConstraintDescription> constraintDescriptions = jointDescription.getChildrenConstraintDescriptions();
+
+      for (LoopClosureConstraintDescription constraintDescription : constraintDescriptions)
+      {
+         String name = constraintDescription.getName();
+         Tuple3DReadOnly offsetFromParentJoint = constraintDescription.getOffsetFromParentJoint();
+         Tuple3DReadOnly offsetFromLinkParentJoint = constraintDescription.getOffsetFromLinkParentJoint();
+         Matrix3DReadOnly constraintForceSubSpace = constraintDescription.getConstraintForceSubSpace();
+         Matrix3DReadOnly constraintMomentSubSpace = constraintDescription.getConstraintMomentSubSpace();
+         LoopClosureSoftConstraint constraint = new LoopClosureSoftConstraint(name,
+                                                                              offsetFromParentJoint,
+                                                                              offsetFromLinkParentJoint,
+                                                                              this,
+                                                                              constraintForceSubSpace,
+                                                                              constraintMomentSubSpace);
+         constraint.setGains(constraintDescription.getProportionalGains(), constraintDescription.getDerivativeGains());
+
+         joint.addLoopClosureConstraint(constraint);
+         Link link = linkDescriptionMap.get(constraintDescription.getLink());
+         Objects.requireNonNull(link, "Could not find link: " + constraintDescription.getLink().getName());
+         constraint.setLink(link);
+      }
+
+      for (JointDescription childJointDescription : jointDescription.getChildrenJoints())
+      {
+         addLoopClosureConstraintsRecursively(childJointDescription);
+      }
    }
 
    private void addExternalForcePointsFromCollisionMesh(JointDescription jointDescription, Joint joint)
