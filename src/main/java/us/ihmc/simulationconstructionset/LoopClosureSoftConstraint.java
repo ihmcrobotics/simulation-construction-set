@@ -6,6 +6,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVector3D;
 
 /**
@@ -24,6 +25,8 @@ public class LoopClosureSoftConstraint
    private final YoVector3D derivativeGains;
    private final ExternalForcePoint constraintA;
    private final ExternalForcePoint constraintB;
+   private final YoDouble positionErrorMagnitude;
+   private final YoDouble rotationErrorMagnitude;
 
    private final Vector3D offsetFromParentJoint = new Vector3D();
    private final Vector3D offsetFromLinkParentJoint = new Vector3D();
@@ -106,6 +109,8 @@ public class LoopClosureSoftConstraint
       derivativeGains = new YoVector3D(name + "DerivativeGain", registry);
       constraintA = new ExternalForcePoint(name + "A", offsetFromParentJoint, robot);
       constraintB = new ExternalForcePoint(name + "B", offsetFromLinkParentJoint, robot);
+      positionErrorMagnitude = new YoDouble(name + "PositionErrorMagnitude", registry);
+      rotationErrorMagnitude = new YoDouble(name + "RotationErrorMagnitude", registry);
    }
 
    public void setGains(double proportionalGain, double derivativeGain)
@@ -146,22 +151,29 @@ public class LoopClosureSoftConstraint
       positionError.sub(constraintB.getYoPosition(), constraintA.getYoPosition());
       // Position error in A's local coordinates.
       parentJoint.transformToNext.inverseTransform(positionError);
+      // Applying the sub-space on the error so the visualization is accurate, i.e. doesn't incorporate error that does not matter.
+      constraintForceSubSpace.transform(positionError);
+      positionErrorMagnitude.set(positionError.length());
 
       constraintA.getParentJoint().getRotationToWorld(quaternionA);
       constraintB.getParentJoint().getRotationToWorld(quaternionB);
       // Rotation error in A's local coordinates.
       quaternionDifference.difference(quaternionA, quaternionB); // This the orientation from B to A
       quaternionDifference.getRotationVector(rotationError);
+      constraintMomentSubSpace.transform(rotationError);
+      rotationErrorMagnitude.set(rotationError.length());
 
       // Linear velocity error in world
       linearVelocityError.sub(constraintB.getYoVelocity(), constraintA.getYoVelocity());
       // Linear velocity error in A's local coordinates.
       parentJoint.transformToNext.inverseTransform(linearVelocityError);
+      constraintForceSubSpace.transform(linearVelocityError);
 
       // Angular velocity in world
       angularVelocityError.sub(constraintB.getYoAngularVelocity(), constraintA.getYoAngularVelocity());
       // Angular velocity error in A's local coordinates.
       parentJoint.transformToNext.inverseTransform(angularVelocityError);
+      constraintMomentSubSpace.transform(angularVelocityError);
 
       positionError.scale(proportionalGains.getX(), proportionalGains.getY(), proportionalGains.getZ());
       rotationError.scale(proportionalGains.getX(), proportionalGains.getY(), proportionalGains.getZ());
@@ -170,9 +182,6 @@ public class LoopClosureSoftConstraint
 
       forceA.add(positionError, linearVelocityError);
       momentA.add(rotationError, angularVelocityError);
-
-      constraintForceSubSpace.transform(forceA);
-      constraintMomentSubSpace.transform(momentA);
 
       // Need to switch back to world before applying these.
       parentJoint.transformToNext.transform(forceA);
