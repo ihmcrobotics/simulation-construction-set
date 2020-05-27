@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.simulationconstructionset.Robot;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
 
 // Same as LinearStickSlipGroundContactModel, but if you use these constructors, it disables slipping.
 public class LinearGroundContactModel extends LinearStickSlipGroundContactModel

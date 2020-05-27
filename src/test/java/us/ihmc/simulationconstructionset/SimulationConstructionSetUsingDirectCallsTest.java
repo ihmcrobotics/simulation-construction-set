@@ -1,10 +1,38 @@
 package us.ihmc.simulationconstructionset;
 
-import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.*;
+import static us.ihmc.robotics.Assert.assertArrayEquals;
+import static us.ihmc.robotics.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.assertFalse;
+import static us.ihmc.robotics.Assert.assertNotNull;
+import static us.ihmc.robotics.Assert.assertTrue;
 
-import us.ihmc.commons.ContinuousIntegrationTools;
+import java.awt.AWTException;
+import java.awt.Button;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+
+import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.structure.Graphics3DNode;
@@ -19,10 +47,19 @@ import us.ihmc.jMonkeyEngineToolkit.camera.ClassicCameraController;
 import us.ihmc.jMonkeyEngineToolkit.jme.JMEGraphics3DAdapter;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.graphics.GraphicsDynamicGraphicsObject;
-import us.ihmc.simulationconstructionset.gui.*;
+import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
+import us.ihmc.simulationconstructionset.gui.StandardGUIActions;
+import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
+import us.ihmc.simulationconstructionset.gui.ViewportWindow;
+import us.ihmc.simulationconstructionset.gui.YoGraphicMenuManager;
 import us.ihmc.simulationconstructionset.gui.camera.CameraTrackAndDollyYoVariablesHolder;
 import us.ihmc.simulationconstructionset.gui.config.GraphGroupList;
-import us.ihmc.simulationconstructionset.physics.*;
+import us.ihmc.simulationconstructionset.physics.CollisionArbiter;
+import us.ihmc.simulationconstructionset.physics.CollisionHandler;
+import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
+import us.ihmc.simulationconstructionset.physics.ScsCollisionConfigure;
+import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
+import us.ihmc.simulationconstructionset.physics.ScsPhysics;
 import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionResult;
 import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionHandler;
 import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisualizer;
@@ -36,15 +73,6 @@ import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.time.Duration;
-import java.util.ArrayList;
-
-import static us.ihmc.robotics.Assert.*;
 
 @Tag("gui")
 public class SimulationConstructionSetUsingDirectCallsTest
@@ -168,14 +196,15 @@ public class SimulationConstructionSetUsingDirectCallsTest
    {
       if (System.getProperty("java.vendor").toLowerCase().contains("oracle"))
       {
-         FailOnThreadViolationRepaintManager.install();  // does not work on OpenJDK
+         FailOnThreadViolationRepaintManager.install(); // does not work on OpenJDK
       }
    }
 
    @BeforeEach
    public void createAndStartSCSWithRobot()
    {
-      Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () -> {
+      Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () ->
+      {
          simpleRegistryNameSpace = new NameSpace(rootRegistryName + "." + simpleRegistryName);
          simpleRegistry = new YoVariableRegistry(simpleRegistryName);
          dummyRegistry = new YoVariableRegistry("dummyRegistry");
@@ -183,7 +212,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
          staticLinkGraphics = staticLink.getLinkGraphics();
          graphics3DNodeType = Graphics3DNodeType.GROUND;
          simpleExternalForcePoint = new ExternalForcePoint("simpleExternalForcePoint", dummyRegistry);
-         yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject", simpleExternalForcePoint.getYoPosition(), simpleExternalForcePoint.getYoForce(), 1.0 / 50.0);
+         yoGraphic = new YoGraphicVector("simpleDynamicGraphicObject",
+                                         simpleExternalForcePoint.getYoPosition(),
+                                         simpleExternalForcePoint.getYoForce(),
+                                         1.0 / 50.0);
          exitActionListenerHasBeenNotified = new YoBoolean("exitActionListenerHasBeenNotified", dummyRegistry);
          simulationRewoundListenerHasBeenNotified = new YoBoolean("simulationRewoundListenerHasBeenNotified", dummyRegistry);
          simulationDoneListenerHasBeenNotified = new YoBoolean("simulationDoneListenerHasBeenNotified", dummyRegistry);
@@ -238,7 +270,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       simpleScsPhysics = null;
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testSimulationConstructionSetMiscellaneous() throws AWTException
    {
       Robot[] robotFromSCS = scs.getRobots();
@@ -283,7 +315,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       String runningNameFromSCS = scs.getRunningName();
       assertEquals(runningName, runningNameFromSCS);
 
-      String scsVersion = scs.getVersion();
+      String scsVersion = SimulationConstructionSet.getVersion();
       assertEquals(SCS_VERSION, scsVersion);
 
       scs.disableSystemExit();
@@ -301,7 +333,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(simpleScsPhysics, scsPhysicsFromSCS);
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testSimulationManagement()
    {
       double startTime = scs.getTime();
@@ -379,7 +411,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    @Disabled // Only run this one locally since it doesn't work on Bamboo on Linux necessarily.
 
-   @Test// timeout = 300000
+   @Test // timeout = 300000
    public void testFrameMethodsThatOnlyWorkOnSomeOperatingSystems()
    {
       scs.setFrameSize(dimension);
@@ -415,7 +447,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(Frame.MAXIMIZED_BOTH, frameStateFromSCS2, epsilon);
    }
 
-   @Test// timeout = 64000
+   @Test // timeout = 64000
    public void testFrameMethods()
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () ->
@@ -472,7 +504,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       });
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testCameraMethods()
    {
       scs.setCameraTracking(true, false, false, false);
@@ -615,7 +647,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.setIndex(keyPoint);
       scs.addCameraKey();
       scs.removeCameraKey();
-      ArrayList<Integer> keyPointFromSCS2 = scs.getCameraKeyPoints();
+      List<Integer> keyPointFromSCS2 = scs.getCameraKeyPoints();
       assertEquals(0, keyPointFromSCS2.size(), epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
@@ -638,7 +670,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertBooleansAreOpposite(initialCameraKeyModeStatus, finalCameraKeyModeStatus);
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void test3DGraphicsMethods()
    {
       scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
@@ -669,7 +701,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       boolean isGroundVisibleFromSCS2 = stateIfTerrainIsVisible(scs);
       assertTrue(isGroundVisibleFromSCS2);
 
-      ArrayList<YoGraphicsListRegistry> yoGraphicListRegistriesFromSCS = scs.getYoGraphicsListRegistries();
+      List<YoGraphicsListRegistry> yoGraphicListRegistriesFromSCS = scs.getYoGraphicsListRegistries();
       assertArrayOfObjectsContainsTheObject(yoGraphicListRegistriesFromSCS, yoGraphicsListRegistry);
 
       scs.setYoGraphicsListVisible(yoGraphicsListName, true);
@@ -700,16 +732,15 @@ public class SimulationConstructionSetUsingDirectCallsTest
    }
 
    /**
-    * I spent some time on this, but couldn't figure out what was wrong. There's a lot
-    * going on and I'm not sure what's even important to test here. So I'm gonna ignore
-    * it for now. - @dcalvert
+    * I spent some time on this, but couldn't figure out what was wrong. There's a lot going on and I'm
+    * not sure what's even important to test here. So I'm gonna ignore it for now. - @dcalvert
     */
    @Disabled
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testGetVariableMethods() throws AWTException
    {
-      ArrayList<YoVariable<?>> allVariablesFromRobot = simpleRobot.getAllVariables();
-      ArrayList<YoVariable<?>> allVariablesFromSCS = scs.getAllVariables();
+      List<YoVariable<?>> allVariablesFromRobot = simpleRobot.getAllVariables();
+      List<YoVariable<?>> allVariablesFromSCS = scs.getAllVariables();
       assertEquals(allVariablesFromRobot, allVariablesFromSCS);
 
       int allVariablesArrayFromRobot = simpleRobot.getAllVariablesArray().length;
@@ -724,16 +755,16 @@ public class SimulationConstructionSetUsingDirectCallsTest
       YoVariable<?> yoVariableFromSCS2 = scs.getVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       assertEquals(yoVariableFromRobot, yoVariableFromSCS2);
 
-      ArrayList<YoVariable<?>> yoVariableArrayFromRobot = simpleRobot.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
-      ArrayList<YoVariable<?>> yoVariableArrayFromSCS = scs.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableArrayFromRobot = simpleRobot.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableArrayFromSCS = scs.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       assertEquals(yoVariableArrayFromRobot, yoVariableArrayFromSCS);
 
-      ArrayList<YoVariable<?>> yoVariableFromRobot2 = simpleRobot.getVariables(simpleRobotFirstVariableName);
-      ArrayList<YoVariable<?>> yoVariableFromSCS3 = scs.getVariables(simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableFromRobot2 = simpleRobot.getVariables(simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableFromSCS3 = scs.getVariables(simpleRobotFirstVariableName);
       assertEquals(yoVariableFromRobot2, yoVariableFromSCS3);
 
-      ArrayList<YoVariable<?>> yoVariableFromRobot3 = simpleRobot.getVariables(simpleRobotRegistryNameSpace);
-      ArrayList<YoVariable<?>> yoVariableFromSCS4 = scs.getVariables(simpleRobotRegistryNameSpace);
+      List<YoVariable<?>> yoVariableFromRobot3 = simpleRobot.getVariables(simpleRobotRegistryNameSpace);
+      List<YoVariable<?>> yoVariableFromSCS4 = scs.getVariables(simpleRobotRegistryNameSpace);
       assertEquals(yoVariableFromRobot3, yoVariableFromSCS4);
 
       boolean hasUniqueVariableRobot = simpleRobot.hasUniqueVariable(simpleRobotFirstVariableName);
@@ -744,25 +775,25 @@ public class SimulationConstructionSetUsingDirectCallsTest
       boolean hasUniqueVariableSCS2 = scs.hasUniqueVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       assertEquals(hasUniqueVariableRobot2, hasUniqueVariableSCS2);
 
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingRobot = getSimpleRobotVariablesThatContain(searchString, false, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingSCS = scs.getVariablesThatContain(searchString);
+      List<YoVariable<?>> arrayOfVariablesContainingRobot = getSimpleRobotVariablesThatContain(searchString, false, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesContainingSCS = scs.getVariablesThatContain(searchString);
       assertEquals(arrayOfVariablesContainingRobot, arrayOfVariablesContainingSCS);
 
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingRobot2 = getSimpleRobotVariablesThatContain(searchString, true, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingSCS2 = scs.getVariablesThatContain(searchString, true);
+      List<YoVariable<?>> arrayOfVariablesContainingRobot2 = getSimpleRobotVariablesThatContain(searchString, true, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesContainingSCS2 = scs.getVariablesThatContain(searchString, true);
       assertEquals(arrayOfVariablesContainingRobot2, arrayOfVariablesContainingSCS2);
 
-      ArrayList<YoVariable<?>> arrayOfVariablesStartingRobot = getSimpleRobotVariablesThatStartWith(searchStringStart, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesStartingSCS = scs.getVariablesThatStartWith(searchStringStart);
+      List<YoVariable<?>> arrayOfVariablesStartingRobot = getSimpleRobotVariablesThatStartWith(searchStringStart, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesStartingSCS = scs.getVariablesThatStartWith(searchStringStart);
       assertEquals(arrayOfVariablesStartingRobot, arrayOfVariablesStartingSCS);
 
       String[] varNames = getVariableNamesGivenArrayListOfYoVariables(arrayOfVariablesContainingRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesRegExprRobot = getSimpleRobotRegExpVariables(varNames, regularExpressions, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesRegExprSCS = scs.getVars(varNames, regularExpressions);
+      List<YoVariable<?>> arrayOfVariablesRegExprRobot = getSimpleRobotRegExpVariables(varNames, regularExpressions, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesRegExprSCS = scs.getVars(varNames, regularExpressions);
       assertEquals(arrayOfVariablesRegExprRobot, arrayOfVariablesRegExprSCS);
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testTimingMethods() throws AWTException
    {
       scs.setDT(simulateDT, recordFrequency);
@@ -790,7 +821,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(Math.PI, timeFromSCS, epsilon);
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testSimulationTickControl()
    {
       scs.setIndex(index);
@@ -933,15 +964,19 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(keyPoint - 1, currentIndexFromSCS6, epsilon);
    }
 
-   @Test// timeout = 43000
+   @Test // timeout = 43000
    public void testVariablesMethods()
    {
       addDoubleYoVariablesInSCSRegistry(cameraDollyXYZVarNames, cameraDollyXYZVarValues, scs);
       YoVariableList yoVariableList = createVarListOfDoubleYoVariableWithDummyRegistry(variableGroup1, variableGroup1Values);
-      YoVariableList[] yoVariableLists = createTwoVarListOfDoubleYoVariablesWithDummyRegistry(variableGroup2, variableGroup2Values, variableGroup3,
+      YoVariableList[] yoVariableLists = createTwoVarListOfDoubleYoVariablesWithDummyRegistry(variableGroup2,
+                                                                                              variableGroup2Values,
+                                                                                              variableGroup3,
                                                                                               variableGroup3Values);
-      ArrayList<YoVariableList> yoVariableArrayLists = createArrayListOfDoubleYoVariableWithDummyRegistry(variableGroup4, variableGroup4Values, variableGroup5,
-                                                                                                          variableGroup5Values);
+      List<YoVariableList> yoVariableArrayLists = createArrayListOfDoubleYoVariableWithDummyRegistry(variableGroup4,
+                                                                                                     variableGroup4Values,
+                                                                                                     variableGroup5,
+                                                                                                     variableGroup5Values);
 
       scs.setupEntryBox(simpleRobotFirstVariableName);
       ThreadTools.sleep(THREAD_SLEEP_TIME);
@@ -987,7 +1022,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertYoVariableListContainsArrayListOfVariables(yoVariableListFromSCS3, yoVariableArrayLists);
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testGroupMethods()
    {
       addDoubleYoVariablesInSCSRegistry(cameraDollyXYZVarNames, cameraDollyXYZVarValues, scs);
@@ -1034,7 +1069,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertNotNull(extraPanelConfigurationPanelFromSCS);
    }
 
-   @Test// timeout = 43000
+   @Test // timeout = 43000
    public void testSimulationListeners()
    {
       SimulationDoneListener simulationDoneListener = createSimulationDoneListener();
@@ -1049,7 +1084,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.setSimulateDoneCriterion(simulationDoneCriterion);
       scs.registerToggleKeyPointModeCommandListener(toggleKeyPointModeCommandListener);
 
-      ArrayList<PlayCycleListener> playCycleListenersFromSCS = scs.getPlayCycleListeners();
+      List<PlayCycleListener> playCycleListenersFromSCS = scs.getPlayCycleListeners();
       assertArrayOfObjectsContainsTheObject(playCycleListenersFromSCS, playCycleListener);
 
       simulationDoneListenerHasBeenNotified.set(false);
@@ -1088,7 +1123,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertTrue(toggleKeyPointModeCommandListenerHasBeenCalled.getBooleanValue());
    }
 
-   @Test// timeout = 48000
+   @Test // timeout = 48000
    public void testDataExporting()
    {
       simulateForTime(scs, simulateTime);
@@ -1204,7 +1239,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private void assertIfGUIComponentsAreDisableOrEnabled(SimulationConstructionSet scs, boolean assertAreEnabled)
    {
       StandardGUIActions standardGUIActions = scs.getStandardGUIActions();
-      ArrayList<AbstractAction> guiActions = standardGUIActions.getGuiActions();
+      List<AbstractAction> guiActions = standardGUIActions.getGuiActions();
       for (int i = 0; i < guiActions.size(); i++)
       {
          AbstractAction guiAction = guiActions.get(i);
@@ -1350,7 +1385,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    //      return arrayListOfCollisionGroup;
    //   }
 
-   private <T> void assertArrayOfObjectsContainsTheArrayOfObject(ArrayList<T> mainArrayList, ArrayList<T> arrayList)
+   private <T> void assertArrayOfObjectsContainsTheArrayOfObject(List<T> mainArrayList, List<T> arrayList)
    {
       int numberOfElements = arrayList.size();
 
@@ -1360,7 +1395,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       }
    }
 
-   private <T> void assertArrayOfObjectsContainsTheObject(ArrayList<T> arrayList, T object)
+   private <T> void assertArrayOfObjectsContainsTheObject(List<T> arrayList, T object)
    {
       int numberOfElements = arrayList.size();
       boolean ret = false;
@@ -1373,7 +1408,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertTrue(ret);
    }
 
-   private void assertYoVariableListContainsArrayListOfVariables(YoVariableList yoVariableList, ArrayList<YoVariableList> arrayLists)
+   private void assertYoVariableListContainsArrayListOfVariables(YoVariableList yoVariableList, List<YoVariableList> arrayLists)
    {
       int numberOfList = arrayLists.size();
 
@@ -1402,10 +1437,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
       }
    }
 
-   private ArrayList<YoVariableList> createArrayListOfDoubleYoVariableWithDummyRegistry(String[] variableNames1, double[] varValues1, String[] variableNames2,
-                                                                                        double[] varValues2)
+   private List<YoVariableList> createArrayListOfDoubleYoVariableWithDummyRegistry(String[] variableNames1, double[] varValues1, String[] variableNames2,
+                                                                                   double[] varValues2)
    {
-      ArrayList<YoVariableList> arrayLists = new ArrayList<YoVariableList>();
+      List<YoVariableList> arrayLists = new ArrayList<>();
       YoVariableList[] yoVariableList = createTwoVarListOfDoubleYoVariablesWithDummyRegistry(variableNames1, varValues1, variableNames2, varValues2);
 
       for (int i = 0; i < yoVariableList.length; i++)
@@ -2047,10 +2082,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.setOutPoint();
    }
 
-   private ArrayList<YoVariable<?>> getSimpleRobotVariablesThatContain(String searchString, boolean caseSensitive, Robot robotModel)
+   private List<YoVariable<?>> getSimpleRobotVariablesThatContain(String searchString, boolean caseSensitive, Robot robotModel)
    {
-      ArrayList<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
-      ArrayList<YoVariable<?>> ret = null;
+      List<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
+      List<YoVariable<?>> ret = null;
 
       if (currentlyMatched != null)
       {
@@ -2067,7 +2102,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
             {
                if (ret == null)
                {
-                  ret = new ArrayList<YoVariable<?>>();
+                  ret = new ArrayList<>();
                }
 
                ret.add(entry);
@@ -2078,10 +2113,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return ret;
    }
 
-   private ArrayList<YoVariable<?>> getSimpleRobotVariablesThatStartWith(String searchString, Robot robotModel)
+   private List<YoVariable<?>> getSimpleRobotVariablesThatStartWith(String searchString, Robot robotModel)
    {
-      ArrayList<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
-      ArrayList<YoVariable<?>> ret = null;
+      List<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
+      List<YoVariable<?>> ret = null;
 
       for (int i = 0; i < currentlyMatched.size(); i++)
       {
@@ -2091,7 +2126,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
          {
             if (ret == null)
             {
-               ret = new ArrayList<YoVariable<?>>();
+               ret = new ArrayList<>();
             }
 
             ret.add(Variable);
@@ -2101,7 +2136,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return ret;
    }
 
-   private String[] getVariableNamesGivenArrayListOfYoVariables(ArrayList<YoVariable<?>> yoVariableList)
+   private String[] getVariableNamesGivenArrayListOfYoVariables(List<YoVariable<?>> yoVariableList)
    {
       String[] ret = null;
 
@@ -2120,9 +2155,9 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return ret;
    }
 
-   private ArrayList<YoVariable<?>> getSimpleRobotRegExpVariables(String[] varNames, String[] regularExpressions, Robot robotModel)
+   private List<YoVariable<?>> getSimpleRobotRegExpVariables(String[] varNames, String[] regularExpressions, Robot robotModel)
    {
-      ArrayList<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
+      List<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
       YoVariableList tempList = new YoVariableList("temp");
 
       for (int i = 0; i < currentlyMatched.size(); i++)

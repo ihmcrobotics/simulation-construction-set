@@ -11,7 +11,7 @@ import javax.swing.Action;
 public abstract class AbstractMultiButtonAction extends AbstractAction implements Action
 {
    private static final long serialVersionUID = 5549057675462205945L;
-   protected ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>();
+   protected ArrayList<AbstractButton> buttons = new ArrayList<>();
 
    public AbstractMultiButtonAction(String name)
    {
@@ -20,7 +20,6 @@ public abstract class AbstractMultiButtonAction extends AbstractAction implement
 
    @Override
    public abstract void actionPerformed(ActionEvent e);
-
 
    public void addButton(AbstractButton button)
    {

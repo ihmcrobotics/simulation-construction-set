@@ -11,7 +11,7 @@ public class EventDispatchThreadHelper
          throw new RuntimeException("Should only call this method from the Swing Event Dispatch Thread");
       }
    }
-   
+
    public static void invokeAndWait(Runnable runnable)
    {
       if (SwingUtilities.isEventDispatchThread())

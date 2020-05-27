@@ -5,26 +5,27 @@ import java.awt.event.FocusEvent;
 
 import us.ihmc.yoVariables.variable.YoVariable;
 
-public interface YoVariableEntryContainer {
+public interface YoVariableEntryContainer
+{
 
-	public void update(YoEntryBox yoEntryBox);
+   public void update(YoEntryBox yoEntryBox);
 
-	public void setup(YoEntryBox yoEntryBox);
-	
-	public void shutdown(YoEntryBox yoEntryBox);
+   public void setup(YoEntryBox yoEntryBox);
 
-	public YoVariable<?> getVariable();
+   public void shutdown(YoEntryBox yoEntryBox);
 
-	public void actionPerformed(YoEntryBox yoEntryBox, ActionEvent evt);
+   public YoVariable<?> getVariable();
 
-	public void bindToVariable(YoEntryBox yoEntryBox, YoVariable<?> variable);
+   public void actionPerformed(YoEntryBox yoEntryBox, ActionEvent evt);
 
-	public boolean isEventSource(YoEntryBox yoEntryBox, FocusEvent evt);
+   public void bindToVariable(YoEntryBox yoEntryBox, YoVariable<?> variable);
 
-	public void focusGained(YoEntryBox yoEntryBox);
+   public boolean isEventSource(YoEntryBox yoEntryBox, FocusEvent evt);
 
-	public void focusLost(YoEntryBox yoEntryBox);
+   public void focusGained(YoEntryBox yoEntryBox);
 
-	public void removeVariable(YoVariable<?> variable);
+   public void focusLost(YoEntryBox yoEntryBox);
+
+   public void removeVariable(YoVariable<?> variable);
 
 }

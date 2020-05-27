@@ -22,8 +22,7 @@ public abstract class ConditionalScriptEntry
 
    public static int eventNumber = 0;
 
-   public static final int
-      DISARMED = 0, ARMED = 1, ACTIVE = 2, FINISHED = 3;
+   public static final int DISARMED = 0, ARMED = 1, ACTIVE = 2, FINISHED = 3;
    protected YoDouble event_state;
    private ArrayList<ConditionalScriptEntry> parentEntries;
    private ArrayList<ConditionalScriptEntry> childEntries;
@@ -35,7 +34,7 @@ public abstract class ConditionalScriptEntry
       this.name = name;
 
       event_state = new YoDouble(name + "_" + eventNumber + "_state", registry);
-      event_state.set(ARMED);    // Default to armed until given a parent or two.
+      event_state.set(ARMED); // Default to armed until given a parent or two.
       eventNumber++;
 
       if (parents != null)
@@ -62,8 +61,6 @@ public abstract class ConditionalScriptEntry
       this(name, registry, new ConditionalScriptEntry[] {parent});
    }
 
-
-
    public ConditionalScriptEntry(YoVariableRegistry registry, ConditionalScriptEntry[] parents)
    {
       this("event", registry, parents);
@@ -74,14 +71,14 @@ public abstract class ConditionalScriptEntry
       if (parentEntry == null)
          return;
 
-      event_state.set(DISARMED);    // Disarmed until parents are finished;
+      event_state.set(DISARMED); // Disarmed until parents are finished;
 
       if (parentEntries == null)
-         parentEntries = new ArrayList<ConditionalScriptEntry>();
+         parentEntries = new ArrayList<>();
       parentEntries.add(parentEntry);
 
       if (parentEntry.childEntries == null)
-         parentEntry.childEntries = new ArrayList<ConditionalScriptEntry>();
+         parentEntry.childEntries = new ArrayList<>();
       parentEntry.childEntries.add(this);
    }
 
@@ -147,10 +144,9 @@ public abstract class ConditionalScriptEntry
    {
       parentEntries.remove(parentEntry);
       parentEntry.childEntries.remove(this);
-      if (parentEntries.isEmpty() && this.isDisarmed())
+      if (parentEntries.isEmpty() && isDisarmed())
          event_state.set(ARMED);
    }
-
 
    public boolean isDisarmed()
    {
@@ -174,10 +170,10 @@ public abstract class ConditionalScriptEntry
 
    public void reset()
    {
-//    if (event_state.val != FINISHED)
-//    {
-//       System.out.println("ConditionalScriptEntry " + name + " is not finished, yet you are resetting it!");
-//    }
+      //    if (event_state.val != FINISHED)
+      //    {
+      //       System.out.println("ConditionalScriptEntry " + name + " is not finished, yet you are resetting it!");
+      //    }
 
       if ((parentEntries == null) || parentEntries.isEmpty())
       {

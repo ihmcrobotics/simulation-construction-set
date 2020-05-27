@@ -37,24 +37,23 @@ public class DataFileReader
 
    // private ArrayList variables;
 
-   public DataFileReader(File file)    // String filename)
+   public DataFileReader(File file) // String filename)
    {
-      this.inFile = file;
-      this.inURL = null;
+      inFile = file;
+      inURL = null;
    }
 
-   public DataFileReader(URL url)    // String filename)
+   public DataFileReader(URL url) // String filename)
    {
-      this.inURL = url;
-      this.inFile = null;
+      inURL = url;
+      inFile = null;
    }
-
 
    // public ArrayList getVariables(){return this.variables;}
 
    public double getRecordDT()
    {
-      return this.recordDT;
+      return recordDT;
    }
 
    private boolean parseLine(String line)
@@ -66,8 +65,8 @@ public class DataFileReader
       {
          String nT = st.nextToken();
 
-//       System.out.println(".");
-//         System.out.println(nT);
+         //       System.out.println(".");
+         //         System.out.println(nT);
 
          if (nT.equals("$END_HEADER"))
          {
@@ -105,7 +104,7 @@ public class DataFileReader
          {
             String vName = st.nextToken();
 
-//          vName = vName.replace('.', '_');
+            //          vName = vName.replace('.', '_');
 
             varNames.add(vName);
          }
@@ -127,7 +126,7 @@ public class DataFileReader
    }
 
    public int readData(YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
-           throws IOException
+         throws IOException
    {
       if (inFile != null)
          return readDataFile(newVars, rootRegistryToAddNewVariablesTo, dataBuffer, sim);
@@ -138,16 +137,16 @@ public class DataFileReader
    }
 
    private int readDataFile(YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
-           throws IOException
+         throws IOException
    {
-//    try
-//    {
+      //    try
+      //    {
       YoDataInputStream dataStream;
 
       if (inFile.getName().endsWith(".gz"))
-         dataStream = new YoDataInputStream(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(inFile)))));    // inStream);
+         dataStream = new YoDataInputStream(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(inFile))))); // inStream);
       else
-         dataStream = new YoDataInputStream(new BufferedInputStream(new FileInputStream(inFile)));    // inStream);
+         dataStream = new YoDataInputStream(new BufferedInputStream(new FileInputStream(inFile))); // inStream);
 
       if (inFile.getName().endsWith(".csv"))
       {
@@ -156,26 +155,26 @@ public class DataFileReader
 
       return readData(dataStream, newVars, rootRegistryToAddNewVariablesTo, dataBuffer, sim);
 
-//    }
-//    catch (IOException e)
-//    {
-//      return -1;
-//    }
+      //    }
+      //    catch (IOException e)
+      //    {
+      //      return -1;
+      //    }
 
    }
 
    private int readDataURL(YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
-           throws IOException
+         throws IOException
    {
-//    try
-//    {
+      //    try
+      //    {
       YoDataInputStream dataStream;
 
       if (inURL.getPath().endsWith(".gz"))
-         dataStream = new YoDataInputStream(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(inURL.openStream()))));    // inStream);
+         dataStream = new YoDataInputStream(new BufferedInputStream(new GZIPInputStream(new BufferedInputStream(inURL.openStream())))); // inStream);
 
       else
-         dataStream = new YoDataInputStream(new BufferedInputStream(inURL.openStream()));    // inStream);
+         dataStream = new YoDataInputStream(new BufferedInputStream(inURL.openStream())); // inStream);
 
       if (inURL.getPath().endsWith(".csv"))
       {
@@ -184,25 +183,25 @@ public class DataFileReader
 
       return readData(dataStream, newVars, rootRegistryToAddNewVariablesTo, dataBuffer, sim);
 
-//    }
-//    catch (IOException e)
-//    {
-//      return -1;
-//    }
+      //    }
+      //    catch (IOException e)
+      //    {
+      //      return -1;
+      //    }
 
    }
 
    public int readData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer,
                        SimulationConstructionSet sim)
-           throws IOException
+         throws IOException
    {
       nPoints = -1;
-      varNames = new ArrayList<String>();
+      varNames = new ArrayList<>();
 
       // variables = new ArrayList();
 
-//    try
-//      {
+      //    try
+      //      {
       String line = dataStream.readASCIILine();
 
       // System.out.println(line);
@@ -263,7 +262,7 @@ public class DataFileReader
       if (DEBUG)
          System.out.println("Done Parsing!");
 
-//    if (nPoints > 0)
+      //    if (nPoints > 0)
       {
          // dataBuffer.setMaxIndex(nPoints);
          // First Clear all the existing data in case we don't read one of the variables that currently exists.
@@ -295,13 +294,12 @@ public class DataFileReader
 
       // inStream.close();
 
-//    }
-//    catch (IOException e)
-//    {
-////       e.printStackTrace();
-//       return -1;
-//    }
-
+      //    }
+      //    catch (IOException e)
+      //    {
+      ////       e.printStackTrace();
+      //       return -1;
+      //    }
 
       // int lB3 = Integer.parseInt("42913ac7",16);
       // float foo3 = Float.intBitsToFloat(lB3);
@@ -346,18 +344,17 @@ public class DataFileReader
       }
    }
 
-   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer)
-           throws IOException
+   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo,
+                                        DataBuffer dataBuffer)
+         throws IOException
    {
       for (int i = 0; i < nVars; i++)
       {
          DataBufferEntry newEntry = getDataBufferEntry(varNames.get(i), dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
 
+         //       System.out.println("varNames.get(i) = " + varNames.get(i) + ", newEntry = " + newEntry);
 
-//       System.out.println("varNames.get(i) = " + varNames.get(i) + ", newEntry = " + newEntry);
-
-
-         double[] someData = newEntry.getData();    // new double[nPoints];
+         double[] someData = newEntry.getData(); // new double[nPoints];
 
          for (int j = 0; j < nPoints; j++)
          {
@@ -377,7 +374,7 @@ public class DataFileReader
    }
 
    private DataBufferEntry getDataBufferEntry(String varName, DataBuffer dataBuffer, YoVariableRegistry rootRegistryToAddNewVariablesTo, YoVariableList newVars)
-           throws IOException
+         throws IOException
    {
       YoVariable<?> newVariable = dataBuffer.getVariable(varName);
 
@@ -405,26 +402,26 @@ public class DataFileReader
             newEntry = dataBuffer.addVariable(newVariable, dataBuffer.getBufferSize());
          }
 
-//            newEntry = dataBuffer.getEntry(varName);
+         //            newEntry = dataBuffer.getEntry(varName);
       }
 
       return newEntry;
    }
 
-   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer)
-           throws IOException
+   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo,
+                                     DataBuffer dataBuffer)
+         throws IOException
    {
       if (DEBUG)
          System.err.println("Reading Row Formatted Data");
 
-//    try
-//    {
+      //    try
+      //    {
       DataBufferEntry[] entries = new DataBufferEntry[nVars];
 
       for (int i = 0; i < nVars; i++)
       {
-//       System.err.println("i = " + i);
-
+         //       System.err.println("i = " + i);
 
          entries[i] = getDataBufferEntry(varNames.get(i), dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
       }
@@ -440,7 +437,7 @@ public class DataFileReader
 
          for (j = 0; j < numberOfPointsToIterateOver; j++)
          {
-//          if (DEBUG) System.err.println("j = " + j);
+            //          if (DEBUG) System.err.println("j = " + j);
 
             if (dataBuffer.getBufferSize() <= j)
             {
@@ -467,36 +464,36 @@ public class DataFileReader
          // +++JEP080725: This can happen for logged data files, where we put the nPoints to a large number since we don't know what it'll be!!
          if (DEBUG)
             System.out.println("Caught Exception while reading data: " + iOException + ". Didn't find nPoints in the data! Only got to " + j + " out of "
-                               + nPoints);
+                  + nPoints);
 
          if (nPoints == -1)
             nPoints = j;
       }
 
-//    for (int i=0; i<nVars; i++)
-//    {
-//       entries[i].reCalcMinMax();
-//    }
+      //    for (int i=0; i<nVars; i++)
+      //    {
+      //       entries[i].reCalcMinMax();
+      //    }
 
       // variables.add(newVariable);
       // System.out.println();
-//    }
-//    catch(Exception e)
-//    {
-//       e.printStackTrace();
-//    }
+      //    }
+      //    catch(Exception e)
+      //    {
+      //       e.printStackTrace();
+      //    }
 
    }
 
    private int readASCIIData(YoDataInputStream dataStream, YoVariableList newVars, DataBuffer dataBuffer, String line,
                              YoVariableRegistry rootRegistryToAddNewVariablesTo)
-           throws IOException
+         throws IOException
    {
       nPoints = -1;
-      varNames = new ArrayList<String>();
+      varNames = new ArrayList<>();
 
-//    try
-//      {
+      //    try
+      //      {
       while (!(line == null))
       {
          // System.out.println(line);
@@ -536,10 +533,7 @@ public class DataFileReader
                // System.out.println("nPoints = " + nPoints);
             }
 
-
             DataBufferEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
-
-
 
             double[] someData = newEntry.getData();
 
@@ -580,23 +574,23 @@ public class DataFileReader
       dataBuffer.setOutPoint(nPoints - 1);
       dataBuffer.setIndex(0);
 
-//    }
-//    catch (IOException e){return -1;}
+      //    }
+      //    catch (IOException e){return -1;}
       return nPoints;
    }
 
    private int readASCIICommaSeparatedData(YoDataInputStream dataStream, YoVariableList newVars, DataBuffer dataBuffer,
-           YoVariableRegistry rootRegistryToAddNewVariablesTo)
-           throws IOException
+                                           YoVariableRegistry rootRegistryToAddNewVariablesTo)
+         throws IOException
    {
       nPoints = -1;
-      varNames = new ArrayList<String>();
+      varNames = new ArrayList<>();
 
-      ArrayList<double[]> dataArrays = new ArrayList<double[]>();
+      ArrayList<double[]> dataArrays = new ArrayList<>();
 
-//    try
-//    {
-      String line = dataStream.readASCIILine();    // Read the variable names:
+      //    try
+      //    {
+      String line = dataStream.readASCIILine(); // Read the variable names:
       StringTokenizer token = new StringTokenizer(line, ", ");
 
       // First get the varname:
@@ -619,7 +613,6 @@ public class DataFileReader
       recordDT = Double.parseDouble(DTString);
 
       // System.out.println("DT = " + recordDT);
-
 
       boolean skipFirstOne = true;
 
@@ -657,22 +650,17 @@ public class DataFileReader
       nPoints = dataArrays.size();
       dataBuffer.clearAll(nPoints);
 
-
       for (int i = 0; i < varNames.size(); i++)
       {
          String varName = varNames.get(i);
 
-
-
          DataBufferEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
-
-
 
          double[] someData = newEntry.getData();
 
          for (int j = 0; j < nPoints; j++)
          {
-            someData[j] = (dataArrays.get(j))[i];    // Gets the ith element of the jth array to rearrange the data.
+            someData[j] = (dataArrays.get(j))[i]; // Gets the ith element of the jth array to rearrange the data.
          }
 
          newEntry.setData(someData, nPoints);
@@ -685,18 +673,18 @@ public class DataFileReader
       dataBuffer.setOutPoint(nPoints - 1);
       dataBuffer.setIndex(0);
 
-//    }
-//    catch (IOException e){return -1;}
+      //    }
+      //    catch (IOException e){return -1;}
       return nPoints;
    }
-
 
    public void readState(YoVariableList varList, boolean printErrorForMissingVariables) throws IOException
    {
       readState(varList, false, printErrorForMissingVariables, null);
    }
 
-   public void readState(YoVariableList varList, boolean createMissingVariables, boolean printErrorForMissingVariables, YoVariableRegistry registry) throws IOException
+   public void readState(YoVariableList varList, boolean createMissingVariables, boolean printErrorForMissingVariables, YoVariableRegistry registry)
+         throws IOException
    {
       BufferedReader in;
       if (inFile.getName().endsWith(".gz"))
@@ -726,7 +714,8 @@ public class DataFileReader
                   YoVariableRegistry registryToUse = registry.getOrCreateAndAddRegistry(nameSpace);
                   if (registryToUse == null)
                   {
-                     if (printErrorForMissingVariables) System.err.println("Warning! Couldn't find an appropriate registry to use. Will just use " + registry);
+                     if (printErrorForMissingVariables)
+                        System.err.println("Warning! Couldn't find an appropriate registry to use. Will just use " + registry);
                      registryToUse = registry;
                   }
 
@@ -743,11 +732,12 @@ public class DataFileReader
             else
             {
                //TODO: JEP 10/23/2012:
-               //Had to just print error instead of throw exception since DRCDemo0 
+               //Had to just print error instead of throw exception since DRCDemo0
                // was somehow saving variables but not needed them on loading?
-               if (printErrorForMissingVariables) System.err.println("Couldn't find variable " + varName + " in line:  " + line);
+               if (printErrorForMissingVariables)
+                  System.err.println("Couldn't find variable " + varName + " in line:  " + line);
                continue;
-//               throw new RuntimeException("Couldn't find variable " + varName + " in line:  " + line);
+               //               throw new RuntimeException("Couldn't find variable " + varName + " in line:  " + line);
             }
          }
 
@@ -775,7 +765,5 @@ public class DataFileReader
 
       return equalsIndex;
    }
-
-
 
 }

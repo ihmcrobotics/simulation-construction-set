@@ -2,12 +2,13 @@ package us.ihmc.simulationconstructionset.util.ground;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 
-public class ShipCorridorGroundProfileTest 
+public class ShipCorridorGroundProfileTest
 {
    private ShipCorridorGroundProfile groundProfile;
    private final double epsilon = 1e-6;
@@ -16,15 +17,15 @@ public class ShipCorridorGroundProfileTest
    @BeforeEach
    public void setUp()
    {
-      groundProfile = new ShipCorridorGroundProfile(100.0, -10.0, 5.0, -5.0, 0.8, -0.8, 0.0, 3.0, Math.toRadians( 2.0 ));
+      groundProfile = new ShipCorridorGroundProfile(100.0, -10.0, 5.0, -5.0, 0.8, -0.8, 0.0, 3.0, Math.toRadians(2.0));
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testSurfaceNormalAlongYAxis()
    {
       int nSteps = 1000;
       BoundingBox3D boundingBox = groundProfile.getBoundingBox();
-      
+
       double yStep = (boundingBox.getMaxY() - boundingBox.getMinY()) / nSteps;
       double dy = 1e-8;
       double x = (boundingBox.getMaxX() - boundingBox.getMinX()) / 2.0;
@@ -53,18 +54,19 @@ public class ShipCorridorGroundProfileTest
             Vector3D surfaceNormalFromGroundProfile = new Vector3D();
             Point3D intersection = new Point3D();
             groundProfile.closestIntersectionAndNormalAt(x, y, z, intersection, surfaceNormalFromGroundProfile);
-            
-            if(((initialHeight == 3.0)&&(finalHeight != 3.0)) || ((initialHeight != 3.0)&&(finalHeight == 3.0)) || ((initialHeight != 0.0)&&(finalHeight == 0.0)) || ((initialHeight == 0.0)&&(finalHeight != 0.0)))
+
+            if (((initialHeight == 3.0) && (finalHeight != 3.0)) || ((initialHeight != 3.0) && (finalHeight == 3.0))
+                  || ((initialHeight != 0.0) && (finalHeight == 0.0)) || ((initialHeight == 0.0) && (finalHeight != 0.0)))
             {
                surfaceNormalFromGroundProfile.setX(0.0);
                surfaceNormalFromGroundProfile.setY(0.0);
                surfaceNormalFromGroundProfile.setZ(1.0);
                numericalSurfaceNormal.setX(0.0);
                numericalSurfaceNormal.setY(0.0);
-               numericalSurfaceNormal.setZ(1.0);         
+               numericalSurfaceNormal.setZ(1.0);
             }
-            
-            if(debug)
+
+            if (debug)
             {
                System.out.println("y :" + y + "   y + dy :" + (y + yStep));
                System.out.println("Height initial :" + groundProfile.heightAt(x, y, z));
@@ -74,7 +76,7 @@ public class ShipCorridorGroundProfileTest
                System.out.println("Normal Numerical: " + numericalSurfaceNormal);
                System.out.println("\n\n");
             }
-  
+
             EuclidCoreTestTools.assertTuple3DEquals(numericalSurfaceNormal, surfaceNormalFromGroundProfile, epsilon);
          }
       }

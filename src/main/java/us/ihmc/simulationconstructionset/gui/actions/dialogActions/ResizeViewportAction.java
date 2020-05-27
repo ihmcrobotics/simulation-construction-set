@@ -18,14 +18,14 @@ public class ResizeViewportAction extends AbstractAction
       super("Resize Viewport");
       this.constructor = constructor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
    }
 
    @Override
    public void actionPerformed(ActionEvent e)
    {
-     constructor.constructDialog();
+      constructor.constructDialog();
    }
 }

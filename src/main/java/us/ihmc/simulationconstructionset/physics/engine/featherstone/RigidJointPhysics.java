@@ -2,8 +2,10 @@ package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
 import java.util.ArrayList;
 
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.Joint;
 import us.ihmc.simulationconstructionset.KinematicPoint;
@@ -11,16 +13,15 @@ import us.ihmc.simulationconstructionset.RigidJoint;
 import us.ihmc.simulationconstructionset.SpatialVector;
 import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
 
-
 public class RigidJointPhysics extends JointPhysics<RigidJoint>
 {
-   //TODO: Clean up. Overriding too much of JointPhysics and repeating it. 
+   //TODO: Clean up. Overriding too much of JointPhysics and repeating it.
    //TODO: Need to make the abstract classes better and perhaps have
    //TODO: JointPhysics, OneDegreeOfFreedomJointPhysics, RigidJointPhysics, FloatingJointPhysics, etc.
    public RigidJointPhysics(RigidJoint owner)
    {
       super(owner);
-      
+
       u_i = null;
       u_iXd_i = null;
       s_hat_i = null;
@@ -32,13 +33,13 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
    }
 
    @Override
-   protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
+   protected void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i)
    {
       Rh_i.set(owner.getRigidRotation());
    }
 
    @Override
-   public void featherstonePassOne(Vector3D w_h, Vector3D v_h, RotationMatrix Rh_0)
+   public void featherstonePassOne(Vector3DReadOnly w_h, Vector3DReadOnly v_h, RotationMatrixReadOnly Rh_0)
    {
       // First set the transform (rotation matrix) for this joint.
       // (R <- rotation matrix from F_h to F_i
@@ -46,13 +47,13 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
       // this.update(false);
       // this.jointTransform3D.get(Rh_i);
 
-      r_in.set(owner.offset);
+      r_in.set(owner.getOffset());
       if (owner.parentJoint != null)
       {
          r_in.sub(owner.parentJoint.link.getComOffset());
       }
 
-      this.jointDependentSetAndGetRotation(Rh_i);
+      jointDependentSetAndGetRotation(Rh_i);
 
       // R.setTranslation(new Vector3d());
       Ri_h.set(Rh_i);
@@ -64,7 +65,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
       jointDependentSet_d_i();
 
       //TODO: Diff here with JointPhysics:
-//      this.u_iXd_i.cross(u_i, d_i);
+      //      this.u_iXd_i.cross(u_i, d_i);
 
       // Now compute the radius vector
       // (r <- radius vector from F_h to F_i (in F_i coordinates)
@@ -88,10 +89,9 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
       v_i_temp.cross(w_i, r_i);
       v_i.add(v_i_temp);
 
-
       // Now do the joint dependent stuff...
 
-      this.jointDependentFeatherstonePassOne();
+      jointDependentFeatherstonePassOne();
 
       // Now update the points attached to the joint:
       R0_i.set(Ri_0);
@@ -106,17 +106,17 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
             for (int y = 0; y < groundContactPoints.size(); y++)
             {
                GroundContactPoint point = groundContactPoints.get(y);
-               point.updatePointVelocity(R0_i, this.owner.link.comOffset, v_i, w_i);
+               point.updatePointVelocity(R0_i, owner.link.comOffset, v_i, w_i);
             }
          }
       }
 
       if (kinematicPoints != null)
       {
-         for (int i = 0; i < this.kinematicPoints.size(); i++)
+         for (int i = 0; i < kinematicPoints.size(); i++)
          {
-            KinematicPoint point = this.kinematicPoints.get(i);
-            point.updatePointVelocity(R0_i, this.owner.link.comOffset, v_i, w_i);
+            KinematicPoint point = kinematicPoints.get(i);
+            point.updatePointVelocity(R0_i, owner.link.comOffset, v_i, w_i);
          }
       }
 
@@ -148,7 +148,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
          child.physics.featherstonePassThree(I_hat_i, Z_hat_i);
       }
    }
-   
+
    @Override
    public void featherstonePassThree(SpatialInertiaMatrix I_hat_h, SpatialVector Z_hat_h)
    {
@@ -187,7 +187,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
       i_X_hat_h.transform(X_hat_h_a_hat_h);
       I_hat_i.multiply(X_hat_h_a_hat_h);
 
-      this.jointDependentFeatherstonePassFour(0.0, passNumber);
+      jointDependentFeatherstonePassFour(0.0, passNumber);
 
       a_hat_i.set(a_hat_h);
       i_X_hat_h.transform(a_hat_i);
@@ -196,7 +196,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
       // Check for unreasonable accelerations:
       if (!jointDependentVerifyReasonableAccelerations())
       {
-         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<Joint>();
+         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<>();
          unreasonableAccelerationJoints.add(owner);
 
          throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
@@ -208,7 +208,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
          child.physics.featherstonePassFour(a_hat_i, passNumber);
       }
 
-      if (this.jointWrenchSensor != null)
+      if (jointWrenchSensor != null)
       {
          computeAndSetWrenchAtJoint();
       }
@@ -223,7 +223,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
    private Vector3D temp1 = new Vector3D();
 
    @Override
-   protected void jointDependentFeatherstonePassTwo(Vector3D w_h)
+   protected void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h)
    {
       // Coriolis Forces:
       c_hat_i.top.set(0.0, 0.0, 0.0);

@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.gui.dialogConstructors;
 
-
 import java.awt.Container;
 
 import javax.swing.JFrame;
@@ -34,4 +33,3 @@ public class YoGraphicsPropertiesDialogGenerator implements YoGraphicsProperties
       parentContainer = null;
    }
 }
-

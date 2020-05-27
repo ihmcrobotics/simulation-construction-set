@@ -2,13 +2,15 @@ package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
+import us.ihmc.simulationconstructionset.physics.engine.featherstone.JointPhysics;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
-import us.ihmc.simulationconstructionset.physics.engine.featherstone.JointPhysics;
 
 public class ExternalForcePoint extends KinematicPoint
 {
@@ -42,17 +44,17 @@ public class ExternalForcePoint extends KinematicPoint
     * @param offset in world when all of the robot's joints are at zero
     * @param robot
     */
-   public ExternalForcePoint(String name, Vector3DReadOnly offset, Robot robot)
+   public ExternalForcePoint(String name, Tuple3DReadOnly offset, Robot robot)
    {
       this(name, offset, robot.getRobotsYoVariableRegistry());
    }
 
    /**
     * @param name
-    * @param offset in world when all of the robot's joints are at zero
+    * @param offset   in world when all of the robot's joints are at zero
     * @param registry
     */
-   public ExternalForcePoint(String name, Vector3DReadOnly offset, YoVariableRegistry registry)
+   public ExternalForcePoint(String name, Tuple3DReadOnly offset, YoVariableRegistry registry)
    {
       super(name, offset, registry);
 
@@ -69,7 +71,8 @@ public class ExternalForcePoint extends KinematicPoint
 
    public boolean isForceAndMomentZero()
    {
-      return ((force.getX() == 0.0) && (force.getY() == 0.0) && (force.getZ() == 0.0) && (moment.getX() == 0.0) && (moment.getY() == 0.0) && (moment.getZ() == 0.0));
+      return ((force.getX() == 0.0) && (force.getY() == 0.0) && (force.getZ() == 0.0) && (moment.getX() == 0.0) && (moment.getY() == 0.0)
+            && (moment.getZ() == 0.0));
    }
 
    @Override
@@ -86,34 +89,33 @@ public class ExternalForcePoint extends KinematicPoint
       Rcoll_0.setToZero();
       Rk_coll.setToZero();
       Rk_coll2.setToZero();
-      u_coll.set(0,0,0);
+      u_coll.set(0, 0, 0);
       Ki_collision_total.setToZero();
 
-      zAxis.set(0,0,0);
-      yAxis.set(0,0,0);
-      xAxis.set(0,0,0);
+      zAxis.set(0, 0, 0);
+      yAxis.set(0, 0, 0);
+      xAxis.set(0, 0, 0);
    }
 
-
-
-   public boolean resolveMicroCollision(double penetrationSquared, ExternalForcePoint externalForcePointTwo, Vector3DReadOnly negative_normal, double epsilon, double mu, Vector3DBasics p_world)
+   public boolean resolveMicroCollision(double penetrationSquared, ExternalForcePoint externalForcePointTwo, Vector3DReadOnly negative_normal, double epsilon,
+                                        double mu, Vector3DBasics p_world)
    {
       //TODO: Duplicate code all over the place here. Clean this up once it works well. Test cases too!
       epsilon = epsilon + 1000000.0 * penetrationSquared;
       if (epsilon > 20.0)
          epsilon = 20.0;
 
-//      System.out.println("epsilon1 = " + epsilon);
-//      System.out.println("penetrationSquared1 = " + penetrationSquared);
+      //      System.out.println("epsilon1 = " + epsilon);
+      //      System.out.println("penetrationSquared1 = " + penetrationSquared);
       return resolveCollision(externalForcePointTwo, negative_normal, epsilon, mu, p_world);
    }
 
-
    private final Vector3D otherObjectVelocity = new Vector3D();
 
-   public boolean resolveCollision(ExternalForcePoint externalForcePoint, Vector3DReadOnly collisionNormalInWorld, double epsilon, double mu, Vector3DBasics impulseInWorldToPack)
+   public boolean resolveCollision(ExternalForcePoint externalForcePoint, Vector3DReadOnly collisionNormalInWorld, double epsilon, double mu,
+                                   Vector3DBasics impulseInWorldToPack)
    {
-//      System.out.println("Resolving collision with other object");
+      //      System.out.println("Resolving collision with other object");
       otherObjectVelocity.set(externalForcePoint.getXVelocity(), externalForcePoint.getYVelocity(), externalForcePoint.getZVelocity());
 
       boolean movingTogether = computeRotationAndRelativeVelocity(collisionNormalInWorld, otherObjectVelocity, impulseInWorldToPack);
@@ -123,7 +125,7 @@ public class ExternalForcePoint extends KinematicPoint
          return false;
       }
 
-      Rk_coll.set(this.parentJoint.physics.Ri_0);
+      Rk_coll.set(parentJoint.physics.Ri_0);
       Rk_coll.multiply(R0_coll);
       Matrix3D Ki_collision = parentJoint.physics.computeKiCollision(tempVectorForOffsetFromCOM, Rk_coll);
 
@@ -132,13 +134,13 @@ public class ExternalForcePoint extends KinematicPoint
       Matrix3D Ki_collision2 = externalForcePoint.parentJoint.physics.computeKiCollision(externalForcePoint.tempVectorForOffsetFromCOM, Rk_coll2);
 
       Ki_collision_total.add(Ki_collision, Ki_collision2);
-      parentJoint.physics.integrateCollision(Ki_collision_total, u_coll, epsilon, mu, impulseInWorldToPack);    // Returns the impulse in collision coordinates
+      parentJoint.physics.integrateCollision(Ki_collision_total, u_coll, epsilon, mu, impulseInWorldToPack); // Returns the impulse in collision coordinates
       parentJoint.physics.applyImpulse(impulseInWorldToPack);
 
       impulseInWorldToPack.scale(-1.0);
       JointPhysics<?> jointPhysics = externalForcePoint.parentJoint.physics;
 
-      jointPhysics.applyImpulse(impulseInWorldToPack);    // Equal and opposite impulses;
+      jointPhysics.applyImpulse(impulseInWorldToPack); // Equal and opposite impulses;
 
       // Rotate into world coordinates:
       R0_coll.transform(impulseInWorldToPack);
@@ -152,19 +154,20 @@ public class ExternalForcePoint extends KinematicPoint
       return true;
    }
 
-   public boolean resolveCollision(Vector3DReadOnly velocityOfOtherObjectInWorld, Vector3DReadOnly collisionNormalInWorld, double epsilon, double mu, Vector3DBasics impulseInWorldToPack)
+   public boolean resolveCollision(Vector3DReadOnly velocityOfOtherObjectInWorld, Vector3DReadOnly collisionNormalInWorld, double epsilon, double mu,
+                                   Vector3DBasics impulseInWorldToPack)
    {
-//      System.out.println("Resolving normal collision with ground");
+      //      System.out.println("Resolving normal collision with ground");
       boolean movingTogether = computeRotationAndRelativeVelocity(collisionNormalInWorld, velocityOfOtherObjectInWorld, impulseInWorldToPack);
       if (!movingTogether)
       {
          return false;
       }
 
-      Rk_coll.set(this.parentJoint.physics.Ri_0);
+      Rk_coll.set(parentJoint.physics.Ri_0);
       Rk_coll.multiply(R0_coll);
 
-      parentJoint.physics.resolveCollision(tempVectorForOffsetFromCOM, Rk_coll, u_coll, epsilon, mu, impulseInWorldToPack);    // Returns the impulse in collision coordinates
+      parentJoint.physics.resolveCollision(tempVectorForOffsetFromCOM, Rk_coll, u_coll, epsilon, mu, impulseInWorldToPack); // Returns the impulse in collision coordinates
 
       // Rotate into world coordinates:
       R0_coll.transform(impulseInWorldToPack);
@@ -176,21 +179,21 @@ public class ExternalForcePoint extends KinematicPoint
       return true;
    }
 
-
-   public boolean resolveMicroCollision(double penetrationSquared, Vector3DReadOnly velocityOfOtherObjectInWorld, Vector3DReadOnly collisionNormalInWorld, double epsilon, double mu, Vector3DBasics impulseInWorldToPack)
+   public boolean resolveMicroCollision(double penetrationSquared, Vector3DReadOnly velocityOfOtherObjectInWorld, Vector3DReadOnly collisionNormalInWorld,
+                                        double epsilon, double mu, Vector3DBasics impulseInWorldToPack)
    {
-//      System.out.println("External force point: Resolving micro collision");
+      //      System.out.println("External force point: Resolving micro collision");
       boolean movingTogether = computeRotationAndRelativeVelocity(collisionNormalInWorld, velocityOfOtherObjectInWorld, impulseInWorldToPack);
       if (!movingTogether)
       {
-//         System.out.println("Not moving together...");
+         //         System.out.println("Not moving together...");
          return false;
       }
 
-      Rk_coll.set(this.parentJoint.physics.Ri_0);
+      Rk_coll.set(parentJoint.physics.Ri_0);
       Rk_coll.multiply(R0_coll);
 
-      parentJoint.physics.resolveMicroCollision(penetrationSquared, tempVectorForOffsetFromCOM, Rk_coll, u_coll, epsilon, mu, impulseInWorldToPack);    // Returns the impulse in collision coordinates
+      parentJoint.physics.resolveMicroCollision(penetrationSquared, tempVectorForOffsetFromCOM, Rk_coll, u_coll, epsilon, mu, impulseInWorldToPack); // Returns the impulse in collision coordinates
 
       // Rotate into world coordinates:
       R0_coll.transform(impulseInWorldToPack);
@@ -202,15 +205,18 @@ public class ExternalForcePoint extends KinematicPoint
       return true;
    }
 
-   private boolean computeRotationAndRelativeVelocity(Vector3DReadOnly collisionNormalInWorld, Vector3DReadOnly otherObjectVelocityInWorld,  Vector3DBasics impulseInWorldToPack)
+   private boolean computeRotationAndRelativeVelocity(Vector3DReadOnly collisionNormalInWorld, Vector3DReadOnly otherObjectVelocityInWorld,
+                                                      Vector3DBasics impulseInWorldToPack)
    {
       computeRotationFromNormalVector(R0_coll, collisionNormalInWorld);
       Rcoll_0.set(R0_coll);
       Rcoll_0.transpose();
-      u_coll.set(getXVelocity() - otherObjectVelocityInWorld.getX(), getYVelocity() - otherObjectVelocityInWorld.getY(), getZVelocity() - otherObjectVelocityInWorld.getZ());
+      u_coll.set(getXVelocity() - otherObjectVelocityInWorld.getX(),
+                 getYVelocity() - otherObjectVelocityInWorld.getY(),
+                 getZVelocity() - otherObjectVelocityInWorld.getZ());
       Rcoll_0.transform(u_coll);
 
-      if (u_coll.getZ() > 0.0)    // -0.001) // Moving slowly together or moving apart...
+      if (u_coll.getZ() > 0.0) // -0.001) // Moving slowly together or moving apart...
       {
          impulseInWorldToPack.set(0.0, 0.0, 0.0);
          impulse.setToZero();
@@ -238,7 +244,7 @@ public class ExternalForcePoint extends KinematicPoint
 
    public void setForce(double fx, double fy, double fz)
    {
-      this.force.set(fx, fy, fz);
+      force.set(fx, fy, fz);
    }
 
    public void setMoment(Vector3D moment)
@@ -248,7 +254,7 @@ public class ExternalForcePoint extends KinematicPoint
 
    public void setMoment(double mx, double my, double mz)
    {
-      this.moment.set(mx, my, mz);
+      moment.set(mx, my, mz);
    }
 
    public void getImpulse(Vector3D vectorToPack)
@@ -263,7 +269,7 @@ public class ExternalForcePoint extends KinematicPoint
 
    public void setImpulse(double px, double py, double pz)
    {
-      this.impulse.set(px, py, pz);
+      impulse.set(px, py, pz);
    }
 
    public YoFrameVector3D getYoForce()
@@ -273,7 +279,7 @@ public class ExternalForcePoint extends KinematicPoint
 
    public YoFrameVector3D getYoMoment()
    {
-	   return moment;
+      return moment;
    }
 
    public YoFrameVector3D getYoImpulse()
@@ -281,7 +287,7 @@ public class ExternalForcePoint extends KinematicPoint
       return impulse;
    }
 
-   private void computeRotationFromNormalVector(RotationMatrix rot, Vector3DReadOnly vec)
+   private void computeRotationFromNormalVector(RotationMatrixBasics rot, Vector3DReadOnly vec)
    {
       // Z axis points in direction of vec...
       zAxis.set(vec);
@@ -290,7 +296,7 @@ public class ExternalForcePoint extends KinematicPoint
       yAxis.set(0.0, 1.0, 0.0);
 
       // if (Math.abs(yAxis.dot(zAxis)) > 0.99){yAxis = new Vector3d(1.0,0.0,0.0);}
-//    if (Math.abs(zAxis.y) > 0.99){yAxis = new Vector3d(1.0,0.0,0.0);}
+      //    if (Math.abs(zAxis.y) > 0.99){yAxis = new Vector3d(1.0,0.0,0.0);}
       if (Math.abs(zAxis.getY()) > 0.99)
       {
          yAxis.set(1.0, 0.0, 0.0);

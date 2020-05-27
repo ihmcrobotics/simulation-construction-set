@@ -44,7 +44,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
 
    private JButton trackCurrentButton, dollyCurrentButton;
 
-
    // private final static java.text.NumberFormat numFormat = new java.text.DecimalFormat(" 0.00000;-0.00000");
 
    private JButton okButton, applyButton, cancelButton;
@@ -58,11 +57,11 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
    private JCheckBox GUITrackCheckBox, GUIDollyCheckBox;
 
    public CameraPropertiesDialog(Container parentContainer, JFrame frame, JCheckBox GUITrackCheckBox, JCheckBox GUIDollyCheckBox,
-                                 ActiveCameraHolder cameraHolder)    // CameraPropertiesDialogListener listener)
+                                 ActiveCameraHolder cameraHolder) // CameraPropertiesDialogListener listener)
    {
       super(frame, "Camera Properties", false);
       this.parentContainer = parentContainer;
-      this.parentFrame = frame;
+      parentFrame = frame;
 
       this.cameraHolder = cameraHolder;
 
@@ -70,12 +69,12 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
       this.GUITrackCheckBox = GUITrackCheckBox;
       this.GUIDollyCheckBox = GUIDollyCheckBox;
 
-      this.numFormat = NumberFormat.getInstance();
-      this.numFormat.setMaximumFractionDigits(4);
-      this.numFormat.setMinimumFractionDigits(1);
-      this.numFormat.setGroupingUsed(false);
+      numFormat = NumberFormat.getInstance();
+      numFormat.setMaximumFractionDigits(4);
+      numFormat.setMinimumFractionDigits(1);
+      numFormat.setGroupingUsed(false);
 
-      Container contentPane = this.getContentPane();
+      Container contentPane = getContentPane();
 
       cameraPropertiesPanel = new CameraPropertiesPanel();
       contentPane.add(cameraPropertiesPanel);
@@ -101,8 +100,8 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
       point.translate(frameSize.width / 2, frameSize.height / 4);
       this.setLocation(point);
 
-      this.setResizable(false);
-      this.pack();
+      setResizable(false);
+      pack();
 
       // Enlarge Text Fields:
 
@@ -166,19 +165,16 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
       camZTextField.setMinimumSize(size);
 
       /*
-       * size = currentTextField.getSize();
-       * size.width = size.width*5/4;
-       * currentTextField.setSize(size);
-       * currentTextField.setPreferredSize(size);
-       * currentTextField.setMinimumSize(size);
+       * size = currentTextField.getSize(); size.width = size.width*5/4; currentTextField.setSize(size);
+       * currentTextField.setPreferredSize(size); currentTextField.setMinimumSize(size);
        */
 
-      this.pack();
-      this.setVisible(true);
+      pack();
+      setVisible(true);
       GUITrackCheckBox.setEnabled(false);
       GUIDollyCheckBox.setEnabled(false);
 
-      parentContainer.repaint();    // This is a horrible way to get the graphs to repaint...
+      parentContainer.repaint(); // This is a horrible way to get the graphs to repaint...
    }
 
    @Override
@@ -186,7 +182,7 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
    {
       if (event.getSource() == cancelButton)
       {
-         this.setVisible(false);
+         setVisible(false);
          GUITrackCheckBox.setEnabled(true);
          GUIDollyCheckBox.setEnabled(true);
       }
@@ -199,12 +195,12 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
       if (event.getSource() == okButton)
       {
          cameraPropertiesPanel.commitChanges();
-         this.setVisible(false);
+         setVisible(false);
          GUITrackCheckBox.setEnabled(true);
          GUIDollyCheckBox.setEnabled(true);
       }
 
-      parentContainer.repaint();    // This is a horrible way to get the graphs to repaint...
+      parentContainer.repaint(); // This is a horrible way to get the graphs to repaint...
    }
 
    @SuppressWarnings("serial")
@@ -250,7 +246,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          // TitledBorder title = BorderFactory.createTitledBorder(blackLine,selectedVariable.getName());
          // this.setBorder(title);
          dollyPanel.setBorder(blackLine);
-
 
          GridBagConstraints constraints = new GridBagConstraints();
 
@@ -306,7 +301,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          trackGridbag.setConstraints(trackXTextField, constraints);
          trackPanel.add(trackXTextField);
 
-
          // Row 2:
 
          JLabel fixYLabel = new JLabel("  Y:  ");
@@ -338,7 +332,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          setConstraints(constraints, 4, 2, 1, GridBagConstraints.WEST);
          trackGridbag.setConstraints(trackYTextField, constraints);
          trackPanel.add(trackYTextField);
-
 
          // Row 3:
 
@@ -372,11 +365,8 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          trackGridbag.setConstraints(trackZTextField, constraints);
          trackPanel.add(trackZTextField);
 
-
-
          // Dolly:
          // Row 0:
-
 
          JLabel cameraLabel = new JLabel("  Camera Position:  ");
          setConstraints(constraints, 0, 0, 2, GridBagConstraints.WEST);
@@ -427,7 +417,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          dollyGridbag.setConstraints(dollyXTextField, constraints);
          dollyPanel.add(dollyXTextField);
 
-
          // Row 2:
 
          JLabel camYLabel = new JLabel("  Y:  ");
@@ -459,7 +448,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          setConstraints(constraints, 4, 2, 1, GridBagConstraints.WEST);
          dollyGridbag.setConstraints(dollyYTextField, constraints);
          dollyPanel.add(dollyYTextField);
-
 
          // Row 3:
 
@@ -493,17 +481,13 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          dollyGridbag.setConstraints(dollyZTextField, constraints);
          dollyPanel.add(dollyZTextField);
 
-
-         this.setLayout(new GridLayout(2, 1));
+         setLayout(new GridLayout(2, 1));
          this.add(trackPanel);
          this.add(dollyPanel);
 
-         this.updateTracking();
-         this.updateEnabling();
+         updateTracking();
+         updateEnabling();
       }
-
-
-
 
       private void setConstraints(GridBagConstraints constraints, int gridx, int gridy, int gridwidth, int anchor)
       {
@@ -629,7 +613,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          }
       }
 
-
       private void updateTracking()
       {
          updateTrackXOffset();
@@ -709,7 +692,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
          newCamZ = updateTrackDolly(camZTextField, newCamZ);
       }
 
-
       private double updateTrackDolly(JTextField textField, double oldVal)
       {
          double newVal = oldVal;
@@ -730,7 +712,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
 
    }
 
-
    public class TrackCurrentButton extends JButton implements ActionListener
    {
       private static final long serialVersionUID = -4680530982540091563L;
@@ -738,7 +719,7 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
       public TrackCurrentButton()
       {
          super("Track Current");
-         this.addActionListener(this);
+         addActionListener(this);
       }
 
       @Override
@@ -756,7 +737,6 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
       }
    }
 
-
    public class DollyCurrentButton extends JButton implements ActionListener
    {
       private static final long serialVersionUID = 6700937880902001238L;
@@ -764,7 +744,7 @@ public class CameraPropertiesDialog extends JDialog implements ActionListener
       public DollyCurrentButton()
       {
          super("Dolly Current");
-         this.addActionListener(this);
+         addActionListener(this);
       }
 
       @Override

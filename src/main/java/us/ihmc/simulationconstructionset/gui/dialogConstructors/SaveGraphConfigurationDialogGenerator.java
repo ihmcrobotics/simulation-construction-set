@@ -20,7 +20,6 @@ public class SaveGraphConfigurationDialogGenerator implements SaveGraphConfigura
    private GUIEnablerAndDisabler guiEnablerAndDisabler;
    private GraphArrayPanel graphArrayPanel;
 
-
    public SaveGraphConfigurationDialogGenerator(GUIEnablerAndDisabler guiEnablerAndDisabler, JFrame frame, GraphArrayPanel graphArrayPanel)
    {
       this.graphArrayPanel = graphArrayPanel;
@@ -104,17 +103,17 @@ public class SaveGraphConfigurationDialogGenerator implements SaveGraphConfigura
 
    private String writeGUIConfig()
    {
-      String textToWrite = "";    // myGUI.getXMLStyleRepresentationOfGraphArrayPanel();
+      String textToWrite = ""; // myGUI.getXMLStyleRepresentationOfGraphArrayPanel();
 
-//    textToWrite += "\n" + myGUI.getXMLStyleRepresentationOfEntryBoxes();
-//    textToWrite += "\n" + myGUI.getXMLStyleRepresentationOfViewPorts();
-//      textToWrite += "\n" + myGUI.getXMLStyleRepresentationOfGraphWindow(graphArrayPanel);
+      //    textToWrite += "\n" + myGUI.getXMLStyleRepresentationOfEntryBoxes();
+      //    textToWrite += "\n" + myGUI.getXMLStyleRepresentationOfViewPorts();
+      //      textToWrite += "\n" + myGUI.getXMLStyleRepresentationOfGraphWindow(graphArrayPanel);
 
-      textToWrite += "\n" + this.graphArrayPanel.getXMLRepresentationOfClass();
-      
+      textToWrite += "\n" + graphArrayPanel.getXMLRepresentationOfClass();
+
       // textToWrite += "\n" + myGUI.getXMLStyleRepresentationOfGraphWindows();
-//    textToWrite += "\n" + myGUI.getXMLStyleRepresentationofJPanels();
-//    textToWrite += "\n" + myGUI.getXMLStyleRepresentationofMultiViews();
+      //    textToWrite += "\n" + myGUI.getXMLStyleRepresentationofJPanels();
+      //    textToWrite += "\n" + myGUI.getXMLStyleRepresentationofMultiViews();
 
       return textToWrite;
    }

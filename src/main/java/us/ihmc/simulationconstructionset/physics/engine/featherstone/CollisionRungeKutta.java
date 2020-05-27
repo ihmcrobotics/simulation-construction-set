@@ -4,7 +4,7 @@ public class CollisionRungeKutta implements java.io.Serializable
 {
    private static final long serialVersionUID = 8085611439415747376L;
 
-   private static final boolean REPORT = false;    // false; //true;
+   private static final boolean REPORT = false; // false; //true;
 
    double minStepSize_;
    double stepSize_;
@@ -35,7 +35,6 @@ public class CollisionRungeKutta implements java.io.Serializable
       // yerr = new double[NVARS];
       ytemp = new double[NVARS];
 
-
       ak2 = new double[NVARS];
       ak3 = new double[NVARS];
       ak4 = new double[NVARS];
@@ -51,14 +50,14 @@ public class CollisionRungeKutta implements java.io.Serializable
 
    public void setStepSize(double stepSize)
    {
-      this.stepSize_ = stepSize;
+      stepSize_ = stepSize;
       if (stepSize < 100 * minStepSize_)
          minStepSize_ = stepSize_ / 100;
    }
 
    public void setMinimumStepSize(double stepSize)
    {
-      this.minStepSize_ = stepSize;
+      minStepSize_ = stepSize;
    }
 
    public void setAdaptive()
@@ -73,7 +72,7 @@ public class CollisionRungeKutta implements java.io.Serializable
 
    public void setAccuracy(double accuracy)
    {
-      this.accuracy_ = accuracy;
+      accuracy_ = accuracy;
    }
 
    public void setVerbose(boolean verbose)
@@ -128,7 +127,7 @@ public class CollisionRungeKutta implements java.io.Serializable
       }
       else
       {
-         rkdumb(y, range, h, dv);    // rkdumb(y, y.length, range, h, dv);
+         rkdumb(y, range, h, dv); // rkdumb(y, y.length, range, h, dv);
       }
    }
 
@@ -146,9 +145,8 @@ public class CollisionRungeKutta implements java.io.Serializable
       h = (end - start) / nSteps;
 
       /*
-       * double[] dydx = new double[NVARS];
-       * double[] yend = new double[NVARS];
-       * double[] yerr = new double[NVARS];
+       * double[] dydx = new double[NVARS]; double[] yend = new double[NVARS]; double[] yerr = new
+       * double[NVARS];
        */
       for (int step = 0; step < nSteps; step++)
       {
@@ -157,20 +155,20 @@ public class CollisionRungeKutta implements java.io.Serializable
          rkck(ystart, dydx, x, h, yend, yerr, dv);
 
          if (REPORT)
-            System.out.print("rkdumb: " + x + " ");    // +++JEP
+            System.out.print("rkdumb: " + x + " "); // +++JEP
 
          for (int n = 0; n < NVARS; n++)
          {
             ystart[n] = yend[n];
             if (REPORT)
-               System.out.print(yend[n] + " ");    // +++JEP
+               System.out.print(yend[n] + " "); // +++JEP
          }
 
          if (REPORT)
-            System.out.println();    // +++JEP
+            System.out.println(); // +++JEP
       }
 
-      range[1] = start + (nSteps - 1) * h;    // +++JEP record the ending time...
+      range[1] = start + (nSteps - 1) * h; // +++JEP record the ending time...
    }
 
    static final int MAXSTP = 10000;
@@ -191,17 +189,14 @@ public class CollisionRungeKutta implements java.io.Serializable
    // double[] dydx;  // Already defined for rkdumb
 
    void odeint(double[] ystart, double[] range, double eps, double h1, double hmin, int[] nok, int[] nbad, CollisionDerivativeVector dv)
-           throws ODEException, CollisionDerivativeException
+         throws ODEException, CollisionDerivativeException
    {
       double x1 = range[0], x2 = range[1];
 
       /*
-       * double[] x = new double[1];
-       * double[] hnext = new double[1];
-       * double[] hdid = new double[1];
-       * double[] yscal = new double[NVARS];
-       * double[] y = new double[NVARS];
-       * double[] dydx = new double[NVARS];
+       * double[] x = new double[1]; double[] hnext = new double[1]; double[] hdid = new double[1];
+       * double[] yscal = new double[NVARS]; double[] y = new double[NVARS]; double[] dydx = new
+       * double[NVARS];
        */
 
       x[0] = x1;
@@ -224,7 +219,7 @@ public class CollisionRungeKutta implements java.io.Serializable
          range[1] = x[0];
 
          return;
-      }    // +++JEP return if stuck at the get go...
+      } // +++JEP return if stuck at the get go...
 
       for (int nstp = 1; nstp <= MAXSTP; nstp++)
       {
@@ -255,7 +250,7 @@ public class CollisionRungeKutta implements java.io.Serializable
          else
             ++nbad[0];
 
-         if (((x[0] - x2) * (x2 - x1) >= 0.0) || (dv.isStuck(y)))    // +++JEP stop integrating if stuck!
+         if (((x[0] - x2) * (x2 - x1) >= 0.0) || (dv.isStuck(y))) // +++JEP stop integrating if stuck!
          {
             for (int i = 0; i < NVARS; i++)
             {
@@ -272,12 +267,10 @@ public class CollisionRungeKutta implements java.io.Serializable
                }
             }
 
-            range[1] = x[0];    // +++JEP record the ending time...
+            range[1] = x[0]; // +++JEP record the ending time...
 
             return;
          }
-
-
 
          if (Math.abs(hnext[0]) <= hmin)
          {
@@ -290,11 +283,11 @@ public class CollisionRungeKutta implements java.io.Serializable
          h = hnext[0];
 
          // System.out.println("h: " + h);
-         currentStepSize_ = h;    // added for comphys
+         currentStepSize_ = h; // added for comphys
       }
 
       System.err.println("Too many steps in routine odeint.");
-//      throw new ODEException("Too many steps in routine odeint.");
+      //      throw new ODEException("Too many steps in routine odeint.");
 
       // error("Too many steps in routine odeint.  NVARS: " + NVARS);
    }
@@ -302,19 +295,18 @@ public class CollisionRungeKutta implements java.io.Serializable
    static final double SAFETY = 0.9;
    static final double PGROW = -0.2;
    static final double PSHRNK = -0.25;
-   static final double ERRCON = 1.89e-4;    // ERRCON = 1.89e-4; +++JEP.  This seems way too low!!! This is error as percent of accuracy!
+   static final double ERRCON = 1.89e-4; // ERRCON = 1.89e-4; +++JEP.  This seems way too low!!! This is error as percent of accuracy!
 
    // double[] yerr;
    double[] ytemp;
 
    void rkqs(double[] y, double[] dydx, double[] x, double htry, double eps, double[] yscal, double[] hdid, double[] hnext, CollisionDerivativeVector dv)
-           throws ODEException, CollisionDerivativeException
+         throws ODEException, CollisionDerivativeException
    {
       double errmax = 0;
 
       /*
-       * double[] yerr = new double[NVARS];
-       * double[] ytemp = new double[NVARS];
+       * double[] yerr = new double[NVARS]; double[] ytemp = new double[NVARS];
        */
       double h = htry;
       for (;;)
@@ -348,42 +340,35 @@ public class CollisionRungeKutta implements java.io.Serializable
          // / +++JEP.  Just don't let it go too low of step size?
 
          /*
-          * System.out.println("SAFETY: " + SAFETY);
-          * System.out.println("h: " + h);
-          * System.out.println("errmax: " + errmax);
-          * System.out.println("PGROW: " + PGROW);
-          *
+          * System.out.println("SAFETY: " + SAFETY); System.out.println("h: " + h);
+          * System.out.println("errmax: " + errmax); System.out.println("PGROW: " + PGROW);
           * System.out.println("hnext: " + hnext[0]);
           */
-
 
       }
       else
          hnext[0] = 5.0 * h;
 
-
       x[0] += (hdid[0] = h);
 
       if (REPORT)
-         System.out.print("rkqs: " + x[0] + " ");    // +++JEP
+         System.out.print("rkqs: " + x[0] + " "); // +++JEP
 
       for (int i = 0; i < NVARS; i++)
       {
          y[i] = ytemp[i];
          if (REPORT)
-            System.out.print(ytemp[i] + " ");    // +++JEP
+            System.out.print(ytemp[i] + " "); // +++JEP
       }
 
       if (REPORT)
-         System.out.println();    // +++JEP
+         System.out.println(); // +++JEP
    }
 
    static final double a2 = 0.2, a3 = 0.3, a4 = 0.6, a5 = 1.0, a6 = 0.875, b21 = 0.2, b31 = 3.0 / 40.0, b32 = 9.0 / 40.0, b41 = 0.3, b42 = -0.9, b43 = 1.2,
-                       b51 = -11.0 / 54.0, b52 = 2.5, b53 = -70.0 / 27.0, b54 = 35.0 / 27.0, b61 = 1631.0 / 55296.0, b62 = 175.0 / 512.0, b63 = 575.0 / 13824.0,
-                       b64 = 44275.0 / 110592.0, b65 = 253.0 / 4096.0, c1 = 37.0 / 378.0, c3 = 250.0 / 621.0, c4 = 125.0 / 594.0, c6 = 512.0 / 1771.0,
-                       dc5 = -277.0 / 14336.0;
+         b51 = -11.0 / 54.0, b52 = 2.5, b53 = -70.0 / 27.0, b54 = 35.0 / 27.0, b61 = 1631.0 / 55296.0, b62 = 175.0 / 512.0, b63 = 575.0 / 13824.0,
+         b64 = 44275.0 / 110592.0, b65 = 253.0 / 4096.0, c1 = 37.0 / 378.0, c3 = 250.0 / 621.0, c4 = 125.0 / 594.0, c6 = 512.0 / 1771.0, dc5 = -277.0 / 14336.0;
    static final double dc1 = c1 - 2825.0 / 27648.0, dc3 = c3 - 18575.0 / 48384.0, dc4 = c4 - 13525.0 / 55296.0, dc6 = c6 - 0.25;
-
 
    double[] ak2;
    double[] ak3;
@@ -395,12 +380,9 @@ public class CollisionRungeKutta implements java.io.Serializable
    void rkck(double[] y, double[] dydx, double x, double h, double[] yout, double[] yerr, CollisionDerivativeVector dv) throws CollisionDerivativeException
    {
       /*
-       * double[] ak2 = new double[NVARS];
-       * double[] ak3 = new double[NVARS];
-       * double[] ak4 = new double[NVARS];
-       * double[] ak5 = new double[NVARS];
-       * double[] ak6 = new double[NVARS];
-       * double[] ytemp2 = new double[NVARS];
+       * double[] ak2 = new double[NVARS]; double[] ak3 = new double[NVARS]; double[] ak4 = new
+       * double[NVARS]; double[] ak5 = new double[NVARS]; double[] ak6 = new double[NVARS]; double[]
+       * ytemp2 = new double[NVARS];
        */
       for (int i = 0; i < NVARS; i++)
       {

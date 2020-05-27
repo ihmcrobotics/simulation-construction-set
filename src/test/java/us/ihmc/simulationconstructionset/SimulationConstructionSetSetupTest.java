@@ -1,10 +1,12 @@
 package us.ihmc.simulationconstructionset;
 
+import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import us.ihmc.simulationconstructionset.gui.SplashPanel;
 
-import javax.swing.*;
+import us.ihmc.simulationconstructionset.gui.SplashPanel;
 
 @Tag("gui")
 public class SimulationConstructionSetSetupTest
@@ -12,9 +14,9 @@ public class SimulationConstructionSetSetupTest
    private static SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
    private static final int pauseTimeForGUIs = 5000;
 
-	@Test
+   @Test
    public void testSplashScreen() throws Exception
-    {
+   {
       SwingUtilities.invokeAndWait(new Runnable()
       {
          @Override
@@ -29,7 +31,7 @@ public class SimulationConstructionSetSetupTest
       });
    }
 
-	@Test
+   @Test
    public void testSimulationConstructionSetWithoutARobot()
    {
       SimulationConstructionSet scs = new SimulationConstructionSet(parameters);
@@ -40,7 +42,7 @@ public class SimulationConstructionSetSetupTest
       scs.closeAndDispose();
    }
 
-	@Test
+   @Test
    public void testSimulationConstructionSetWithARobot()
    {
       Robot robot = new Robot("NullRobot");

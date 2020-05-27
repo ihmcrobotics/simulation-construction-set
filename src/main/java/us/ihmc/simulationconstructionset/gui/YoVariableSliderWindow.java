@@ -1,11 +1,16 @@
 package us.ihmc.simulationconstructionset.gui;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.tools.thread.CloseableAndDisposable;
 import us.ihmc.tools.thread.CloseableAndDisposableRegistry;
-
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * Created by Peter on 8/29/2017.
@@ -40,8 +45,8 @@ public class YoVariableSliderWindow implements CloseableAndDisposable
                                  final CloseableAndDisposableRegistry closeableAndDisposableRegistry)
    {
       this.numberOfSliders = numberOfSliders;
-      this.numCol = Math.min(numberOfSliders, MAX_CHANNELS_PER_ROW);
-      this.numRow = (int) Math.ceil(numberOfSliders / (double) MAX_CHANNELS_PER_ROW);
+      numCol = Math.min(numberOfSliders, MAX_CHANNELS_PER_ROW);
+      numRow = (int) Math.ceil(numberOfSliders / (double) MAX_CHANNELS_PER_ROW);
       this.closeableAndDisposableRegistry = closeableAndDisposableRegistry;
       this.selectedVariableHolder = selectedVariableHolder;
 

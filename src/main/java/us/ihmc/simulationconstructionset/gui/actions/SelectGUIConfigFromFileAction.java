@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import us.ihmc.simulationconstructionset.commands.SelectGUIConfigFromFileCommandExecutor;
+
 public class SelectGUIConfigFromFileAction extends AbstractAction
 {
    private static final long serialVersionUID = -8579530834957317679L;

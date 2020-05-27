@@ -6,7 +6,7 @@ import us.ihmc.simulationconstructionset.ViewportConfiguration;
 
 public class ViewportConfigurationList
 {
-   private ArrayList<ViewportConfiguration> configs = new ArrayList<ViewportConfiguration>();
+   private ArrayList<ViewportConfiguration> configs = new ArrayList<>();
 
    public ViewportConfigurationList()
    {

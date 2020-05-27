@@ -1,11 +1,12 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import us.ihmc.tools.MemoryTools;
 
-import static us.ihmc.robotics.Assert.*;
+import us.ihmc.tools.MemoryTools;
 
 public class VaryingStairGroundProfileTest
 {
@@ -14,14 +15,14 @@ public class VaryingStairGroundProfileTest
    {
       MemoryTools.printCurrentMemoryUsageAndReturnUsedMemoryInMB(getClass().getSimpleName() + " before test.");
    }
-   
+
    @AfterEach
    public void showMemoryUsageAfterTest()
    {
       MemoryTools.printCurrentMemoryUsageAndReturnUsedMemoryInMB(getClass().getSimpleName() + " after test.");
    }
 
-	@Test// timeout = 30000
+   @Test // timeout = 30000
    public void test()
    {
       double startX = -0.1;
@@ -34,7 +35,7 @@ public class VaryingStairGroundProfileTest
       double epsilonZ = 1e-14;
 
       int nSteps = stepRises.length;
-      
+
       double currentX = startX;
       double currentHeight = startZ;
       for (int i = 0; i < nSteps; i++)

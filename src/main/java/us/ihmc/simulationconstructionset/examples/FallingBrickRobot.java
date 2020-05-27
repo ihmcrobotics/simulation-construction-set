@@ -36,18 +36,17 @@ public class FallingBrickRobot extends Robot implements RobotController
 
    Joint floatingJoint;
 
-
    public FallingBrickRobot()
    {
       super("FallingBrick");
-      
+
       this.setGravity(0.0, 0.0, -G);
 
       // create the brick as a floating joint
       floatingJoint = new FloatingJoint("base", new Vector3D(0.0, 0.0, 0.0), this);
       Link link1 = base("base", YoAppearance.Red());
       floatingJoint.setLink(link1);
-      this.addRootJoint(floatingJoint);
+      addRootJoint(floatingJoint);
 
       // add ground contact points to the brick
       GroundContactPoint gc1 = new GroundContactPoint("gc1", new Vector3D(BASE_L / 2.0, BASE_W / 2.0, BASE_H / 2.0), this);
@@ -73,15 +72,15 @@ public class FallingBrickRobot extends Robot implements RobotController
       GroundContactPoint gc10 = new GroundContactPoint("gc10", new Vector3D(0.0, 0.0, -BASE_H / 2.0 - BASE_H), this);
       floatingJoint.addGroundContactPoint(gc10);
 
-      this.setController(this); // tells the simulator to call the local doControl() method 
+      this.setController(this); // tells the simulator to call the local doControl() method
 
-      // instantiate ground contact model 
-      GroundContactModel groundModel = new LinearGroundContactModel(this, 1422, 150.6, 50.0, 1000.0, this.getRobotsYoVariableRegistry());
+      // instantiate ground contact model
+      GroundContactModel groundModel = new LinearGroundContactModel(this, 1422, 150.6, 50.0, 1000.0, getRobotsYoVariableRegistry());
       // GroundContactModel groundModel = new CollisionGroundContactModel(this, 0.5, 0.7);
 
       GroundProfile3D profile = new WavyGroundProfile();
       groundModel.setGroundProfile3D(profile);
-      this.setGroundContactModel(groundModel);
+      setGroundContactModel(groundModel);
 
       initRobot();
       initControl();
@@ -109,7 +108,6 @@ public class FallingBrickRobot extends Robot implements RobotController
       return ret;
    }
 
-
    /**
     * This method sets the initial positions, velocities, and accelerations of the brick
     */
@@ -120,30 +118,30 @@ public class FallingBrickRobot extends Robot implements RobotController
 
       t.set(0.0);
 
-      q_x = (YoDouble)this.getVariable("q_x");
-      q_y = (YoDouble)this.getVariable("q_y");
-      q_z = (YoDouble)this.getVariable("q_z");
-      qd_x = (YoDouble)this.getVariable("qd_x");
-      qd_y = (YoDouble)this.getVariable("qd_y");
-      qd_z = (YoDouble)this.getVariable("qd_z");
-      qdd_x = (YoDouble)this.getVariable("qdd_x");
-      qdd_y = (YoDouble)this.getVariable("qdd_y");
-      qdd_z = (YoDouble)this.getVariable("qdd_z");
+      q_x = (YoDouble) this.getVariable("q_x");
+      q_y = (YoDouble) this.getVariable("q_y");
+      q_z = (YoDouble) this.getVariable("q_z");
+      qd_x = (YoDouble) this.getVariable("qd_x");
+      qd_y = (YoDouble) this.getVariable("qd_y");
+      qd_z = (YoDouble) this.getVariable("qd_z");
+      qdd_x = (YoDouble) this.getVariable("qdd_x");
+      qdd_y = (YoDouble) this.getVariable("qdd_y");
+      qdd_z = (YoDouble) this.getVariable("qdd_z");
 
-      q_qs = (YoDouble)this.getVariable("q_qs");
-      q_qx = (YoDouble)this.getVariable("q_qx");
-      q_qy = (YoDouble)this.getVariable("q_qy");
-      q_qz = (YoDouble)this.getVariable("q_qz");
-      qd_wx = (YoDouble)this.getVariable("qd_wx");
-      qd_wy = (YoDouble)this.getVariable("qd_wy");
-      qd_wz = (YoDouble)this.getVariable("qd_wz");
-      qdd_wx = (YoDouble)this.getVariable("qdd_wx");
-      qdd_wy = (YoDouble)this.getVariable("qdd_wy");
-      qdd_wz = (YoDouble)this.getVariable("qdd_wz");
+      q_qs = (YoDouble) this.getVariable("q_qs");
+      q_qx = (YoDouble) this.getVariable("q_qx");
+      q_qy = (YoDouble) this.getVariable("q_qy");
+      q_qz = (YoDouble) this.getVariable("q_qz");
+      qd_wx = (YoDouble) this.getVariable("qd_wx");
+      qd_wy = (YoDouble) this.getVariable("qd_wy");
+      qd_wz = (YoDouble) this.getVariable("qd_wz");
+      qdd_wx = (YoDouble) this.getVariable("qdd_wx");
+      qdd_wy = (YoDouble) this.getVariable("qdd_wy");
+      qdd_wz = (YoDouble) this.getVariable("qdd_wz");
 
       q_x.set(0.0);
       q_y.set(0.0);
-      q_z.set(0.6);   
+      q_z.set(0.6);
 
       qd_x.set(0.0);
       qd_y.set(0.0);
@@ -154,8 +152,8 @@ public class FallingBrickRobot extends Robot implements RobotController
       q_qy.set(0.4);
       q_qz.set(0.5);
 
-      qd_wx.set(0.0001);   
-      qd_wy.set(1.0);   
+      qd_wx.set(0.0001);
+      qd_wy.set(1.0);
       qd_wz.set(0.5001);
 
    }
@@ -172,8 +170,10 @@ public class FallingBrickRobot extends Robot implements RobotController
    @Override
    public void doControl()
    {
-      energy.set(M1 * G * q_z.getDoubleValue() + 0.5 * M1 * qd_x.getDoubleValue() * qd_x.getDoubleValue() + 0.5 * M1 * qd_y.getDoubleValue() * qd_y.getDoubleValue() + 0.5 * M1 * qd_z.getDoubleValue() * qd_z.getDoubleValue()
-                   + 0.5 * Ixx1 * qd_wx.getDoubleValue() * qd_wx.getDoubleValue() + 0.5 * Iyy1 * qd_wy.getDoubleValue() * qd_wy.getDoubleValue() + 0.5 * Izz1 * qd_wz.getDoubleValue() * qd_wz.getDoubleValue());
+      energy.set(M1 * G * q_z.getDoubleValue() + 0.5 * M1 * qd_x.getDoubleValue() * qd_x.getDoubleValue()
+            + 0.5 * M1 * qd_y.getDoubleValue() * qd_y.getDoubleValue() + 0.5 * M1 * qd_z.getDoubleValue() * qd_z.getDoubleValue()
+            + 0.5 * Ixx1 * qd_wx.getDoubleValue() * qd_wx.getDoubleValue() + 0.5 * Iyy1 * qd_wy.getDoubleValue() * qd_wy.getDoubleValue()
+            + 0.5 * Izz1 * qd_wz.getDoubleValue() * qd_wz.getDoubleValue());
 
       qdd2_wx.set((Iyy1 - Izz1) / Ixx1 * qd_wy.getDoubleValue() * qd_wz.getDoubleValue());
       qdd2_wy.set((Izz1 - Ixx1) / Iyy1 * qd_wz.getDoubleValue() * qd_wx.getDoubleValue());
@@ -186,10 +186,10 @@ public class FallingBrickRobot extends Robot implements RobotController
    {
       return registry;
    }
-   
+
    @Override
    public void initialize()
-   {      
+   {
    }
 
    @Override
@@ -199,4 +199,3 @@ public class FallingBrickRobot extends Robot implements RobotController
    }
 
 }
-

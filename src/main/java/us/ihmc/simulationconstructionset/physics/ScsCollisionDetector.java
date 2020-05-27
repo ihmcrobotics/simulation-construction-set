@@ -4,13 +4,11 @@ import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionRes
 
 /**
  * High level interface for collision detection
- *
  */
 public interface ScsCollisionDetector
 {
    /**
     * Call to initialize collision detection.
-    *
     */
    public void initialize();
 

@@ -1,8 +1,10 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformBasics;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
 public class JointWrenchSensor
@@ -12,7 +14,7 @@ public class JointWrenchSensor
    private final Vector3D offsetFromJoint = new Vector3D();
 
    // FIXME offsetFromJoint is probably the offsetToJoint.
-   public JointWrenchSensor(String name, Vector3D offsetFromJoint, Robot robot)
+   public JointWrenchSensor(String name, Tuple3DReadOnly offsetFromJoint, Robot robot)
    {
       this.name = name;
 
@@ -22,7 +24,7 @@ public class JointWrenchSensor
       this.offsetFromJoint.set(offsetFromJoint);
    }
 
-   public void getOffsetFromJoint(Vector3D offsetFromJointToPack)
+   public void getOffsetFromJoint(Tuple3DBasics offsetFromJointToPack)
    {
       offsetFromJointToPack.set(offsetFromJoint);
    }
@@ -48,7 +50,12 @@ public class JointWrenchSensor
       jointWrenchTorque.set(tempVector);
    }
 
-   public void getTransformToParentJoint(RigidBodyTransform transformToPack)
+   public Vector3DReadOnly getOffsetFromJoint()
+   {
+      return offsetFromJoint;
+   }
+
+   public void getTransformToParentJoint(RigidBodyTransformBasics transformToPack)
    {
       transformToPack.setTranslationAndIdentityRotation(offsetFromJoint);
    }

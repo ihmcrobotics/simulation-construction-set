@@ -7,7 +7,6 @@ import javax.swing.JCheckBox;
 
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 
-
 public class TrackCheckBox extends JCheckBox implements ActionListener
 {
    private static final String TRACK = "Track";
@@ -17,12 +16,12 @@ public class TrackCheckBox extends JCheckBox implements ActionListener
    public TrackCheckBox(ActiveCameraHolder cameraHolder)
    {
       super(TRACK);
-      this.setName(TRACK);
+      setName(TRACK);
 
       this.cameraHolder = cameraHolder;
 
       CameraPropertiesHolder camera = cameraHolder.getCameraPropertiesForActiveCamera();
-      this.setSelected(camera.isTracking());
+      setSelected(camera.isTracking());
       addActionListener(this);
    }
 
@@ -30,7 +29,7 @@ public class TrackCheckBox extends JCheckBox implements ActionListener
    public void actionPerformed(ActionEvent actionEvent)
    {
       CameraPropertiesHolder camera = cameraHolder.getCameraPropertiesForActiveCamera();
-      camera.setTracking(this.isSelected());
+      camera.setTracking(isSelected());
 
    }
 
@@ -43,7 +42,8 @@ public class TrackCheckBox extends JCheckBox implements ActionListener
          {
             CameraPropertiesHolder camera = cameraHolder.getCameraPropertiesForActiveCamera();
             camera.setTracking(isSelected());
-         }});
+         }
+      });
    }
 
    public void makeCheckBoxConsistent()
@@ -54,7 +54,9 @@ public class TrackCheckBox extends JCheckBox implements ActionListener
          public void run()
          {
             CameraPropertiesHolder camera = cameraHolder.getCameraPropertiesForActiveCamera();
-            if (camera != null) setSelected(camera.isTracking());
-         }});
+            if (camera != null)
+               setSelected(camera.isTracking());
+         }
+      });
    }
 }

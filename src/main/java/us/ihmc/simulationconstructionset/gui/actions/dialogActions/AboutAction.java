@@ -19,9 +19,9 @@ public class AboutAction extends AbstractAction
       super("About...");
       this.constructor = constructor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
-      this.putValue(Action.LONG_DESCRIPTION, "Display About Information");
-      this.putValue(Action.SHORT_DESCRIPTION, "About");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
+      putValue(Action.LONG_DESCRIPTION, "Display About Information");
+      putValue(Action.SHORT_DESCRIPTION, "About");
    }
 
    @Override

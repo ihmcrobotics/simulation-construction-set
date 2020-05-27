@@ -37,14 +37,14 @@ public class YoVariablePanelJPopupMenu extends ForcedRepaintPopupMenu
       super();
       this.selectedVariableHolder = selectedVariableHolder;
 
-      this.graphArrayPanel = null;
-      this.entryBoxArrayPanel = null;
-      this.combinedVarPanel = null;
-      this.bookmarkedVariablesHolder = null;
+      graphArrayPanel = null;
+      entryBoxArrayPanel = null;
+      combinedVarPanel = null;
+      bookmarkedVariablesHolder = null;
    }
 
    public YoVariablePanelJPopupMenu(GraphArrayPanel graphArrayPanel, EntryBoxArrayTabbedPanel entryBoxArrayPanel, SelectedVariableHolder selectedVariableHolder,
-         YoVariableExplorerTabbedPane combinedVarPanel, BookmarkedVariablesHolder bookmarkedVariablesHolder)
+                                    YoVariableExplorerTabbedPane combinedVarPanel, BookmarkedVariablesHolder bookmarkedVariablesHolder)
    {
       super();
       this.graphArrayPanel = graphArrayPanel;

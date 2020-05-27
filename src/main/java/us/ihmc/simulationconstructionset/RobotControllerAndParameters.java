@@ -13,7 +13,7 @@ public class RobotControllerAndParameters
    {
       this.controller = controller;
       this.simulationTicksPerControlTick = simulationTicksPerControlTick;
-      this.ticks_till_control = new YoInteger("ticks_till_control_" + controller.getName(), controller.getYoVariableRegistry());
+      ticks_till_control = new YoInteger("ticks_till_control_" + controller.getName(), controller.getYoVariableRegistry());
       ticks_till_control.set(simulationTicksPerControlTick);
    }
 

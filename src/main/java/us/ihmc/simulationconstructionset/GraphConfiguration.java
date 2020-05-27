@@ -11,10 +11,8 @@ public class GraphConfiguration
 
    // private String[] varNames;
 
-   public static final int
-      INDIVIDUAL_SCALING = 0, AUTO_SCALING = 1, MANUAL_SCALING = 2;
-   public static final int
-      TIME_PLOT = 100, PHASE_PLOT = 101;
+   public static final int INDIVIDUAL_SCALING = 0, AUTO_SCALING = 1, MANUAL_SCALING = 2;
+   public static final int TIME_PLOT = 100, PHASE_PLOT = 101;
    private double manualMinScaling = 0.0, manualMaxScaling = 1.0;
 
    // private final double manualMinScaling, manualMaxScaling;
@@ -58,19 +56,17 @@ public class GraphConfiguration
       this.name = name;
       this.scalingMethod = scalingMethod;
 
-      this.manualMinScaling = minScaling;
-      this.manualMaxScaling = maxScaling;
+      manualMinScaling = minScaling;
+      manualMaxScaling = maxScaling;
 
       // System.out.println("Creating Graph Configuration with name " + name + ", scalingMethod = " + scalingMethod);
       // System.out.println("  manualMinScaling = " + manualMinScaling + ", manualMaxScaling = " + manualMaxScaling);
    }
 
-
    public String getName()
    {
-      return this.name;
+      return name;
    }
-
 
    public void setScalingMethod(int scalingMethod)
    {
@@ -79,7 +75,7 @@ public class GraphConfiguration
 
    public int getScalingMethod()
    {
-      return this.scalingMethod;
+      return scalingMethod;
    }
 
    public void setPlotType(int plotType)
@@ -89,7 +85,7 @@ public class GraphConfiguration
 
    public int getPlotType()
    {
-      return this.plotType;
+      return plotType;
    }
 
    public void setShowBaseLines(boolean showBaseLines)
@@ -99,17 +95,17 @@ public class GraphConfiguration
 
    public void setBaseLine(double baseLine)
    {
-      this.baseLines = new double[] {baseLine};
+      baseLines = new double[] {baseLine};
    }
 
    public void setBaseLines(double baseLine1, double baseLine2)
    {
-      this.baseLines = new double[] {baseLine1, baseLine2};
+      baseLines = new double[] {baseLine1, baseLine2};
    }
 
    public void setPositiveNegativeBaseLines(double baseLine)
    {
-      this.baseLines = new double[] {-baseLine, baseLine};
+      baseLines = new double[] {-baseLine, baseLine};
    }
 
    public void setBaseLines(double[] baseLines)
@@ -119,32 +115,34 @@ public class GraphConfiguration
 
    public void setBaseLine(int baseLineIndex, double value)
    {
-      if (baseLineIndex >= baseLines.length) return;
-      this.baseLines[baseLineIndex] = value;
+      if (baseLineIndex >= baseLines.length)
+         return;
+      baseLines[baseLineIndex] = value;
    }
-   
+
    public void incrementBaseLine(int baseLineIndex, double amountToIncrement)
    {
-      if (baseLineIndex >= baseLines.length) return;
-      this.baseLines[baseLineIndex] += amountToIncrement;
+      if (baseLineIndex >= baseLines.length)
+         return;
+      baseLines[baseLineIndex] += amountToIncrement;
    }
 
    public boolean getShowBaseLines()
    {
-      return this.showBaseLines;
+      return showBaseLines;
    }
 
    public double[] getBaseLines()
    {
-      return this.baseLines;
+      return baseLines;
    }
 
    public void setManualScalingMinMax(double minScaling, double maxScaling)
    {
       // System.out.println("Changing " + name + ". Values were:  manualMinScaling = " + manualMinScaling + ", manualMaxScaling = " + manualMaxScaling);
 
-      this.manualMinScaling = minScaling;
-      this.manualMaxScaling = maxScaling;
+      manualMinScaling = minScaling;
+      manualMaxScaling = maxScaling;
 
       // System.out.println("Changing " + name + ". Values are now:  manualMinScaling = " + manualMinScaling + ", manualMaxScaling = " + manualMaxScaling);
 
@@ -155,7 +153,6 @@ public class GraphConfiguration
       this.minPhaseXScaling = minPhaseXScaling;
       this.maxPhaseXScaling = maxPhaseXScaling;
    }
-
 
    public double getManualScalingMin()
    {
@@ -213,49 +210,47 @@ public class GraphConfiguration
       {
          String graphConfigurationString = XMLReaderUtility.getMiddleString(start, xmlRepresentation, "<GraphConfiguration>", "</GraphConfig>");
 
-//       System.out.println("        GraphConfiguration: " + graphConfigurationString);
+         //       System.out.println("        GraphConfiguration: " + graphConfigurationString);
 
          String name = XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<Name>", "</Name>");
 
-//       System.out.println("            Name: " + name);
+         //       System.out.println("            Name: " + name);
 
-         int scalingMethod = XMLReaderUtility.parseIntegerBetweenTwoStrings(0, graphConfigurationString, "<ScalingMethod>", "</ScalingMethod>");    // Integer.parseInt(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<ScalingMethod>", "</ScalingMethod>"));
+         int scalingMethod = XMLReaderUtility.parseIntegerBetweenTwoStrings(0, graphConfigurationString, "<ScalingMethod>", "</ScalingMethod>"); // Integer.parseInt(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<ScalingMethod>", "</ScalingMethod>"));
 
-//       System.out.println("            ScalingMethod: " + scalingMethod);
+         //       System.out.println("            ScalingMethod: " + scalingMethod);
 
-         int plotType = XMLReaderUtility.parseIntegerBetweenTwoStrings(0, graphConfigurationString, "<PlotType>", "</PlotType>");    // Integer.parseInt(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<PlotType>", "</PlotType>"));
+         int plotType = XMLReaderUtility.parseIntegerBetweenTwoStrings(0, graphConfigurationString, "<PlotType>", "</PlotType>"); // Integer.parseInt(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<PlotType>", "</PlotType>"));
 
-//       System.out.println("            PlotType: " + plotType);
+         //       System.out.println("            PlotType: " + plotType);
 
-         boolean showBaseLines = XMLReaderUtility.parseBooleanBetweenTwoStrings(0, graphConfigurationString, "<ShowBaseLines>", "</ShowBaseLines>");    // Boolean.parseBoolean(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<ShowBaseLines>", "</ShowBaseLines>"));
+         boolean showBaseLines = XMLReaderUtility.parseBooleanBetweenTwoStrings(0, graphConfigurationString, "<ShowBaseLines>", "</ShowBaseLines>"); // Boolean.parseBoolean(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<ShowBaseLines>", "</ShowBaseLines>"));
 
-//       System.out.println("            ShowBaseLines: " + showBaseLines);
+         //       System.out.println("            ShowBaseLines: " + showBaseLines);
 
          String baseLinesString = XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<BaseLines>", "</BaseLines>");
 
-//       System.out.println("            BaseLines: " + baseLines);
+         //       System.out.println("            BaseLines: " + baseLines);
 
          StringTokenizer tokenizer = new StringTokenizer(baseLinesString, " /t/n/r/f,");
          double[] baseLines = new double[tokenizer.countTokens()];
          int numberOfTokens = tokenizer.countTokens();
          for (int i = 0; i < numberOfTokens; i++)
          {
-            baseLines[i] = XMLReaderUtility.parseDouble(tokenizer.nextToken());    // Double.parseDouble(tokenizer.nextToken());
+            baseLines[i] = XMLReaderUtility.parseDouble(tokenizer.nextToken()); // Double.parseDouble(tokenizer.nextToken());
 
-//          System.out.println("                BaseLine: " + baseLines[i]);
+            //          System.out.println("                BaseLine: " + baseLines[i]);
          }
 
-         double manualMaxScaling = XMLReaderUtility.parseDoubleBetweenTwoStrings(0, graphConfigurationString, "<MaxScaling>", "</MaxScaling>");    // Double.parseDouble(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<MaxScaling>", "</MaxScaling>"));
+         double manualMaxScaling = XMLReaderUtility.parseDoubleBetweenTwoStrings(0, graphConfigurationString, "<MaxScaling>", "</MaxScaling>"); // Double.parseDouble(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<MaxScaling>", "</MaxScaling>"));
 
-//       System.out.println("            ManualMaxScaling: " + manualMaxScaling);
+         //       System.out.println("            ManualMaxScaling: " + manualMaxScaling);
 
-         double manualMinScaling = XMLReaderUtility.parseDoubleBetweenTwoStrings(0, graphConfigurationString, "<MinScaling>", "</MinScaling>");    // Double.parseDouble(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<MinScaling>", "</MinScaling>"));
+         double manualMinScaling = XMLReaderUtility.parseDoubleBetweenTwoStrings(0, graphConfigurationString, "<MinScaling>", "</MinScaling>"); // Double.parseDouble(XMLReaderUtility.getMiddleString(0, graphConfigurationString, "<MinScaling>", "</MinScaling>"));
 
-//       System.out.println("            ManualMinScaling: " + manualMinScaling);
-
+         //       System.out.println("            ManualMinScaling: " + manualMinScaling);
 
          tmp = new GraphConfiguration(name, scalingMethod, manualMinScaling, manualMaxScaling);
-
 
          // this.name = name;
          // this.scalingMethod = scalingMethod;
@@ -276,10 +271,5 @@ public class GraphConfiguration
 
       return tmp;
    }
-
-
-
-
-
 
 }

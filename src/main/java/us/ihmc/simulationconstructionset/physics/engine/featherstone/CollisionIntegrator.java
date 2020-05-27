@@ -9,25 +9,22 @@ import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.CollisionRungeKutta.ODEException;
 import us.ihmc.simulationconstructionset.util.QuarticRootFinder;
 
-
 public class CollisionIntegrator implements java.io.Serializable
 {
    /*
-    * private static final double U_STUCK_THRESH = 0.0001;
-    * private static final double ACCURACY = 0.0002;
-    * private static final double H_MIN = 0.0000000001, H_START = 0.001; //H_MIN = 0.00000001, H_START = 0.001; //H_MIN = 0.000001, H_START = 0.001;
-    * private static final double UZ_OVERSHOOT = 0.00001;
+    * private static final double U_STUCK_THRESH = 0.0001; private static final double ACCURACY =
+    * 0.0002; private static final double H_MIN = 0.0000000001, H_START = 0.001; //H_MIN = 0.00000001,
+    * H_START = 0.001; //H_MIN = 0.000001, H_START = 0.001; private static final double UZ_OVERSHOOT =
+    * 0.00001;
     */
 
    private static final long serialVersionUID = -6083539629185172597L;
-   private static final double U_STUCK_THRESH = 0.0001;    // U_STUCK_THRESH = 0.0001;
+   private static final double U_STUCK_THRESH = 0.0001; // U_STUCK_THRESH = 0.0001;
    private static final double ACCURACY = 1e-7;
-   private static final double
-      H_MIN = 1.0E-10, H_START = 0.001;    // H_MIN = 1.0E-10, H_START = 0.001; //H_MIN = 0.00000001, H_START = 0.001; //H_MIN = 0.000001, H_START = 0.001;
-   private static final double UZ_OVERSHOOT = 0.0005;    // 0.001
+   private static final double H_MIN = 1.0E-10, H_START = 0.001; // H_MIN = 1.0E-10, H_START = 0.001; //H_MIN = 0.00000001, H_START = 0.001; //H_MIN = 0.000001, H_START = 0.001;
+   private static final double UZ_OVERSHOOT = 0.0005; // 0.001
 
-   private static final double
-      PZ_STEP_SIZE_MIN = 1.0E-7, PZ_STEP_SIZE_MAX = 10.0;
+   private static final double PZ_STEP_SIZE_MIN = 1.0E-7, PZ_STEP_SIZE_MAX = 10.0;
 
    private Matrix3DReadOnly K;
    private Matrix3D K_inv = new Matrix3D();
@@ -36,7 +33,7 @@ public class CollisionIntegrator implements java.io.Serializable
    private double epsilon, mu;
 
    private boolean stableSticking;
-   private boolean amStuck;    // , hadBadCompression;
+   private boolean amStuck; // , hadBadCompression;
 
    private Vector3DReadOnly u0 = new Vector3D();
    Vector3D Kx = new Vector3D(), Ky = new Vector3D(), Kz = new Vector3D();
@@ -46,20 +43,16 @@ public class CollisionIntegrator implements java.io.Serializable
       collisionRungeKutta = new CollisionRungeKutta(3);
 
       /*
-       * collisionRungeKutta.setAdaptive();
-       * collisionRungeKutta.setStepSize(H_START);
-       * collisionRungeKutta.setMinimumStepSize(H_MIN);
-       * collisionRungeKutta.setVerbose(false);
+       * collisionRungeKutta.setAdaptive(); collisionRungeKutta.setStepSize(H_START);
+       * collisionRungeKutta.setMinimumStepSize(H_MIN); collisionRungeKutta.setVerbose(false);
        * collisionRungeKutta.setAccuracy(ACCURACY);
        */
 
       pzRungeKutta = new CollisionRungeKutta(4);
 
       /*
-       * pzRungeKutta.setAdaptive();
-       * pzRungeKutta.setStepSize(H_START);
-       * pzRungeKutta.setMinimumStepSize(H_MIN);
-       * pzRungeKutta.setVerbose(false);
+       * pzRungeKutta.setAdaptive(); pzRungeKutta.setStepSize(H_START);
+       * pzRungeKutta.setMinimumStepSize(H_MIN); pzRungeKutta.setVerbose(false);
        * pzRungeKutta.setAccuracy(ACCURACY);
        */
    }
@@ -70,94 +63,76 @@ public class CollisionIntegrator implements java.io.Serializable
 
       CollisionIntegrator integrator = new CollisionIntegrator();
 
-
       /*
-       * Matrix3d K_test = new Matrix3d(8.0,-2.0,1.0,-2.0,3.0,-1.0,1.0,-1.0,5.0);
-       * double mu = 0.2, epsilon = 0.2;
-       * Vector3d u0_test = new Vector3d(-2.0, 1.0, -4.0);
-       */
-
-
-      /*
-       * Matrix3d K_test = new Matrix3d(4.83333,0.0,0.0,0.0,4.833333,0.0,0.0,0.0,1.5);
-       * double mu = 0.92, epsilon = 1.0;
-       * Vector3d u0_test = new Vector3d(0.0, 0.0, -1.0);
+       * Matrix3d K_test = new Matrix3d(8.0,-2.0,1.0,-2.0,3.0,-1.0,1.0,-1.0,5.0); double mu = 0.2, epsilon
+       * = 0.2; Vector3d u0_test = new Vector3d(-2.0, 1.0, -4.0);
        */
 
       /*
-       * Matrix3d K_test = new Matrix3d(3.47985, 0.0100, 0.223515, 0.0100, 3.5, 0.0100, 0.223515, 0.0100, 1.020146);
-       * double mu = 0.05, epsilon = 1.0;
-       * Vector3d u0_test = new Vector3d(0.0, 0.0, -1.0);
+       * Matrix3d K_test = new Matrix3d(4.83333,0.0,0.0,0.0,4.833333,0.0,0.0,0.0,1.5); double mu = 0.92,
+       * epsilon = 1.0; Vector3d u0_test = new Vector3d(0.0, 0.0, -1.0);
+       */
+
+      /*
+       * Matrix3d K_test = new Matrix3d(3.47985, 0.0100, 0.223515, 0.0100, 3.5, 0.0100, 0.223515, 0.0100,
+       * 1.020146); double mu = 0.05, epsilon = 1.0; Vector3d u0_test = new Vector3d(0.0, 0.0, -1.0);
        */
 
       /*
        * Matrix3d K_test = new Matrix3d(1.1342222504102195, 0.004126728884482201, -0.15691706096001176,
-       *                             0.004126728884482199, 0.025381577079665128, 0.004414281746073675,
-       *                             -0.15691706096001173, 0.004414281746073675, 0.06421269879067157);
-       *
-       * double mu = 0.7, epsilon = 0.1;
-       * Vector3d u0_test = new Vector3d(-5.895158654917366E-4, 1.8749539576258544E-4, -0.0016297500787469943);
+       * 0.004126728884482199, 0.025381577079665128, 0.004414281746073675, -0.15691706096001173,
+       * 0.004414281746073675, 0.06421269879067157); double mu = 0.7, epsilon = 0.1; Vector3d u0_test =
+       * new Vector3d(-5.895158654917366E-4, 1.8749539576258544E-4, -0.0016297500787469943);
        */
-
-
 
       // p_coll: (0.17188135946929903, -0.007288630118566598, -0.24648651514990955)
 
       /*
        * Matrix3d K_test = new Matrix3d(1.1283380515752726, -0.001809908560091365, 0.17617678415118457,
-       *                             -0.0018099085600913653, 0.025437857575848575, 0.004807094008384275,
-       *                               0.17617678415118465, 0.0048070940083842755, 0.07008821141980301);
-       *
-       *
-       * double mu = 0.7, epsilon = 0.1;
-       * Vector3d u0_test = new Vector3d(5.806705594191019E-4, -7.915630494231113E-4, -0.011444529447608695);
+       * -0.0018099085600913653, 0.025437857575848575, 0.004807094008384275, 0.17617678415118465,
+       * 0.0048070940083842755, 0.07008821141980301); double mu = 0.7, epsilon = 0.1; Vector3d u0_test =
+       * new Vector3d(5.806705594191019E-4, -7.915630494231113E-4, -0.011444529447608695);
        */
 
       /*
        * Matrix3d K_test = new Matrix3d(1.0884180123959373, -0.0016746159372512137, -0.273476754908481,
-       *                             -0.001674615937251212, 0.025733497695040443, -0.0073012463637908784,
-       *                             -0.27347675490848106, -0.007301246363790878, 0.12299541129420415);
-       *
-       *
-       * double mu = 0.7, epsilon = 0.1;
-       * Vector3d u0_test = new Vector3d(5.049818637140807E-4, -4.2306740568656334E-4, -0.0010165991967400496);
+       * -0.001674615937251212, 0.025733497695040443, -0.0073012463637908784, -0.27347675490848106,
+       * -0.007301246363790878, 0.12299541129420415); double mu = 0.7, epsilon = 0.1; Vector3d u0_test =
+       * new Vector3d(5.049818637140807E-4, -4.2306740568656334E-4, -0.0010165991967400496);
        */
-
 
       /*
        * Matrix3d K_test = new Matrix3d(1.2291934004316973, 0.00105078599490031, 0.13012964047319764,
-       *                               0.001050785994900307, 0.43590647432237956, -0.20342283466057104,
-       *                               0.13012964047319764, -0.2034228346605711, 0.12623720152295714);
-       *
-       * double mu = 0.7, epsilon = 0.1;
-       * Vector3d u0_test = new Vector3d(-0.0895,-0.5198,-0.71915);
+       * 0.001050785994900307, 0.43590647432237956, -0.20342283466057104, 0.13012964047319764,
+       * -0.2034228346605711, 0.12623720152295714); double mu = 0.7, epsilon = 0.1; Vector3d u0_test = new
+       * Vector3d(-0.0895,-0.5198,-0.71915);
        */
 
       // Vector3d u0_test = new Vector3d(-0.792456072811943, -0.5812959495565716, -0.7866333086521968);
 
-
       /*
        * Matrix3d K_test = new Matrix3d(1.6450778034099955, 0.7982095897676131, -0.005188629210542688,
-       *                               0.7982095897676127, 0.43458463722653984, -0.03705665798843,
-       *                               -0.005188629210542542, -0.03705665798843, 0.15694363350221135);
-       *
-       * double mu = 0.7, epsilon = 0.1;
-       * Vector3d u0_test = new Vector3d(-1.2873982706843987, -0.3749851697997516, -2.350018921463037);
+       * 0.7982095897676127, 0.43458463722653984, -0.03705665798843, -0.005188629210542542,
+       * -0.03705665798843, 0.15694363350221135); double mu = 0.7, epsilon = 0.1; Vector3d u0_test = new
+       * Vector3d(-1.2873982706843987, -0.3749851697997516, -2.350018921463037);
        */
 
+      Matrix3D K_test = new Matrix3D(1.9795607798930628,
+                                     -0.23966928371230545,
+                                     0.2574790610887272,
+                                     -0.23966928371230545,
+                                     0.06310349438764432,
+                                     -0.012154180483161334,
+                                     0.2574790610887272,
+                                     -0.012154180483161352,
+                                     0.19089180777144152);
 
-      Matrix3D K_test = new Matrix3D(1.9795607798930628, -0.23966928371230545, 0.2574790610887272, -0.23966928371230545, 0.06310349438764432,
-                                     -0.012154180483161334, 0.2574790610887272, -0.012154180483161352, 0.19089180777144152);
-
-      double mu = 0.7, epsilon = 3.0;    // .0;
+      double mu = 0.7, epsilon = 3.0; // .0;
       Vector3D u0_test = new Vector3D(-0.46351582426916077, 0.061475623099959374, -4.4499062468302507E-4);
-
-
 
       Matrix3D K_test_inv = new Matrix3D(K_test);
       K_test_inv.invert();
       System.out.println("K_test_inv: " + K_test_inv);
-
 
       integrator.setup(K_test, u0_test, epsilon, mu);
 
@@ -168,7 +143,7 @@ public class CollisionIntegrator implements java.io.Serializable
 
       System.out.println("u0: " + u0_test);
 
-      System.out.println("final ux: " + final_output.getX() + ", uy: " + final_output.getY() + ", uz: " + final_output.getZ());    // + ", Wz: " + final_output[3]);
+      System.out.println("final ux: " + final_output.getX() + ", uy: " + final_output.getY() + ", uz: " + final_output.getZ()); // + ", Wz: " + final_output[3]);
       Vector3D delta_u = new Vector3D();
       delta_u.sub(final_output, u0_test);
       System.out.println("delta_u: " + delta_u);
@@ -176,7 +151,6 @@ public class CollisionIntegrator implements java.io.Serializable
       Vector3D impulse = new Vector3D(delta_u);
       K_test_inv.transform(impulse);
       System.out.println("Impulse:  " + impulse);
-
 
    }
 
@@ -196,7 +170,6 @@ public class CollisionIntegrator implements java.io.Serializable
       pzRungeKutta.setMinimumStepSize(H_MIN);
       pzRungeKutta.setVerbose(false);
       pzRungeKutta.setAccuracy(ACCURACY);
-
 
       this.K = K;
       this.u0 = u0;
@@ -243,8 +216,8 @@ public class CollisionIntegrator implements java.io.Serializable
       // System.out.println("Kx: " + Kx);
       // Compute if stable sticking or not.  Mirtich p. 65.
 
-      if (K_inv.getElement(0, 2) * K_inv.getElement(0, 2) + K_inv.getElement(1, 2) * K_inv.getElement(1, 2)
-            <= mu * mu * K_inv.getElement(2, 2) * K_inv.getElement(2, 2))
+      if (K_inv.getElement(0, 2) * K_inv.getElement(0, 2) + K_inv.getElement(1, 2) * K_inv.getElement(1, 2) <= mu * mu * K_inv.getElement(2, 2)
+            * K_inv.getElement(2, 2))
          stableSticking = true;
       else
          stableSticking = false;
@@ -269,7 +242,7 @@ public class CollisionIntegrator implements java.io.Serializable
       // System.out.println("u_final: " + u_final);
 
       delta_u.set(u_final);
-      delta_u.sub(this.u0);
+      delta_u.sub(u0);
 
       // System.out.println("delta_u: " + delta_u);
 
@@ -277,7 +250,6 @@ public class CollisionIntegrator implements java.io.Serializable
       K_inv.transform(impulse);
 
       // System.out.println("impulse: " + impulse);
-
 
    }
 
@@ -288,7 +260,7 @@ public class CollisionIntegrator implements java.io.Serializable
       impulse.set(u0);
 
       // impulse.scale(-2.0); //-1.5);
-      impulse.scale(-2.1);    // +++JEP.  Use 2.1 instead of 2.0 to prevent major ground penetration...
+      impulse.scale(-2.1); // +++JEP.  Use 2.1 instead of 2.0 to prevent major ground penetration...
 
       // impulse.x = impulse.x * (-1.0); //(-2.0); //-1.5);
       // impulse.y = impulse.y * (-1.0);
@@ -297,7 +269,6 @@ public class CollisionIntegrator implements java.io.Serializable
       K_inv.transform(impulse);
 
    }
-
 
    private Vector3D zeta_B = new Vector3D();
    double[] pz_output = new double[4];
@@ -321,11 +292,11 @@ public class CollisionIntegrator implements java.io.Serializable
       {
          nn++;
 
-//          System.out.println("Kz.dot(zeta)<0.0!!!!!!  Need to do integration with respect to pz first!!!!");
+         //          System.out.println("Kz.dot(zeta)<0.0!!!!!!  Need to do integration with respect to pz first!!!!");
 
          // if (nn>20)System.out.println("Before pz integration (ux, uy, uz, Wz) = (" + ux + ", " + uy + ", " + uz + ", " + Wz + ")");
 
-         double pz_step_size = (nn / 1000.0) * Math.abs(uz / K.getM22());    // 0.005 *
+         double pz_step_size = (nn / 1000.0) * Math.abs(uz / K.getM22()); // 0.005 *
          if (pz_step_size > PZ_STEP_SIZE_MAX)
             pz_step_size = PZ_STEP_SIZE_MAX;
          if (pz_step_size < PZ_STEP_SIZE_MIN)
@@ -347,15 +318,9 @@ public class CollisionIntegrator implements java.io.Serializable
          // System.out.println("nn:  " + nn);
 
          /*
-          * if ((Kz.dot(zeta) > 0.0) && (nn > 20))
-          * {
-          * System.out.println("nn:  " + nn);
-          * System.out.print("K: "  + K);
-          * System.out.println("u0: " + u0);
-          * System.out.println("u_pz: (" + ux + ", " + uy + ", " + uz + ", " + Wz + ")   ");
-          * System.out.println("amStuck: " + amStuck);
-          * System.out.println();
-          * }
+          * if ((Kz.dot(zeta) > 0.0) && (nn > 20)) { System.out.println("nn:  " + nn); System.out.print("K: "
+          * + K); System.out.println("u0: " + u0); System.out.println("u_pz: (" + ux + ", " + uy + ", " + uz
+          * + ", " + Wz + ")   "); System.out.println("amStuck: " + amStuck); System.out.println(); }
           */
 
          // u_fin.set(0.0,0.0,0.0);
@@ -370,7 +335,7 @@ public class CollisionIntegrator implements java.io.Serializable
 
       if (!amStuck)
       {
-         if (uz < UZ_OVERSHOOT)    // Only do this if compressing.  Otherwise in restitution
+         if (uz < UZ_OVERSHOOT) // Only do this if compressing.  Otherwise in restitution
          {
             try
             {
@@ -396,7 +361,7 @@ public class CollisionIntegrator implements java.io.Serializable
                // ux = 0.0; uy = 0.0;
                // Wz = 0.0;
                // uz = 0.0;
-               uz = UZ_OVERSHOOT;    // 0.0; // Just stop it dead in it's tracks!!!
+               uz = UZ_OVERSHOOT; // 0.0; // Just stop it dead in it's tracks!!!
             }
          }
       }
@@ -407,17 +372,17 @@ public class CollisionIntegrator implements java.io.Serializable
          if (Wz > 0.0)
             Wz = 0.0;
 
-         if (this.stableSticking)
+         if (stableSticking)
          {
             // Stable Sticking during Compression.  Mirtich p. 74;
             // System.out.println("Stable Sticking during compression");
             // System.out.print(".");
             u_fin.setX(0.0);
-            u_fin.setY(0.0);    // ux=uy=0.0 if stably stuck.
+            u_fin.setY(0.0); // ux=uy=0.0 if stably stuck.
 
             // System.out.println("Wz, uz: " + Wz + ", " + uz);
-            if (uz < 0.0)    // Only do this if still compressing.  If extending, then just throw the energy away...
-               Wz = Wz + 0.5 * K_inv.getElement(2, 2) * (0 - uz * uz);    // Wz(b) = Wz(a) + 1/2 K_inv(3,3)*(b^2-a^2);
+            if (uz < 0.0) // Only do this if still compressing.  If extending, then just throw the energy away...
+               Wz = Wz + 0.5 * K_inv.getElement(2, 2) * (0 - uz * uz); // Wz(b) = Wz(a) + 1/2 K_inv(3,3)*(b^2-a^2);
 
             // System.out.println("epsilon: " + epsilon);
 
@@ -426,7 +391,7 @@ public class CollisionIntegrator implements java.io.Serializable
             if (Wz < 0.0)
             {
                uz = Math.sqrt(0.0 + 2.0 * (0.0 - Wz) / K_inv.getElement(2, 2));
-            }    // Math.sqrt(uz*uz + 2.0*(0.0 - Wz)/K_inv.getElement(2,2));}
+            } // Math.sqrt(uz*uz + 2.0*(0.0 - Wz)/K_inv.getElement(2,2));}
             else
                uz = 0.0;
 
@@ -439,13 +404,13 @@ public class CollisionIntegrator implements java.io.Serializable
          }
          else
          {
-//             System.out.println("Unstable Sticking during compression and restitution!");
+            //             System.out.println("Unstable Sticking during compression and restitution!");
             // Mirtich p.76
 
             if (uz > 0.0)
             {
                uz = 0.0;
-            }    // If extending, then just throw the energy away... +++JEP???
+            } // If extending, then just throw the energy away... +++JEP???
 
             double beta = solveBeta(K, mu);
             zeta_B.setX(-mu * Math.cos(beta));
@@ -492,14 +457,14 @@ public class CollisionIntegrator implements java.io.Serializable
             if (Wz > 0.0)
                Wz = 0.0;
 
-            if (this.stableSticking)
+            if (stableSticking)
             {
                // Stable Sticking during Restitution.  Mirtich p. 75;
                // System.out.println("Stable Sticking during restitution");
                // System.out.print(".");
 
                u_fin.setX(0.0);
-               u_fin.setY(0.0);    // ux=uy=0.0 if stably stuck.
+               u_fin.setY(0.0); // ux=uy=0.0 if stably stuck.
 
                if (Wz < 0.0)
                {
@@ -560,7 +525,7 @@ public class CollisionIntegrator implements java.io.Serializable
    private double solveBeta(Matrix3DReadOnly K, double mu)
    {
       // Mirtich p. 83;
-//      @SuppressWarnings("unused")
+      //      @SuppressWarnings("unused")
       double a = K.getM00(), b = K.getM11(), c = K.getM22(), d = K.getM12(), e = K.getM02(), f = K.getM01();
 
       coeffs[0] = -f * mu + d;
@@ -579,10 +544,10 @@ public class CollisionIntegrator implements java.io.Serializable
          // System.out.println("Solution " + i + " : " + solutions[i]);
          double t = solutions[i];
          if ((-a * mu - e) * t * t * t * t + (4.0 * f * mu + 2.0 * d) * t * t * t + (2.0 * a * mu - 4.0 * b * mu) * t * t + (-4.0 * f * mu + 2.0 * d) * t
-                 + (-a * mu + e) > 0.0)
+               + (-a * mu + e) > 0.0)
          {
             // System.out.println("Final solutions for t is:  " + t);
-            return Math.atan2(2.0 * t, 1.0 - t * t);    // Math.tan(t)*2.0;
+            return Math.atan2(2.0 * t, 1.0 - t * t); // Math.tan(t)*2.0;
          }
       }
 
@@ -591,18 +556,14 @@ public class CollisionIntegrator implements java.io.Serializable
       /*
        * System.err.println("Error!! No diverging solutions for beta!!");
        * System.err.println("Number of Real solutions is : " + num_real_solutions);
-       * System.err.println("K is:  " + K);
-       * System.err.println("mu is:  " + mu);
+       * System.err.println("K is:  " + K); System.err.println("mu is:  " + mu);
        * System.err.println("Solutions for t are:  " + solutions);
        */
-
-
 
       return 0.0;
    }
 
-
-   private CollisionRungeKutta collisionRungeKutta;    // = new CollisionRungeKutta(3);
+   private CollisionRungeKutta collisionRungeKutta; // = new CollisionRungeKutta(3);
    private CollisionRungeKutta pzRungeKutta;
 
    double[] rk_input = new double[4];
@@ -621,7 +582,7 @@ public class CollisionIntegrator implements java.io.Serializable
 
       try
       {
-         pzRungeKutta.integrate(rk_input, rk_range, pzDerivativeVector);    // From 0.0 to uz or from uz to 0.0???
+         pzRungeKutta.integrate(rk_input, rk_range, pzDerivativeVector); // From 0.0 to uz or from uz to 0.0???
       }
       catch (ODEException e)
       {
@@ -633,11 +594,10 @@ public class CollisionIntegrator implements java.io.Serializable
       }
 
       output[0] = rk_input[0];
-      output[1] = rk_input[1];    // uy;
-      output[2] = rk_input[2];    // uz;
-      output[3] = rk_input[3];    // Wz;
+      output[1] = rk_input[1]; // uy;
+      output[2] = rk_input[2]; // uz;
+      output[3] = rk_input[3]; // Wz;
    }
-
 
    CompressionDerivativeVector compressionDerivativeVector = new CompressionDerivativeVector();
 
@@ -649,8 +609,7 @@ public class CollisionIntegrator implements java.io.Serializable
       // double Wz = 0.0;
 
       /*
-       * double ux = input[0], uy = input[1], uz = input[2];
-       * double Wz = input[3];
+       * double ux = input[0], uy = input[1], uz = input[2]; double Wz = input[3];
        */
 
       // System.out.println("Wz: " + Wz + ", ux: " + ux + ", uy: " + uy + ", uz: " + uz);
@@ -663,10 +622,9 @@ public class CollisionIntegrator implements java.io.Serializable
       rk_range[0] = uz;
       rk_range[1] = UZ_OVERSHOOT;
 
-
       try
       {
-         collisionRungeKutta.integrate(rk_input, rk_range, compressionDerivativeVector);    // From 0.0 to uz or from uz to 0.0???
+         collisionRungeKutta.integrate(rk_input, rk_range, compressionDerivativeVector); // From 0.0 to uz or from uz to 0.0???
       }
       catch (ODEException e)
       {
@@ -681,18 +639,15 @@ public class CollisionIntegrator implements java.io.Serializable
       }
 
       /*
-       * catch(CollisionDerivativeException e)
-       * {
-       * System.out.println("Exception in integrateCompression: " + e);
-       * // +++JEP.  This happens when we should be integrating with respect to pz.  What should we do???
-       * }
+       * catch(CollisionDerivativeException e) { System.out.println("Exception in integrateCompression: "
+       * + e); // +++JEP. This happens when we should be integrating with respect to pz. What should we
+       * do??? }
        */
 
-
-      output[0] = rk_input[0];    // ux
-      output[1] = rk_input[1];    // uy;
-      output[2] = rk_range[1];    // uz ends at 0.0;
-      output[3] = rk_input[2];    // Wz;
+      output[0] = rk_input[0]; // ux
+      output[1] = rk_input[1]; // uy;
+      output[2] = rk_range[1]; // uz ends at 0.0;
+      output[3] = rk_input[2]; // Wz;
 
    }
 
@@ -713,7 +668,7 @@ public class CollisionIntegrator implements java.io.Serializable
 
       try
       {
-         collisionRungeKutta.integrate(rk_input, rk_range, restitutionDerivativeVector);    // From 0.0 to uz or from uz to 0.0???
+         collisionRungeKutta.integrate(rk_input, rk_range, restitutionDerivativeVector); // From 0.0 to uz or from uz to 0.0???
       }
       catch (ODEException e)
       {
@@ -732,12 +687,10 @@ public class CollisionIntegrator implements java.io.Serializable
          System.out.println("Exception in integrateRestitution: " + e);
       }
 
-
-
-      output[0] = rk_input[0];    // ux
-      output[1] = rk_input[1];    // uy;
-      output[2] = rk_input[2];    // uz;
-      output[3] = rk_range[1];    // Wz;
+      output[0] = rk_input[0]; // ux
+      output[1] = rk_input[1]; // uy;
+      output[2] = rk_input[2]; // uz;
+      output[3] = rk_range[1]; // Wz;
 
    }
 
@@ -789,7 +742,6 @@ public class CollisionIntegrator implements java.io.Serializable
       }
    }
 
-
    private class CompressionDerivativeVector implements CollisionDerivativeVector
    {
       private static final long serialVersionUID = -4133081308328360568L;
@@ -797,7 +749,6 @@ public class CollisionIntegrator implements java.io.Serializable
       public CompressionDerivativeVector()
       {
       }
-
 
       @Override
       public void derivs(double uz, double[] state, double[] deriv) throws CollisionDerivativeException
@@ -850,7 +801,6 @@ public class CollisionIntegrator implements java.io.Serializable
       }
    }
 
-
    private class RestitutionDerivativeVector implements CollisionDerivativeVector
    {
       private static final long serialVersionUID = 4537460728198035585L;
@@ -871,9 +821,9 @@ public class CollisionIntegrator implements java.io.Serializable
 
             // Derivative during compression step.  Mirtich p. 72
 
-            deriv[0] = Kx.dot(zeta) / uz;    // ux_dot  = Kx dot  zeta/uz;
-            deriv[1] = Ky.dot(zeta) / uz;    // uy_dot  = Ky dot  zeta/uz;
-            deriv[2] = Kz.dot(zeta) / uz;    // uz_dot  = Ky dot  zeta/uz;
+            deriv[0] = Kx.dot(zeta) / uz; // ux_dot  = Kx dot  zeta/uz;
+            deriv[1] = Ky.dot(zeta) / uz; // uy_dot  = Ky dot  zeta/uz;
+            deriv[2] = Kz.dot(zeta) / uz; // uz_dot  = Ky dot  zeta/uz;
 
          }
       }

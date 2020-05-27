@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-
 import java.util.ArrayList;
 
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -12,14 +11,13 @@ import us.ihmc.yoVariables.variable.YoInteger;
 
 public class SimpleStickSlipContactModel
 {
-   private final ArrayList<ExternalForcePoint> contactPointAs = new ArrayList<ExternalForcePoint>();
-   private final ArrayList<Contactable> contactableBs = new ArrayList<Contactable>();
+   private final ArrayList<ExternalForcePoint> contactPointAs = new ArrayList<>();
+   private final ArrayList<Contactable> contactableBs = new ArrayList<>();
 
-   private final ArrayList<YoInteger> contactPointAContactingContactableIndices = new ArrayList<YoInteger>();
-   private final ArrayList<YoInteger> contactPointAContactingGroundContactIndices = new ArrayList<YoInteger>();
+   private final ArrayList<YoInteger> contactPointAContactingContactableIndices = new ArrayList<>();
+   private final ArrayList<YoInteger> contactPointAContactingGroundContactIndices = new ArrayList<>();
 
    private final Point3D contactATempPosition = new Point3D();
-
 
    private final YoDouble kContact, bContact;
    private final YoDouble alphaStick, alphaSlip;
@@ -70,7 +68,7 @@ public class SimpleStickSlipContactModel
 
    public void addContactPoint(ExternalForcePoint contactPoint)
    {
-      this.contactPointAs.add(contactPoint);
+      contactPointAs.add(contactPoint);
 
       YoInteger contactableIndex = new YoInteger(contactPoint.getName() + "ContactableIndex", registry);
       contactPointAContactingContactableIndices.add(contactableIndex);
@@ -83,7 +81,7 @@ public class SimpleStickSlipContactModel
 
    public void addContactable(Contactable contactable)
    {
-      this.contactableBs.add(contactable);
+      contactableBs.add(contactable);
    }
 
    public void doContact()
@@ -134,8 +132,13 @@ public class SimpleStickSlipContactModel
 
          if (areInContact)
          {
-            stickSlipContactCalculator.doCurrentlyInContact(contactPointA, contactableB, contactPointB, kContact.getDoubleValue(), bContact.getDoubleValue(),
-                    alphaStick.getDoubleValue(), alphaSlip.getDoubleValue());
+            stickSlipContactCalculator.doCurrentlyInContact(contactPointA,
+                                                            contactableB,
+                                                            contactPointB,
+                                                            kContact.getDoubleValue(),
+                                                            bContact.getDoubleValue(),
+                                                            alphaStick.getDoubleValue(),
+                                                            alphaSlip.getDoubleValue());
          }
 
          else

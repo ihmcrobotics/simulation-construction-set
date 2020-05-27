@@ -1,11 +1,12 @@
 package us.ihmc.simulationconstructionset;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.yoVariables.listener.RewoundListener;
-
-import static us.ihmc.robotics.Assert.*;
 
 public class SimulationRewoundListenerTest
 {
@@ -13,7 +14,7 @@ public class SimulationRewoundListenerTest
     * Hang forever
     */
    @Disabled
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testSimulationRewoundListener()
    {
       boolean showGUI = false;
@@ -21,7 +22,7 @@ public class SimulationRewoundListenerTest
       SimpleSimulationRewoundListener simulationRewoundListener = new SimpleSimulationRewoundListener();
 
       Robot robot = new Robot("Test");
-      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(showGUI);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
       scs.setDT(0.001, 10);
@@ -31,7 +32,7 @@ public class SimulationRewoundListenerTest
 
       assertEquals(0, simulationRewoundListener.getCount());
       scs.simulate(1.0);
-      while(scs.isSimulating())
+      while (scs.isSimulating())
       {
          ThreadTools.sleep(10);
       }
@@ -69,17 +70,18 @@ public class SimulationRewoundListenerTest
 
       scs.closeAndDispose();
    }
-   
+
    private class SimpleSimulationRewoundListener implements RewoundListener
    {
       private int count = 0;
+
       @Override
       public void notifyOfRewind()
       {
-//         System.out.println(count + ": Sim was rewound");
+         //         System.out.println(count + ": Sim was rewound");
          count++;
       }
-      
+
       public int getCount()
       {
          return count;

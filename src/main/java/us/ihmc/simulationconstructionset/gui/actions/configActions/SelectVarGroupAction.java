@@ -7,7 +7,6 @@ import javax.swing.Action;
 
 import us.ihmc.simulationconstructionset.gui.config.VarGroupSelector;
 
-
 public class SelectVarGroupAction extends AbstractAction
 {
    private static final long serialVersionUID = 7027661415555951268L;
@@ -18,12 +17,12 @@ public class SelectVarGroupAction extends AbstractAction
    {
       super(name);
 
-      this.varGroupSelector = selector;
+      varGroupSelector = selector;
       this.name = name;
 
       // this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_E));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
    }
 
    @Override

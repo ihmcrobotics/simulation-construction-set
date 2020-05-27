@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.simulationconstructionset.ContactingExternalForcePoint;
 import us.ihmc.simulationconstructionset.Link;
@@ -8,8 +8,8 @@ import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionRes
 import us.ihmc.simulationconstructionset.physics.collision.CollisionHandlerListener;
 
 /**
- * Interface for the physics engine respond to a collision.  Collisions are modeled as a set of point collisions.
- *
+ * Interface for the physics engine respond to a collision. Collisions are modeled as a set of point
+ * collisions.
  */
 public interface CollisionHandler
 {
@@ -32,16 +32,17 @@ public interface CollisionHandler
    public abstract void addListener(CollisionHandlerListener listener);
 
    /**
-    * When two shapes collide this function is called.  The two shapes and which points on the shapes collide are passed in.
+    * When two shapes collide this function is called. The two shapes and which points on the shapes
+    * collide are passed in.
     *
-    * @param shapeA One of the shapes which is colliding
-    * @param shapeB One of the shapes which is colliding
+    * @param shapeA   One of the shapes which is colliding
+    * @param shapeB   One of the shapes which is colliding
     * @param contacts Which points on the two shapes are involved in the collision
     */
    public abstract void handle(Contacts contacts);
 
    public abstract void handleCollisions(CollisionDetectionResult results);
 
-   public abstract void addContactingExternalForcePoints(Link link, ArrayList<ContactingExternalForcePoint> contactingExternalForcePoints);
+   public abstract void addContactingExternalForcePoints(Link link, List<ContactingExternalForcePoint> contactingExternalForcePoints);
 
 }

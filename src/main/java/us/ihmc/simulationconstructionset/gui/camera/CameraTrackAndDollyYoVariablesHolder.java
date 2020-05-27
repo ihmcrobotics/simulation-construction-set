@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.gui.camera;
 
-import us.ihmc.euclid.tuple3D.Point3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraTrackingAndDollyPositionHolder;
 import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
 import us.ihmc.yoVariables.variable.YoDouble;
@@ -9,9 +9,9 @@ public class CameraTrackAndDollyYoVariablesHolder implements CameraTrackingAndDo
 {
    private YoDouble track_x_var, track_y_var, track_z_var, dolly_x_var, dolly_y_var, dolly_z_var;
    private YoDouble field_of_view_var;
-   
+
    public CameraTrackAndDollyYoVariablesHolder(YoVariableHolder holder)
-   { 
+   {
       if (holder != null)
       {
          if (holder.hasUniqueVariable("q_x"))
@@ -36,7 +36,7 @@ public class CameraTrackAndDollyYoVariablesHolder implements CameraTrackingAndDo
    }
 
    @Override
-   public void getTrackingPosition(Point3D trackPositionToPack)
+   public void getTrackingPosition(Point3DBasics trackPositionToPack)
    {
       if (track_x_var != null)
       {
@@ -53,7 +53,7 @@ public class CameraTrackAndDollyYoVariablesHolder implements CameraTrackingAndDo
    }
 
    @Override
-   public void getDollyPosition(Point3D dollyPositionToPack)
+   public void getDollyPosition(Point3DBasics dollyPositionToPack)
    {
       if (dolly_x_var != null)
       {
@@ -67,10 +67,9 @@ public class CameraTrackAndDollyYoVariablesHolder implements CameraTrackingAndDo
       {
          dollyPositionToPack.setZ(dolly_z_var.getDoubleValue());
       }
-      
+
    }
-   
-   
+
    public void setTrackingVars(YoDouble xVar, YoDouble yVar, YoDouble zVar)
    {
       if (xVar != null)
@@ -90,7 +89,7 @@ public class CameraTrackAndDollyYoVariablesHolder implements CameraTrackingAndDo
       if (zVar != null)
          dolly_z_var = zVar;
    }
-   
+
    public void setTrackXVar(YoDouble track_x_var)
    {
       this.track_x_var = track_x_var;
@@ -133,12 +132,11 @@ public class CameraTrackAndDollyYoVariablesHolder implements CameraTrackingAndDo
       {
          return Double.NaN;
       }
-      
-      else return field_of_view_var.getDoubleValue();
+
+      else
+         return field_of_view_var.getDoubleValue();
    }
 
-   
-   
    @Override
    public double getTrackingX()
    {

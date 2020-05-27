@@ -15,7 +15,6 @@ import javax.swing.border.Border;
 
 import us.ihmc.simulationconstructionset.commands.RunCommandsExecutor;
 
-
 public class Canvas3DPanel extends JPanel implements MouseListener
 {
    private static final long serialVersionUID = -4186691483384418845L;
@@ -27,17 +26,18 @@ public class Canvas3DPanel extends JPanel implements MouseListener
    private AbstractBorder border;
    private Canvas canvas;
    private SpaceKeyListener spaceKeyListener;
-   
-   public Canvas3DPanel(RunCommandsExecutor runCommandsExecutor, ViewportAdapterAndCameraControllerHolder viewportAdapterAndCameraControllerHolder, ViewportPanel viewportPanel)
+
+   public Canvas3DPanel(RunCommandsExecutor runCommandsExecutor, ViewportAdapterAndCameraControllerHolder viewportAdapterAndCameraControllerHolder,
+                        ViewportPanel viewportPanel)
    {
       super(new GridLayout(1, 1));
-      this.view = viewportAdapterAndCameraControllerHolder;
+      view = viewportAdapterAndCameraControllerHolder;
       this.viewportPanel = viewportPanel;
 
       canvas = viewportAdapterAndCameraControllerHolder.getViewportAdapter().getCanvas();
       this.add(canvas);
 
-      this.setRequestFocusEnabled(true);
+      setRequestFocusEnabled(true);
 
       canvas.addMouseListener(this);
 
@@ -45,7 +45,7 @@ public class Canvas3DPanel extends JPanel implements MouseListener
       Border loweredbevel = BorderFactory.createLoweredBevelBorder();
       border = BorderFactory.createCompoundBorder(raisedbevel, loweredbevel);
 
-      this.setBorder(border);
+      setBorder(border);
       spaceKeyListener = new SpaceKeyListener(runCommandsExecutor);
       canvas.addKeyListener(spaceKeyListener);
    }
@@ -83,7 +83,6 @@ public class Canvas3DPanel extends JPanel implements MouseListener
       viewportPanel.setActiveView(view, this);
    }
 
-
    public void setActive(boolean active)
    {
       if (this.active == active)
@@ -108,9 +107,8 @@ public class Canvas3DPanel extends JPanel implements MouseListener
          border = BorderFactory.createCompoundBorder(raisedbevel, loweredbevel);
       }
 
-      this.setBorder(border);
+      setBorder(border);
    }
-
 
    private class SpaceKeyListener implements KeyListener
    {
@@ -148,13 +146,13 @@ public class Canvas3DPanel extends JPanel implements MouseListener
 
       public void closeAndDispose()
       {
-         this.runCommandsExecutor = null;
+         runCommandsExecutor = null;
       }
    }
-   
+
    public void closeAndDispose()
    {
-      this.removeAll();
+      removeAll();
 
       if (canvas != null)
       {
@@ -169,6 +167,6 @@ public class Canvas3DPanel extends JPanel implements MouseListener
 
       view = null;
       viewportPanel = null;
-      border =  null;
+      border = null;
    }
 }

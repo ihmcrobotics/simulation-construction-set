@@ -2,13 +2,17 @@ package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.Matrix3DBasics;
 import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.ExternalForcePoint;
@@ -23,23 +27,22 @@ import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SpatialVector;
 import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
 
-
-public abstract class JointPhysics< J extends Joint>
+public abstract class JointPhysics<J extends Joint>
 {
    protected J owner;
 
-   public Vector3D u_i;    // u_i is unit vector in direction of joint axis.  Set once upon creation by the specific joint.
-   public Vector3D d_i = new Vector3D();    // d_i is vector from link i inboard joint to link i com (link.getComOffset());
+   public Vector3D u_i; // u_i is unit vector in direction of joint axis.  Set once upon creation by the specific joint.
+   public Vector3D d_i = new Vector3D(); // d_i is vector from link i inboard joint to link i com (link.getComOffset());
 
-   public Vector3D u_iXd_i = new Vector3D();    // u_iXd_i is u_i cross d_i.
+   public Vector3D u_iXd_i = new Vector3D(); // u_iXd_i is u_i cross d_i.
 
-   public Vector3D r_in = new Vector3D();    // r_in is the vector from the previous center of mass to this joint in the previous joint coordinates.
+   public Vector3D r_in = new Vector3D(); // r_in is the vector from the previous center of mass to this joint in the previous joint coordinates.
 
-   public Vector3D w_i = new Vector3D();    // w_i is the rotational velocity of this link, in these coordinates.
-   public Vector3D v_i = new Vector3D();    // v_i is the linear velocity of this link in these coordinates.
+   public Vector3D w_i = new Vector3D(); // w_i is the rotational velocity of this link, in these coordinates.
+   public Vector3D v_i = new Vector3D(); // v_i is the linear velocity of this link in these coordinates.
 
-   public Vector3D r_i = new Vector3D();    // r_i is radius vector from previous center of mass to this center of mass in these coordinates.
-   protected Vector3D r_h = new Vector3D();    // r_h is radius vector from this center of mass to the previous center of mass in the previous coordinates.
+   public Vector3D r_i = new Vector3D(); // r_i is radius vector from previous center of mass to this center of mass in these coordinates.
+   protected Vector3D r_h = new Vector3D(); // r_h is radius vector from this center of mass to the previous center of mass in the previous coordinates.
    protected Vector3D v_i_temp = new Vector3D();
 
    protected SpatialTransformationMatrix i_X_hat_h = new SpatialTransformationMatrix();
@@ -50,26 +53,26 @@ public abstract class JointPhysics< J extends Joint>
    public SpatialVector c_hat_i = new SpatialVector();
    public SpatialVector a_hat_i = new SpatialVector();
 
-   public SpatialVector s_hat_i = new SpatialVector();    // Spatial Joint Axis
-   public double Q_i;    // Joint Torque.
+   public SpatialVector s_hat_i = new SpatialVector(); // Spatial Joint Axis
+   public double Q_i; // Joint Torque.
 
-   public ArrayList<KinematicPoint> kinematicPoints;
-   protected ArrayList<ExternalForcePoint> externalForcePoints;
-   protected ArrayList<ExternalTorque> externalTorques;
+   public List<KinematicPoint> kinematicPoints;
+   protected List<ExternalForcePoint> externalForcePoints;
+   protected List<ExternalTorque> externalTorques;
 
    public LinkedHashMap<Integer, GroundContactPointGroup> groundContactPointGroups;
-   public ArrayList<GroundContactPointGroup> groundContactPointGroupList;
+   public List<GroundContactPointGroup> groundContactPointGroupList;
 
    protected JointWrenchSensor jointWrenchSensor;
    private SpatialVector tempJointWrenchVector;
    private Vector3D tempVectorForWrenchTranslation, tempOffsetForWrenchTranslation;
 
    // private Transform3D R = new Transform3D();
-   public RotationMatrix Ri_0 = new RotationMatrix();    // Rotation matrix from this space to world space
-   public RotationMatrix R0_i = new RotationMatrix();    // Rotation matrix from world space to this space
-   public RotationMatrix Ri_h = new RotationMatrix();    // Rotation matrix from this joint to previous joint
-   public RotationMatrix Rh_i = new RotationMatrix();    // Rotation matrix from previous joint to this joint
-   public RotationMatrix Rtemp = new RotationMatrix();    // @todo Remove this if it is unused.
+   public RotationMatrix Ri_0 = new RotationMatrix(); // Rotation matrix from this space to world space
+   public RotationMatrix R0_i = new RotationMatrix(); // Rotation matrix from world space to this space
+   public RotationMatrix Ri_h = new RotationMatrix(); // Rotation matrix from this joint to previous joint
+   public RotationMatrix Rh_i = new RotationMatrix(); // Rotation matrix from previous joint to this joint
+   public RotationMatrix Rtemp = new RotationMatrix(); // @todo Remove this if it is unused.
 
    public JointPhysics(J owner)
    {
@@ -77,21 +80,20 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * This featherstone pass recurses down the tree updating the linear and angular velocities
-    * of each link based on their current position and velocity and the position and velocity of
-    * the previous joint in the chain.  In the process of carrying out these calculations the
-    * rotation matricies between frame i and the world, the world and frame i, frame i and frame i-1,
-    * and frame i-1 and frame i are updated.  The vector r_i which decsribes the translation
-    * between frames i and i-1 in frame i's coordinates is also updated.  The final step of this
-    * pass is to update the ground contact and kinematic points with the new position, velocity,
-    * and rotation data.  For further details see Brian Mirtich's Thesis: "Impulse-based
-    * Dynamic Simulation of Rigid Body Systems".
+    * This featherstone pass recurses down the tree updating the linear and angular velocities of each
+    * link based on their current position and velocity and the position and velocity of the previous
+    * joint in the chain. In the process of carrying out these calculations the rotation matricies
+    * between frame i and the world, the world and frame i, frame i and frame i-1, and frame i-1 and
+    * frame i are updated. The vector r_i which decsribes the translation between frames i and i-1 in
+    * frame i's coordinates is also updated. The final step of this pass is to update the ground
+    * contact and kinematic points with the new position, velocity, and rotation data. For further
+    * details see Brian Mirtich's Thesis: "Impulse-based Dynamic Simulation of Rigid Body Systems".
     *
-    * @param w_h Angular velocity of joint i-1.
-    * @param v_h Linear velocity of joint i-1.
+    * @param w_h  Angular velocity of joint i-1.
+    * @param v_h  Linear velocity of joint i-1.
     * @param Rh_0 Rotation matrix between frame i-1 and the world.
     */
-   public void featherstonePassOne(Vector3D w_h, Vector3D v_h, RotationMatrix Rh_0)
+   public void featherstonePassOne(Vector3DReadOnly w_h, Vector3DReadOnly v_h, RotationMatrixReadOnly Rh_0)
    {
       // First set the transform (rotation matrix) for this joint.
       // (R <- rotation matrix from F_h to F_i
@@ -99,7 +101,7 @@ public abstract class JointPhysics< J extends Joint>
       // this.update(false);
       // this.jointTransform3D.get(Rh_i);
 
-      r_in.set(owner.offset);
+      r_in.set(owner.getOffset());
       if (owner.parentJoint != null)
       {
          r_in.sub(owner.parentJoint.link.getComOffset());
@@ -129,7 +131,6 @@ public abstract class JointPhysics< J extends Joint>
       r_h.scale(-1.0);
       Rh_i.transform(r_h);
 
-
       // w_i <- R w_h
       w_i.set(w_h);
       Ri_h.transform(w_i);
@@ -141,11 +142,9 @@ public abstract class JointPhysics< J extends Joint>
       v_i_temp.cross(w_i, r_i);
       v_i.add(v_i_temp);
 
-
       // Now do the joint dependent stuff...
 
       this.jointDependentFeatherstonePassOne();
-
 
       // Now update the points attached to the joint:
       R0_i.set(Ri_0);
@@ -156,7 +155,7 @@ public abstract class JointPhysics< J extends Joint>
       {
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             for (int y = 0; y < groundContactPoints.size(); y++)
             {
                GroundContactPoint point = groundContactPoints.get(y);
@@ -189,31 +188,36 @@ public abstract class JointPhysics< J extends Joint>
    private final Vector3D tempExternalMomentVector = new Vector3D();
    private final Vector3D externalMomentVector = new Vector3D();
 
-
-   private final Vector3D w_h = new Vector3D();    // Velocity of the previous joint in this joints coordinates
+   private final Vector3D w_h = new Vector3D(); // Velocity of the previous joint in this joints coordinates
 
    /**
-    * The second Featherstone pass recurses down the tree initializing the spatial isolated inerta (spatial matrix) and
-    * spatial isolated zero-acceleration (z.a.) force (spatial vector) of each link.  During this process the coriolis vector
-    * for each link is also calculated.  External force and ground contact points present at the current link are included
-    * the spatial isolated inertia and isolated z.a. force.  For further details see Brian Mirtich's Thesis: "Impulse-based
-    * Dynamic Simulation of Rigid Body Systems".
+    * The second Featherstone pass recurses down the tree initializing the spatial isolated inerta
+    * (spatial matrix) and spatial isolated zero-acceleration (z.a.) force (spatial vector) of each
+    * link. During this process the coriolis vector for each link is also calculated. External force
+    * and ground contact points present at the current link are included the spatial isolated inertia
+    * and isolated z.a. force. For further details see Brian Mirtich's Thesis: "Impulse-based Dynamic
+    * Simulation of Rigid Body Systems".
     *
-    * @param w_previous The angular velocity of the previous joint represented in that joints coordinates.  This value is
-    * used in the calculation of the coriolis vector.
+    * @param w_previous The angular velocity of the previous joint represented in that joints
+    *                   coordinates. This value is used in the calculation of the coriolis vector.
     */
-   public void featherstonePassTwo(Vector3D w_previous)
+   public void featherstonePassTwo(Vector3DReadOnly w_previous)
    {
       // First need to rotate w_previous into these coordinate system to get w_h:
       w_h.set(w_previous);
       if (Ri_h != null)
-         Ri_h.transform(w_h);    // Note: FloatingJoint doesn't set Ri_h, therefore you have to do this check...
+         Ri_h.transform(w_h); // Note: FloatingJoint doesn't set Ri_h, therefore you have to do this check...
 
       // Z_hat_i.setInitArticulatedZeroAccel(this.link.mass, this.w_i, this.link.Ixx, this.link.Iyy, this.link.Izz, Ri_0, Robot.gX, Robot.gY, Robot.gZ);
       // I_hat_i.setInitArticulatedInertia(this.link.mass, this.link.Ixx, this.link.Iyy, this.link.Izz);
 
-      Z_hat_i.setInitArticulatedZeroAccel(owner.link.getMass(), this.w_i, owner.link.Inertia, Ri_0, owner.rob.gravityX.getDoubleValue(), owner.rob.gravityY.getDoubleValue(),
-            owner.rob.gravityZ.getDoubleValue());
+      Z_hat_i.setInitArticulatedZeroAccel(owner.link.getMass(),
+                                          this.w_i,
+                                          owner.link.Inertia,
+                                          Ri_0,
+                                          owner.rob.gravityX.getDoubleValue(),
+                                          owner.rob.gravityY.getDoubleValue(),
+                                          owner.rob.gravityZ.getDoubleValue());
       I_hat_i.setInitArticulatedInertia(owner.link.getMass(), owner.link.Inertia);
 
       // Put ground contact point effects in Z_hat:
@@ -222,7 +226,7 @@ public abstract class JointPhysics< J extends Joint>
       {
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             for (int y = 0; y < groundContactPoints.size(); y++)
             {
                GroundContactPoint point = groundContactPoints.get(y);
@@ -259,7 +263,7 @@ public abstract class JointPhysics< J extends Joint>
 
             double tx = p.getTorqueX(), ty = p.getTorqueY(), tz = p.getTorqueZ();
 
-            if ((tx != 0.0) || (ty != 0.0) || (tz != 0.0))    // +++JEP OPTIMIZE: Don't do the math if the forces are zero!
+            if ((tx != 0.0) || (ty != 0.0) || (tz != 0.0)) // +++JEP OPTIMIZE: Don't do the math if the forces are zero!
             {
                // not really a force, but recycle this variable
                externalForceVector.set(-tx, -ty, -tz);
@@ -270,7 +274,7 @@ public abstract class JointPhysics< J extends Joint>
 
                // Add it to Z_hat:
 
-//                   Z_hat_i.top.add(externalForceVector);  there is no force just torque
+               //                   Z_hat_i.top.add(externalForceVector);  there is no force just torque
                Z_hat_i.bottom.add(externalForceVector);
             }
          }
@@ -295,10 +299,9 @@ public abstract class JointPhysics< J extends Joint>
       externalMomentVector.set(0.0, 0.0, 0.0);
    }
 
-
    private void applyForcesAndMomentsFromExternalForcePoints(ExternalForcePoint point)
    {
-      if (!point.isForceAndMomentZero())    // +++JEP OPTIMIZE: Don't do the math if the forces are zero!
+      if (!point.isForceAndMomentZero()) // +++JEP OPTIMIZE: Don't do the math if the forces are zero!
       {
          point.getForce(externalForceVector);
          externalForceVector.negate();
@@ -307,7 +310,7 @@ public abstract class JointPhysics< J extends Joint>
 
          Ri_0.transform(externalForceVector);
 
-//       externalForceR.sub(p.offset, this.link.comOffset);    // JEP+++ 12/19/01.  Something wrong here!
+         //       externalForceR.sub(p.offset, this.link.comOffset);    // JEP+++ 12/19/01.  Something wrong here!
 
          point.getOffset(externalForceR);
          externalForceR.sub(owner.link.comOffset);
@@ -326,21 +329,19 @@ public abstract class JointPhysics< J extends Joint>
       }
    }
 
-   private double sIs;    // sIs is s_hat_i_prime I_hat_A_i s_hat_i
-   private double Qi_etc;    // Qi - s_hat_i_prime (Z_hat_i + I_hat_i * c_hat_i)
+   private double sIs; // sIs is s_hat_i_prime I_hat_A_i s_hat_i
+   private double Qi_etc; // Qi - s_hat_i_prime (Z_hat_i + I_hat_i * c_hat_i)
 
    // Temporary variables used in intermediary calculations
-   protected SpatialInertiaMatrix
-         SIM1 = new SpatialInertiaMatrix(), SIM2 = new SpatialInertiaMatrix();
-   protected SpatialVector
-         sV1 = new SpatialVector(), sV2 = new SpatialVector();
+   protected SpatialInertiaMatrix SIM1 = new SpatialInertiaMatrix(), SIM2 = new SpatialInertiaMatrix();
+   protected SpatialVector sV1 = new SpatialVector(), sV2 = new SpatialVector();
 
    /**
     * Pass three calculates the articulated versions of both the spatial inertia and spatial
-    * zero-acceleration (z.a.) force traveling from the leaves to the root.  These calculations
-    * are based on data generated by the preceding two passes.  This is a helper method for pass
-    * three which is only called on root nodes.  For further details see Brian
-    * Mirtich's Thesis: "Impulse-based Dynamic Simulation of Rigid Body Systems".
+    * zero-acceleration (z.a.) force traveling from the leaves to the root. These calculations are
+    * based on data generated by the preceding two passes. This is a helper method for pass three which
+    * is only called on root nodes. For further details see Brian Mirtich's Thesis: "Impulse-based
+    * Dynamic Simulation of Rigid Body Systems".
     */
    public void featherstonePassThree()
    {
@@ -361,10 +362,8 @@ public abstract class JointPhysics< J extends Joint>
       double temp = s_hat_i.innerProduct(sV1);
 
       /*
-       * System.out.println(name + ":\n");
-       * System.out.println("s_hat_i: " + s_hat_i + "\n");
-       * System.out.println("sV1: " + sV1 + "\n");
-       * System.out.println("temp: " + temp + "\n");
+       * System.out.println(name + ":\n"); System.out.println("s_hat_i: " + s_hat_i + "\n");
+       * System.out.println("sV1: " + sV1 + "\n"); System.out.println("temp: " + temp + "\n");
        */
 
       Qi_etc = Q_i - temp;
@@ -376,16 +375,15 @@ public abstract class JointPhysics< J extends Joint>
       // System.out.println("s_hat_i: " + s_hat_i);
       // System.out.println("temp: " + temp);
 
-
    }
 
    /**
     * Pass three calculates the articulated versions of both the spatial inertia and spatial
-    * zero-acceleration (z.a.) force traveling from the leaves to the root.  These calculations
-    * are based on data generated by the preceding two passes.  This is the recursive method
-    * which travels to the outermost link to begin calculations.  The pass for link I produces
-    * the values for link i-1. For further details see Brian Mirtich's Thesis: "Impulse-based
-    * Dynamic Simulation of Rigid Body Systems".
+    * zero-acceleration (z.a.) force traveling from the leaves to the root. These calculations are
+    * based on data generated by the preceding two passes. This is the recursive method which travels
+    * to the outermost link to begin calculations. The pass for link I produces the values for link
+    * i-1. For further details see Brian Mirtich's Thesis: "Impulse-based Dynamic Simulation of Rigid
+    * Body Systems".
     */
    public void featherstonePassThree(SpatialInertiaMatrix I_hat_h, SpatialVector Z_hat_h)
    {
@@ -396,7 +394,6 @@ public abstract class JointPhysics< J extends Joint>
          Joint child = owner.childrenJoints.get(i);
          child.physics.featherstonePassThree(I_hat_i, Z_hat_i);
       }
-
 
       // Compute Spatial Transformation Matrix:
 
@@ -454,16 +451,15 @@ public abstract class JointPhysics< J extends Joint>
    // private SpatialInertiaMatrix
 
    /**
-    * The fourth featherstone pass calculates the spatial acceleration vector and
-    * scalar acceleration for each joint.  These values are based on the preceding
-    * passes and the spatial acceleration of joint i-1.  Once calculated the scalar
-    * value is stored for the Runge-Kutta sum.  For further details see Brian
-    * Mirtich's Thesis: "Impulse-based Dynamic Simulation of Rigid Body Systems".
+    * The fourth featherstone pass calculates the spatial acceleration vector and scalar acceleration
+    * for each joint. These values are based on the preceding passes and the spatial acceleration of
+    * joint i-1. Once calculated the scalar value is stored for the Runge-Kutta sum. For further
+    * details see Brian Mirtich's Thesis: "Impulse-based Dynamic Simulation of Rigid Body Systems".
     *
-    * @param a_hat_h The spatial acceleration vector for link i-1.
-    * @param passNumber In order to perform RK4 (Runge-Kutta) the four featherstone
-    * passes are called four times each simulation tick.  This pass uses the overall
-    * pass to index these results as they are saved.
+    * @param a_hat_h    The spatial acceleration vector for link i-1.
+    * @param passNumber In order to perform RK4 (Runge-Kutta) the four featherstone passes are called
+    *                   four times each simulation tick. This pass uses the overall pass to index these
+    *                   results as they are saved.
     * @throws UnreasonableAccelerationException
     */
    public void featherstonePassFour(SpatialVector a_hat_h, int passNumber) throws UnreasonableAccelerationException
@@ -471,7 +467,6 @@ public abstract class JointPhysics< J extends Joint>
       X_hat_h_a_hat_h.set(a_hat_h);
       i_X_hat_h.transform(X_hat_h_a_hat_h);
       I_hat_i.multiply(X_hat_h_a_hat_h);
-
 
       // System.out.println(this.name + " a_hat_h: " + a_hat_h);
       // System.out.println(this.name + " X_hat_h_a_hat_h: " + X_hat_h_a_hat_h);
@@ -483,7 +478,6 @@ public abstract class JointPhysics< J extends Joint>
       // System.out.println(this.name + " Qi_etc: " + Qi_etc);
       // System.out.println(this.name + " sIs: " + sIs);
       // System.out.println(this.name + " qdd: " + qdd);
-
 
       this.jointDependentFeatherstonePassFour(qdd, passNumber);
 
@@ -500,7 +494,7 @@ public abstract class JointPhysics< J extends Joint>
       // Check for unreasonable accelerations:
       if (!jointDependentVerifyReasonableAccelerations())
       {
-         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<Joint>();
+         List<Joint> unreasonableAccelerationJoints = new ArrayList<>();
          unreasonableAccelerationJoints.add(owner);
 
          throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
@@ -561,7 +555,6 @@ public abstract class JointPhysics< J extends Joint>
       linearAccelerationInBodyToPack.add(tempOmegaCrossOmegaCrossDeltaPVector);
    }
 
-
    public void getLinearAccelerationInWorld(Vector3DBasics linearAccelerationInWorldToPack, Vector3DBasics pointInBody)
    {
       getLinearAccelerationInBody(linearAccelerationInWorldToPack, pointInBody);
@@ -580,11 +573,10 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Records the K values for Runge-Kutta calculations on non-dynamic
-    * joint trees.
+    * Records the K values for Runge-Kutta calculations on non-dynamic joint trees.
     *
-    * @param passNumber The current pass count, four coefficents are needed
-    * for the Runge-Kutta method so passes 0 through 3 are valid.
+    * @param passNumber The current pass count, four coefficents are needed for the Runge-Kutta method
+    *                   so passes 0 through 3 are valid.
     */
    public void recordK(int passNumber)
    {
@@ -600,44 +592,35 @@ public abstract class JointPhysics< J extends Joint>
    // Collision Stuff:
 
    /**
-    * Recurses over the children and performes a Euler Integration on the
-    * position and velocity parameters of each.  As joint types have different
-    * parameters each must implement this method.  Each value is calculated
-    * based on the following formula:<br />
-    * y_(n+1) = y_n + h*f(t_n, y_n)  where h is the step size.
+    * Recurses over the children and performes a Euler Integration on the position and velocity
+    * parameters of each. As joint types have different parameters each must implement this method.
+    * Each value is calculated based on the following formula:<br />
+    * y_(n+1) = y_n + h*f(t_n, y_n) where h is the step size.
     *
     * @param stepSize Step size for the Euler Integration
     */
    public abstract void recursiveEulerIntegrate(double stepSize);
 
    /**
-    * Saves the current state of each joint.  Different joint types have different relevant values, pin and slider joints
-    * store only position and velocity.  These values are restored prior to each Euler integration in order to properly
-    * calculate the Runge-Kutta slope.
+    * Saves the current state of each joint. Different joint types have different relevant values, pin
+    * and slider joints store only position and velocity. These values are restored prior to each Euler
+    * integration in order to properly calculate the Runge-Kutta slope.
     */
    public abstract void recursiveSaveTempState();
 
    /**
-    * Restores the previous state for the relevant joint variables for use in the next Euler Integration.
+    * Restores the previous state for the relevant joint variables for use in the next Euler
+    * Integration.
     */
    public abstract void recursiveRestoreTempState();
 
    /**
-    * This function recurses through the children of this joint calculating new values for the
-    * relevant variables using the RK4 method.  This is based on the set of four values stored for
-    * each variable during {@link Robot#doDynamics doDynamics}.
-    * The RK4 method operates in the following form:
-    *
-    * y_(n+1) = y_n + 1/6 * h * (k_1 + 2k_2 + 2k_3 + k_4
-    * t_(n+1) = t_n + h
-    *
-    * Where:
-    *
-    * h is the step size
-    * k_1 = f(t_n, y_n)
-    * k_2 = f(t_n + 0.5 * h, y_n + 0.5 * h * k_1)
-    * k_3 = f(t_n + 0.5 * h, y_n + 0.5 * h * k_2)
-    * k_4 = f(t_n + h, y_n + h * k_3)
+    * This function recurses through the children of this joint calculating new values for the relevant
+    * variables using the RK4 method. This is based on the set of four values stored for each variable
+    * during {@link Robot#doDynamics doDynamics}. The RK4 method operates in the following form:
+    * y_(n+1) = y_n + 1/6 * h * (k_1 + 2k_2 + 2k_3 + k_4 t_(n+1) = t_n + h Where: h is the step size
+    * k_1 = f(t_n, y_n) k_2 = f(t_n + 0.5 * h, y_n + 0.5 * h * k_1) k_3 = f(t_n + 0.5 * h, y_n + 0.5 *
+    * h * k_2) k_4 = f(t_n + h, y_n + h * k_3)
     *
     * @param stepSize The step size h, for use in calculation.
     */
@@ -654,13 +637,14 @@ public abstract class JointPhysics< J extends Joint>
    private Vector3D tempVector = new Vector3D();
 
    /**
-    * This method calculates the multibody collision matrix Ki which relates the applied impulse
-    * to the the change in contact point velocity.  This is solved for both bodies involved in the
-    * collision and then combined to form the final matrix K.
+    * This method calculates the multibody collision matrix Ki which relates the applied impulse to the
+    * the change in contact point velocity. This is solved for both bodies involved in the collision
+    * and then combined to form the final matrix K.
     *
     * @param offsetFromCOM Location of the collision with respect to the joint center of mass
-    * @param Rk_coll Rotation matrix from the body frame of the colliding link to the collision frame.
-    * The collision frame is aligned with the z axis normal to the collision point.
+    * @param Rk_coll       Rotation matrix from the body frame of the colliding link to the collision
+    *                      frame. The collision frame is aligned with the z axis normal to the
+    *                      collision point.
     * @return Matrix3d Ki, which represents the half of the collision matrix.
     */
    public Matrix3D computeKiCollision(Vector3DReadOnly offsetFromCOM, RotationMatrixReadOnly Rk_coll)
@@ -670,23 +654,21 @@ public abstract class JointPhysics< J extends Joint>
 
       k_X_hat_coll.setFromOffsetAndRotation(tempVector, Rk_coll);
 
-      computeMultibodyKi(k_X_hat_coll, Ki);    // Ki is in collision coordinates.
+      computeMultibodyKi(k_X_hat_coll, Ki); // Ki is in collision coordinates.
       return Ki;
    }
 
    /**
-    * See Mirtich 3.3 p66
+    * See Mirtich 3.3 p66 This is the process of tracking u_coll, the contact point velocity. The value
+    * of u_coll is calculated over compression and restitution. Once the change in u_coll is calculated
+    * the desired reaction impluse is calculated and stored in p_coll as described by the following
+    * equation: delta_u_coll = Ki*p or Ki_inv*delta_u_coll = p
     *
-    * This is the process of tracking u_coll, the contact point velocity.  The value of u_coll is
-    * calculated over compression and restitution.  Once the change in u_coll is calculated the
-    * desired reaction impluse is calculated and stored in p_coll as described by the following
-    * equation:  delta_u_coll = Ki*p or Ki_inv*delta_u_coll = p
-    *
-    * @param Ki The combined collision matrix representing both points.
-    * @param u_coll The relative contact point velocity between the two colliding bodies
+    * @param Ki      The combined collision matrix representing both points.
+    * @param u_coll  The relative contact point velocity between the two colliding bodies
     * @param epsilon The coefficent of restitution.
-    * @param mu The coefficent of friction.
-    * @param p_coll Spatial collision impulse
+    * @param mu      The coefficent of friction.
+    * @param p_coll  Spatial collision impulse
     */
    public void integrateCollision(Matrix3DReadOnly Ki, Vector3DReadOnly u_coll, double epsilon, double mu, Vector3DBasics p_coll)
    {
@@ -699,19 +681,16 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Converts the provided impluse from collision space into joint space and if the value
-    * is not unreasonably large, applies the impulse to the system.
+    * Converts the provided impluse from collision space into joint space and if the value is not
+    * unreasonably large, applies the impulse to the system.
     *
     * @param p_coll Vector3d the impulse applied in reaction to the collision event.
     */
    public void applyImpulse(Vector3DReadOnly p_coll)
    {
       /*
-       * if(p_coll.z < 0.0)
-       * {
-       * // Something is wrong if the impulse has negative components in the z direction!!!
-       * //System.out.println("Collision has negative z component!!!");
-       * }
+       * if(p_coll.z < 0.0) { // Something is wrong if the impulse has negative components in the z
+       * direction!!! //System.out.println("Collision has negative z component!!!"); }
        */
 
       // impulse is in collision coordinates.  Need to rotate into joint com coordinates:
@@ -720,13 +699,13 @@ public abstract class JointPhysics< J extends Joint>
 
       p_hat_k.top.set(p_coll);
       p_hat_k.bottom.set(0.0, 0.0, 0.0);
-      k_X_hat_coll.transform(p_hat_k);    // p_k is now the impulse at the joint com.
+      k_X_hat_coll.transform(p_hat_k); // p_k is now the impulse at the joint com.
 
       // System.out.println("r_k_coll: " + r_k_coll);
       // System.out.println("p_hat_k: " + p_hat_k);
 
       if (p_coll.length() < 1000000000.0)
-         propagateImpulse(p_hat_k);    // Propagate the impulse.  Mirtich p. 146, step E.
+         propagateImpulse(p_hat_k); // Propagate the impulse.  Mirtich p. 146, step E.
       else
       {
          System.out.println("p_coll is enormous:  " + p_coll);
@@ -737,21 +716,23 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Resolves the specified collision event by calculating the collision impulse and applying it to the link.
-    * This process is completed over the course of several steps.  First the collision matrix Ki is computed
-    * based on the three basis vectors of collision space. Once that calculation is completed a collision
-    * integration is executed to compute the desired impulse, p_coll.  When that impulse is computed it is then
-    * applied to the system and the changes in velocity are propagated back through the system.
-    * For further information see Mirtich pg. 146
+    * Resolves the specified collision event by calculating the collision impulse and applying it to
+    * the link. This process is completed over the course of several steps. First the collision matrix
+    * Ki is computed based on the three basis vectors of collision space. Once that calculation is
+    * completed a collision integration is executed to compute the desired impulse, p_coll. When that
+    * impulse is computed it is then applied to the system and the changes in velocity are propagated
+    * back through the system. For further information see Mirtich pg. 146
     *
-    * @param offsetFromCOM Vector describing the distance between the link center of mass and the point of collision.
-    * @param Rk_coll Rotation matrix from joint k to collision space.
-    * @param u_coll Vector representing the velocity at the collision point.
-    * @param epsilon The coefficent of restitution.
-    * @param mu The coefficent of friction.
-    * @param p_coll Vector to store the collision impulse once it has been calculated.
+    * @param offsetFromCOM Vector describing the distance between the link center of mass and the point
+    *                      of collision.
+    * @param Rk_coll       Rotation matrix from joint k to collision space.
+    * @param u_coll        Vector representing the velocity at the collision point.
+    * @param epsilon       The coefficent of restitution.
+    * @param mu            The coefficent of friction.
+    * @param p_coll        Vector to store the collision impulse once it has been calculated.
     */
-   public void resolveCollision(Vector3DReadOnly offsetFromCOM, RotationMatrixReadOnly Rk_coll, Vector3DReadOnly u_coll, double epsilon, double mu, Vector3DBasics p_coll)
+   public void resolveCollision(Vector3DReadOnly offsetFromCOM, RotationMatrixReadOnly Rk_coll, Vector3DReadOnly u_coll, double epsilon, double mu,
+                                Vector3DBasics p_coll)
    {
       computeKiCollision(offsetFromCOM, Rk_coll);
       integrateCollision(Ki, u_coll, epsilon, mu, p_coll);
@@ -759,28 +740,31 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Micro collisions are used to simulate static contact.  They prevent simulation failure when the separation distance
-    * and time between collisions approaches zero (static contact).  This micro collisions only take place when the initial
-    * velocities of the two bodies are quite small.  Micro collisions work by artifically increasing the coefficent of restitution
-    * (epsilon) based on the penetration of the bodies in the collision envelope.  Once this new penetration coefficent
-    * is calculated the collision is resolved normally.  A special case is the instance where the two bodies are resting statically
-    * due to a high coefficent of friction.  Normal micro collisions would cause a slow creep down the slope which is not
-    * an accurate model.  In this senario the impulse is simply the force required to reverse the velocity at the point of collision,
-    * effectively countering the artifical sliding effect.  For further information see Mirtich 3.5 pg 88
+    * Micro collisions are used to simulate static contact. They prevent simulation failure when the
+    * separation distance and time between collisions approaches zero (static contact). This micro
+    * collisions only take place when the initial velocities of the two bodies are quite small. Micro
+    * collisions work by artifically increasing the coefficent of restitution (epsilon) based on the
+    * penetration of the bodies in the collision envelope. Once this new penetration coefficent is
+    * calculated the collision is resolved normally. A special case is the instance where the two
+    * bodies are resting statically due to a high coefficent of friction. Normal micro collisions would
+    * cause a slow creep down the slope which is not an accurate model. In this senario the impulse is
+    * simply the force required to reverse the velocity at the point of collision, effectively
+    * countering the artifical sliding effect. For further information see Mirtich 3.5 pg 88
     *
     * @param penetrationSquared Square of the distance between the two components.
-    * @param offsetFromCOM Vector3d describing the offset between this link's center of mass and the point of collision
-    * @param Rk_coll Rotation matrix between this space, link k, and collision space
-    * @param u_coll Vector representing the velocity at the point of collision
-    * @param epsilon The coefficent of restitution.
-    * @param mu The coefficent of friction.
-    * @param p_coll Vector3d in which the impulse will be stored.
+    * @param offsetFromCOM      Vector3d describing the offset between this link's center of mass and
+    *                           the point of collision
+    * @param Rk_coll            Rotation matrix between this space, link k, and collision space
+    * @param u_coll             Vector representing the velocity at the point of collision
+    * @param epsilon            The coefficent of restitution.
+    * @param mu                 The coefficent of friction.
+    * @param p_coll             Vector3d in which the impulse will be stored.
     */
-   public void resolveMicroCollision(double penetrationSquared, Vector3DReadOnly offsetFromCOM, RotationMatrixReadOnly Rk_coll, Vector3DReadOnly u_coll, double epsilon, double mu,
-                                     Vector3DBasics p_coll)
+   public void resolveMicroCollision(double penetrationSquared, Vector3DReadOnly offsetFromCOM, RotationMatrixReadOnly Rk_coll, Vector3DReadOnly u_coll,
+                                     double epsilon, double mu, Vector3DBasics p_coll)
    {
       //TODO: Commented out microcollisions for time being and replaced with penetration-based
-      // epsilon increase. Need to make test cases and figure out exactly how we are going to 
+      // epsilon increase. Need to make test cases and figure out exactly how we are going to
       // do all of this...
       boolean justUseSpringyEpsilonForMicroCollisions = true;
       if (justUseSpringyEpsilonForMicroCollisions)
@@ -791,38 +775,37 @@ public abstract class JointPhysics< J extends Joint>
 
       computeKiCollision(offsetFromCOM, Rk_coll);
       collisionIntegrator.setup(Ki, u_coll, epsilon, mu);
-      collisionIntegrator.computeMicroImpulse(p_coll);    // impulse is in collision coordinates.  Need to rotate into joint com coordinates:
+      collisionIntegrator.computeMicroImpulse(p_coll); // impulse is in collision coordinates.  Need to rotate into joint com coordinates:
 
-      if (Math.abs(Math.sqrt(p_coll.getX() * p_coll.getX() + p_coll.getY() * p_coll.getY()) / p_coll.getZ()) > mu)    // If slipping, just do it the normal way...
+      if (Math.abs(Math.sqrt(p_coll.getX() * p_coll.getX() + p_coll.getY() * p_coll.getY()) / p_coll.getZ()) > mu) // If slipping, just do it the normal way...
       {
          // Slipping MicroCollision:
-//         System.out.println("Slipping Micro Collision:  " + p_coll);
+         //         System.out.println("Slipping Micro Collision:  " + p_coll);
          resolveCollision(offsetFromCOM, Rk_coll, u_coll, epsilon, mu, p_coll);
       }
       else
       {
-//         System.out.println("Non-Slipping Micro Collision:  " + p_coll);
+         //         System.out.println("Non-Slipping Micro Collision:  " + p_coll);
 
          p_hat_k.top.set(p_coll);
          p_hat_k.bottom.set(0.0, 0.0, 0.0);
-         k_X_hat_coll.transform(p_hat_k);    // p_k is now the impulse at the joint com.
+         k_X_hat_coll.transform(p_hat_k); // p_k is now the impulse at the joint com.
 
-         propagateImpulse(p_hat_k);    // Propagate the impulse.  Mirtich p. 146, step E.
+         propagateImpulse(p_hat_k); // Propagate the impulse.  Mirtich p. 146, step E.
       }
 
-
    }
-   
-   private void resolveMicroCollisionWithSpringyEpsilon(double penetrationSquared, Vector3DReadOnly offsetFromCOM, RotationMatrixReadOnly Rk_coll, Vector3DReadOnly u_coll, double epsilon, double mu,
-                                                        Vector3DBasics p_coll)
+
+   private void resolveMicroCollisionWithSpringyEpsilon(double penetrationSquared, Vector3DReadOnly offsetFromCOM, RotationMatrixReadOnly Rk_coll,
+                                                        Vector3DReadOnly u_coll, double epsilon, double mu, Vector3DBasics p_coll)
    {
-   // +++JEP: Adjust epsilon based on penetration...
+      // +++JEP: Adjust epsilon based on penetration...
       epsilon = epsilon + 1000000.0 * penetrationSquared;
       if (epsilon > 20.0)
          epsilon = 20.0;
 
-//      System.out.println("epsilon2 = " + epsilon);
-//      System.out.println("penetrationSquared2 = " + penetrationSquared);
+      //      System.out.println("epsilon2 = " + epsilon);
+      //      System.out.println("penetrationSquared2 = " + penetrationSquared);
       // if (epsilon > 1.2) System.out.print(epsilon + " ");
 
       resolveCollision(offsetFromCOM, Rk_coll, u_coll, epsilon, mu, p_coll);
@@ -831,10 +814,11 @@ public abstract class JointPhysics< J extends Joint>
    private SpatialVector delta_v_hat_null = new SpatialVector();
 
    /**
-    * Given an impulse at this links center of mass this function
-    * computes the change in velocity of all links.
+    * Given an impulse at this links center of mass this function computes the change in velocity of
+    * all links.
     *
-    * @param p_hat_k SpatialVector describing the force and torque impulse to be applied at this links center of mass.
+    * @param p_hat_k SpatialVector describing the force and torque impulse to be applied at this links
+    *                center of mass.
     */
    private void propagateImpulse(SpatialVector p_hat_k)
    {
@@ -853,15 +837,17 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Beginning with link k, the link at which the collision occured, calculate the new Y_hat for each parent, link h,
-    * traveling up the tree to the root.  Once there, interate back down the tree calculating the change in velocity
-    * for each node.  This downward traversal of the tree skips all child nodes in the path from k to the root as these
-    * nodes are already updating their subtrees.
+    * Beginning with link k, the link at which the collision occured, calculate the new Y_hat for each
+    * parent, link h, traveling up the tree to the root. Once there, interate back down the tree
+    * calculating the change in velocity for each node. This downward traversal of the tree skips all
+    * child nodes in the path from k to the root as these nodes are already updating their subtrees.
     *
-    * @param new_Y_hat SpatialVector representing the force Z_hat_i must cancel as a result of the collision.
-    * @param delta_v_hat_return SpatialVector representing the change in velocity of this joint due to the collison.
-    * @param skipMeBackUp This joint is the child on the path to link k, skip it when calculating velocity changes
-    * for joints not on the path.
+    * @param new_Y_hat          SpatialVector representing the force Z_hat_i must cancel as a result of
+    *                           the collision.
+    * @param delta_v_hat_return SpatialVector representing the change in velocity of this joint due to
+    *                           the collison.
+    * @param skipMeBackUp       This joint is the child on the path to link k, skip it when calculating
+    *                           velocity changes for joints not on the path.
     */
    protected void recursivePropagateImpulse(SpatialVector new_Y_hat, SpatialVector delta_v_hat_return, Joint skipMeBackUp)
    {
@@ -918,13 +904,14 @@ public abstract class JointPhysics< J extends Joint>
    private final SpatialTransformationMatrix coll_X_hat_k = new SpatialTransformationMatrix();
 
    /**
-    * Computes Ki for this joint using the three basis vectors describing collision space as test impulses.  The
-    * calculated collision matrix is stored in Ki.  For further information see Mirtich p. 144
+    * Computes Ki for this joint using the three basis vectors describing collision space as test
+    * impulses. The calculated collision matrix is stored in Ki. For further information see Mirtich p.
+    * 144
     *
     * @param k_X_hat_coll Spatial transformation matrix between this joint and collision space.
-    * @param kiToPack Matrix3d in which the collision matrix will be stored.
+    * @param kiToPack     Matrix3d in which the collision matrix will be stored.
     */
-   private void computeMultibodyKi(SpatialTransformationMatrix k_X_hat_coll, Matrix3D kiToPack)
+   private void computeMultibodyKi(SpatialTransformationMatrix k_X_hat_coll, Matrix3DBasics kiToPack)
    {
       // Mirtich p. 144.  Compute the multi-body Ki for this Joint, given the SpatialTransformationMatrix from the contact frame to the joint COM frame.
       // Articulated inertias are already computed from the dynamics.  k_X_hat_coll is given.
@@ -980,28 +967,27 @@ public abstract class JointPhysics< J extends Joint>
       kiToPack.setM12(delta_v_hat_k.bottom.getY());
       kiToPack.setM22(delta_v_hat_k.bottom.getZ());
 
-
       // +++JEP Run a bunch of test cases here:
 
       /*
-       * p_hat_coll.top.x = 1.0; p_hat_coll.top.y = 0.0; p_hat_coll.top.z = 0.0; p_hat_coll.bottom.x = 0.0; p_hat_coll.bottom.y = 0.0; p_hat_coll.bottom.z = 0.0;
-       * this.impulseResponse(p_hat_coll, delta_v_hat_k);
-       * System.out.println("delta_v_hat_k from (1 0 0 , 0 0 0) impulse:  " + delta_v_hat_k);
+       * p_hat_coll.top.x = 1.0; p_hat_coll.top.y = 0.0; p_hat_coll.top.z = 0.0; p_hat_coll.bottom.x =
+       * 0.0; p_hat_coll.bottom.y = 0.0; p_hat_coll.bottom.z = 0.0; this.impulseResponse(p_hat_coll,
+       * delta_v_hat_k); System.out.println("delta_v_hat_k from (1 0 0 , 0 0 0) impulse:  " +
+       * delta_v_hat_k);
        */
 
    }
 
-   protected final  SpatialVector Y_hat_i = new SpatialVector();
+   protected final SpatialVector Y_hat_i = new SpatialVector();
    private final SpatialVector Y_hat_parent = new SpatialVector();
 
    // SpatialVector delta_v_hat_i = new SpatialVector();
 
    /**
-    * Calculates the resulting change in velocity for this link given an impulse
-    * at its center of mass.  This is used in calculating the collision matrix
-    * Ki based on three test impulses.
+    * Calculates the resulting change in velocity for this link given an impulse at its center of mass.
+    * This is used in calculating the collision matrix Ki based on three test impulses.
     *
-    * @param p_hat_coll SpatialVector representing the impulse to this link's center of mass
+    * @param p_hat_coll  SpatialVector representing the impulse to this link's center of mass
     * @param delta_v_hat SpatialVector in which this links change in velocity is stored.
     */
    private void impulseResponse(SpatialVector p_hat_coll, SpatialVector delta_v_hat)
@@ -1015,12 +1001,10 @@ public abstract class JointPhysics< J extends Joint>
       // System.out.println("In impulseResponse.  ");
       // System.out.println("Y_hat_parent: " + Y_hat_parent);
 
-
       // Recurse up the tree to the root to update the Y_hat of each joint:
       this.recursiveImpulseResponseToRootAndBack(Y_hat_parent, delta_v_hat);
 
    }
-
 
    private SpatialVector delta_v_hat_h = new SpatialVector();
 
@@ -1028,7 +1012,7 @@ public abstract class JointPhysics< J extends Joint>
     * Travels up the tree from this link updating the articulated impulses of each joint in the chain.
     * Once this is complete, the function calculates the change in velocity at each joint.
     *
-    * @param new_Y_hat SpatialVector containing the new value for Y_hat_i for this link.
+    * @param new_Y_hat          SpatialVector containing the new value for Y_hat_i for this link.
     * @param delta_v_hat_return SpatialVector containing the change in velocity for this link.
     */
    protected void recursiveImpulseResponseToRootAndBack(SpatialVector new_Y_hat, SpatialVector delta_v_hat_return)
@@ -1077,22 +1061,19 @@ public abstract class JointPhysics< J extends Joint>
 
       impulseResponseComputeDeltaV(delta_v_hat_h, delta_v_hat_return);
 
-
    }
 
    private final SpatialVector delta_v_temp1 = new SpatialVector(), delta_v_temp2 = new SpatialVector();
 
    /**
-    * Compute the change in velocity for this joint as described in Mirtich p. 141.
-    * This function applies only to joints on the path between and including link k, the
-    * joint involved in collision, and the root joint.  This function is identical to
-    * PropagateImpulseSetDeltaVOnPath in every way
-    * except it does not store the calculated delta_q_dot_i.  This function is used
-    * in the calculation of Ki which requires the propagation of test impulses which should
-    * not be recorded.
+    * Compute the change in velocity for this joint as described in Mirtich p. 141. This function
+    * applies only to joints on the path between and including link k, the joint involved in collision,
+    * and the root joint. This function is identical to PropagateImpulseSetDeltaVOnPath in every way
+    * except it does not store the calculated delta_q_dot_i. This function is used in the calculation
+    * of Ki which requires the propagation of test impulses which should not be recorded.
     *
     * @param delta_v_parent SpatialVector representing the change in velocity of the parent joint.
-    * @param delta_v_me SpatialVector to which the change in velocity of this joint is stored.
+    * @param delta_v_me     SpatialVector to which the change in velocity of this joint is stored.
     */
    protected void impulseResponseComputeDeltaV(SpatialVector delta_v_parent, SpatialVector delta_v_me)
    {
@@ -1114,12 +1095,12 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Compute and store the change in velocity for this joint as described in Mirtich p. 141.
-    * This function applies only to joints on the path between and including link k, the
-    * joint involved in collision, and the root joint.
+    * Compute and store the change in velocity for this joint as described in Mirtich p. 141. This
+    * function applies only to joints on the path between and including link k, the joint involved in
+    * collision, and the root joint.
     *
     * @param delta_v_parent SpatialVector representing the change in velocity of the parent joint.
-    * @param delta_v_me SpatialVector to which the change in velocity of this joint is stored.
+    * @param delta_v_me     SpatialVector to which the change in velocity of this joint is stored.
     */
    protected void propagateImpulseSetDeltaVOnPath(SpatialVector delta_v_parent, SpatialVector delta_v_me)
    {
@@ -1143,10 +1124,9 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Recurses down the tree calculating and storing the change in velocity
-    * of each joint as a result of a collision at link k. This function is
-    * for use on joints not on the path from link k to root.  For further
-    * information see Mirtich p. 141
+    * Recurses down the tree calculating and storing the change in velocity of each joint as a result
+    * of a collision at link k. This function is for use on joints not on the path from link k to root.
+    * For further information see Mirtich p. 141
     *
     * @param delta_v_parent SpatialVector representing the change in velocity of this joints parent.
     */
@@ -1180,13 +1160,14 @@ public abstract class JointPhysics< J extends Joint>
    private final Point3D tempCOMPoint = new Point3D();
 
    /**
-    * Calculates center of mass position as well as the total mass of all joints beginning with
-    * this joint as root.
+    * Calculates center of mass position as well as the total mass of all joints beginning with this
+    * joint as root.
     *
-    * @param comPoint Point3D representing the location of this subtree's center of mass in world coordinates.
+    * @param comPoint Point3D representing the location of this subtree's center of mass in world
+    *                 coordinates.
     * @return Double indicating the total mass of this joint and its children.
     */
-   public double recursiveComputeCenterOfMass(Point3D comPoint)
+   public double recursiveComputeCenterOfMass(Point3DBasics comPoint)
    {
       double totalMass = 0.0;
       comPoint.set(0.0, 0.0, 0.0);
@@ -1234,10 +1215,11 @@ public abstract class JointPhysics< J extends Joint>
    /**
     * Computes the total linear momentum and mass of this subtree.
     *
-    * @param linearMomentum Vector3d representing the total linear momentum of this subtree in world coordinates.
+    * @param linearMomentum Vector3d representing the total linear momentum of this subtree in world
+    *                       coordinates.
     * @return The total mass of this subtree.
     */
-   public double recursiveComputeLinearMomentum(Vector3D linearMomentum)
+   public double recursiveComputeLinearMomentum(Vector3DBasics linearMomentum)
    {
       double totalMass = 0.0;
       linearMomentum.set(0.0, 0.0, 0.0);
@@ -1271,15 +1253,15 @@ public abstract class JointPhysics< J extends Joint>
       return totalMass;
    }
 
-
    private Vector3D tempAngularMomentum = new Vector3D();
    private Vector3D tempCOMVector = new Vector3D();
 
    /**
     * Calculates the total angular momentum of this subtree in world coordinates.
+    * 
     * @param angularMomentum Vector3d in which the total angular momentum will be stored.
     */
-   public void recursiveComputeAngularMomentum(Vector3D angularMomentum)
+   public void recursiveComputeAngularMomentum(Vector3DBasics angularMomentum)
    {
       angularMomentum.set(0.0, 0.0, 0.0);
       tempAngularMomentum.set(0.0, 0.0, 0.0);
@@ -1336,7 +1318,7 @@ public abstract class JointPhysics< J extends Joint>
     *
     * @return The total rotational kinetic energy.
     */
-   public double recursiveComputeRotationalKineticEnergy()    // 1/2 w^T I w
+   public double recursiveComputeRotationalKineticEnergy() // 1/2 w^T I w
    {
       tempRotationalEnergyVector.set(this.w_i);
       owner.link.Inertia.transform(tempRotationalEnergyVector);
@@ -1359,7 +1341,7 @@ public abstract class JointPhysics< J extends Joint>
     *
     * @return The translational kinetic energy of this subtree.
     */
-   public double recursiveComputeTranslationalKineticEnergy()    // 1/2 m v^T v
+   public double recursiveComputeTranslationalKineticEnergy() // 1/2 m v^T v
    {
       double translationalKineticEnergy = 0.5 * v_i.dot(v_i) * owner.link.getMass();
 
@@ -1383,16 +1365,15 @@ public abstract class JointPhysics< J extends Joint>
     *
     * @return The total gravitational potential energy of this subtree.
     */
-   public double recursiveComputeGravitationalPotentialEnergy()    // m g h
+   public double recursiveComputeGravitationalPotentialEnergy() // m g h
    {
-      tempPE_COMPoint.set(owner.link.comOffset);    // Get this joints com
+      tempPE_COMPoint.set(owner.link.comOffset); // Get this joints com
 
       // Transform to World Coords
       owner.transformToNext.transform(tempPE_COMPoint);
 
-      double gravitationalPotentialEnergy = owner.link.getMass()
-            * (-owner.rob.gravityX.getDoubleValue() * tempPE_COMPoint.getX() - owner.rob.gravityY.getDoubleValue() * tempPE_COMPoint.getY()
-            - owner.rob.gravityZ.getDoubleValue() * tempPE_COMPoint.getZ());
+      double gravitationalPotentialEnergy = owner.link.getMass() * (-owner.rob.gravityX.getDoubleValue() * tempPE_COMPoint.getX()
+            - owner.rob.gravityY.getDoubleValue() * tempPE_COMPoint.getY() - owner.rob.gravityZ.getDoubleValue() * tempPE_COMPoint.getZ());
 
       // Add the children
 
@@ -1406,7 +1387,7 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Recurse through the tree deciding if any ground contact points are in contact.  This function
+    * Recurse through the tree deciding if any ground contact points are in contact. This function
     * builds the list of points in contact to be used during dynamics.
     */
    public void recursiveDecideGroundContactPointsInContact()
@@ -1420,8 +1401,6 @@ public abstract class JointPhysics< J extends Joint>
          }
       }
 
-
-
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
          Joint child = owner.childrenJoints.get(i);
@@ -1430,8 +1409,8 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * This function is called once per simulation tick to update the velocities of all ground contact points.
-    * Without this function only those points currently in contact would be updated.
+    * This function is called once per simulation tick to update the velocities of all ground contact
+    * points. Without this function only those points currently in contact would be updated.
     */
    public void recursiveUpdateAllGroundContactPointVelocities()
    {
@@ -1444,7 +1423,7 @@ public abstract class JointPhysics< J extends Joint>
 
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             for (int y = 0; y < groundContactPoints.size(); y++)
             {
                GroundContactPoint point = groundContactPoints.get(y);
@@ -1462,7 +1441,8 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Recurses down the tree ensuring each joint has reasonable accelerations returning false on the first joint to fail.
+    * Recurses down the tree ensuring each joint has reasonable accelerations returning false on the
+    * first joint to fail.
     *
     * @return Indicates whether or not the joints underwent reasonable accelerations.
     */
@@ -1494,22 +1474,24 @@ public abstract class JointPhysics< J extends Joint>
          jointOffset.sub(r_in);
 
          double length = jointOffset.length();
-         if (length > epsilon) return false;
+         if (length > epsilon)
+            return false;
       }
 
       for (Joint childJoint : owner.childrenJoints)
       {
          boolean childSetupProperly = childJoint.physics.verifySetupProperly(epsilon);
-         if (!childSetupProperly) return false;
+         if (!childSetupProperly)
+            return false;
       }
 
       return true;
    }
 
    /**
-    * Adds the specified KinematicPoint to this joint.  These points allow external forces
-    * and effects to be applied while also providing a means to monitor position and velocity.
-    * Currently the only implementation internal to SCS is the ExternalForcePoint.
+    * Adds the specified KinematicPoint to this joint. These points allow external forces and effects
+    * to be applied while also providing a means to monitor position and velocity. Currently the only
+    * implementation internal to SCS is the ExternalForcePoint.
     *
     * @param point KinematicPoint to be added.
     * @see KinematicPoint KinematicPoint
@@ -1518,7 +1500,7 @@ public abstract class JointPhysics< J extends Joint>
    {
       if (kinematicPoints == null)
       {
-         kinematicPoints = new ArrayList<KinematicPoint>();
+         kinematicPoints = new ArrayList<>();
       }
 
       kinematicPoints.add(point);
@@ -1526,9 +1508,9 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Adds the specified ExternalForcePoint.  These points allow forces to be applied to particular joints
-    * allowing the creation of certain mechanical structures such as four-bar-linkages.  See the tutorial for
-    * further details.
+    * Adds the specified ExternalForcePoint. These points allow forces to be applied to particular
+    * joints allowing the creation of certain mechanical structures such as four-bar-linkages. See the
+    * tutorial for further details.
     *
     * @param point ExternalForcePoint
     * @see ExternalForcePoint ExternalForcePoint
@@ -1537,15 +1519,15 @@ public abstract class JointPhysics< J extends Joint>
    {
       if (kinematicPoints == null)
       {
-         kinematicPoints = new ArrayList<KinematicPoint>();
+         kinematicPoints = new ArrayList<>();
       }
 
       if (externalForcePoints == null)
       {
-         externalForcePoints = new ArrayList<ExternalForcePoint>();
+         externalForcePoints = new ArrayList<>();
       }
 
-      kinematicPoints.add(point);    // Add it to both the external force points, and kinematic points, since it is both.
+      kinematicPoints.add(point); // Add it to both the external force points, and kinematic points, since it is both.
       externalForcePoints.add(point);
       point.setParentJoint(owner);
    }
@@ -1554,23 +1536,25 @@ public abstract class JointPhysics< J extends Joint>
    {
       if (externalTorques == null)
       {
-         externalTorques = new ArrayList<ExternalTorque>();
+         externalTorques = new ArrayList<>();
       }
 
       externalTorques.add(torque);
       torque.setParentJoint(owner);
    }
 
-   public void removeExternalForcePoint( ExternalForcePoint point ) {
-      if( !kinematicPoints.remove(point) )
+   public void removeExternalForcePoint(ExternalForcePoint point)
+   {
+      if (!kinematicPoints.remove(point))
          throw new RuntimeException("Removing point which is not in the kinematics list!");
 
-      if( !externalForcePoints.remove(point) )
+      if (!externalForcePoints.remove(point))
          throw new RuntimeException("Removing point which is not in the external force list!");
    }
 
-   public void removeExternalTorque( ExternalTorque point ) {
-      if( !externalTorques.remove(point) )
+   public void removeExternalTorque(ExternalTorque point)
+   {
+      if (!externalTorques.remove(point))
          throw new RuntimeException("Removing torque which is not in the torque list!");
 
    }
@@ -1578,26 +1562,24 @@ public abstract class JointPhysics< J extends Joint>
    /**
     * Returns a list of the kinematic points associated with this joint. (Added by Stelian).
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see KinematicPoint KinematicPoint
     */
-   public void getKinematicPoints(ArrayList<KinematicPoint> list)
+   public void getKinematicPoints(List<KinematicPoint> list)
    {
       if (kinematicPoints != null)
          list.addAll(this.kinematicPoints);
    }
 
-
-
    /**
-    * Recurse over the children of this joint and add their KinematicPoints to the
-    * provided ArrayList.  This list includes both KinematicPoints and ExternalForcePoints
-    * as the latter is a child of the former.
+    * Recurse over the children of this joint and add their KinematicPoints to the provided List.
+    * This list includes both KinematicPoints and ExternalForcePoints as the latter is a child of the
+    * former.
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see KinematicPoint KinematicPoint
     */
-   protected void recursiveGetKinematicPoints(ArrayList<KinematicPoint> list)
+   protected void recursiveGetKinematicPoints(List<KinematicPoint> list)
    {
       if (kinematicPoints != null)
          list.addAll(this.kinematicPoints);
@@ -1612,13 +1594,13 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Recurse over the children of this joint and add their ExternalForcePoints to the
-    * provided ArrayList.
+    * Recurse over the children of this joint and add their ExternalForcePoints to the provided
+    * List.
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see ExternalForcePoint ExternalForcePoint
     */
-   protected void recursiveGetExternalForcePoints(ArrayList<ExternalForcePoint> list)
+   protected void recursiveGetExternalForcePoints(List<ExternalForcePoint> list)
    {
       list.addAll(this.externalForcePoints);
 
@@ -1631,20 +1613,20 @@ public abstract class JointPhysics< J extends Joint>
       }
    }
 
-   public ArrayList<ExternalForcePoint> getExternalForcePoints()
+   public List<ExternalForcePoint> getExternalForcePoints()
    {
       return externalForcePoints;
    }
 
    public ExternalForcePoint getExternalForcePoint(String name)
    {
-      if (externalForcePoints == null) 
+      if (externalForcePoints == null)
          return null;
 
-      for (int i=0; i<externalForcePoints.size(); i++)
+      for (int i = 0; i < externalForcePoints.size(); i++)
       {
          ExternalForcePoint externalForcePoint = externalForcePoints.get(i);
-         if (externalForcePoint.getName().equals(name)) 
+         if (externalForcePoint.getName().equals(name))
             return externalForcePoint;
       }
 
@@ -1652,18 +1634,18 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Recurse over the children of this joint and add their GroundContactPoints to the
-    * provided ArrayList.
+    * Recurse over the children of this joint and add their GroundContactPoints to the provided
+    * List.
     *
-    * @param list ArrayList to which the points are added.
+    * @param list List to which the points are added.
     * @see GroundContactPoint GroundContactPoint
     */
-   public void recursiveGetGroundContactPoints(int groundContactGroupIdentifier, ArrayList<GroundContactPoint> list)
+   public void recursiveGetGroundContactPoints(int groundContactGroupIdentifier, List<GroundContactPoint> list)
    {
       if (groundContactPointGroups != null)
       {
          GroundContactPointGroup groundContactPointGroup = groundContactPointGroups.get(groundContactGroupIdentifier);
-         if(groundContactPointGroup != null)
+         if (groundContactPointGroup != null)
          {
             list.addAll(groundContactPointGroup.getGroundContactPoints());
          }
@@ -1678,16 +1660,15 @@ public abstract class JointPhysics< J extends Joint>
       }
    }
 
-
-   public void recursiveGetAllGroundContactPointsGroupedByJoint(ArrayList<ArrayList<GroundContactPoint>> listOfLists)
+   public void recursiveGetAllGroundContactPointsGroupedByJoint(List<List<GroundContactPoint>> listOfLists)
    {
       if (groundContactPointGroupList != null)
       {
-         ArrayList<GroundContactPoint> listForThisJoint = new ArrayList<GroundContactPoint>();
+         List<GroundContactPoint> listForThisJoint = new ArrayList<>();
 
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             listForThisJoint.addAll(groundContactPoints);
          }
 
@@ -1706,13 +1687,13 @@ public abstract class JointPhysics< J extends Joint>
 
    }
 
-   public void recursiveGetAllGroundContactPoints(ArrayList<GroundContactPoint> list)
+   public void recursiveGetAllGroundContactPoints(List<GroundContactPoint> list)
    {
       if (groundContactPointGroupList != null)
       {
          for (int i = 0; i < groundContactPointGroupList.size(); i++)
          {
-            ArrayList<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
+            List<GroundContactPoint> groundContactPoints = groundContactPointGroupList.get(i).getGroundContactPoints();
             list.addAll(groundContactPoints);
          }
       }
@@ -1725,11 +1706,10 @@ public abstract class JointPhysics< J extends Joint>
       }
    }
 
-   public void recursiveGetAllExternalForcePoints(ArrayList<ExternalForcePoint> list)
+   public void recursiveGetAllExternalForcePoints(List<ExternalForcePoint> list)
    {
       if (externalForcePoints != null)
          list.addAll(externalForcePoints);
-
 
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
@@ -1739,7 +1719,7 @@ public abstract class JointPhysics< J extends Joint>
       }
    }
 
-   public void recursiveGetAllKinematicPoints(ArrayList<KinematicPoint> list)
+   public void recursiveGetAllKinematicPoints(List<KinematicPoint> list)
    {
       if (kinematicPoints != null)
          list.addAll(kinematicPoints);
@@ -1753,8 +1733,9 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Adds the specified GroundContactPoint to this joint.  These points allow ground contact modeling to occur
-    * which provides a means of robot ground interaction.  For further examples see the tutorial.
+    * Adds the specified GroundContactPoint to this joint. These points allow ground contact modeling
+    * to occur which provides a means of robot ground interaction. For further examples see the
+    * tutorial.
     *
     * @param point GroundContactPoint
     * @see GroundContactPoint GroundContactPoint
@@ -1768,11 +1749,11 @@ public abstract class JointPhysics< J extends Joint>
    public void addGroundContactPoint(int groupIdentifier, GroundContactPoint point)
    {
       if (groundContactPointGroups == null)
-         groundContactPointGroups = new LinkedHashMap<Integer, GroundContactPointGroup>();
+         groundContactPointGroups = new LinkedHashMap<>();
 
       if (groundContactPointGroupList == null)
       {
-         groundContactPointGroupList = new ArrayList<GroundContactPointGroup>();
+         groundContactPointGroupList = new ArrayList<>();
       }
 
       GroundContactPointGroup groundContactPointGroup = groundContactPointGroups.get(groupIdentifier);
@@ -1784,7 +1765,6 @@ public abstract class JointPhysics< J extends Joint>
       }
 
       groundContactPointGroup.addGroundContactPoint(point);
-
 
       point.setParentJoint(owner);
    }
@@ -1804,7 +1784,8 @@ public abstract class JointPhysics< J extends Joint>
 
    public void addJointWrenchSensor(JointWrenchSensor jointWrenchSensor)
    {
-      if (this.jointWrenchSensor != null) throw new RuntimeException("Already have a JointWrenchSensor!");
+      if (this.jointWrenchSensor != null)
+         throw new RuntimeException("Already have a JointWrenchSensor!");
 
       this.jointWrenchSensor = jointWrenchSensor;
       tempJointWrenchVector = new SpatialVector();
@@ -1849,63 +1830,70 @@ public abstract class JointPhysics< J extends Joint>
    }
 
    /**
-    * Calculates the rotation matrix between the previous and current joint space.  This method is abstract
-    * as different joint types have different means of conversion.  Once calculated the value is stored in the
-    * parameter Rh_i.
+    * Calculates the rotation matrix between the previous and current joint space. This method is
+    * abstract as different joint types have different means of conversion. Once calculated the value
+    * is stored in the parameter Rh_i.
     *
-    * @param Rh_i Matrix3d in which the rotation between from the previous joint space to the current will be stored.
+    * @param Rh_i Matrix3d in which the rotation between from the previous joint space to the current
+    *             will be stored.
     */
-   protected abstract void jointDependentSetAndGetRotation(RotationMatrix Rh_i);
+   protected abstract void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i);
 
    /**
-    * The first featherstone pass handles velocity and position updates as it recurses down the tree.  The primary method does the majority
-    * of these calculations however joint torque has a significant impact on both forms of velocity.  Different forms of joints
-    * have differing torque conditions therefore each must implement its own method to handle these effects.
+    * The first featherstone pass handles velocity and position updates as it recurses down the tree.
+    * The primary method does the majority of these calculations however joint torque has a significant
+    * impact on both forms of velocity. Different forms of joints have differing torque conditions
+    * therefore each must implement its own method to handle these effects.
     */
    protected abstract void jointDependentFeatherstonePassOne();
 
    /**
-    * Updates the value of d_i based on the current coordinate system.  d_i represents the distance between the inbound joint and
-    * its link's center of mass.  Different joint types have varying means of calculating this value, therefore each must
-    * implement its own method to handle these effects.
+    * Updates the value of d_i based on the current coordinate system. d_i represents the distance
+    * between the inbound joint and its link's center of mass. Different joint types have varying means
+    * of calculating this value, therefore each must implement its own method to handle these effects.
     */
    protected abstract void jointDependentSet_d_i();
 
    /**
-    * The primary function of the second featherstone pass is the calculation of the spatial articulated inertia and
-    * spatial articulated zero-acceleration force of link i.  During this process the coriolis forces and spatial joint axis
-    * also must be recalculated, however, these values are dependent on joint implementation and type.
+    * The primary function of the second featherstone pass is the calculation of the spatial
+    * articulated inertia and spatial articulated zero-acceleration force of link i. During this
+    * process the coriolis forces and spatial joint axis also must be recalculated, however, these
+    * values are dependent on joint implementation and type.
     *
-    * @param w_h The angular velocity of the previous link in this links coordinate system.  This value is necessary for the
-    * calculation of coriolis forces.
+    * @param w_h The angular velocity of the previous link in this links coordinate system. This value
+    *            is necessary for the calculation of coriolis forces.
     */
-   protected abstract void jointDependentFeatherstonePassTwo(Vector3D w_h);
+   protected abstract void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h);
 
    // protected abstract void jointDependentComputeExternalForceR(Vector3d point_offset, Vector3d comOffset, Vector3d externalForceR);
 
    /**
-    * The fourth and final featherstone pass travels back down the tree calculating joint accelerations based on the data gathered
-    * by the preceding three passes.  In order to use the Runge-Kutta (RK4) method to calculate future values this data must be stored
-    * over four sets of featherstone passes.  The joint dependant part of the fourth pass stores these values along with the pass number.
+    * The fourth and final featherstone pass travels back down the tree calculating joint accelerations
+    * based on the data gathered by the preceding three passes. In order to use the Runge-Kutta (RK4)
+    * method to calculate future values this data must be stored over four sets of featherstone passes.
+    * The joint dependant part of the fourth pass stores these values along with the pass number.
     *
-    * @param Q Joint acceleration based on the preceding three passes.
-    * @param passNumber Number of times dynamics have been calculated.  Dynamics must be calculated four times in total, not to be confused
-    * with the four featherstone passes involved in each calculation.
+    * @param Q          Joint acceleration based on the preceding three passes.
+    * @param passNumber Number of times dynamics have been calculated. Dynamics must be calculated four
+    *                   times in total, not to be confused with the four featherstone passes involved
+    *                   in each calculation.
     */
    protected abstract void jointDependentFeatherstonePassFour(double Q, int passNumber);
 
    /**
-    * If a joint is specified as non dynamic the second and third featherstone passes are skipped when dynamics are calculated.  However,
-    * Runge-Kutta still requires four k values which are stored by this method.
+    * If a joint is specified as non dynamic the second and third featherstone passes are skipped when
+    * dynamics are calculated. However, Runge-Kutta still requires four k values which are stored by
+    * this method.
     *
-    * @param passNumber Current pass number of doDynamics.  There are a total of 4 passes numbered 0 - 3.
+    * @param passNumber Current pass number of doDynamics. There are a total of 4 passes numbered 0 -
+    *                   3.
     */
    protected abstract void jointDependentRecordK(int passNumber);
 
    /**
-    * This function ensures that the joint has not undergone an unreasonable acceleration when dynamics were calculated.  If
-    * accelerations are deemed unreasonable the robot
-    * Various joint implementations have different definitions of unreasonble and as such implement this method independently.
+    * This function ensures that the joint has not undergone an unreasonable acceleration when dynamics
+    * were calculated. If accelerations are deemed unreasonable the robot Various joint implementations
+    * have different definitions of unreasonble and as such implement this method independently.
     *
     * @return Indicates whether or not joint accelerations are reasonable.
     */
@@ -1914,15 +1902,16 @@ public abstract class JointPhysics< J extends Joint>
    // protected abstract void jointDependentRecordK(int passNumber);
 
    /**
-    * This function handles joint dependent velocity changes as a result of collisions and external forces.  Each joint type
-    * must implement its own variant of this function.
+    * This function handles joint dependent velocity changes as a result of collisions and external
+    * forces. Each joint type must implement its own variant of this function.
     *
     * @param delta_qd Change in joint velocity.
     */
    protected abstract void jointDependentChangeVelocity(double delta_qd);
 
    @Override
-   public String toString() {
+   public String toString()
+   {
 
       StringBuffer retBuffer = new StringBuffer();
 
@@ -1981,6 +1970,4 @@ public abstract class JointPhysics< J extends Joint>
 
       this.jointWrenchSensor.setWrench(tempJointWrenchVector);
    }
-
-
 }

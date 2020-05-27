@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -18,14 +18,16 @@ import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.KDTree;
 
-
 //Ground file must be a point cloud with 1 cm resolution
 public class GroundProfileFromFile extends GroundProfileFromHeightMap
 {
    private KDTree kdTree;
    private final BoundingBox3D boundingBox;
 
-   public static enum VariableType {X, Y, Z}
+   public static enum VariableType
+   {
+      X, Y, Z
+   }
 
    public GroundProfileFromFile(String BDITerrainFilePath, int maxPointsInLeaves, RigidBodyTransform transform3D)
    {
@@ -38,12 +40,11 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
    }
 
    /**
-    * Creates a KDTree from an array of (X, Y) terrain points and an equally sized array of
-    * (Z) terrain heights.  The value MaxPointsInLeaves specifies the maximum number of
-    * points in a leaf Node.   Use a small value (5-20) unless building the
-    * tree takes too long.
+    * Creates a KDTree from an array of (X, Y) terrain points and an equally sized array of (Z) terrain
+    * heights. The value MaxPointsInLeaves specifies the maximum number of points in a leaf Node. Use a
+    * small value (5-20) unless building the tree takes too long.
     *
-    * @param points double[][]
+    * @param points            double[][]
     * @param maxPointsInLeaves int
     */
    public GroundProfileFromFile(String BDITerrainFilePath, int maxPointsInLeaves, RigidBodyTransform transform3D, VariableType[] variableOrder)
@@ -88,16 +89,15 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
       }
 
       boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
-      
+
       System.out.println(BDITerrainFilePath + ": " + "(" + xMin + ", " + yMin + ", " + zMin + ") (" + xMax + ", " + yMax + ", " + zMax + ")");
 
       kdTree = new KDTree(XYpoints, rawPoints, maxPointsInLeaves);
    }
 
-
    /**
-    * Loads an ASCII file of 3D points.  The first line of the file must contain the
-    * number of points, and all subsequent lines must contain three scalar values.
+    * Loads an ASCII file of 3D points. The first line of the file must contain the number of points,
+    * and all subsequent lines must contain three scalar values.
     *
     * @param filename String
     * @return OneDTerrainGrid
@@ -129,11 +129,9 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
    }
 
    /**
-    * Loads terrain data from a BufferedReader and returns a 2D array of doubles.
-    * The first line of the file must contain the number of points, and all
-    * subsequent lines must contain three scalar values.
-    *
-    * Returns null if the operation does not succeed.
+    * Loads terrain data from a BufferedReader and returns a 2D array of doubles. The first line of the
+    * file must contain the number of points, and all subsequent lines must contain three scalar
+    * values. Returns null if the operation does not succeed.
     *
     * @param bufferedReader BufferedReader
     * @return BreadthFirstStateEnumerator
@@ -146,7 +144,7 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
       try
       {
          // int numPoints = Integer.parseInt(bufferedReader.readLine());
-         ArrayList<double[]> pointsArrayList = new ArrayList<double[]>();
+         ArrayList<double[]> pointsArrayList = new ArrayList<>();
 
          // double[][] points = new double[numPoints][3];
          // for (int i=0; i<numPoints; i++)
@@ -157,13 +155,12 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
             String lineIn = bufferedReader.readLine();
 
             if (lineIn == null)
-               moreToRead = false;    // +++ Is this the end of the file?
+               moreToRead = false; // +++ Is this the end of the file?
 
             else
             {
                // StringTokenizer s = new StringTokenizer(lineIn, " ");
                StringTokenizer s = new StringTokenizer(lineIn);
-
 
                double x = 0.0, y = 0.0, z = 0.0;
 
@@ -223,25 +220,26 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return height;
    }
-   
+
    private final double[] query = new double[2];
 
    @Override
    public double heightAt(double x, double y, double z)
    {
-      if (!boundingBox.isXYInsideInclusive(x, y)) return 0.0;
+      if (!boundingBox.isXYInsideInclusive(x, y))
+         return 0.0;
 
       // double[] query = new double[]{x, y};
       query[0] = x;
       query[1] = y;
-      double[] closest = (double[]) kdTree.closestObject(query, 0.02);    // At most can be 2 cm away. Otherwise return 0.0;
+      double[] closest = (double[]) kdTree.closestObject(query, 0.02); // At most can be 2 cm away. Otherwise return 0.0;
 
       // if (closest == null) System.out.println(x + ", " + y);
       if ((closest == null) || (KDTree.distanceSquared(query, new double[] {closest[0], closest[1]}) > 0.01 * 0.01))
@@ -251,33 +249,33 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
    }
 
    /*
-    * public double[] closestPoint(double x, double y)
-    * {
-    *   double[] closest = (double[]) kdTree.closestObject(new double[]{x, y});
-    *   return closest;
-    * }
+    * public double[] closestPoint(double x, double y) { double[] closest = (double[])
+    * kdTree.closestObject(new double[]{x, y}); return closest; }
     */
 
-
-   public void surfaceNormalAt(double x, double y, double z, Vector3D vector3d)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics vector3d)
    {
       vector3d.set(0.0, 0.0, 1.0);
    }
-
 
    public static void main(String[] args)
    {
       // String datafile = "TerrainFiles/wood1.asc";
       String datafile = "TerrainFiles/rocks1.asc";
-      @SuppressWarnings("unused") double xOffset = 0.0;    // 0.5;
-      @SuppressWarnings("unused") double yOffset = 0.0;    // 0.3;
-      @SuppressWarnings("unused") double unitScale = 0.01;
+      @SuppressWarnings("unused")
+      double xOffset = 0.0; // 0.5;
+      @SuppressWarnings("unused")
+      double yOffset = 0.0; // 0.3;
+      @SuppressWarnings("unused")
+      double unitScale = 0.01;
 
       RigidBodyTransform transform3D = new RigidBodyTransform();
       transform3D.setRotationYawAndZeroTranslation(Math.PI / 8.0);
 
-      GroundProfileFromFile groundProfile = new GroundProfileFromFile(datafile, 10, transform3D, new VariableType[] {VariableType.X, VariableType.Z,
-              VariableType.Y});
+      GroundProfileFromFile groundProfile = new GroundProfileFromFile(datafile,
+                                                                      10,
+                                                                      transform3D,
+                                                                      new VariableType[] {VariableType.X, VariableType.Z, VariableType.Y});
 
       // TerrainFromGroundProfile terrain = new TerrainFromGroundProfile(groundProfile, unitScale, xOffset, yOffset);
       BoundingBox3D boundingBox = groundProfile.getBoundingBox();
@@ -297,11 +295,10 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
       scs.setGroundVisible(false);
 
       Graphics3DObject groundLinkGraphics = new Graphics3DObject();
-      
+
       HeightMapWithNormals heightMap = groundProfile.getHeightMapIfAvailable();
       groundLinkGraphics.addHeightMap(heightMap, 100, 100, YoAppearance.Green());
       scs.addStaticLinkGraphics(groundLinkGraphics);
-      
 
       Link link = new Link("");
       Graphics3DObject linkGraphics = new Graphics3DObject();
@@ -316,20 +313,13 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
       // 608.799561 21.673950 38.070194
 
       /*
-       * double x = 0.608799;
-       * double y = 0.02167;
-       * double z = groundProfile.heightAt(x, y, 0.0);
-       *
-       * double[] closest = groundProfile.closestPoint(x, y);
-       *
-       *
-       *
-       * System.out.print("(" + x + ", " + y + ", " + z + ")   ");
-       * System.out.println("(" + closest[0] + ", " + closest[1]  + ", " + closest[2]  + ")");
+       * double x = 0.608799; double y = 0.02167; double z = groundProfile.heightAt(x, y, 0.0); double[]
+       * closest = groundProfile.closestPoint(x, y); System.out.print("(" + x + ", " + y + ", " + z +
+       * ")   "); System.out.println("(" + closest[0] + ", " + closest[1] + ", " + closest[2] + ")");
        */
 
    }
-   
+
    @Override
    public BoundingBox3D getBoundingBox()
    {

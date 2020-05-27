@@ -28,7 +28,6 @@ public class ExternalForcePointDefinitionFixedFrame
 
    Vector3D offset = null;
 
-
    public String getXMLRepresentation()
    {
       String returnString = "";

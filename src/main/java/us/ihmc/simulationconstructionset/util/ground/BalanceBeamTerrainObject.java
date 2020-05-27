@@ -4,8 +4,10 @@ import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.Vector2D;
+import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -21,7 +23,7 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
    private final Graphics3DObject linkGraphics;
    private final double heightAboveGround;
 
-   public BalanceBeamTerrainObject(Point2D origin, double back, double forward, Vector2D direction, double width, double heightAboveGround,
+   public BalanceBeamTerrainObject(Point2DReadOnly origin, double back, double forward, Vector2D direction, double width, double heightAboveGround,
                                    AppearanceDefinition appearance)
    {
       Point2D pForward = new Point2D(direction);
@@ -41,7 +43,7 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
       Point3D minPoint = new Point3D(xMin, yMin, zMin);
       Point3D maxPoint = new Point3D(xMax, yMax, zMax);
 
-      this.boundingBox = new BoundingBox3D(minPoint, maxPoint);
+      boundingBox = new BoundingBox3D(minPoint, maxPoint);
 
       this.direction = direction;
       this.width = width;
@@ -57,10 +59,10 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
-      double heightAt = this.heightAt(x, y, z);
-      this.surfaceNormalAt(x, y, z, normalToPack);
+      double heightAt = heightAt(x, y, z);
+      surfaceNormalAt(x, y, z, normalToPack);
 
       return heightAt;
    }
@@ -88,19 +90,19 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
       }
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       normal.set(0.0, 0.0, 1.0);
    }
 
-   public void closestIntersectionTo(double x, double y, double z, Point3D intersection)
+   public void closestIntersectionTo(double x, double y, double z, Point3DBasics intersection)
    {
       intersection.setX(x); // Go Straight Up for now...
       intersection.setY(y);
       intersection.setZ(heightAt(x, y, z));
    }
 
-   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersection, Vector3D normal)
+   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics intersection, Vector3DBasics normal)
    {
       intersection.setX(x); // Go Straight Up for now...
       intersection.setY(y);
@@ -110,7 +112,7 @@ public class BalanceBeamTerrainObject implements TerrainObject3D, HeightMapWithN
    }
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       intersectionToPack.set(x, y, heightAt(x, y, z));
       surfaceNormalAt(x, y, z, normalToPack);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class GraphGroup
 {
    private String name;
-   private final ArrayList<String[][]> graphLists = new ArrayList<String[][]>();
+   private final ArrayList<String[][]> graphLists = new ArrayList<>();
    private int numColumns = 1;
 
    public GraphGroup(String name)
@@ -32,10 +32,7 @@ public class GraphGroup
    {
       for (int i = 0; i < varNames.length; i++)
       {
-         graphLists.add(new String[][]
-         {
-            varNames[i], {""}
-         });
+         graphLists.add(new String[][] {varNames[i], {""}});
       }
    }
 
@@ -46,7 +43,6 @@ public class GraphGroup
          graphLists.add(varNamesAndConfigs[i]);
       }
    }
-
 
    public ArrayList<String[][]> getGraphVars()
    {

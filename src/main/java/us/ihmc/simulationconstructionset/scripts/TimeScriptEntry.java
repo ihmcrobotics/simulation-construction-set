@@ -12,12 +12,12 @@ public class TimeScriptEntry implements Comparable<Object>
    private double time;
    private ArrayList<VariableValuePair> varValuePairs;
    private ArrayList<TimeScriptCommand> timeScriptCommands;
-   
+
    public TimeScriptEntry(double time)
    {
       this.time = time;
-      varValuePairs = new ArrayList<VariableValuePair>();
-      timeScriptCommands = new ArrayList<TimeScriptCommand>();
+      varValuePairs = new ArrayList<>();
+      timeScriptCommands = new ArrayList<>();
    }
 
    public void addVarValue(YoDouble variable, double value)
@@ -27,7 +27,7 @@ public class TimeScriptEntry implements Comparable<Object>
       VariableValuePair variableValuePair = new DoubleVariableValuePair(variable, value);
       varValuePairs.add(variableValuePair);
    }
-   
+
    public void addVarValue(YoBoolean variable, boolean value)
    {
       if (variable == null)
@@ -35,7 +35,7 @@ public class TimeScriptEntry implements Comparable<Object>
       VariableValuePair variableValuePair = new BooleanVariableValuePair(variable, value);
       varValuePairs.add(variableValuePair);
    }
-   
+
    public void addVarValue(YoInteger variable, int value)
    {
       if (variable == null)
@@ -43,7 +43,7 @@ public class TimeScriptEntry implements Comparable<Object>
       VariableValuePair variableValuePair = new IntegerVariableValuePair(variable, value);
       varValuePairs.add(variableValuePair);
    }
-   
+
    @SuppressWarnings("rawtypes")
    public void addVarValue(YoEnum variable, Enum value)
    {
@@ -72,17 +72,16 @@ public class TimeScriptEntry implements Comparable<Object>
          variableValuePair.setVariableToValue();
       }
    }
-   
+
    public void doCommands()
    {
-      for (int i=0; i<timeScriptCommands.size(); i++)
+      for (int i = 0; i < timeScriptCommands.size(); i++)
       {
          TimeScriptCommand timeScriptCommand = timeScriptCommands.get(i);
          timeScriptCommand.doCommand();
       }
    }
-   
-   
+
    public void addTimeScriptCommand(TimeScriptCommand timeScriptCommand)
    {
       timeScriptCommands.add(timeScriptCommand);
@@ -90,14 +89,14 @@ public class TimeScriptEntry implements Comparable<Object>
 
    public double getTime()
    {
-      return this.time;
+      return time;
    }
 
    private interface VariableValuePair
    {
       public abstract void setVariableToValue();
    }
-   
+
    private class DoubleVariableValuePair implements VariableValuePair
    {
       protected YoDouble variable;
@@ -115,7 +114,7 @@ public class TimeScriptEntry implements Comparable<Object>
          variable.set(value);
       }
    }
-   
+
    private class BooleanVariableValuePair implements VariableValuePair
    {
       protected YoBoolean variable;
@@ -133,7 +132,7 @@ public class TimeScriptEntry implements Comparable<Object>
          variable.set(value);
       }
    }
-   
+
    private class IntegerVariableValuePair implements VariableValuePair
    {
       protected YoInteger variable;
@@ -151,7 +150,7 @@ public class TimeScriptEntry implements Comparable<Object>
          variable.set(value);
       }
    }
-   
+
    private class EnumVariableValuePair implements VariableValuePair
    {
       @SuppressWarnings("rawtypes")
@@ -173,6 +172,5 @@ public class TimeScriptEntry implements Comparable<Object>
          variable.set(value);
       }
    }
- 
-   
+
 }

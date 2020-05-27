@@ -24,8 +24,6 @@ import us.ihmc.yoVariables.listener.VariableChangedListener;
 import us.ihmc.yoVariables.variable.YoEnum;
 import us.ihmc.yoVariables.variable.YoVariable;
 
-
-
 public class YoEntryBox extends JPanel implements MouseListener, ActionListener, FocusListener, ChangeListener
 {
    private final boolean USE_NEW_DISPLAY_FOR_ENUMS = true;
@@ -39,13 +37,12 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
    protected static final int MAX_COMPONENT_LENGTH = 400;
 
    protected static final int MIN_COMPONENT_LENGTH = 50;
-   
+
    private Color origionalColor = null;
 
-   private static ArrayList<VariableChangedListener> variableChangedListeners = new ArrayList<VariableChangedListener>();
+   private static ArrayList<VariableChangedListener> variableChangedListeners = new ArrayList<>();
 
    private YoVariableEntryContainer activeEntryContainer = new YoTextEntryContainer();
-
 
    private EntryBoxArrayPanel entryBoxArrayPanel;
 
@@ -56,19 +53,19 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
    public YoEntryBox(EntryBoxArrayPanel entryBoxArrayPanel, SelectedVariableHolder holder)
    {
       super();
-            
+
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-      this.selectedVariableHolder = holder;
+      selectedVariableHolder = holder;
       this.entryBoxArrayPanel = entryBoxArrayPanel;
-      this.setOpaque(true);
-      this.setName(DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
+      setOpaque(true);
+      setName(DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
       activeEntryContainer.setup(this);
 
-      this.addFocusListener(this);
+      addFocusListener(this);
 
-      this.addMouseListener(this);
-      this.setDropTarget(new DropTarget(this, new YoEntryBoxTargetListener(this)));
-      this.setTransferHandler(new YoEntryBoxTransferHandler());
+      addMouseListener(this);
+      setDropTarget(new DropTarget(this, new YoEntryBoxTargetListener(this)));
+      setTransferHandler(new YoEntryBoxTransferHandler());
 
       popupMenu = new ForcedRepaintPopupMenu();
       JMenuItem delete = new JMenuItem("Delete Entry Box");
@@ -84,10 +81,10 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
          }
       });
       popupMenu.add(delete);
-//      this.setToolTipText(DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
-      this.setToolTipText("");
-      this.setPreferredSize(new Dimension(200, 26));
-      origionalColor= this.getBackground();
+      //      this.setToolTipText(DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
+      setToolTipText("");
+      setPreferredSize(new Dimension(200, 26));
+      origionalColor = getBackground();
    }
 
    public static void attachVariableChangedListener(VariableChangedListener listener)
@@ -108,15 +105,14 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
    {
       variableChangedListeners.remove(listener);
    }
-   
+
    @Override
    public void actionPerformed(ActionEvent evt)
    {
-//    System.out.println("YoEntryBox: Hey, I haz an actionPerformed!");
+      //    System.out.println("YoEntryBox: Hey, I haz an actionPerformed!");
       activeEntryContainer.actionPerformed(this, evt);
    }
-   
-   
+
    public void addVariable(YoVariable<?> variable)
    {
       if ((entryBoxArrayPanel != null) && entryBoxArrayPanel.isHoldingVariable(variable))
@@ -126,9 +122,8 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
       updateActiveContainer();
 
       if (entryBoxArrayPanel != null)
-         this.entryBoxArrayPanel.checkStatus();
+         entryBoxArrayPanel.checkStatus();
    }
-
 
    @Override
    public void focusGained(FocusEvent evt)
@@ -165,7 +160,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
 
    public int getNumVars()
    {
-      if (this.activeEntryContainer.getVariable() != null)
+      if (activeEntryContainer.getVariable() != null)
          return 1;
       else
          return 0;
@@ -183,7 +178,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
 
    public boolean isHoldingVariable(YoVariable<?> v)
    {
-      return (this.activeEntryContainer.getVariable() == v);
+      return (activeEntryContainer.getVariable() == v);
    }
 
    @Override
@@ -206,8 +201,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
    {
       this.requestFocus();
 
-
-      if (evt.isMetaDown() &&!(evt.isAltDown()))
+      if (evt.isMetaDown() && !(evt.isAltDown()))
       {
          popupMenu.setLocation(evt.getXOnScreen(), evt.getYOnScreen());
          popupMenu.setVisible(true);
@@ -223,7 +217,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
 
             YoVariable<?> v = selectedVariableHolder.getSelectedVariable();
             if (v != null)
-               this.addVariable(v);
+               addVariable(v);
          }
          else
          {
@@ -231,12 +225,12 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
 
             if (!evt.isControlDown())
             {
-               this.getTransferHandler().exportAsDrag(this, evt, TransferHandler.MOVE);
+               getTransferHandler().exportAsDrag(this, evt, TransferHandler.MOVE);
                YoGraph.setActionPerformedByDragAndDrop(TransferHandler.MOVE);
             }
             else if (evt.isControlDown())
             {
-               this.getTransferHandler().exportAsDrag(this, evt, TransferHandler.COPY);
+               getTransferHandler().exportAsDrag(this, evt, TransferHandler.COPY);
                YoGraph.setActionPerformedByDragAndDrop(TransferHandler.COPY);
             }
 
@@ -244,40 +238,36 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
          }
       }
 
-
    }
-
 
    @Override
    public void mouseReleased(MouseEvent evt)
    {
    }
 
-
    protected void passOnFocusRequest()
    {
       if (entryBoxArrayPanel != null)
          entryBoxArrayPanel.requestFocus();
       else
-         this.getParent().requestFocus();
+         getParent().requestFocus();
    }
-
 
    public void removeVariable(YoVariable<?> variable)
    {
       activeEntryContainer.removeVariable(variable);
 
-      this.setToolTipText("");
-      this.setName("");
-//      this.setToolTipText(DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
+      setToolTipText("");
+      setName("");
+      //      this.setToolTipText(DEFAULT_UNBOUND_ENTRY_BOX_LABEL);
 
       if (entryBoxArrayPanel != null)
-         this.entryBoxArrayPanel.checkStatus();
+         entryBoxArrayPanel.checkStatus();
 
       if (popupMenu.isVisible())
          popupMenu.setVisible(false);
 
-      this.updateUI();
+      updateUI();
    }
 
    @SuppressWarnings({"rawtypes"})
@@ -296,20 +286,20 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
 
    private void switchContainerType(YoVariableEntryContainer yoEntryContainer)
    {
-//    if (activeEntryContainer.getClass() != yoEntryContainer.getClass())
-//    {
+      //    if (activeEntryContainer.getClass() != yoEntryContainer.getClass())
+      //    {
       activeEntryContainer.shutdown(this);
       activeEntryContainer = yoEntryContainer;
       activeEntryContainer.setup(this);
 
-//    }
+      //    }
    }
 
    public synchronized void setTextField()
    {
       updateActiveContainer();
    }
-   
+
    public void setVariableInThisBox(YoVariable<?> variableInThisBox)
    {
       setContainerType(variableInThisBox);
@@ -318,27 +308,26 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
       setName(variableInThisBox.getName() + "_YoEntryBox");
    }
 
-
    public void updateActiveContainer()
    {
       final YoEntryBox thisEntryBox = this;
-      
+
       EventDispatchThreadHelper.invokeLater(new Runnable()
       {
          @Override
          public void run()
          {
-            activeEntryContainer.update(thisEntryBox);            
-         }});
+            activeEntryContainer.update(thisEntryBox);
+         }
+      });
    }
-
 
    protected void updateToolTipText(YoVariable<?> variableInThisBox)
    {
       String toolTip = variableInThisBox.getDescription();
       if ((toolTip == null) || toolTip.equals(""))
          toolTip = variableInThisBox.getFullNameWithNameSpace();
-      this.setToolTipText(toolTip);
+      setToolTipText(toolTip);
    }
 
    public YoVariableEntryContainer getActiveYoVariableEntryContainer()
@@ -353,9 +342,9 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
       if (activeEntryContainer.getVariable() != null)
       {
          if (activeEntryContainer.getVariable().equals(tmp))
-            this.setBackground(Color.GREEN);
+            setBackground(Color.GREEN);
          else
-            this.setBackground(origionalColor);
+            setBackground(origionalColor);
       }
    }
 

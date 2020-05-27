@@ -18,12 +18,12 @@ public class SelectExtraPanelAction extends AbstractAction
    {
       super(extraPanelConfiguration.getName());
 
-      this.selectExtraPanelAction = selector;
+      selectExtraPanelAction = selector;
       this.extraPanelConfiguration = extraPanelConfiguration;
 
       // this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_E));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
    }
 
    @Override

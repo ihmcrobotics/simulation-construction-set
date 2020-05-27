@@ -23,7 +23,7 @@ public class ZoomOutAction extends AbstractAction
       int shortKey = KeyEvent.VK_O;
       String longDescription = "Zoom Out";
       String shortDescription = "Zoom Out";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 
@@ -32,7 +32,7 @@ public class ZoomOutAction extends AbstractAction
    {
       executor.zoomOut();
    }
-   
+
    public void closeAndDispose()
    {
       executor = null;

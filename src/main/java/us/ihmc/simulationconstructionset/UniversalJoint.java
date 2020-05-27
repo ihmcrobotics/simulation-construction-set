@@ -1,11 +1,9 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.euclid.Axis3D;
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.orientation.interfaces.Orientation3DBasics;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
-import us.ihmc.euclid.tuple4D.Quaternion;
 
 public class UniversalJoint extends PinJoint
 {
@@ -15,7 +13,7 @@ public class UniversalJoint extends PinJoint
    private static final long serialVersionUID = 3428274232426974681L;
    private PinJoint joint2;
 
-   public UniversalJoint(String jname1, String jname2, Vector3DReadOnly offset, Robot rob, Axis3D firstAxis, Axis3D secondAxis)
+   public UniversalJoint(String jname1, String jname2, Tuple3DReadOnly offset, Robot rob, Vector3DReadOnly firstAxis, Vector3DReadOnly secondAxis)
    {
       super(jname1, offset, rob, firstAxis);
 
@@ -32,7 +30,7 @@ public class UniversalJoint extends PinJoint
       joint2.physics.r_in.setY(0.0);
       joint2.physics.r_in.setZ(0.0);
    }
-   
+
    public PinJoint getFirstJoint()
    {
       return this;
@@ -40,7 +38,7 @@ public class UniversalJoint extends PinJoint
 
    public PinJoint getSecondJoint()
    {
-      return this.joint2;
+      return joint2;
    }
 
    @Override
@@ -53,7 +51,7 @@ public class UniversalJoint extends PinJoint
    public void setLink(Link l)
    {
       // Set this joints real link to a null link and set the second Joints link to the given link...
-      Link nullLink = new Link("null");    // smallPiece();
+      Link nullLink = new Link("null"); // smallPiece();
       nullLink.setMass(0.0);
       nullLink.setMomentOfInertia(0.0, 0.0, 0.0);
       nullLink.setComOffset(0.0, 0.0, 0.0);
@@ -67,7 +65,7 @@ public class UniversalJoint extends PinJoint
    {
       joint2.addCameraMount(mount);
    }
-   
+
    @Override
    public void addIMUMount(IMUMount mount)
    {
@@ -93,23 +91,12 @@ public class UniversalJoint extends PinJoint
    }
 
    /*
-    * private Link smallPiece()
-    * {
-    * double BASE_H = 0.1, BASE_W = 0.1, BASE_L = 0.1;
-    *
-    * Link ret = new Link("small piece");
-    * ret.translate(0.0,0.0,-BASE_H/2.0);
-    * ret.addCube((float)BASE_L, (float)BASE_W, (float)BASE_H, YoAppearance.Red());
-    * //ret.addPyramidCube(BASE_L, BASE_W, BASE_H, BASE_H, appearance);
-    *
-    * ret.identity();
-    * ret.rotate(Math.PI/2.0,Link.Y);
-    * ret.addCylinder(0.5,0.01, YoAppearance.Red());
-    *
-    * return ret;
-    * }
+    * private Link smallPiece() { double BASE_H = 0.1, BASE_W = 0.1, BASE_L = 0.1; Link ret = new
+    * Link("small piece"); ret.translate(0.0,0.0,-BASE_H/2.0); ret.addCube((float)BASE_L,
+    * (float)BASE_W, (float)BASE_H, YoAppearance.Red()); //ret.addPyramidCube(BASE_L, BASE_W, BASE_H,
+    * BASE_H, appearance); ret.identity(); ret.rotate(Math.PI/2.0,Link.Y); ret.addCylinder(0.5,0.01,
+    * YoAppearance.Red()); return ret; }
     */
-
 
    public void setLimitStops(int axis, double q_min, double q_max, double k_limit, double b_limit)
    {
@@ -150,22 +137,8 @@ public class UniversalJoint extends PinJoint
    }
 
    @Override
-   public void getRotationToWorld(RotationMatrix rotation)
+   public void getRotationToWorld(Orientation3DBasics rotation)
    {
       rotation.set(joint2.transformToNext.getRotation());
    }
-
-   @Override
-   public void getRotationToWorld(Quaternion rotation)
-   {
-      rotation.set(joint2.transformToNext.getRotation());
-   }
-
-   @Override
-   public void getTranslationToWorld(Vector3DBasics translation)
-   {
-      translation.set(joint2.transformToNext.getTranslation());
-   }
-
-
 }

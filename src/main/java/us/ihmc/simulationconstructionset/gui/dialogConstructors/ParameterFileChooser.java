@@ -3,9 +3,6 @@ package us.ihmc.simulationconstructionset.gui.dialogConstructors;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.io.File;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
@@ -132,8 +129,14 @@ public class ParameterFileChooser
             }
             if (parameterFile.exists())
             {
-               return JOptionPane.showOptionDialog(parent, "File exists, overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-                                                   null, null, null) == JOptionPane.YES_OPTION;
+               return JOptionPane.showOptionDialog(parent,
+                                                   "File exists, overwrite?",
+                                                   "Overwrite?",
+                                                   JOptionPane.YES_NO_OPTION,
+                                                   JOptionPane.WARNING_MESSAGE,
+                                                   null,
+                                                   null,
+                                                   null) == JOptionPane.YES_OPTION;
             }
             return true;
          }

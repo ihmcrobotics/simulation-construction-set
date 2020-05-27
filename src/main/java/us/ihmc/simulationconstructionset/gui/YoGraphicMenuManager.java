@@ -35,7 +35,7 @@ public class YoGraphicMenuManager
    {
       this.jMenu = jMenu;
    }
-   
+
    public void hideAllGraphics()
    {
       hideAllGraphicObjects.hideAllGraphics();

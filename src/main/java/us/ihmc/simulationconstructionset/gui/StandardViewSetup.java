@@ -42,7 +42,7 @@ public class StandardViewSetup
       camera4.setCameraDolly(false, true, true, true);
       camera4.setCameraDollyOffsets(2, 12, 0);
       camera4.setCameraTrackingOffsets(0.0, 0.0, 0.0);
-      
+
       standardSimulationGUI.setupCamera(camera1);
       standardSimulationGUI.setupCamera(camera2);
       standardSimulationGUI.setupCamera(camera3);

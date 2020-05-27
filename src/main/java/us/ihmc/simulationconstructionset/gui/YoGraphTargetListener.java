@@ -43,7 +43,7 @@ public class YoGraphTargetListener implements DropTargetListener
    {
       YoGraph.setRecipientOfDrag(yoGraph);
 
-      if ((YoGraph.getSourceOfDrag() == null) ||!YoGraph.getSourceOfDrag().equals(yoGraph))
+      if ((YoGraph.getSourceOfDrag() == null) || !YoGraph.getSourceOfDrag().equals(yoGraph))
       {
          yoGraph.addVariableFromSelectedVariableHolder();
       }

@@ -23,7 +23,7 @@ public class PlayAction extends AbstractAction
       int shortKey = KeyEvent.VK_P;
       String longDescription = "Start playing simulation.";
       String shortDescription = "Play";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

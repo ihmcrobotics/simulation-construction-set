@@ -10,13 +10,12 @@ import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class VariablesThatShouldMatchList
 {
-   private LinkedHashMap<String, YoVariable<?>> variableHashMapOne = new LinkedHashMap<String, YoVariable<?>>();    // From full name to the variable with that name.
-   private LinkedHashMap<String, YoVariable<?>> variableHashMapTwo = new LinkedHashMap<String, YoVariable<?>>();    // From full name to the variable with that name.
+   private LinkedHashMap<String, YoVariable<?>> variableHashMapOne = new LinkedHashMap<>(); // From full name to the variable with that name.
+   private LinkedHashMap<String, YoVariable<?>> variableHashMapTwo = new LinkedHashMap<>(); // From full name to the variable with that name.
 
-   private final List<YoVariable<?>[]> variablesThatShouldMatch = new ArrayList<YoVariable<?>[]>();
-   private final List<YoVariable<?>> variablesInOneButNotInTwo = new ArrayList<YoVariable<?>>();
-   private final List<YoVariable<?>> variablesInTwoButNotInOne = new ArrayList<YoVariable<?>>();
-
+   private final List<YoVariable<?>[]> variablesThatShouldMatch = new ArrayList<>();
+   private final List<YoVariable<?>> variablesInOneButNotInTwo = new ArrayList<>();
+   private final List<YoVariable<?>> variablesInTwoButNotInOne = new ArrayList<>();
 
    public VariablesThatShouldMatchList(YoVariableRegistry registryOne, YoVariableRegistry registryTwo, List<String> exceptions)
    {
@@ -27,7 +26,6 @@ public class VariablesThatShouldMatchList
    {
       this(varListOne.getVariables(), varListTwo.getVariables(), exceptions);
    }
-
 
    public VariablesThatShouldMatchList(List<YoVariable<?>> variablesOne, List<YoVariable<?>> variablesTwo, List<String> exceptions)
    {
@@ -45,7 +43,6 @@ public class VariablesThatShouldMatchList
       {
          YoVariable<?> variableOne = variablesOne.get(i);
          YoVariable<?> variableTwo = variablesTwo.get(i);
-
 
          String nameOne = variableOne.getFullNameWithNameSpace();
          String nameTwo = variableTwo.getFullNameWithNameSpace();
@@ -79,7 +76,7 @@ public class VariablesThatShouldMatchList
 
    private List<YoVariable<?>> copyListButRemoveExceptions(List<YoVariable<?>> variables, List<String> exceptions)
    {
-      List<YoVariable<?>> ret = new ArrayList<YoVariable<?>>();
+      List<YoVariable<?>> ret = new ArrayList<>();
 
       for (YoVariable<?> variable : variables)
       {
@@ -93,18 +90,18 @@ public class VariablesThatShouldMatchList
    }
 
    private static void copyListAndReorder(List<YoVariable<?>> variablesOne, List<YoVariable<?>> variablesTwo,
-           List<YoVariable<?>> variablesInOneButNotInTwoToPack, List<YoVariable<?>> variablesInTwoButNotInOneToPack)
+                                          List<YoVariable<?>> variablesInOneButNotInTwoToPack, List<YoVariable<?>> variablesInTwoButNotInOneToPack)
    {
       variablesInOneButNotInTwoToPack.clear();
       variablesInTwoButNotInOneToPack.clear();
 
-      LinkedHashMap<String, YoVariable<?>> variablesTwoHashMap = new LinkedHashMap<String, YoVariable<?>>();
+      LinkedHashMap<String, YoVariable<?>> variablesTwoHashMap = new LinkedHashMap<>();
       for (YoVariable<?> variableInTwo : variablesTwo)
       {
          variablesTwoHashMap.put(variableInTwo.getFullNameWithNameSpace(), variableInTwo);
       }
 
-      ArrayList<YoVariable<?>> newVariablesTwo = new ArrayList<YoVariable<?>>();
+      ArrayList<YoVariable<?>> newVariablesTwo = new ArrayList<>();
 
       for (YoVariable<?> variableInOne : variablesOne)
       {
@@ -140,7 +137,6 @@ public class VariablesThatShouldMatchList
       variablesTwo.addAll(newVariablesTwo);
    }
 
-
    private static boolean isException(List<String> exceptions, YoVariable<?> variable)
    {
       boolean isException = false;
@@ -163,8 +159,8 @@ public class VariablesThatShouldMatchList
       return isException;
    }
 
-
-   public boolean doVariableValuesMatch(List<VariableDifference> variableDifferences, double time, double maxDifferenceAllowed, boolean checkForPercentDifference)
+   public boolean doVariableValuesMatch(List<VariableDifference> variableDifferences, double time, double maxDifferenceAllowed,
+                                        boolean checkForPercentDifference)
    {
       boolean ret = true;
 
@@ -194,7 +190,7 @@ public class VariablesThatShouldMatchList
 
          if (variablesAreDifferent)
          {
-//          System.out.println("absoluteDifference = " + absoluteDifference + ", maxDifferenceAllowed = " + maxDifferenceAllowed);
+            //          System.out.println("absoluteDifference = " + absoluteDifference + ", maxDifferenceAllowed = " + maxDifferenceAllowed);
             variableDifferences.add(new VariableDifference(time, variableOne, variableTwo));
             ret = false;
          }
@@ -214,6 +210,5 @@ public class VariablesThatShouldMatchList
 
       return ret;
    }
-
 
 }

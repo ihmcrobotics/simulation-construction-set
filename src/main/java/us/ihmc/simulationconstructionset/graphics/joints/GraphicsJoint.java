@@ -17,7 +17,7 @@ public class GraphicsJoint extends Graphics3DNode
       this.joint = joint;
 
       setGraphicsObject(graphics3DObject);
-     
+
    }
 
    public final void updateFromJoint()
@@ -29,7 +29,7 @@ public class GraphicsJoint extends Graphics3DNode
          transformToParent.multiply(joint.getJointTransform3D());
          setTransform(transformToParent);
       }
-      catch(NotARotationMatrixException e)
+      catch (NotARotationMatrixException e)
       {
          e.printStackTrace();
       }

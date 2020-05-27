@@ -7,7 +7,7 @@ import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
 
 public class ExtraPanelConfigurationList
 {
-   private ArrayList<ExtraPanelConfiguration> panels = new ArrayList<ExtraPanelConfiguration>();
+   private ArrayList<ExtraPanelConfiguration> panels = new ArrayList<>();
 
    public ExtraPanelConfigurationList()
    {
@@ -34,7 +34,7 @@ public class ExtraPanelConfigurationList
    public ExtraPanelConfiguration getExtraPanelConfiguration(String name)
    {
       int n = panels.size();
-      
+
       for (int i = 0; i < n; i++)
       {
          ExtraPanelConfiguration panel = panels.get(i);
@@ -58,7 +58,7 @@ public class ExtraPanelConfigurationList
 
       return 0;
    }
-   
+
    public List<ExtraPanelConfiguration> getConfigurationList()
    {
       return panels;

@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,8 +25,8 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    private SimulationConstructionSet simulationConstructionSet;
    private DataBuffer dataBuffer;
 
-   private ArrayList<ViewportSelectorCommandListener> viewportSelectorCommandListenersToRegister = new ArrayList<ViewportSelectorCommandListener>();
-   private ArrayList<ToggleKeyPointModeCommandListener> toggleKeyPointModeCommandListenersToRegister = new ArrayList<ToggleKeyPointModeCommandListener>();
+   private ArrayList<ViewportSelectorCommandListener> viewportSelectorCommandListenersToRegister = new ArrayList<>();
+   private ArrayList<ToggleKeyPointModeCommandListener> toggleKeyPointModeCommandListenersToRegister = new ArrayList<>();
 
    public StandardAllCommandsExecutor()
    {
@@ -62,7 +63,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.addCameraKey();
    }
 
-   public ArrayList<Integer> getCameraKeyPoints()
+   public List<Integer> getCameraKeyPoints()
    {
       return standardSimulationGUI.getCameraKeyPoints();
    }
@@ -76,10 +77,10 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
 
    /**
     * Gets the KeyPoints in the cropped data
-    * 
+    *
     * @return The current KeyPoints as an ArrayList of Integer
     */
-   public ArrayList<Integer> getKeyPoints()
+   public List<Integer> getKeyPoints()
    {
       return standardSimulationGUI.getKeyPoints();
    }
@@ -158,7 +159,6 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
       return null;
    }
 
-
    @Override
    public YoVariableSliderWindow createNewYoVariableSliderWindow()
    {
@@ -201,7 +201,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
       if (standardSimulationGUI != null)
          standardSimulationGUI.zoomFullView();
    }
-   
+
    @Override
    public void packBuffer()
    {
@@ -209,7 +209,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
       if (standardSimulationGUI != null)
          standardSimulationGUI.updateGraphs();
    }
-   
+
    @Override
    public void cutBuffer()
    {
@@ -217,7 +217,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
       if (standardSimulationGUI != null)
          standardSimulationGUI.zoomFullView();
    }
-   
+
    @Override
    public void thinBuffer(int keepEveryNthPoint)
    {
@@ -284,7 +284,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
       else
          dataBuffer.setOutPoint();
    }
-   
+
    public void setInOutPointFullBuffer()
    {
       if (standardSimulationGUI != null)
@@ -517,17 +517,18 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    private boolean alreadyStartedClosing = false;
-   
+
    @Override
    public void closeAndDispose()
    {
-      if (alreadyStartedClosing) return;
-      
+      if (alreadyStartedClosing)
+         return;
+
       alreadyStartedClosing = true;
-      
-      this.standardSimulationGUI = null;
-      this.simulationConstructionSet = null;
-      this.dataBuffer = null;
+
+      standardSimulationGUI = null;
+      simulationConstructionSet = null;
+      dataBuffer = null;
 
       if (viewportSelectorCommandListenersToRegister != null)
       {

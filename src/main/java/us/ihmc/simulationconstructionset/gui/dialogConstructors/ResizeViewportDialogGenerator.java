@@ -40,7 +40,6 @@ public class ResizeViewportDialogGenerator implements ResizeViewportDialogConstr
 
    public void closeAndDispose()
    {
-      this.frame = null;
+      frame = null;
    }
 }
-

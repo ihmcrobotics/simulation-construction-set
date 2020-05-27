@@ -6,15 +6,15 @@ import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 
 public class MinimalGraphIndicesHolder implements GraphIndicesHolder
 {
-   ArrayList<Integer> keyPoints = new ArrayList<Integer>();
-   
+   ArrayList<Integer> keyPoints = new ArrayList<>();
+
    int leftPlotIndex = 0;
    int rightPlotIndex = 100;
    int inPoint = 50;
    int index = 60;
    int outPoint = 75;
    int maxIndex = 200;
-   
+
    @Override
    public void tickLater(int i)
    {
@@ -24,19 +24,19 @@ public class MinimalGraphIndicesHolder implements GraphIndicesHolder
    @Override
    public void setRightPlotIndex(int newRightIndex)
    {
-      this.rightPlotIndex = newRightIndex;
+      rightPlotIndex = newRightIndex;
    }
 
    @Override
    public void setLeftPlotIndex(int newLeftIndex)
    {
-      this.leftPlotIndex = newLeftIndex;
+      leftPlotIndex = newLeftIndex;
    }
 
    @Override
    public void setIndexLater(int newIndex)
    {
-      this.index = newIndex;
+      index = newIndex;
    }
 
    @Override
@@ -74,7 +74,7 @@ public class MinimalGraphIndicesHolder implements GraphIndicesHolder
    {
       return inPoint;
    }
-   
+
    @Override
    public int getOutPoint()
    {

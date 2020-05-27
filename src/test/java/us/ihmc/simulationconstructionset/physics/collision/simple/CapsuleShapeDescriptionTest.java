@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -8,7 +9,7 @@ import us.ihmc.euclid.tuple3D.Point3D;
 
 public class CapsuleShapeDescriptionTest
 {
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void test()
    {
       double radius = 0.2;

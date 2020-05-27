@@ -30,7 +30,7 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.GUIEnablerAndDis
 public class VideoSaveDialog implements TickUpdateListener
 {
    private final Resolution[] dimensions = {new Resolution(640, 360), new Resolution(1280, 720), new Resolution(1920, 1080), new Resolution(640, 480),
-           new Resolution(800, 600)};
+         new Resolution(800, 600)};
 
    private final int frameWidth = 720;
    private final int frameHeight = 600;
@@ -44,18 +44,18 @@ public class VideoSaveDialog implements TickUpdateListener
    private ViewportPanel viewportPanel;
    private JTextField frameRateTextField;
    private JTextField playbackRateTextField;
-   
+
    private final Dimension dimension = new Dimension(1900, 1080);
    private final ExportVideoCommandExecutor exportVideoCommandExecutor;
-      
+
    public VideoSaveDialog(Window owner, StandardSimulationGUI myGUI, StandardGUIActions standardGUIActions, ActiveCanvas3DHolder activeCanvas3DHolder,
                           ExportVideoCommandExecutor exportVideoCommandExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler)
-   {      
+   {
       this.exportVideoCommandExecutor = exportVideoCommandExecutor;
 
       exportDialog = new JDialog(owner, "Export Video");
       exportDialog.setName("Export Video");
-      
+
       this.guiEnablerAndDisabler = guiEnablerAndDisabler;
       this.myGUI = myGUI;
 
@@ -95,7 +95,7 @@ public class VideoSaveDialog implements TickUpdateListener
       panel.add(toolbar);
 
       JPanel settings = new JPanel();
-      JComboBox <Dimension> resolutions = new JComboBox<Dimension>(dimensions);
+      JComboBox<Dimension> resolutions = new JComboBox<>(dimensions);
 
       resolutions.addActionListener(new ActionListener()
       {
@@ -108,14 +108,14 @@ public class VideoSaveDialog implements TickUpdateListener
 
       JPanel frPanel = new JPanel();
       JLabel frameRateLabel = new JLabel("Frame Rate");
-      frameRateTextField = new JTextField("30",3);
+      frameRateTextField = new JTextField("30", 3);
       frPanel.add(frameRateLabel);
       frPanel.add(frameRateTextField);
 
       JPanel pbPanel = new JPanel();
 
       JLabel playbackRateLabel = new JLabel("Playback Rate");
-      playbackRateTextField = new JTextField("1",3);
+      playbackRateTextField = new JTextField("1", 3);
       pbPanel.add(playbackRateLabel);
       pbPanel.add(playbackRateTextField);
 
@@ -147,7 +147,6 @@ public class VideoSaveDialog implements TickUpdateListener
 
       panel.add(settings);
 
-
       myGUI.addTickUpdateListener(this);
 
       exportDialog.setVisible(true);
@@ -169,7 +168,7 @@ public class VideoSaveDialog implements TickUpdateListener
          float playBackRate = new Float(playbackRateTextField.getText());
 
          Boolean isSequanceSelected = false;
-         exportVideoCommandExecutor.createVideo(viewportPanel.getCamera(), selectedFile, dimension, isSequanceSelected , playBackRate, frameRate);
+         exportVideoCommandExecutor.createVideo(viewportPanel.getCamera(), selectedFile, dimension, isSequanceSelected, playBackRate, frameRate);
       }
    }
 
@@ -186,7 +185,7 @@ public class VideoSaveDialog implements TickUpdateListener
 
    private void setResolution(Dimension dimension)
    {
-      double aspectRatio = ((double) dimension.getWidth()) / ((double) dimension.getHeight());
+      double aspectRatio = (dimension.getWidth()) / (dimension.getHeight());
       double screenAspect = ((double) previewWidth) / ((double) previewHeight);
 
       int width, height;
@@ -204,7 +203,7 @@ public class VideoSaveDialog implements TickUpdateListener
       viewportPanel.setBounds((previewWidth - width) / 2, (previewHeight - height) / 2, width, height);
       viewportPanel.repaint();
       viewportPanel.revalidate();
-      
+
       this.dimension.setSize(dimension);
    }
 
@@ -222,19 +221,23 @@ public class VideoSaveDialog implements TickUpdateListener
 
    private class Resolution extends Dimension
    {
-      public Resolution() {
+      public Resolution()
+      {
       }
 
-      public Resolution(Dimension d) {
+      public Resolution(Dimension d)
+      {
          super(d);
       }
 
-      public Resolution(int width, int height) {
+      public Resolution(int width, int height)
+      {
          super(width, height);
       }
 
       @Override
-      public String toString() {
+      public String toString()
+      {
          return width + " x " + height;
       }
    }

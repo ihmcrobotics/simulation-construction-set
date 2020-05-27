@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 
 public class FlatGroundProfile extends GroundProfileFromHeightMap
 {
@@ -27,11 +27,11 @@ public class FlatGroundProfile extends GroundProfileFromHeightMap
    {
       this.zHeight = zHeight;
 
-      this.boundingBox = new BoundingBox3D(xMin, yMin, zHeight - 1.0, xMax, yMax, zHeight + 0.01);
+      boundingBox = new BoundingBox3D(xMin, yMin, zHeight - 1.0, xMax, yMax, zHeight + 0.01);
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
@@ -45,7 +45,7 @@ public class FlatGroundProfile extends GroundProfileFromHeightMap
       return zHeight;
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       normal.setX(0.0);
       normal.setY(0.0);

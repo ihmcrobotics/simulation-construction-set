@@ -8,20 +8,20 @@ import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.BagOfBalls;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicVector;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.simulationconstructionset.ExternalForcePoint;
 import us.ihmc.simulationconstructionset.ExternalTorque;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.physics.CollisionShape;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoDouble;
 
 public class DefaultCollisionVisualizer implements CollisionHandlerListener
 {
    private SimulationConstructionSet scs;
    private YoGraphicsListRegistry yoGraphicsListRegistry = new YoGraphicsListRegistry();
 
-   private List<YoGraphicVector> activeRedYoGraphicVectors = new ArrayList<YoGraphicVector>();
-   private List<YoGraphicVector> activeBlueYoGraphicVectors = new ArrayList<YoGraphicVector>();
+   private List<YoGraphicVector> activeRedYoGraphicVectors = new ArrayList<>();
+   private List<YoGraphicVector> activeBlueYoGraphicVectors = new ArrayList<>();
 
    private BagOfBalls collisionPositionsVizOne, collisionPositionsVizTwo;
    private int total;
@@ -32,7 +32,8 @@ public class DefaultCollisionVisualizer implements CollisionHandlerListener
    private double forceScale = 0.005;
    private double collisionBallRadius = 0.01;
 
-   public DefaultCollisionVisualizer(double forceScale, double impulseScale, double collisionBallRadius, SimulationConstructionSet scs, int numberOfVectorsToCreate)
+   public DefaultCollisionVisualizer(double forceScale, double impulseScale, double collisionBallRadius, SimulationConstructionSet scs,
+                                     int numberOfVectorsToCreate)
    {
       this.forceScale = forceScale;
       this.impulseScale = impulseScale;
@@ -62,8 +63,8 @@ public class DefaultCollisionVisualizer implements CollisionHandlerListener
 
    public void callBeforeCollisionDetection()
    {
-//      collisionPositionsViz.reset();
-      
+      //      collisionPositionsViz.reset();
+
       //      System.out.println("CallBeforeCollision");
       //      for (int i = 0; i < total; i++)
       //      {
@@ -76,7 +77,7 @@ public class DefaultCollisionVisualizer implements CollisionHandlerListener
 
    @Override
    public void collision(CollisionShape shapeA, CollisionShape shapeB, ExternalForcePoint forceA, ExternalForcePoint forceB, ExternalTorque torqueA,
-         ExternalTorque torqueB)
+                         ExternalTorque torqueB)
    {
       if (total >= activeRedYoGraphicVectors.size())
          return;
@@ -97,18 +98,18 @@ public class DefaultCollisionVisualizer implements CollisionHandlerListener
       //      System.out.println("Visualizing Collision. forceB.getYoPosition() = " + forceB.getYoPosition());
       //      System.out.println("Visualizing Collision. forceB.getYoImpulse() = " + forceB.getYoImpulse());
 
-      if(forceA != null)
+      if (forceA != null)
       {
          collisionPositionsVizOne.setBallLoop(forceA.getYoPosition());
          yoGraphicVectorA.set(forceA.getYoPosition(), forceA.getYoImpulse());
       }
-      
-      if(forceB != null)
+
+      if (forceB != null)
       {
          collisionPositionsVizTwo.setBallLoop(forceB.getYoPosition());
          yoGraphicVectorB.set(forceB.getYoPosition(), forceB.getYoImpulse());
       }
-      
+
       total++;
    }
 

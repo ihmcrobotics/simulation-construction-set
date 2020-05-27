@@ -13,13 +13,16 @@ import java.util.Collections;
 
 import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.*;
+import us.ihmc.yoVariables.variable.YoBoolean;
+import us.ihmc.yoVariables.variable.YoDouble;
+import us.ihmc.yoVariables.variable.YoEnum;
 import us.ihmc.yoVariables.variable.YoInteger;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public class TimeScript implements Script
 {
    // Rep invariant: timeScriptEntryList must be always sorted!
-   private ArrayList<TimeScriptEntry> sortedTimeScriptEntryList = new ArrayList<TimeScriptEntry>();
+   private ArrayList<TimeScriptEntry> sortedTimeScriptEntryList = new ArrayList<>();
    private final YoInteger nextTimeScriptIndex;
 
    public TimeScript(YoVariableRegistry registry)
@@ -31,10 +34,11 @@ public class TimeScript implements Script
    @Override
    public void doScript(double t)
    {
-      if (nextTimeScriptIndex.getIntegerValue() >= sortedTimeScriptEntryList.size()) return;
-      
+      if (nextTimeScriptIndex.getIntegerValue() >= sortedTimeScriptEntryList.size())
+         return;
+
       TimeScriptEntry timeScriptEntry = sortedTimeScriptEntryList.get(nextTimeScriptIndex.getIntegerValue());
-      
+
       if (t >= timeScriptEntry.getTime())
       {
          timeScriptEntry.setVarsToValues();
@@ -47,7 +51,7 @@ public class TimeScript implements Script
    {
       if (timeScriptEntry == null)
          return;
-      
+
       sortedTimeScriptEntryList.add(timeScriptEntry);
       Collections.sort(sortedTimeScriptEntryList);
    }
@@ -81,7 +85,6 @@ public class TimeScript implements Script
       }
    }
 
-
    public void readTimeScript(YoVariableHolder holder, File file)
    {
       try
@@ -94,7 +97,6 @@ public class TimeScript implements Script
          System.err.println("Error when trying to readTimeScript: " + exception);
       }
    }
-
 
    public void readTimeScript(YoVariableHolder holder, BufferedReader in)
    {
@@ -123,7 +125,7 @@ public class TimeScript implements Script
       for (int i = 0; i < strings.size(); i++)
       {
          // System.out.println(strings.get(i));
-         this.addEntry(parseTimeScriptEntry(holder, strings.get(i)));
+         addEntry(parseTimeScriptEntry(holder, strings.get(i)));
       }
 
    }
@@ -218,51 +220,51 @@ public class TimeScript implements Script
          t_part = line.substring(equalIndex + 1, semicolonIndex).trim();
 
          // System.out.println(t_part);
-         switch(variable.getYoVariableType())
+         switch (variable.getYoVariableType())
          {
-         case DOUBLE:
-         {  
-            double value = Double.parseDouble(t_part);
-            ret.addVarValue((YoDouble) variable, value);
-            break;
-         }
-         case BOOLEAN:
-         {
-            boolean value;
-            if (t_part.equals("1.0"))
+            case DOUBLE:
             {
-               value = true;
+               double value = Double.parseDouble(t_part);
+               ret.addVarValue((YoDouble) variable, value);
+               break;
             }
-            else
+            case BOOLEAN:
             {
-               value = Boolean.parseBoolean(t_part);
+               boolean value;
+               if (t_part.equals("1.0"))
+               {
+                  value = true;
+               }
+               else
+               {
+                  value = Boolean.parseBoolean(t_part);
+               }
+
+               ret.addVarValue((YoBoolean) variable, value);
+               break;
             }
-            
-            ret.addVarValue((YoBoolean) variable, value);
-            break;
+            case ENUM:
+            {
+               @SuppressWarnings("rawtypes")
+               YoEnum yoEnum = (YoEnum) variable;
+               @SuppressWarnings({"unchecked", "rawtypes"})
+               Enum value = Enum.valueOf(yoEnum.getEnumType(), t_part);
+               ret.addVarValue(yoEnum, value);
+               break;
+            }
+            case INTEGER:
+            {
+               int value = Integer.parseInt(t_part);
+               ret.addVarValue((YoInteger) variable, value);
+               break;
+            }
+            default:
+            {
+               throw new RuntimeException("Should not get here!");
+            }
+
          }
-         case ENUM:
-         {
-            @SuppressWarnings("rawtypes")
-            YoEnum yoEnum = (YoEnum) variable;
-            @SuppressWarnings({ "unchecked", "rawtypes" })
-            Enum value = Enum.valueOf(yoEnum.getEnumType(), t_part);
-            ret.addVarValue(yoEnum, value);
-            break;
-         }
-         case INTEGER:
-         {
-            int value = Integer.parseInt(t_part);
-            ret.addVarValue((YoInteger) variable, value);
-            break;
-         }
-         default:
-         {
-            throw new RuntimeException("Should not get here!");
-         }
-         
-         }
-        
+
          line = line.substring(semicolonIndex + 1).trim();
 
       }
@@ -273,7 +275,7 @@ public class TimeScript implements Script
 
    private ArrayList<String> extractStrings(StringBuffer buffer)
    {
-      ArrayList<String> ret = new ArrayList<String>();
+      ArrayList<String> ret = new ArrayList<>();
       boolean done = false;
 
       int index = 0;

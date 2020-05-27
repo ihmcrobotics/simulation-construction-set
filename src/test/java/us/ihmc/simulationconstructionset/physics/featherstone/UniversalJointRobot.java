@@ -40,18 +40,17 @@ public class UniversalJointRobot extends RobotWithClosedFormDynamics
 
       double g = Math.abs(gravityZ.getDoubleValue());
 
-      if(Math.abs(Math.cos(qy)) < 1e-4)
+      if (Math.abs(Math.cos(qy)) < 1e-4)
          return;
 
-      double qddxLagrangian = - (g * Math.sin(qx)) / (length * Math.cos(qy));
-      double qddyLagrangian = - (g * Math.cos(qx) * Math.sin(qy)) / length;
+      double qddxLagrangian = -(g * Math.sin(qx)) / (length * Math.cos(qy));
+      double qddyLagrangian = -(g * Math.cos(qx) * Math.sin(qy)) / length;
 
-      if(Math.abs(qddxLagrangian - qddx) > epsilon || Math.abs(qddyLagrangian - qddy) > epsilon)
+      if (Math.abs(qddxLagrangian - qddx) > epsilon || Math.abs(qddyLagrangian - qddy) > epsilon)
       {
-         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. "
-                                        + "\nAt t=" + getTime()
-                                        + "\nSimulated joint accelerations: (" + qddx + ", " + qddy + ")"
-                                        + "\nLagrangian accelerations: (" + qddxLagrangian + ", " + qddyLagrangian + ")");
+         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. " + "\nAt t=" + getTime()
+               + "\nSimulated joint accelerations: (" + qddx + ", " + qddy + ")" + "\nLagrangian accelerations: (" + qddxLagrangian + ", " + qddyLagrangian
+               + ")");
       }
    }
 }

@@ -4,9 +4,8 @@ import us.ihmc.simulationconstructionset.Robot;
 
 /**
  * Configures the collision engine given the world model and collision interface
- *
  */
 public interface ScsCollisionConfigure
 {
-   public void setup(Robot robot,  ScsCollisionDetector collisionDetector, CollisionHandler collisionHandler);
+   public void setup(Robot robot, ScsCollisionDetector collisionDetector, CollisionHandler collisionHandler);
 }

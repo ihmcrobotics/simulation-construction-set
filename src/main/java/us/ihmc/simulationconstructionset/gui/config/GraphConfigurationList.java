@@ -6,7 +6,7 @@ import us.ihmc.simulationconstructionset.GraphConfiguration;
 
 public class GraphConfigurationList
 {
-   private ArrayList<GraphConfiguration> configs = new ArrayList<GraphConfiguration>();
+   private ArrayList<GraphConfiguration> configs = new ArrayList<>();
 
    public GraphConfigurationList()
    {

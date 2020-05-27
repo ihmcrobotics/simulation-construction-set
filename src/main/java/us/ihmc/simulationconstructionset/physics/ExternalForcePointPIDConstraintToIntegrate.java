@@ -3,10 +3,10 @@ package us.ihmc.simulationconstructionset.physics;
 import us.ihmc.euclid.referenceFrame.FrameVector3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.simulationconstructionset.ExternalForcePoint;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
-import us.ihmc.simulationconstructionset.ExternalForcePoint;
 
 public class ExternalForcePointPIDConstraintToIntegrate extends ExternalForcePointPDConstraintToIntegrate
 {
@@ -19,7 +19,7 @@ public class ExternalForcePointPIDConstraintToIntegrate extends ExternalForcePoi
    private final Vector3D tempForce = new Vector3D();
 
    public ExternalForcePointPIDConstraintToIntegrate(String name, ExternalForcePoint connectionPointA, ExternalForcePoint connectionPointB,
-         YoVariableRegistry parentRegistry)
+                                                     YoVariableRegistry parentRegistry)
    {
       super(name, connectionPointA, connectionPointB, parentRegistry);
 

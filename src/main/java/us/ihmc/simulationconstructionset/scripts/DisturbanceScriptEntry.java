@@ -36,7 +36,7 @@ public class DisturbanceScriptEntry implements Comparable<Object>
 
    public double getTime()
    {
-      return this.time;
+      return time;
    }
 
    public Vector3D getForceVector()

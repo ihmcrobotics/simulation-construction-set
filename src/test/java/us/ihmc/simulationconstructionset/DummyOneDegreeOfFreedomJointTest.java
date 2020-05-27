@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
@@ -10,7 +11,7 @@ public class DummyOneDegreeOfFreedomJointTest
 {
    private final static boolean keepSCSUp = false;
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testDummyOneDegreeOfFreedomJoint()
    {
       Robot robot = new Robot("testDummyOneDegreeOfFreedomJoint");

@@ -31,7 +31,7 @@ public class Simulator implements java.io.Serializable
    {
       this.simulationSynchronizer = simulationSynchronizer;
       this.robots = robots;
-      this.DT = dt;
+      DT = dt;
 
       //    this.time = time;
    }
@@ -48,13 +48,13 @@ public class Simulator implements java.io.Serializable
 
    public double getDT()
    {
-      return this.DT;
+      return DT;
    }
 
    protected void addScript(Script script)
    {
       if (scripts == null)
-         scripts = new ArrayList<Script>();
+         scripts = new ArrayList<>();
       scripts.add(script);
    }
 
@@ -80,7 +80,6 @@ public class Simulator implements java.io.Serializable
             //          rob.update();
 
             robot.updateAllGroundContactPointVelocities(); // +++JEP OPTIMIZE: Need to do this once so all point velocities get updated. Otherwise only those in contact will.
-
 
             if (robot.getGroundContactModel() != null)
             {
@@ -145,11 +144,12 @@ public class Simulator implements java.io.Serializable
       //
    }
 
-   public void setCollisions(ScsCollisionDetector collisionDetector, CollisionArbiter collisionArbiter, CollisionHandler collisionHandler, DefaultCollisionVisualizer visulize)
+   public void setCollisions(ScsCollisionDetector collisionDetector, CollisionArbiter collisionArbiter, CollisionHandler collisionHandler,
+                             DefaultCollisionVisualizer visulize)
    {
       this.collisionDetector = collisionDetector;
       this.collisionArbiter = collisionArbiter;
       this.collisionHandler = collisionHandler;
-      this.collisionVisualizer = visulize;
+      collisionVisualizer = visulize;
    }
 }

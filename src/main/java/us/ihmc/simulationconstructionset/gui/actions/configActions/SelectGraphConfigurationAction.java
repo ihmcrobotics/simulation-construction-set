@@ -20,8 +20,8 @@ public class SelectGraphConfigurationAction extends AbstractAction
       this.executor = executor;
       this.name = name;
 
-      this.putValue(Action.LONG_DESCRIPTION, "Select Graph Configuration: " + name);
-      this.putValue(Action.SHORT_DESCRIPTION, "Select " + name);
+      putValue(Action.LONG_DESCRIPTION, "Select Graph Configuration: " + name);
+      putValue(Action.SHORT_DESCRIPTION, "Select " + name);
    }
 
    @Override

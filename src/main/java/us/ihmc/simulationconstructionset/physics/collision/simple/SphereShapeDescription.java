@@ -11,8 +11,12 @@ public class SphereShapeDescription<T extends SphereShapeDescription<T>> impleme
    private double radius;
    private Point3D center = new Point3D();
 
-   private final BoundingBox3D boundingBox = new BoundingBox3D(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
-                                                               Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+   private final BoundingBox3D boundingBox = new BoundingBox3D(Double.NEGATIVE_INFINITY,
+                                                               Double.NEGATIVE_INFINITY,
+                                                               Double.NEGATIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY);
    private boolean boundingBoxNeedsUpdating = true;
 
    public SphereShapeDescription(double radius, Point3D center)
@@ -25,7 +29,7 @@ public class SphereShapeDescription<T extends SphereShapeDescription<T>> impleme
    @Override
    public SphereShapeDescription<T> copy()
    {
-      SphereShapeDescription<T> copy = new SphereShapeDescription<T>(radius, center);
+      SphereShapeDescription<T> copy = new SphereShapeDescription<>(radius, center);
       boundingBoxNeedsUpdating = true;
       return copy;
    }
@@ -69,8 +73,8 @@ public class SphereShapeDescription<T extends SphereShapeDescription<T>> impleme
 
    private void updateBoundingBox()
    {
-      boundingBox.set(center.getX() - radius, center.getY() - radius, center.getZ() - radius, center.getX() + radius, center.getY() + radius,
-                      center.getZ() + radius);
+      boundingBox.set(center.getX()
+            - radius, center.getY() - radius, center.getZ() - radius, center.getX() + radius, center.getY() + radius, center.getZ() + radius);
    }
 
    @Override

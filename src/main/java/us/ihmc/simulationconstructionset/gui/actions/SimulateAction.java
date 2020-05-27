@@ -17,13 +17,13 @@ public class SimulateAction extends AbstractAction
    public SimulateAction(SimulateCommandExecutor listener)
    {
       super("Simulate");
-      this.executor = listener;
+      executor = listener;
 
       String iconFilename = "icons/Simulate.png";
       int shortKey = KeyEvent.VK_S;
       String longDescription = "Start simulating.";
       String shortDescription = "Simulate";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

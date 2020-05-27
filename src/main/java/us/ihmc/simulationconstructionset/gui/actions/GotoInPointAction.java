@@ -23,7 +23,7 @@ public class GotoInPointAction extends AbstractAction
       int shortKey = KeyEvent.VK_I;
       String longDescription = "Goto In Point";
       String shortDescription = "Goto In Point";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

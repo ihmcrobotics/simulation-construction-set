@@ -15,8 +15,12 @@ public class CapsuleShapeDescription<T extends CapsuleShapeDescription<T>> imple
    private LineSegment3D lineSegmentInShapeFrame = new LineSegment3D();
    private LineSegment3D lineSegment = new LineSegment3D();
 
-   private final BoundingBox3D boundingBox = new BoundingBox3D(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
-                                                               Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+   private final BoundingBox3D boundingBox = new BoundingBox3D(Double.NEGATIVE_INFINITY,
+                                                               Double.NEGATIVE_INFINITY,
+                                                               Double.NEGATIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY,
+                                                               Double.POSITIVE_INFINITY);
    private boolean boundingBoxNeedsUpdating = true;
    private RigidBodyTransform transform = new RigidBodyTransform();
    private RigidBodyTransform tempTransform = new RigidBodyTransform();
@@ -42,7 +46,7 @@ public class CapsuleShapeDescription<T extends CapsuleShapeDescription<T>> imple
    @Override
    public CapsuleShapeDescription<T> copy()
    {
-      CapsuleShapeDescription<T> copy = new CapsuleShapeDescription<T>(radius, lineSegment);
+      CapsuleShapeDescription<T> copy = new CapsuleShapeDescription<>(radius, lineSegment);
       copy.setTransform(this.transform);
       return copy;
    }
@@ -156,23 +160,23 @@ public class CapsuleShapeDescription<T extends CapsuleShapeDescription<T>> imple
    private final Point3D tempPointForRollingShapeFrame = new Point3D();
    private final Vector3D tempVectorForRollingWorldFrame = new Vector3D();
    private final Vector3D tempVectorForRollingShapeFrame = new Vector3D();
-//   private final Vector3D tempVectorTwoForRollingShapeFrame = new Vector3D();
-//   private final LineSegment3d tempLineSegmentForRollingWorldFrame = new LineSegment3d();
+   //   private final Vector3D tempVectorTwoForRollingShapeFrame = new Vector3D();
+   //   private final LineSegment3d tempLineSegmentForRollingWorldFrame = new LineSegment3d();
 
    @Override
    public boolean rollContactIfRolling(Vector3D surfaceNormal, Point3D pointToRoll)
    {
       tempTransform.set(transform);
       tempTransform.invert();
-//      System.out.println("tempTransform = " + tempTransform);
+      //      System.out.println("tempTransform = " + tempTransform);
 
       tempPointForRollingWorldFrame.set(pointToRoll);
       tempVectorForRollingWorldFrame.set(surfaceNormal);
-//      tempLineSegmentForRollingWorldFrame.set(lineSegment);
+      //      tempLineSegmentForRollingWorldFrame.set(lineSegment);
 
       tempTransform.transform(tempPointForRollingWorldFrame);
       tempTransform.transform(tempVectorForRollingWorldFrame);
-//      tempLineSegmentForRollingWorldFrame.applyTransform(tempTransform);
+      //      tempLineSegmentForRollingWorldFrame.applyTransform(tempTransform);
 
       boolean isRolling = rollContactIfRollingShapeFrame(tempVectorForRollingWorldFrame, tempPointForRollingWorldFrame);
       transform.transform(tempPointForRollingWorldFrame);
@@ -180,45 +184,45 @@ public class CapsuleShapeDescription<T extends CapsuleShapeDescription<T>> imple
 
       return isRolling;
    }
-   
+
    public boolean rollContactIfRollingShapeFrame(Vector3D surfaceNormalInShapeFrame, Point3D pointToRollInShapeFrame)
    {
       //TODO: This assumes shape frame has the capsule being along the z axis and middle of capsule at 0, 0...
       //TODO: If we don't want to assume that, we should just do everything in world frame then and use the vectors and dot products, etc.
-      
-//      System.out.println("\nCapsuleRolling:");
-//      System.out.println("surfaceNormalInShapeFrame = " + surfaceNormalInShapeFrame);
-//      System.out.println("pointToRollInShapeFrame = " + pointToRollInShapeFrame);
-//      System.out.println("lineSegmentInShapeFrame = " + lineSegmentInShapeFrame);
+
+      //      System.out.println("\nCapsuleRolling:");
+      //      System.out.println("surfaceNormalInShapeFrame = " + surfaceNormalInShapeFrame);
+      //      System.out.println("pointToRollInShapeFrame = " + pointToRollInShapeFrame);
+      //      System.out.println("lineSegmentInShapeFrame = " + lineSegmentInShapeFrame);
 
       tempVectorForRollingShapeFrame.set(surfaceNormalInShapeFrame);
 
       double height = 2.0 * (lineSegmentInShapeFrame.getSecondEndpoint().getZ() + radius);
-      
-//      System.out.println("pointToRollInShapeFrame.getZ() = " + pointToRollInShapeFrame.getZ());
-//      System.out.println("height = " + height);
-//      System.out.println("radius = " + radius);
-//      System.out.println("-height/2.0 + radius = " + (-height/2.0 + radius));
-//      System.out.println("height/2.0 - radius = " + (height/2.0 - radius));
-      if ((pointToRollInShapeFrame.getZ() > -height/2.0 + radius) && (pointToRollInShapeFrame.getZ() < height/2.0 - radius))
+
+      //      System.out.println("pointToRollInShapeFrame.getZ() = " + pointToRollInShapeFrame.getZ());
+      //      System.out.println("height = " + height);
+      //      System.out.println("radius = " + radius);
+      //      System.out.println("-height/2.0 + radius = " + (-height/2.0 + radius));
+      //      System.out.println("height/2.0 - radius = " + (height/2.0 - radius));
+      if ((pointToRollInShapeFrame.getZ() > -height / 2.0 + radius) && (pointToRollInShapeFrame.getZ() < height / 2.0 - radius))
       {
          // Not on the caps. So don't roll along the flat side, only along the curved side...
          tempVectorForRollingShapeFrame.setZ(0.0);
-//         System.out.println("Not on the caps... surfaceNormalInShapeFrame = " + tempVectorForRollingShapeFrame);
+         //         System.out.println("Not on the caps... surfaceNormalInShapeFrame = " + tempVectorForRollingShapeFrame);
       }
 
       lineSegmentInShapeFrame.orthogonalProjection(pointToRollInShapeFrame, tempPointForRollingShapeFrame);
-//      System.out.println("after line projection pointToRollInShapeFrame = " + tempPointForRollingShapeFrame);
+      //      System.out.println("after line projection pointToRollInShapeFrame = " + tempPointForRollingShapeFrame);
       double currentRadiusOfPenetration = pointToRollInShapeFrame.distance(tempPointForRollingShapeFrame);
 
       tempVectorForRollingShapeFrame.normalize();
       tempVectorForRollingShapeFrame.scale(currentRadiusOfPenetration);
-//      tempVectorForRolling.scale(radius);
+      //      tempVectorForRolling.scale(radius);
 
       tempPointForRollingShapeFrame.add(tempVectorForRollingShapeFrame);
       pointToRollInShapeFrame.set(tempPointForRollingShapeFrame);
 
-//      System.out.println("pointToRollInShapeFrame = " + pointToRollInShapeFrame);
+      //      System.out.println("pointToRollInShapeFrame = " + pointToRollInShapeFrame);
 
       //TODO: Not necessarily true all the time....
 

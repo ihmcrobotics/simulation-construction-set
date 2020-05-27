@@ -1,24 +1,23 @@
 package us.ihmc.simulationconstructionset.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoBoolean;
-import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.simulationconstructionset.GroundContactModel;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.GroundContactPointsHolder;
+import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoBoolean;
+import us.ihmc.yoVariables.variable.YoDouble;
 
 public class LinearStickSlipGroundContactModel implements GroundContactModel
 {
    private YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
    private static final long serialVersionUID = -2481515446904072547L;
 
-   private static final double
-      DEFAULT_K_XY = 1422, DEFAULT_B_XY = 15.6, DEFAULT_K_Z = 125, DEFAULT_B_Z = 300;
+   private static final double DEFAULT_K_XY = 1422, DEFAULT_B_XY = 15.6, DEFAULT_K_Z = 125, DEFAULT_B_Z = 300;
    private static final double DEFAULT_STIFFENING_LENGTH = 0.008;
    private static final double DEFAULT_ALPHA_SLIP = 0.7;
    private static final double DEFAULT_ALPHA_STICK = 0.7;
@@ -28,20 +27,18 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
    private final YoDouble groundKz = new YoDouble("groundKz", "LinearStickSlipGroundContactModel z spring constant", registry);
    private final YoDouble groundBz = new YoDouble("groundBz", "LinearStickSlipGroundContactModel z damping constant", registry);
    private final YoDouble groundStiffeningLength = new YoDouble("groundStiffeningLength",
-                                                              "LinearStickSlipGroundContactModel z spring nominal stiffening length", registry);
-   private final YoDouble groundAlphaSlip = new YoDouble("groundAlphaSlip", "LinearStickSlipGroundContactModel slip coefficient of friction",
-                                                       registry);
-   private final YoDouble groundAlphaStick = new YoDouble("groundAlphaStick",
-                                                        "LinearStickSlipGroundContactModel stick coefficient of friction", registry);
+                                                                "LinearStickSlipGroundContactModel z spring nominal stiffening length",
+                                                                registry);
+   private final YoDouble groundAlphaSlip = new YoDouble("groundAlphaSlip", "LinearStickSlipGroundContactModel slip coefficient of friction", registry);
+   private final YoDouble groundAlphaStick = new YoDouble("groundAlphaStick", "LinearStickSlipGroundContactModel stick coefficient of friction", registry);
 
-   private final YoBoolean groundEnableSlip = new YoBoolean("groundEnableSlip", "LinearStickSlipGroundContactModel. If true can slip",
-                                                         registry);
+   private final YoBoolean groundEnableSlip = new YoBoolean("groundEnableSlip", "LinearStickSlipGroundContactModel. If true can slip", registry);
 
-   
-   private final YoBoolean groundEnableSurfaceNormal = new YoBoolean("groundEnableSurfaceNormal", "LinearStickSlipGroundContactModel. If true will take into account surface normals in computations.",
-         registry);
+   private final YoBoolean groundEnableSurfaceNormal = new YoBoolean("groundEnableSurfaceNormal",
+                                                                     "LinearStickSlipGroundContactModel. If true will take into account surface normals in computations.",
+                                                                     registry);
 
-   private ArrayList<GroundContactPoint> groundContactPoints;
+   private List<GroundContactPoint> groundContactPoints;
    private GroundProfile3D groundProfile3D;
 
    public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoVariableRegistry parentRegistry)
@@ -49,27 +46,30 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       this(groundContactPointsHolder, DEFAULT_K_XY, DEFAULT_B_XY, DEFAULT_K_Z, DEFAULT_B_Z, DEFAULT_ALPHA_SLIP, DEFAULT_ALPHA_STICK, parentRegistry);
    }
 
-   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double alphaSlip, double alphaStick, YoVariableRegistry parentRegistry)
+   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double alphaSlip, double alphaStick,
+                                            YoVariableRegistry parentRegistry)
    {
       this(groundContactPointsHolder, DEFAULT_K_XY, DEFAULT_B_XY, DEFAULT_K_Z, DEFAULT_B_Z, alphaSlip, alphaStick, parentRegistry);
    }
 
-   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy, double groundBxy, double groundKz,
-           double groundBz, YoVariableRegistry parentRegistry)
+   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy,
+                                            double groundBxy, double groundKz, double groundBz, YoVariableRegistry parentRegistry)
    {
-      this(groundContactPointsHolder, groundContactGroupIdentifier, groundKxy, groundBxy, groundKz, groundBz, DEFAULT_ALPHA_SLIP, DEFAULT_ALPHA_STICK, parentRegistry);
+      this(groundContactPointsHolder, groundContactGroupIdentifier, groundKxy, groundBxy, groundKz, groundBz, DEFAULT_ALPHA_SLIP, DEFAULT_ALPHA_STICK,
+           parentRegistry);
    }
 
-   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double groundKxy, double groundBxy, double groundKz, double groundBz, double groundAlphaSlip,
-           double groundAlphaStick, YoVariableRegistry parentRegistry)
+   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double groundKxy, double groundBxy, double groundKz,
+                                            double groundBz, double groundAlphaSlip, double groundAlphaStick, YoVariableRegistry parentRegistry)
    {
       this(groundContactPointsHolder, 0, groundKxy, groundBxy, groundKz, groundBz, groundAlphaSlip, groundAlphaStick, parentRegistry);
    }
 
-   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy, double groundBxy, double groundKz,
-           double groundBz, double groundAlphaSlip, double groundAlphaStick, YoVariableRegistry parentRegistry)
+   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy,
+                                            double groundBxy, double groundKz, double groundBz, double groundAlphaSlip, double groundAlphaStick,
+                                            YoVariableRegistry parentRegistry)
    {
-      this.groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
+      groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
 
       this.groundKxy.set(groundKxy);
       this.groundBxy.set(groundBxy);
@@ -77,32 +77,32 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       this.groundBz.set(groundBz);
       this.groundAlphaSlip.set(groundAlphaSlip);
       this.groundAlphaStick.set(groundAlphaStick);
-      this.groundStiffeningLength.set(DEFAULT_STIFFENING_LENGTH);
+      groundStiffeningLength.set(DEFAULT_STIFFENING_LENGTH);
 
       groundEnableSlip.set(true);
       groundEnableSurfaceNormal.set(true);
-      
+
       parentRegistry.addChild(registry);
    }
 
    public void enableSlipping()
    {
-      this.groundEnableSlip.set(true);
+      groundEnableSlip.set(true);
    }
 
    public void disableSlipping()
    {
-      this.groundEnableSlip.set(false);
+      groundEnableSlip.set(false);
    }
-   
+
    public void enableSurfaceNormal()
    {
-      this.groundEnableSurfaceNormal.set(true);
+      groundEnableSurfaceNormal.set(true);
    }
 
    public void disableSurfaceNormal()
    {
-      this.groundEnableSurfaceNormal.set(false);
+      groundEnableSurfaceNormal.set(false);
    }
 
    public void setGroundStiffeningLength(double groundStiffeningLength)
@@ -118,28 +118,28 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
 
    public void setXYStiffness(double xyStiffness)
    {
-      this.groundKxy.set(xyStiffness);
+      groundKxy.set(xyStiffness);
    }
 
    public void setZStiffness(double zStiffness)
    {
-      this.groundKz.set(zStiffness);
+      groundKz.set(zStiffness);
    }
 
    public void setXYDamping(double xyDamping)
    {
-      this.groundBxy.set(xyDamping);
+      groundBxy.set(xyDamping);
    }
 
    public void setZDamping(double zDamping)
    {
-      this.groundBz.set(zDamping);
+      groundBz.set(zDamping);
    }
 
    @Override
    public void setGroundProfile3D(GroundProfile3D profile3D)
    {
-      this.groundProfile3D = profile3D;
+      groundProfile3D = profile3D;
    }
 
    @Override
@@ -183,8 +183,11 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       else
       {
          // TODO: We'll be using the surface normal at the current point, rather than at the touchdown point. We might want to store the touchdown normal and use it instead...
-         isInside = groundProfile3D.checkIfInside(groundContactPoint.getX(), groundContactPoint.getY(), groundContactPoint.getZ(), intersectionPositionInWorld,
-        		 surfaceNormalTemp);
+         isInside = groundProfile3D.checkIfInside(groundContactPoint.getX(),
+                                                  groundContactPoint.getY(),
+                                                  groundContactPoint.getZ(),
+                                                  intersectionPositionInWorld,
+                                                  surfaceNormalTemp);
       }
 
       if (isInside)
@@ -236,9 +239,9 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       groundContactPoint.getTouchdownLocation(touchdownLocation);
       groundContactPoint.getPosition(position);
       groundContactPoint.getVelocity(velocity);
-      
+
       deltaPositionFromTouchdown.sub(touchdownLocation, position);
-      
+
       if (groundEnableSurfaceNormal.getBooleanValue())
       {
          resolveContactForceUsingSurfaceNormal(deltaPositionFromTouchdown, velocity, groundContactPoint);
@@ -248,17 +251,17 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
          resolveContactForceZUp(deltaPositionFromTouchdown, velocity, groundContactPoint);
       }
    }
-   
-   
+
    private final Vector3D inPlaneVector1 = new Vector3D();
    private final Vector3D inPlaneVector2 = new Vector3D();
+
    private void resolveContactForceUsingSurfaceNormal(Vector3D deltaPositionFromTouchdown, Vector3D velocity, GroundContactPoint groundContactPoint)
    {
-	   groundContactPoint.getSurfaceNormal(surfaceNormalTemp);
-	   
+      groundContactPoint.getSurfaceNormal(surfaceNormalTemp);
+
       tempVector.set(0.0, 1.0, 0.0);
 
-      if ((tempVector.dot(surfaceNormalTemp) == 1.0) || (tempVector.dot(surfaceNormalTemp) == -1.0))    // check if they are parallel, in which case UNIT_X will do.
+      if ((tempVector.dot(surfaceNormalTemp) == 1.0) || (tempVector.dot(surfaceNormalTemp) == -1.0)) // check if they are parallel, in which case UNIT_X will do.
       {
          tempVector.set(1.0, 0.0, 0.0);
       }
@@ -268,18 +271,18 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
 
       inPlaneVector2.cross(surfaceNormalTemp, inPlaneVector1);
       inPlaneVector2.normalize();
-      
+
       // Spring part
       double xPrime = inPlaneVector1.dot(deltaPositionFromTouchdown);
       double yPrime = inPlaneVector2.dot(deltaPositionFromTouchdown);
       double zPrime = surfaceNormalTemp.dot(deltaPositionFromTouchdown);
-      
+
       forceParallel.set(inPlaneVector1);
       forceParallel.scale(xPrime);
       forceParallel.scaleAdd(yPrime, inPlaneVector2, forceParallel);
       forceParallel.scale(groundKxy.getDoubleValue());
       forceNormal.set(surfaceNormalTemp);
-      
+
       if (groundStiffeningLength.getDoubleValue() - zPrime > 0.002)
       {
          forceNormal.scale(groundKz.getDoubleValue() * zPrime / (groundStiffeningLength.getDoubleValue() - zPrime));
@@ -288,7 +291,7 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       {
          forceNormal.scale(groundKz.getDoubleValue() * zPrime / 0.002);
       }
-      
+
       // Damping part
       xPrime = inPlaneVector1.dot(velocity);
       yPrime = inPlaneVector2.dot(velocity);
@@ -296,11 +299,11 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       forceParallel.scaleAdd(-groundBxy.getDoubleValue() * xPrime, inPlaneVector1, forceParallel);
       forceParallel.scaleAdd(-groundBxy.getDoubleValue() * yPrime, inPlaneVector2, forceParallel);
       forceNormal.scaleAdd(-groundBz.getDoubleValue() * zPrime, surfaceNormalTemp, forceNormal);
-      
+
       double magnitudeOfForceNormal = forceNormal.dot(surfaceNormalTemp);
       if (magnitudeOfForceNormal < 0.0)
       {
-         // If both the ground is pulling the point in rather than pushing it out, 
+         // If both the ground is pulling the point in rather than pushing it out,
          // and the point is higher than the touchdown point, then set not in contact so that
          // the touchdown point can be reset next tick if still below the ground...
          if (zPrime < 0.0)
@@ -311,7 +314,7 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
          }
          else
          {
-//            forceParallel.set(0.0, 0.0, 0.0);
+            //            forceParallel.set(0.0, 0.0, 0.0);
             forceNormal.set(0.0, 0.0, 0.0);
          }
       }
@@ -329,11 +332,10 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       double yForce = groundKxy.getDoubleValue() * (deltaPositionFromTouchdown.getY()) - groundBxy.getDoubleValue() * velocity.getY();
 
       double zForce;
-      if (groundStiffeningLength.getDoubleValue() -deltaPositionFromTouchdown.getZ() > 0.002)
+      if (groundStiffeningLength.getDoubleValue() - deltaPositionFromTouchdown.getZ() > 0.002)
       {
-         zForce =
-            groundKz.getDoubleValue() * deltaPositionFromTouchdown.getZ() / (groundStiffeningLength.getDoubleValue() -deltaPositionFromTouchdown.getZ())
-            - groundBz.getDoubleValue() * velocity.getZ();
+         zForce = groundKz.getDoubleValue() * deltaPositionFromTouchdown.getZ() / (groundStiffeningLength.getDoubleValue() - deltaPositionFromTouchdown.getZ())
+               - groundBz.getDoubleValue() * velocity.getZ();
       }
       else
       {
@@ -342,7 +344,7 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
 
       if (zForce < 0.0)
       {
-         // If both the ground is pulling the point in rather than pushing it out, 
+         // If both the ground is pulling the point in rather than pushing it out,
          // and the point is higher than the touchdown point, then set not in contact so that
          // the touchdown point can be reset next tick if still below the ground...
          if (deltaPositionFromTouchdown.getZ() < 0.0)
@@ -354,8 +356,8 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
          }
          else
          {
-//            xForce = 0.0;
-//            yForce = 0.0;
+            //            xForce = 0.0;
+            //            yForce = 0.0;
             zForce = 0.0;
          }
       }
@@ -365,8 +367,7 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
 
    private final Point3D touchDownPoint = new Point3D();
    private final Vector3D tempVector = new Vector3D();
-   private final Vector3D
-      forceWorld = new Vector3D(), forceNormal = new Vector3D(), forceParallel = new Vector3D();
+   private final Vector3D forceWorld = new Vector3D(), forceNormal = new Vector3D(), forceParallel = new Vector3D();
 
    private void checkIfSlipping(GroundContactPoint groundContactPoint)
    {
@@ -381,7 +382,7 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       // Compute the horizontal to vertical force ratio:
       groundContactPoint.getForce(forceWorld);
       groundContactPoint.getSurfaceNormal(surfaceNormalTemp);
-      
+
       forceNormal.set(surfaceNormalTemp);
       forceNormal.scale(surfaceNormalTemp.dot(forceWorld));
 
@@ -397,7 +398,7 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
       // But don't slip if inside the ground by more than 1 cm since this probably only occurs when in a wedge and keep sliding
       // perpendicular to the normal into the chasm..
       // +++JEP: 140626: Revisit the chasm thing later. For now take the heightAt check out...
-//    if ((gc.getZ() > heightAt - 0.010) && ((ratio > groundAlphaStick.getDoubleValue()) || ((gc.isSlipping()) && (ratio > groundAlphaSlip.getDoubleValue()))))
+      //    if ((gc.getZ() > heightAt - 0.010) && ((ratio > groundAlphaStick.getDoubleValue()) || ((gc.isSlipping()) && (ratio > groundAlphaSlip.getDoubleValue()))))
       if ((ratio > groundAlphaStick.getDoubleValue()) || (groundContactPoint.isSlipping()) && (ratio > groundAlphaSlip.getDoubleValue()))
       {
          groundContactPoint.setIsSlipping(true);
@@ -424,8 +425,8 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
 
          touchDownPoint.add(forceParallel);
          groundContactPoint.setTouchdownLocation(touchDownPoint);
-         
-         // The following is a little inefficient since we call checkIfInside twice for any point that is slipping, but 
+
+         // The following is a little inefficient since we call checkIfInside twice for any point that is slipping, but
          // cleaner than letting the next tick know we need to update the surface normal due to a slip...
          boolean isInside;
          if (groundProfile3D == null)
@@ -437,11 +438,15 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
          else
          {
             // TODO: We'll be using the surface normal at the current point, rather than at the touchdown point. We might want to store the touchdown normal and use it instead...
-            isInside = groundProfile3D.checkIfInside(groundContactPoint.getX(), groundContactPoint.getY(), groundContactPoint.getZ(), intersectionPositionInWorld,
-                surfaceNormalTemp);
+            isInside = groundProfile3D.checkIfInside(groundContactPoint.getX(),
+                                                     groundContactPoint.getY(),
+                                                     groundContactPoint.getZ(),
+                                                     intersectionPositionInWorld,
+                                                     surfaceNormalTemp);
          }
-         
-         if (isInside) groundContactPoint.setSurfaceNormal(surfaceNormalTemp);
+
+         if (isInside)
+            groundContactPoint.setSurfaceNormal(surfaceNormalTemp);
       }
       else
       {

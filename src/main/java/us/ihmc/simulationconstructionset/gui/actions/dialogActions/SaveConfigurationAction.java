@@ -18,8 +18,8 @@ public class SaveConfigurationAction extends AbstractAction
       super("Save Configuration");
       this.constructor = constructor;
 
-      this.putValue(Action.LONG_DESCRIPTION, "Save Configuration");
-      this.putValue(Action.SHORT_DESCRIPTION, "save config");
+      putValue(Action.LONG_DESCRIPTION, "Save Configuration");
+      putValue(Action.SHORT_DESCRIPTION, "save config");
    }
 
    public void setCurrentDirectory(File directory)

@@ -8,7 +8,6 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoFrameQuaternion;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
-
 public class IMUMount
 {
    private final String name;
@@ -29,10 +28,10 @@ public class IMUMount
    private final YoFrameVector3D linearAccelerationInWorld;
 
    private final YoFrameQuaternion orientation;
-   
+
    private double accelerationGaussianNoiseMean = 0.0, accelerationGaussianNoiseStdDev = 0.0;
    private double accelerationGaussianBiasMean = 0.0, accelerationGaussianBiasStdDev = 0.0;
-   
+
    private double angularVelocityGaussianNoiseMean = 0.0, angularVelocityGaussianNoiseStdDev = 0.0;
    private double angularVelocityGaussianBiasMean = 0.0, angularVelocityGaussianBiasStdDev = 0.0;
 
@@ -64,7 +63,7 @@ public class IMUMount
 
    protected void setParentJoint(Joint parent)
    {
-      this.parentJoint = parent;
+      parentJoint = parent;
    }
 
    public Joint getParentJoint()
@@ -111,12 +110,12 @@ public class IMUMount
    private final Vector3D tempGravity = new Vector3D();
    private final Vector3D tempLinearAcceleration = new Vector3D();
    private final Vector3D tempAngularAccelerationInBody = new Vector3D();
-   
+
    protected void updateIMUMountAcceleration()
    {
-      // We redo some of the things that are already done in updateIMUMountPositionAndVelocity, 
+      // We redo some of the things that are already done in updateIMUMountPositionAndVelocity,
       // but it is safer that way since updateIMUMountAcceleration might be called by itself sometimes.
-      
+
       // Offsets of IMUMount:
       tempIMUOffset.set(transformFromMountToJoint.getTranslation());
       tempIMURotation.set(transformFromMountToJoint.getRotation());
@@ -125,7 +124,7 @@ public class IMUMount
       parentJoint.getRotationToWorld(tempRotationToWorld);
       tempRotationToWorld.multiply(tempIMURotation);
       tempIMURotation.transpose();
-      
+
       // Linear Acceleration
       parentJoint.physics.getLinearAccelerationInBody(tempLinearAcceleration, tempIMUOffset);
       tempIMURotation.transform(tempLinearAcceleration);
@@ -150,7 +149,7 @@ public class IMUMount
       tempIMURotation.transform(tempAngularAccelerationInBody);
       angularAccelerationInBody.set(tempAngularAccelerationInBody);
    }
-   
+
    public void setOrientation(Quaternion orientation)
    {
       this.orientation.set(orientation);
@@ -170,17 +169,17 @@ public class IMUMount
    {
       this.angularVelocityInBody.set(angularVelocityInBody);
    }
-   
+
    public void getAngularVelocityInBody(Vector3D angularVelocityInBodyToPack)
    {
       angularVelocityInBodyToPack.set(angularVelocityInBody);
    }
-   
+
    public void setAngularAccelerationInBody(Vector3D angularAccelerationInBody)
    {
       this.angularAccelerationInBody.set(angularAccelerationInBody);
    }
-   
+
    public void getAngularAccelerationInBody(Vector3D angularAccelerationInBodyToPack)
    {
       angularAccelerationInBodyToPack.set(angularAccelerationInBody);
@@ -190,7 +189,7 @@ public class IMUMount
    {
       this.linearAccelerationInBody.set(linearAccelerationInBody);
    }
-   
+
    public void getLinearAccelerationInBody(Vector3D linearAccelerationInBodyToPack)
    {
       linearAccelerationInBodyToPack.set(linearAccelerationInBody);
@@ -206,25 +205,24 @@ public class IMUMount
       transformFromMountToJoint.set(newTransformFromMountToJoint);
    }
 
-   
    public void setAngularVelocityNoiseParameters(double angularVelocityGaussianNoiseMean, double angularVelocityGaussianNoiseStdDev)
    {
       this.angularVelocityGaussianNoiseMean = angularVelocityGaussianNoiseMean;
       this.angularVelocityGaussianNoiseStdDev = angularVelocityGaussianNoiseStdDev;
    }
-   
+
    public void setAngularVelocityBiasParameters(double angularVelocityGaussianBiasMean, double angularVelocityGaussianBiasStdDev)
    {
       this.angularVelocityGaussianBiasMean = angularVelocityGaussianBiasMean;
       this.angularVelocityGaussianBiasStdDev = angularVelocityGaussianBiasStdDev;
    }
-   
+
    public void setAccelerationNoiseParameters(double accelerationGaussianNoiseMean, double accelerationGaussianNoiseStdDev)
    {
       this.accelerationGaussianNoiseMean = accelerationGaussianNoiseMean;
       this.accelerationGaussianNoiseStdDev = accelerationGaussianNoiseStdDev;
    }
-   
+
    public void setAccelerationBiasParameters(double accelerationGaussianBiasMean, double accelerationGaussianBiasStdDev)
    {
       this.accelerationGaussianBiasMean = accelerationGaussianBiasMean;
@@ -270,7 +268,5 @@ public class IMUMount
    {
       return angularVelocityGaussianBiasStdDev;
    }
-   
-   
-   
+
 }

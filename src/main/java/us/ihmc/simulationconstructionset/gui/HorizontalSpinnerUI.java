@@ -31,7 +31,7 @@ public class HorizontalSpinnerUI extends BasicSpinnerUI
    @Override
    public void installUI(JComponent component)
    {
-      this.spinner = (JSpinner) component;
+      spinner = (JSpinner) component;
       installDefaults();
       installListeners();
       westButton = createTheArrowButton(SwingConstants.WEST, "West");
@@ -76,11 +76,9 @@ public class HorizontalSpinnerUI extends BasicSpinnerUI
       return handlerLayout;
    }
 
-
-
    public void initButtonListeners()
    {
-      ComponentOrientation orient = this.spinner.getComponentOrientation();
+      ComponentOrientation orient = spinner.getComponentOrientation();
       if (orient.equals(ComponentOrientation.UNKNOWN) || orient.equals(ComponentOrientation.LEFT_TO_RIGHT))
       {
          installPreviousButtonListeners(westButton);
@@ -105,7 +103,7 @@ public class HorizontalSpinnerUI extends BasicSpinnerUI
          try
          {
             if (listener.getClass().getEnclosingClass().equals(basicSpinnerClass) && listener.getClass().getDeclaringClass().equals(basicSpinnerClass)
-                    && listener.getClass().isMemberClass() && listener.getClass().getName().equals(HorizontalSpinnerUI.BASIC_SPINNERUI_LISTENER_NAME))
+                  && listener.getClass().isMemberClass() && listener.getClass().getName().equals(HorizontalSpinnerUI.BASIC_SPINNERUI_LISTENER_NAME))
             {
                handler = true;
             }
@@ -276,7 +274,7 @@ public class HorizontalSpinnerUI extends BasicSpinnerUI
          }
 
          /*
-          *  Deal with the spinner's componentOrientation property.
+          * Deal with the spinner's componentOrientation property.
           */
          int editorWidth;
          if (parent.getComponentOrientation().isLeftToRight())

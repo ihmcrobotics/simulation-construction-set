@@ -2,17 +2,15 @@ package us.ihmc.simulationconstructionset.util;
 
 /**
  * Centralized location for the names related to contols
- *
  * <p>
  * Nomenqlature:<br>
  * <ul>
- * <li>q_ = position.  from Lagrangian mechanics</li>
- * <li>qd_ = velocity.  deriviative of position</li>
+ * <li>q_ = position. from Lagrangian mechanics</li>
+ * <li>qd_ = velocity. deriviative of position</li>
  * <li>STUFF_d = desired value of STUFF</li>
  * <li>_k = gain</li>
  * </ul>
  * </p>
- *
  */
 public enum CommonNames
 {

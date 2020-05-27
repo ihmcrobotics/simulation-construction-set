@@ -1,5 +1,10 @@
 package us.ihmc.simulationconstructionset.physics.collision;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.assertTrue;
+
+import java.util.List;
+
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -7,22 +12,23 @@ import us.ihmc.simulationconstructionset.ContactingExternalForcePoint;
 import us.ihmc.simulationconstructionset.FloatingJoint;
 import us.ihmc.simulationconstructionset.Link;
 import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.physics.*;
-
-import java.util.ArrayList;
-
-import static us.ihmc.robotics.Assert.*;
+import us.ihmc.simulationconstructionset.physics.CollisionHandler;
+import us.ihmc.simulationconstructionset.physics.CollisionShape;
+import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
+import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
+import us.ihmc.simulationconstructionset.physics.Contacts;
+import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
 
 /**
  * Tests compliance to the {@link us.ihmc.simulationconstructionset.physics.ScsCollisionDetector}
- *
  */
 public abstract class SCSCollisionDetectorTest
 {
    public abstract ScsCollisionDetector createCollisionDetector();
 
    /**
-    * Make a small object and see if it detects the collision correctly.  Small objects aren't already handled correctly
+    * Make a small object and see if it detects the collision correctly. Small objects aren't already
+    * handled correctly
     */
    public void testSmallBox()
    {
@@ -133,7 +139,7 @@ public abstract class SCSCollisionDetectorTest
       FloatingJoint cubeA = cube(collisionDetector, "A", 10, 0.5, 1.0, 1.5);
       FloatingJoint cubeB = cube(collisionDetector, "B", 10, 0.75, 1.2, 1.7);
 
-      double a[] = new double[] { 0.5 + 0.75, 1.0 + 1.2, 1.5 + 1.7 };
+      double a[] = new double[] {0.5 + 0.75, 1.0 + 1.2, 1.5 + 1.7};
 
       // add a bit of separation to ensure they don't collide
       double tau = 0.001;
@@ -174,7 +180,7 @@ public abstract class SCSCollisionDetectorTest
       FloatingJoint cubeA = cube(collisionDetector, "A", 10, 0.5, 1.0, 1.5);
       FloatingJoint cubeB = cube(collisionDetector, "B", 10, 0.75, 1.2, 1.7);
 
-      double a[] = new double[] { 0.5 + 0.75, 1.0 + 1.2, 1.5 + 1.7 };
+      double a[] = new double[] {0.5 + 0.75, 1.0 + 1.2, 1.5 + 1.7};
 
       // add a bit of separation to ensure they don't collide
       double tau = -0.001;
@@ -267,10 +273,10 @@ public abstract class SCSCollisionDetectorTest
 
       CollisionDetectionResult result = new CollisionDetectionResult();
       collisionDetector.performCollisionDetection(result);
-//      result.getNumberOfCollisions()
+      //      result.getNumberOfCollisions()
 
       // only A and B should collide
-//      assertEquals(1, check.totalCollisions);
+      //      assertEquals(1, check.totalCollisions);
       assertEquals(1, result.getNumberOfCollisions());
    }
 
@@ -279,7 +285,8 @@ public abstract class SCSCollisionDetectorTest
       return cube(collisionDetector, name, mass, null, radiusX, radiusY, radiusZ, 0xFFFFFFFF, 0xFFFFFFFF);
    }
 
-   public FloatingJoint cube(ScsCollisionDetector collisionDetector, String name, double mass, RigidBodyTransform shapeToLink, double radiusX, double radiusY, double radiusZ, int collisionGroup, int collisionMask)
+   public FloatingJoint cube(ScsCollisionDetector collisionDetector, String name, double mass, RigidBodyTransform shapeToLink, double radiusX, double radiusY,
+                             double radiusZ, int collisionGroup, int collisionMask)
    {
       Robot robot = new Robot("null");
       FloatingJoint joint = new FloatingJoint("cube", new Vector3D(), robot);
@@ -335,8 +342,8 @@ public abstract class SCSCollisionDetectorTest
       }
 
       @Override
-      public void addContactingExternalForcePoints(Link link, ArrayList<ContactingExternalForcePoint> contactingExternalForcePoints)
-      {         
+      public void addContactingExternalForcePoints(Link link, List<ContactingExternalForcePoint> contactingExternalForcePoints)
+      {
       }
    }
 
