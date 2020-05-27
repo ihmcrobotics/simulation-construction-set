@@ -5,11 +5,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraMountInterface;
@@ -46,8 +50,8 @@ import us.ihmc.yoVariables.variable.YoVariableList;
 public class Robot implements YoVariableHolder, GroundContactPointsHolder
 {
    protected YoVariableRegistry yoVariableRegistry;
-   protected final ArrayList<YoGraphicsListRegistry> yoGraphicsListRegistries = new ArrayList<>();
-   private ArrayList<Joint> rootJoints;
+   protected final List<YoGraphicsListRegistry> yoGraphicsListRegistries = new ArrayList<>();
+   private List<Joint> rootJoints;
 
    private FunctionIntegrators functionIntegrators = null;
 
@@ -62,7 +66,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    // protected double gX = 0.0, gY = 0.0, gZ = -9.81;
 
-   private ArrayList<RobotControllerAndParameters> controllers = new ArrayList<>();
+   private List<RobotControllerAndParameters> controllers = new ArrayList<>();
 
    private GroundContactModel groundContactModel;
 
@@ -70,10 +74,10 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    private DynamicIntegrationMethod dynamicIntegrationMethod = DynamicIntegrationMethod.RUNGE_KUTTA_FOURTH_ORDER;
 
-   private final ArrayList<Graphics3DObject> staticLinkGraphics = new ArrayList<>();
+   private final List<Graphics3DObject> staticLinkGraphics = new ArrayList<>();
    // private VarList robVars;
    // private VarList groundVars;
-   // private ArrayList<VarList> controllerVarLists = new ArrayList<VarList>();
+   // private List<VarList> controllerVarLists = new ArrayList<VarList>();
 
    public Robot(RobotDefinitionFixedFrame definition, String name)
    {
@@ -293,7 +297,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    public void decideGroundContactPointsInContact()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -303,17 +307,17 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Retrieves an ArrayList containing the rootJoints of this robot. These joints make up the entirety
+    * Retrieves an List containing the rootJoints of this robot. These joints make up the entirety
     * of the robot's visual component as all joints and links are at some level their children.
     *
-    * @return ArrayList containing the root joints of the robot.
+    * @return List containing the root joints of the robot.
     */
-   public ArrayList<Joint> getRootJoints()
+   public List<Joint> getRootJoints()
    {
       return rootJoints;
    }
 
-   public void getRootJoints(ArrayList<Joint> jointsToPack)
+   public void getRootJoints(List<Joint> jointsToPack)
    {
       jointsToPack.addAll(rootJoints);
    }
@@ -333,7 +337,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       this.gravityZ.set(gravityZ);
    }
 
-   public void setGravity(Vector3D gravity)
+   public void setGravity(Vector3DReadOnly gravity)
    {
       gravityX.set(gravity.getX());
       gravityY.set(gravity.getY());
@@ -398,7 +402,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       setController(new RobotControllerAndParameters(controller, simulationTicksPerControlTick));
    }
 
-   public void setController(ArrayList<RobotController> controllers, int simulationTicksPerControlTick)
+   public void setController(List<RobotController> controllers, int simulationTicksPerControlTick)
    {
       for (int i = 0; i < controllers.size(); i++)
       {
@@ -407,7 +411,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-   public void setControllersAndCallInitialization(ArrayList<RobotControllerAndParameters> robotControllersAndParameters)
+   public void setControllersAndCallInitialization(List<RobotControllerAndParameters> robotControllersAndParameters)
    {
       for (RobotControllerAndParameters robotControllerAndParameters : robotControllersAndParameters)
       {
@@ -470,7 +474,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
 
    // protected VarList getGroundContactVarList(){return this.groundVars;}
-   // protected ArrayList<VarList> getControllerVarLists(){return this.controllerVarLists;}
+   // protected List<VarList> getControllerVarLists(){return this.controllerVarLists;}
    // protected VarList getExternalForceVarList(){return this.groundVars;}
 
    /**
@@ -560,9 +564,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    public void getCameraMountList(CameraMountList cameraMountList)
    {
-      ArrayList<CameraMountInterface> mountArrayList = new ArrayList<>();
+      List<CameraMountInterface> mountArrayList = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -573,11 +577,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-   public ArrayList<SimulatedSensor> getSensors()
+   public List<SimulatedSensor> getSensors()
    {
-      ArrayList<SimulatedSensor> ret = new ArrayList<>();
+      List<SimulatedSensor> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
       for (int i = 0; i < children.size(); i++)
       {
          Joint rootJoint = children.get(i);
@@ -588,15 +592,15 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Returns an ArrayList appropriate to the type of sensor being queried containing all the sensors
+    * Returns an List appropriate to the type of sensor being queried containing all the sensors
     * of that type for each joint.
     */
    @SuppressWarnings("unchecked")
-   public <T extends SimulatedSensor> ArrayList<T> getSensors(Class<T> sensorType)
+   public <T extends SimulatedSensor> List<T> getSensors(Class<T> sensorType)
    {
-      ArrayList<SimulatedSensor> allSensors = getSensors();
+      List<SimulatedSensor> allSensors = getSensors();
 
-      ArrayList<T> specificSensors = new ArrayList<>();
+      List<T> specificSensors = new ArrayList<>();
 
       for (SimulatedSensor sensor : allSensors)
       {
@@ -609,9 +613,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return specificSensors;
    }
 
-   public void getAllOneDegreeOfFreedomJoints(ArrayList<OneDegreeOfFreedomJoint> oneDegreeOfFreedomJoints)
+   public void getAllOneDegreeOfFreedomJoints(List<OneDegreeOfFreedomJoint> oneDegreeOfFreedomJoints)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -620,9 +624,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-   public void getLidarMounts(ArrayList<LidarMount> lidarMountsToPack)
+   public void getLidarMounts(List<LidarMount> lidarMountsToPack)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -631,9 +635,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-   public void getIMUMounts(ArrayList<IMUMount> imuMountsToPack)
+   public void getIMUMounts(List<IMUMount> imuMountsToPack)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -642,9 +646,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-   public void getForceSensors(ArrayList<WrenchCalculatorInterface> forceSensors)
+   public void getForceSensors(List<WrenchCalculatorInterface> forceSensors)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -657,14 +661,14 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * Retrieves a list of all ground contact points associated with this robot and the
     * groundContactGroupIdentifier.
     *
-    * @return ArrayList containing the GroundContactPoints, if none exist the list will be empty.
+    * @return List containing the GroundContactPoints, if none exist the list will be empty.
     */
    @Override
-   public ArrayList<GroundContactPoint> getGroundContactPoints(int groundContactGroupIdentifier)
+   public List<GroundContactPoint> getGroundContactPoints(int groundContactGroupIdentifier)
    {
-      ArrayList<GroundContactPoint> ret = new ArrayList<>();
+      List<GroundContactPoint> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -675,11 +679,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return ret;
    }
 
-   public ArrayList<ArrayList<GroundContactPoint>> getAllGroundContactPointsGroupedByJoint()
+   public List<List<GroundContactPoint>> getAllGroundContactPointsGroupedByJoint()
    {
-      ArrayList<ArrayList<GroundContactPoint>> ret = new ArrayList<>();
+      List<List<GroundContactPoint>> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -690,11 +694,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return ret;
    }
 
-   public ArrayList<GroundContactPoint> getAllGroundContactPoints()
+   public List<GroundContactPoint> getAllGroundContactPoints()
    {
-      ArrayList<GroundContactPoint> ret = new ArrayList<>();
+      List<GroundContactPoint> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -705,11 +709,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return ret;
    }
 
-   public ArrayList<ExternalForcePoint> getAllExternalForcePoints()
+   public List<ExternalForcePoint> getAllExternalForcePoints()
    {
-      ArrayList<ExternalForcePoint> ret = new ArrayList<>();
+      List<ExternalForcePoint> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -720,11 +724,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return ret;
    }
 
-   public ArrayList<KinematicPoint> getAllKinematicPoints()
+   public List<KinematicPoint> getAllKinematicPoints()
    {
-      ArrayList<KinematicPoint> ret = new ArrayList<>();
+      List<KinematicPoint> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -737,7 +741,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    public ExternalForcePoint getExternalForcePoint(String name)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -774,7 +778,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    }
 
-   public void addStaticLinkGraphics(ArrayList<Graphics3DObject> linkGraphicsArray)
+   public void addStaticLinkGraphics(List<Graphics3DObject> linkGraphicsArray)
    {
       for (Graphics3DObject linkGraphics : linkGraphicsArray)
       {
@@ -790,7 +794,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    public void updateVelocities()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -832,7 +836,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    private void doDynamics(int passNumber) throws UnreasonableAccelerationException
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -887,7 +891,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    private void rootJointsRecursiveSaveTempState()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -907,7 +911,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    public void rootJointsRecursiveEulerIntegrate(double dt)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -922,7 +926,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    private void rootJointsRecursiveRestoreTempState()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -946,7 +950,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    private void rootJointsRecursiveRungeKuttaSum(double dt)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -1079,7 +1083,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       //    else
       //    {
-      //       ArrayList<Joint> unreasonableAccelerationJoints = getUnreasonableAccelerationJoints();
+      //       List<Joint> unreasonableAccelerationJoints = getUnreasonableAccelerationJoints();
       //       throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
       //
       //       // System.err.println("Unreasonable Accelerations!");
@@ -1242,7 +1246,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param comPoint Center of Mass point, in World Coordinates, that is computed.
     * @return The total mass of the robot.
     */
-   public double computeCenterOfMass(Point3D comPoint)
+   public double computeCenterOfMass(Point3DBasics comPoint)
    {
       double totalMass = 0.0;
       comPoint.set(0.0, 0.0, 0.0);
@@ -1275,7 +1279,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param comPoint Center of Mass point, in World Coordinates, that is computed.
     * @return The total mass of the robot.
     */
-   public double computeCenterOfMass(Joint rootJoint, Point3D comPoint)
+   public double computeCenterOfMass(Joint rootJoint, Point3DBasics comPoint)
    {
       double totalMass = 0.0;
       comPoint.set(0.0, 0.0, 0.0);
@@ -1304,7 +1308,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param linearMomentum Total linear momentum vector that is computed.
     * @return The total mass of the robot.
     */
-   public double computeLinearMomentum(Vector3D linearMomentum)
+   public double computeLinearMomentum(Vector3DBasics linearMomentum)
    {
       double totalMass = 0.0;
       linearMomentum.set(0.0, 0.0, 0.0);
@@ -1329,7 +1333,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param linearMomentum Total linear momentum vector that is computed.
     * @return The total mass of the robot.
     */
-   public double computeLinearMomentum(Joint rootJoint, Vector3D linearMomentum)
+   public double computeLinearMomentum(Joint rootJoint, Vector3DBasics linearMomentum)
    {
       double totalMass = 0.0;
       linearMomentum.set(0.0, 0.0, 0.0);
@@ -1348,7 +1352,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     *
     * @param angularMomentum Total angular momentum vector that is computed.
     */
-   public void computeAngularMomentum(Vector3D angularMomentum)
+   public void computeAngularMomentum(Vector3DBasics angularMomentum)
    {
       angularMomentum.set(0.0, 0.0, 0.0);
 
@@ -1368,7 +1372,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param rootJoint       Root Joint for which linear momentum is computed.
     * @param angularMomentum Total angular momentum vector that is computed.
     */
-   public void computeAngularMomentum(Joint rootJoint, Vector3D angularMomentum)
+   public void computeAngularMomentum(Joint rootJoint, Vector3DBasics angularMomentum)
    {
       angularMomentum.set(0.0, 0.0, 0.0);
 
@@ -1387,7 +1391,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param angularMomentum Total angular momentum vector that is computed.
     * @return Total mass of the robot.
     */
-   public double computeCOMMomentum(Point3D comPoint, Vector3D linearMomentum, Vector3D angularMomentum)
+   public double computeCOMMomentum(Point3DBasics comPoint, Vector3DBasics linearMomentum, Vector3DBasics angularMomentum)
    {
       double mass = computeCenterOfMass(comPoint);
       computeLinearMomentum(linearMomentum);
@@ -1416,7 +1420,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param angularMomentum Total angular momentum vector that is computed.
     * @return Total mass of the robot.
     */
-   public double computeCOMMomentum(Joint rootJoint, Point3D comPoint, Vector3D linearMomentum, Vector3D angularMomentum)
+   public double computeCOMMomentum(Joint rootJoint, Point3DBasics comPoint, Vector3DBasics linearMomentum, Vector3DBasics angularMomentum)
    {
       double mass = computeCenterOfMass(rootJoint, comPoint);
       computeLinearMomentum(rootJoint, linearMomentum);
@@ -1446,13 +1450,13 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param copMoment Total moment generated about the Center of Pressure from all the
     *                  GroundContactPoints.
     */
-   public void computeCenterOfPressure(Point3D copPoint, Vector3D copForce, Vector3D copMoment)
+   public void computeCenterOfPressure(Point3DBasics copPoint, Vector3DBasics copForce, Vector3DBasics copMoment)
    {
       copPoint.set(0.0, 0.0, 0.0);
       copForce.set(0.0, 0.0, 0.0);
       copMoment.set(0.0, 0.0, 0.0);
 
-      ArrayList<GroundContactPoint> gcPoints = getAllGroundContactPoints();
+      List<GroundContactPoint> gcPoints = getAllGroundContactPoints();
 
       for (int i = 0; i < gcPoints.size(); i++)
       {
@@ -1504,7 +1508,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       retBuffer.append("Robot: " + name + "\n\n");
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       queue.addAll(children);
 
@@ -1513,7 +1517,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          Joint joint = queue.poll();
 
          retBuffer.append("\n" + joint.toString());
-         ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
+         List<Joint> childrenJoints = joint.getChildrenJoints();
 
          queue.addAll(childrenJoints);
       }
@@ -1524,7 +1528,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    public void printRobotJointsAndMasses(StringBuffer stringBuffer)
    {
       Queue<Joint> queue = new LinkedList<>();
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       queue.addAll(children);
 
@@ -1533,7 +1537,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          Joint joint = queue.poll();
 
          stringBuffer.append("\n" + joint.getName() + ": mass = " + joint.getLink().getMass());
-         ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
+         List<Joint> childrenJoints = joint.getChildrenJoints();
 
          queue.addAll(childrenJoints);
       }
@@ -1855,17 +1859,17 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    }
 
-   public ArrayList<YoVariableList> createAllVarLists()
+   public List<YoVariableList> createAllVarLists()
    {
       return getRobotsYoVariableRegistry().createVarListsIncludingChildren();
    }
 
-   public ArrayList<RewoundListener> getSimulationRewoundListeners()
+   public List<RewoundListener> getSimulationRewoundListeners()
    {
       return getRobotsYoVariableRegistry().getAllSimulationRewoundListeners();
    }
 
-   public ArrayList<RobotControllerAndParameters> getControllers()
+   public List<RobotControllerAndParameters> getControllers()
    {
       return controllers;
    }
@@ -1888,7 +1892,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getAllVariables()
+   public List<YoVariable<?>> getAllVariables()
    {
       return getRobotsYoVariableRegistry().getAllVariablesIncludingDescendants();
    }
@@ -1912,24 +1916,24 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String nameSpaceEnding, String name)
+   public List<YoVariable<?>> getVariables(String nameSpaceEnding, String name)
    {
       return getRobotsYoVariableRegistry().getVariables(nameSpaceEnding, name);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String name)
+   public List<YoVariable<?>> getVariables(String name)
    {
       return getRobotsYoVariableRegistry().getVariables(name);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(NameSpace nameSpace)
+   public List<YoVariable<?>> getVariables(NameSpace nameSpace)
    {
       return getRobotsYoVariableRegistry().getVariables(nameSpace);
    }
 
-   public ArrayList<Graphics3DObject> getStaticLinkGraphics()
+   public List<Graphics3DObject> getStaticLinkGraphics()
    {
       return staticLinkGraphics;
    }
@@ -1958,9 +1962,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       parentLink = Link.combineLinks(parentLink.getName(), parentLink, jointToFreeze.getLink(), jointToFreezeOffset);
       parentJoint.setLink(parentLink);
 
-      ArrayList<Joint> jointsToMove = new ArrayList<>();
+      List<Joint> jointsToMove = new ArrayList<>();
 
-      ArrayList<Joint> childrenJoints = jointToFreeze.getChildrenJoints();
+      List<Joint> childrenJoints = jointToFreeze.getChildrenJoints();
       for (Joint childJoint : childrenJoints)
       {
          jointsToMove.add(childJoint);
@@ -1968,7 +1972,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          Vector3D childOffset = new Vector3D();
          childJoint.getOffset(childOffset);
          childOffset.add(jointToFreezeOffset);
-         childJoint.changeOffsetVector(childOffset);
+         childJoint.setOffset(childOffset);
       }
 
       for (Joint jointToMove : jointsToMove)
@@ -2001,12 +2005,4 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
       return null;
    }
-
-   //   public void resetup()
-   //   {
-   //      for (Joint rootJoint : rootJoints)
-   //      {
-   //         rootJoint.resetup();
-   //      }
-   //   }
 }

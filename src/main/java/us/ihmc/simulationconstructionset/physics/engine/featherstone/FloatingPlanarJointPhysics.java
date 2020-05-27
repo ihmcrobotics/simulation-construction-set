@@ -6,8 +6,10 @@ import java.util.Collection;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.CommonOps;
 
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.robotics.robotDescription.Plane;
 import us.ihmc.simulationconstructionset.FloatingPlanarJoint;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
@@ -40,7 +42,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
    // Override featherstonePassOne since don't need to do everything...
 
    @Override
-   public void featherstonePassOne(Vector3D w_h, Vector3D v_h, RotationMatrix Rh_0)
+   public void featherstonePassOne(Vector3DReadOnly w_h, Vector3DReadOnly v_h, RotationMatrixReadOnly Rh_0)
    {
       // this.update(false);
       // this.jointTransform3D.get(Ri_0);
@@ -136,7 +138,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
    }
 
    @Override
-   protected void jointDependentFeatherstonePassTwo(Vector3D w_h)
+   protected void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h)
    {
       // Coriolis Forces:
       c_hat_i.top = null;
@@ -502,7 +504,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
    }
 
    @Override
-   protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
+   protected void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i)
    {
       Rh_i.setIdentity(); // We probably can rely on Rh_i not changing its 1 and 0 elements but let's just be safe.
 

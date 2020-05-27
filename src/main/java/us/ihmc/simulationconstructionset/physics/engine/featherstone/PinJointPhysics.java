@@ -1,8 +1,9 @@
 package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
 import us.ihmc.commons.MathTools;
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.Joint;
 import us.ihmc.simulationconstructionset.PinJoint;
 
@@ -42,7 +43,7 @@ public class PinJointPhysics extends JointPhysics<PinJoint>
     * @param Rh_i Matrix3d in which to store the rotation
     */
    @Override
-   protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
+   protected void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i)
    {
       Rh_i.setIdentity(); // We probably can rely on Rh_i not changing its 1 and 0 elements but let's just be safe.
 
@@ -190,7 +191,7 @@ public class PinJointPhysics extends JointPhysics<PinJoint>
     *            coordinates
     */
    @Override
-   protected void jointDependentFeatherstonePassTwo(Vector3D w_h)
+   protected void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h)
    {
       // Coriolis Forces:
       vel_i.set(u_i);

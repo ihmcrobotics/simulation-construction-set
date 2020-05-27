@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.dataBuffer;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.google.common.collect.BiMap;
@@ -28,7 +28,7 @@ public class MirroredYoVariableRegistry extends YoVariableRegistry
 
    private void copyRegistry(YoVariableRegistry original, YoVariableRegistry target)
    {
-      ArrayList<YoVariable<?>> vars = original.getAllVariablesInThisListOnly();
+      List<YoVariable<?>> vars = original.getAllVariablesInThisListOnly();
 
       for (YoVariable<?> var : vars)
       {
@@ -91,7 +91,7 @@ public class MirroredYoVariableRegistry extends YoVariableRegistry
 
    private void callListenersForVariable(YoVariable<?> variable)
    {
-      ArrayList<VariableChangedListener> variableChangedListeners = variable.getVariableChangedListeners();
+      List<VariableChangedListener> variableChangedListeners = variable.getVariableChangedListeners();
       //noinspection ForLoopReplaceableByForEach (runs in tight loop, foreach allocates memory)
       for (int i = 0; i < variableChangedListeners.size(); i++)
       {

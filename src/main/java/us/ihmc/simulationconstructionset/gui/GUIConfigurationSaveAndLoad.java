@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.JFileChooser;
@@ -256,7 +256,7 @@ public class GUIConfigurationSaveAndLoad
    {
       int numberOfViewports = Integer.parseInt(XMLReaderUtility.getMiddleString(0, xmlRepresentation, "<Number of ViewPorts>", "</Number of ViewPorts>"));
 
-      ArrayList<ViewportWindow> windows = myGUI.getViewportWindows();
+      List<ViewportWindow> windows = myGUI.getViewportWindows();
 
       for (int i = windows.size() - 1; i >= 0; i--)
       {
@@ -412,7 +412,7 @@ public class GUIConfigurationSaveAndLoad
 
    private void removeOldWindows()
    {
-      ArrayList<GraphArrayWindow> windows = myGUI.getGraphArrayWindows();
+      List<GraphArrayWindow> windows = myGUI.getGraphArrayWindows();
 
       for (int i = windows.size() - 1; i >= 0; i--)
       {

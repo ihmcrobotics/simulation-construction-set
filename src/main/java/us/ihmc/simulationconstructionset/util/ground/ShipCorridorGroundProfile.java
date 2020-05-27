@@ -1,8 +1,9 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
 
@@ -46,7 +47,7 @@ public class ShipCorridorGroundProfile implements GroundProfile3D, HeightMapWith
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double heightAt = heightAt(x, y, z);
       surfaceNormalAt(x, y, heightAt, normalToPack);
@@ -96,7 +97,7 @@ public class ShipCorridorGroundProfile implements GroundProfile3D, HeightMapWith
       return true;
    }
 
-   public void closestIntersectionTo(double x, double y, double z, Point3D intersection)
+   public void closestIntersectionTo(double x, double y, double z, Point3DBasics intersection)
    {
       /*
        * there are three areas (triangles): 1. left wall (positive y) 2. center 3. right wall (negative y)
@@ -149,7 +150,7 @@ public class ShipCorridorGroundProfile implements GroundProfile3D, HeightMapWith
       return y;
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       double height;
       height = heightAt(x, y, z);
@@ -201,7 +202,7 @@ public class ShipCorridorGroundProfile implements GroundProfile3D, HeightMapWith
    private Vector3D tempVectorTwo = new Vector3D();
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       closestIntersectionTo(x, y, z, intersectionToPack);
       surfaceNormalAt(x, y, z, normalToPack);
@@ -218,7 +219,7 @@ public class ShipCorridorGroundProfile implements GroundProfile3D, HeightMapWith
       return (dotProduct < 0.0);
    }
 
-   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersection, Vector3D normal)
+   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics intersection, Vector3DBasics normal)
    {
       closestIntersectionTo(x, y, z, intersection);
       surfaceNormalAt(x, y, z, normal);

@@ -21,6 +21,7 @@ import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -70,15 +71,15 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private final Color colors[] = new Color[YoGraph.MAX_NUM_GRAPHS];
    private final Color baseLineColors[] = new Color[YoGraph.MAX_NUM_BASELINES];
 
-   private final ArrayList<DataEntry> entriesOnThisGraph;
+   private final List<DataEntry> entriesOnThisGraph;
    private final SelectedVariableHolder selectedVariableHolder;
 
    private double min = 0.0, max = 1.1;
 
    private int[] xData, yData;
 
-   private final ArrayList<Integer> entryNamePaintWidths = new ArrayList<>();
-   private final ArrayList<Integer> entryNamePaintRows = new ArrayList<>();
+   private final List<Integer> entryNamePaintWidths = new ArrayList<>();
+   private final List<Integer> entryNamePaintRows = new ArrayList<>();
    private int totalEntryNamePaintRows = 1;
    private JPopupMenu popupMenu;
    private JMenuItem delete;
@@ -283,7 +284,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       graphConfiguration.setManualScalingMinMax(minScaling, maxScaling);
    }
 
-   public ArrayList<DataEntry> getEntriesOnThisGraph()
+   public List<DataEntry> getEntriesOnThisGraph()
    {
       return entriesOnThisGraph;
    }
@@ -1077,7 +1078,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       graphics.setColor(Color.ORANGE);
 
-      ArrayList<Integer> keys = graphIndicesHolder.getKeyPoints();
+      List<Integer> keys = graphIndicesHolder.getKeyPoints();
 
       for (int i = 0; i < keys.size(); i++)
       {

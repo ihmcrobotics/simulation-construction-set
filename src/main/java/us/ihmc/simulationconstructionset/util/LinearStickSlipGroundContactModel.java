@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -38,7 +38,7 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
                                                                      "LinearStickSlipGroundContactModel. If true will take into account surface normals in computations.",
                                                                      registry);
 
-   private ArrayList<GroundContactPoint> groundContactPoints;
+   private List<GroundContactPoint> groundContactPoints;
    private GroundProfile3D groundProfile3D;
 
    public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoVariableRegistry parentRegistry)

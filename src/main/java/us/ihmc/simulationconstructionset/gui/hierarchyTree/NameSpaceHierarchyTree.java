@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.JFileChooser;
@@ -55,7 +56,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
    protected JPopupMenu popupMenu;
 
    private final YoVariableRegistry root;
-   private ArrayList<RegistrySettingsChangedListener> registrySettingsChangedListeners = new ArrayList<>();
+   private List<RegistrySettingsChangedListener> registrySettingsChangedListeners = new ArrayList<>();
 
    private String filterText = "";
    private boolean showOnlyParameters = false;
@@ -382,7 +383,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
    private void toggleVariableSendOrLog(ActionEvent arg0, boolean toggleSend, boolean toggleLog, boolean recursive)
    {
       TreePath[] selectionPaths = tree.getSelectionPaths();
-      ArrayList<YoVariableRegistry> changedRegistries = new ArrayList<>();
+      List<YoVariableRegistry> changedRegistries = new ArrayList<>();
       for (int i = 0; i < selectionPaths.length; i++)
       {
          TreePath path = selectionPaths[i];
@@ -401,7 +402,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
    private void exportRegistryData(ActionEvent e, final boolean binary)
    {
       TreePath[] selectionPaths = tree.getSelectionPaths();
-      ArrayList<YoVariable<?>> allVariables = new ArrayList<>();
+      List<YoVariable<?>> allVariables = new ArrayList<>();
 
       for (int i = 0; i < selectionPaths.length; i++)
       {
@@ -462,7 +463,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
    }
 
    private void recursiveToggleVariableSendOrLog(boolean recursive, boolean toggleSend, boolean send, boolean toggleLog, boolean log, TreeNode parentNode,
-                                                 YoVariableRegistry parentRegistry, ArrayList<YoVariableRegistry> changedRegistries)
+                                                 YoVariableRegistry parentRegistry, List<YoVariableRegistry> changedRegistries)
    {
       if (toggleSend)
          parentRegistry.setSending(send);
@@ -516,7 +517,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
       {
          if (selectedFile.exists())
          {
-            ArrayList<YoVariableRegistry> treeNodes = root.getAllRegistriesIncludingChildren();
+            List<YoVariableRegistry> treeNodes = root.getAllRegistriesIncludingChildren();
 
             // getAllRegistrys(rootRegistry, treeNodes);
 
@@ -565,7 +566,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
       }
    }
 
-   private void notifyRegistrySettingsChangedListeners(ArrayList<YoVariableRegistry> yoVariableRegistries)
+   private void notifyRegistrySettingsChangedListeners(List<YoVariableRegistry> yoVariableRegistries)
    {
       for (RegistrySettingsChangedListener listener : registrySettingsChangedListeners)
       {
@@ -573,7 +574,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
       }
    }
 
-   private YoVariableRegistry findRegistry(String name, ArrayList<YoVariableRegistry> allRegistries)
+   private YoVariableRegistry findRegistry(String name, List<YoVariableRegistry> allRegistries)
    {
       for (YoVariableRegistry reg : allRegistries)
       {
@@ -600,7 +601,7 @@ public class NameSpaceHierarchyTree extends JScrollPane implements MouseListener
       if (selectedFile != null)
       {
          SimpleFileWriter writer = new SimpleFileWriter(selectedFile);
-         ArrayList<YoVariableRegistry> treeNodes = root.getAllRegistriesIncludingChildren();
+         List<YoVariableRegistry> treeNodes = root.getAllRegistriesIncludingChildren();
 
          String outString = "";
          for (YoVariableRegistry node : treeNodes)

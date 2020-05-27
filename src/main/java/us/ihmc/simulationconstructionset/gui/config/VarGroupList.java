@@ -3,10 +3,11 @@ package us.ihmc.simulationconstructionset.gui.config;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VarGroupList
 {
-   private ArrayList<VarGroup> groups = new ArrayList<>();
+   private List<VarGroup> groups = new ArrayList<>();
 
    public VarGroupList()
    {

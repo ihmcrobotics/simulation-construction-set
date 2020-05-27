@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,7 +28,6 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
    private ArrayList<YoGraph> graphsOnThisPanel;
 
-   private StandardSimulationGUI standardSimulationGUI;
    private JFrame parentFrame;
    private DataBuffer dataBuffer;
 
@@ -47,7 +47,6 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
       selectedVariableHolder = holder;
       setBackground(Color.lightGray);
 
-      this.standardSimulationGUI = standardSimulationGUI;
       parentFrame = frame;
       dataBuffer = buffer;
 
@@ -65,7 +64,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
       return numColumns;
    }
 
-   public ArrayList<YoGraph> getGraphsOnThisPanel()
+   public List<YoGraph> getGraphsOnThisPanel()
    {
       return graphsOnThisPanel;
    }
@@ -723,7 +722,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
    }
 
    @Override
-   public ArrayList<Integer> getKeyPoints()
+   public List<Integer> getKeyPoints()
    {
       return dataBuffer.getKeyPoints();
    }

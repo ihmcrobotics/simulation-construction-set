@@ -7,7 +7,7 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -38,7 +38,7 @@ public class GraphPropertiesDialog extends JDialog implements ActionListener
 
       Container contentPane = getContentPane();
 
-      ArrayList<DataEntry> entries = graph.getEntriesOnThisGraph();
+      List<DataEntry> entries = graph.getEntriesOnThisGraph();
 
       JPanel panels = new JPanel(new GridLayout(entries.size() + 1, 1));
       graphPropertiesPanel = new GraphPropertiesPanel(graph);

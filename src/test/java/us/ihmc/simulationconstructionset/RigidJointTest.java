@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import static us.ihmc.robotics.Assert.assertEquals;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -556,13 +556,13 @@ public class RigidJointTest
       EuclidCoreTestTools.assertTuple3DEquals(linearMomentumA, linearMomentumB, 1e-10);
       EuclidCoreTestTools.assertTuple3DEquals(angularMomentumA, angularMomentumB, 1e-9);
 
-      ArrayList<Joint> jointsA = robotA.getRootJoints();
-      ArrayList<Joint> jointsB = robotB.getRootJoints();
+      List<Joint> jointsA = robotA.getRootJoints();
+      List<Joint> jointsB = robotB.getRootJoints();
 
       recursivelyTestJointStateIsTheSame(jointsA, jointsB);
    }
 
-   private void recursivelyTestJointStateIsTheSame(ArrayList<Joint> jointsA, ArrayList<Joint> jointsB)
+   private void recursivelyTestJointStateIsTheSame(List<Joint> jointsA, List<Joint> jointsB)
    {
       int indexA = 0;
       int indexB = 0;
@@ -599,8 +599,8 @@ public class RigidJointTest
             throw new RuntimeException("Only testing OneDegreeOfFreedomJoints right now...");
          }
 
-         ArrayList<Joint> childrenJointsA = jointA.getChildrenJoints();
-         ArrayList<Joint> childrenJointsB = jointB.getChildrenJoints();
+         List<Joint> childrenJointsA = jointA.getChildrenJoints();
+         List<Joint> childrenJointsB = jointB.getChildrenJoints();
 
          recursivelyTestJointStateIsTheSame(childrenJointsA, childrenJointsB);
 

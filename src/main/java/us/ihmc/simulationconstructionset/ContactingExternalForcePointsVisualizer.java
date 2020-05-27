@@ -72,7 +72,7 @@ public class ContactingExternalForcePointsVisualizer
       this.forceVectorScale = forceVectorScale;
    }
 
-   public void addPoints(ArrayList<ContactingExternalForcePoint> contactingExternalForcePoints)
+   public void addPoints(List<ContactingExternalForcePoint> contactingExternalForcePoints)
    {
       contactPoints.addAll(contactingExternalForcePoints);
    }

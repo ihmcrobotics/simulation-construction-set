@@ -1,9 +1,10 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.euclid.referenceFrame.FrameVector3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.referenceFrame.interfaces.FrameVector3DBasics;
 import us.ihmc.euclid.rotationConversion.YawPitchRollConversion;
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple2D.interfaces.Tuple2DReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
@@ -82,7 +83,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
       physics = new FloatingPlanarJointPhysics(this);
    }
 
-   public FloatingPlanarJoint(String jname, Vector3DReadOnly offset, Robot rob)
+   public FloatingPlanarJoint(String jname, Tuple3DReadOnly offset, Robot rob)
    {
       this(jname, offset, rob, Plane.XZ);
       physics = new FloatingPlanarJointPhysics(this);
@@ -93,7 +94,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
       this(jname, new Vector3D(), rob, type);
    }
 
-   public FloatingPlanarJoint(String jname, Vector3DReadOnly offset, Robot rob, Plane type)
+   public FloatingPlanarJoint(String jname, Tuple3DReadOnly offset, Robot rob, Plane type)
    {
       super(jname, offset, rob, 3);
       physics = new FloatingPlanarJointPhysics(this);
@@ -149,7 +150,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
       this(jname, varName, new Vector3D(), rob, type);
    }
 
-   public FloatingPlanarJoint(String jname, String varName, Vector3D offset, Robot rob, Plane type)
+   public FloatingPlanarJoint(String jname, String varName, Tuple3DReadOnly offset, Robot rob, Plane type)
    {
       super(jname, offset, rob, 6);
       physics = new FloatingPlanarJointPhysics(this);
@@ -292,7 +293,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
    private final YawPitchRoll yawPitchRoll = new YawPitchRoll();
 
    @Override
-   public void setRotationAndTranslation(RigidBodyTransform transform)
+   public void setRotationAndTranslation(RigidBodyTransformReadOnly transform)
    {
       Quaternion rotation = new Quaternion();
       rotation.set(transform.getRotation());
@@ -354,7 +355,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
    }
 
    @Override
-   public void getVelocity(FrameVector3D linearVelocityToPack)
+   public void getVelocity(FrameVector3DBasics linearVelocityToPack)
    {
       switch (type)
       {
@@ -371,7 +372,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
    }
 
    @Override
-   public void getAngularVelocity(FrameVector3D angularVelocityToPack, ReferenceFrame bodyFrame)
+   public void getAngularVelocity(FrameVector3DBasics angularVelocityToPack, ReferenceFrame bodyFrame)
    {
       switch (type)
       {

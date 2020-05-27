@@ -363,14 +363,14 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private int numberOfTicksBeforeUpdatingGraphs = 15;
    private int ticksToSimulate = 0;
 
-   private ArrayList<PlaybackListener> playbackListeners = null;
-   private ArrayList<PlayCycleListener> playCycleListeners = null;
+   private List<PlaybackListener> playbackListeners = null;
+   private List<PlayCycleListener> playCycleListeners = null;
 
    private Simulation mySimulation;
    private Robot[] robots;
    private final SimulationSynchronizer simulationSynchronizer;
 
-   private ArrayList<YoGraphicsListRegistry> yoGraphicListRegistries = new ArrayList<>();
+   private List<YoGraphicsListRegistry> yoGraphicListRegistries = new ArrayList<>();
    private DataBuffer myDataBuffer;
    private boolean defaultLoaded = false;
    private int lastIndexPlayed = 0;
@@ -492,7 +492,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       this.parameters = parameters;
       standardAllCommandsExecutor = new StandardAllCommandsExecutor();
 
-      final boolean showGUI = ((graphicsAdapter != null) && (parameters.getCreateGUI()));
+      final boolean showGUI = graphicsAdapter != null && parameters.getCreateGUI();
       rootRegistry = new YoVariableRegistry(rootRegistryName);
 
       if (showGUI)
@@ -516,7 +516,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       myDataBuffer = mySimulation.getDataBuffer();
       simulationSynchronizer = mySimulation.getSimulationSynchronizer();
 
-      ArrayList<YoVariable<?>> originalRootVariables = rootRegistry.getAllVariablesIncludingDescendants();
+      List<YoVariable<?>> originalRootVariables = rootRegistry.getAllVariablesIncludingDescendants();
 
       for (YoVariable<?> yoVariable : originalRootVariables)
       {
@@ -588,11 +588,11 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          }
       }
 
-      if ((myGUI != null) && (robots != null))
+      if (myGUI != null && robots != null)
       {
          for (Robot robot : robots)
          {
-            ArrayList<Graphics3DObject> staticLinkGraphics = robot.getStaticLinkGraphics();
+            List<Graphics3DObject> staticLinkGraphics = robot.getStaticLinkGraphics();
             myGUI.addStaticLinkGraphics(staticLinkGraphics);
          }
       }
@@ -801,7 +801,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getAllVariables()
+   public List<YoVariable<?>> getAllVariables()
    {
       return mySimulation.getAllVariables();
    }
@@ -828,19 +828,19 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String nameSpace, String varname)
+   public List<YoVariable<?>> getVariables(String nameSpace, String varname)
    {
       return mySimulation.getVariables(nameSpace, varname);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String varname)
+   public List<YoVariable<?>> getVariables(String varname)
    {
       return mySimulation.getVariables(varname);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(NameSpace nameSpace)
+   public List<YoVariable<?>> getVariables(NameSpace nameSpace)
    {
       return mySimulation.getVariables(nameSpace);
    }
@@ -858,53 +858,53 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Retrieves an ArrayList containing the YoVariables whos names contain the search string. If none
+    * Retrieves an List containing the YoVariables whos names contain the search string. If none
     * exist, it returns null.
     *
     * @param searchString  String for which YoVariable names are checked.
     * @param caseSensitive Indicates if the search is to be case sensitive.
-    * @return ArrayList of the YoVariables whos names contained searchString.
+    * @return List of the YoVariables whos names contained searchString.
     */
-   public ArrayList<YoVariable<?>> getVariablesThatContain(String searchString, boolean caseSensitive)
+   public List<YoVariable<?>> getVariablesThatContain(String searchString, boolean caseSensitive)
    {
       return mySimulation.getVariablesThatContain(searchString, caseSensitive);
    }
 
    /**
-    * Retrieves an ArrayList containing the YoVariables with names that contain searchString. If none
+    * Retrieves an List containing the YoVariables with names that contain searchString. If none
     * exist, it returns null. This method assumes the string is case insensitive.
     *
     * @param searchString String for which YoVariable names are checked.
-    * @return ArrayList of the YoVariables whos names contained searchString.
+    * @return List of the YoVariables whos names contained searchString.
     */
-   public ArrayList<YoVariable<?>> getVariablesThatContain(String searchString)
+   public List<YoVariable<?>> getVariablesThatContain(String searchString)
    {
       return mySimulation.getVariablesThatContain(searchString, false);
    }
 
    /**
-    * Retrieves an ArrayList containing the YoVariables with names that start with the searchString. If
+    * Retrieves an List containing the YoVariables with names that start with the searchString. If
     * none exist, it returns null.
     *
     * @param searchString String for which YoVariable names are checked.
-    * @return ArrayList of the YoVariables whos names begin with searchString.
+    * @return List of the YoVariables whos names begin with searchString.
     */
-   public ArrayList<YoVariable<?>> getVariablesThatStartWith(String searchString)
+   public List<YoVariable<?>> getVariablesThatStartWith(String searchString)
    {
       return mySimulation.getVariablesThatStartWith(searchString);
    }
 
    /**
     * Given an array of YoVariable names and an array of regular expressions this function returns an
-    * ArrayList of the YoVariables whos name's fit the regular expression. If a given variable fits
+    * List of the YoVariables whos name's fit the regular expression. If a given variable fits
     * multiple expressions it will be added multiple times.
     *
     * @param varNames           String array of the name of YoVariables to be checked.
     * @param regularExpressions String array of regular expressions to use.
-    * @return ArrayList of the YoVariables which have names that match the provided regular
+    * @return List of the YoVariables which have names that match the provided regular
     *         expressions.
     */
-   public ArrayList<YoVariable<?>> getVars(String[] varNames, String[] regularExpressions)
+   public List<YoVariable<?>> getVars(String[] varNames, String[] regularExpressions)
    {
       return mySimulation.getVars(varNames, regularExpressions);
    }
@@ -936,7 +936,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    {
       double simulationDT = getDT();
       long recordFrequency = getRecordFreq();
-      double timePerRecordTick = (recordFrequency) * simulationDT;
+      double timePerRecordTick = recordFrequency * simulationDT;
       return timePerRecordTick;
    }
 
@@ -1071,9 +1071,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
    }
 
-   public ArrayList<Graphics3DNode> addStaticLinkGraphics(ArrayList<Graphics3DObject> staticLinkGraphics)
+   public List<Graphics3DNode> addStaticLinkGraphics(List<Graphics3DObject> staticLinkGraphics)
    {
-      ArrayList<Graphics3DNode> ret = new ArrayList<>(staticLinkGraphics.size());
+      List<Graphics3DNode> ret = new ArrayList<>(staticLinkGraphics.size());
       for (Graphics3DObject linkGraphics : staticLinkGraphics)
       {
          ret.add(addStaticLinkGraphics(linkGraphics));
@@ -1536,7 +1536,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (myGUI != null)
       {
-         if ((!fastSimulate))
+         if (!fastSimulate)
          {
             myGUI.updateGraphs(); // If the GUI exists and fast simulate is disabled update graphs
          }
@@ -1690,7 +1690,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    public boolean setTick(int tick)
    {
-      boolean ret = myDataBuffer.tick((int) (((double) tick) * TICKS_PER_PLAY_CYCLE));
+      boolean ret = myDataBuffer.tick((int) ((double) tick * TICKS_PER_PLAY_CYCLE));
       for (Robot robot : robots)
       {
          robot.updateForPlayback();
@@ -1961,7 +1961,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    {
       if (myGUI != null)
       {
-         if ((varGroupName != null) && (graphGroupName != null) && (entryBoxGroupName != null))
+         if (varGroupName != null && graphGroupName != null && entryBoxGroupName != null)
          {
             myGUI.setupConfiguration(config, graphGroupName, entryBoxGroupName);
          }
@@ -1994,7 +1994,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void selectConfiguration(String name)
    {
-      if ((myGUI != null) && !isDefaultFileExist())
+      if (myGUI != null && !isDefaultFileExist())
       {
          myGUI.selectGraphConfiguration(name);
       }
@@ -2183,7 +2183,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       {
          myGUI.addRobot(robot);
 
-         ArrayList<RewoundListener> simulationRewoundListeners = robot.getSimulationRewoundListeners();
+         List<RewoundListener> simulationRewoundListeners = robot.getSimulationRewoundListeners();
          for (RewoundListener simulationRewoundListener : simulationRewoundListeners)
          {
             myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
@@ -2223,7 +2223,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          {
             for (Robot robotToAddToGUI : robots)
             {
-               ArrayList<RewoundListener> simulationRewoundListeners = robotToAddToGUI.getSimulationRewoundListeners();
+               List<RewoundListener> simulationRewoundListeners = robotToAddToGUI.getSimulationRewoundListeners();
                for (RewoundListener simulationRewoundListener : simulationRewoundListeners)
                {
                   myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
@@ -2279,7 +2279,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       HeightMap heightMap = null;
 
       // TODO: GroundProfile is just that of the first robot. Need to make it part of the sim or something...
-      if (parameters.getUseAutoGroundGraphics() && (robots != null) && (robots.length > 0))
+      if (parameters.getUseAutoGroundGraphics() && robots != null && robots.length > 0)
       {
          GroundContactModel groundContactModel = robots[0].getGroundContactModel();
          if (groundContactModel != null)
@@ -2475,7 +2475,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (!TESTING_LOAD_STUFF)
       {
-         if ((!defaultLoaded) && (myGUI != null))
+         if (!defaultLoaded && myGUI != null)
          {
             if (parameters.getShowWindows())
             {
@@ -2573,7 +2573,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
                System.err.println("   Simulation either went unstable or is too stiff.");
                System.err.println("   Try reducing gains, ground stiffness and damping, or DT");
 
-               ArrayList<Joint> unreasonableAccelerationJoints = ex.getUnreasonableAccelerationJoints();
+               List<Joint> unreasonableAccelerationJoints = ex.getUnreasonableAccelerationJoints();
                System.err.println("   Joints with an unreasonable acceleration:");
 
                for (Joint joint : unreasonableAccelerationJoints)
@@ -2697,7 +2697,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          // for(int i=0;i<RECORD_FREQ;i++)
          for (int i = 0; i < ticksThisCycle; i++)
          {
-            if ((myGUI != null) && (synchronizeGraphicsAndCamerasWhileSimulating))
+            if (myGUI != null && synchronizeGraphicsAndCamerasWhileSimulating)
             {
                synchronized (myGUI.getGraphicsConch())
                {
@@ -2740,7 +2740,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
          if (myGUI != null)
          {
-            if ((!fastSimulate))
+            if (!fastSimulate)
             {
                myGUI.updateGraphs(); // If the GUI exists and fast simulate is disabled update graphs
             }
@@ -2844,10 +2844,10 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          // Thread.yield();
       }
 
-      long numTicks = (currentTime - nextWakeMillis) / ((PLAY_CYCLE_TIME_MS)) + 1;
+      long numTicks = (currentTime - nextWakeMillis) / PLAY_CYCLE_TIME_MS + 1;
 
       // System.out.println("tick number  = "+(Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1)));
-      nextWakeMillis = nextWakeMillis + ((PLAY_CYCLE_TIME_MS)) * numTicks;
+      nextWakeMillis = nextWakeMillis + PLAY_CYCLE_TIME_MS * numTicks;
 
       // myDataBuffer.tick(Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1));
 
@@ -3033,7 +3033,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    /**
     * @return the Play Cycle Listeners
     */
-   public ArrayList<PlayCycleListener> getPlayCycleListeners()
+   public List<PlayCycleListener> getPlayCycleListeners()
    {
       return playCycleListeners;
    }
@@ -3399,9 +3399,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    /**
     * Gets the KeyPoints in the cropped data
     *
-    * @return The current KeyPoints as an ArrayList of Integer
+    * @return The current KeyPoints as an List of Integer
     */
-   public ArrayList<Integer> getKeyPoints()
+   public List<Integer> getKeyPoints()
    {
       return standardAllCommandsExecutor.getKeyPoints();
    }
@@ -3420,9 +3420,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    /**
     * Retrieves the camera KeyPoints used in this simulation.
     *
-    * @return Camera KeyPoints contained in this simulation as ArrayList
+    * @return Camera KeyPoints contained in this simulation as List
     */
-   public ArrayList<Integer> getCameraKeyPoints()
+   public List<Integer> getCameraKeyPoints()
    {
       return standardAllCommandsExecutor.getCameraKeyPoints();
    }
@@ -3762,8 +3762,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
-      // ArrayList vars = myGUI.getVarsFromGroup(varGroup);
-      ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      // List vars = myGUI.getVarsFromGroup(varGroup);
+      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
 
       // dataWriter.writeSpreadsheetFormattedData(myDataBuffer, (mySimulation.getDT() * mySimulation.getRecordFreq()), vars);
       dataWriter.writeSpreadsheetFormattedData(myDataBuffer, vars);
@@ -3785,7 +3785,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void writeData(String varGroupName, boolean binary, boolean compress, File chosenFile)
    {
-      ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
       writeData(vars, binary, compress, chosenFile);
    }
 
@@ -3803,7 +3803,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @param chosenFile File to which data will be saved
     */
    @Override
-   public void writeData(ArrayList<YoVariable<?>> vars, boolean binary, boolean compress, File chosenFile)
+   public void writeData(List<YoVariable<?>> vars, boolean binary, boolean compress, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
@@ -3816,7 +3816,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
-      ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroup, varGroupList);
+      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroup, varGroupList);
       dataWriter.writeMatlabBinaryData(mySimulation.getDT() * mySimulation.getRecordFreq(), myDataBuffer, vars);
    }
 
@@ -3940,9 +3940,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       System.out.println("Writing State File " + chosenFile.getName()); // filename);
 
-      // ArrayList vars = myGUI.getVarsFromGroup(varGroup);
-      ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
-      dataWriter.writeState(robots[0].getName(), (mySimulation.getDT() * mySimulation.getRecordFreq()), vars, binary, compress);
+      // List vars = myGUI.getVarsFromGroup(varGroup);
+      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      dataWriter.writeState(robots[0].getName(), mySimulation.getDT() * mySimulation.getRecordFreq(), vars, binary, compress);
    }
 
    /**
@@ -3959,7 +3959,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
-      ArrayList<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
 
       dataWriter.writeSpreadsheetFormattedState(myDataBuffer, vars);
    }
@@ -4087,7 +4087,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    //    addVariablesToSimulationAndGUI(registry.createVarListsIncludingChildren());
    // }
    //
-   // private void addVariablesToSimulationAndGUI(ArrayList<VarList> varLists)
+   // private void addVariablesToSimulationAndGUI(List<VarList> varLists)
    // {
    //    for (int i = 0; i < varLists.size(); i++)
    //    {
@@ -4288,13 +4288,13 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Adds all of the YoVariables contained in the provided ArrayList of VarLists to the simulation. If
+    * Adds all of the YoVariables contained in the provided List of VarLists to the simulation. If
     * any of the variables are already present an exception will occur and that particular VarList will
     * fail. Each varlist will have its own tab in the var panel.
     *
-    * @param newVarLists ArrayList
+    * @param newVarLists List
     */
-   public void addVarLists(ArrayList<YoVariableList> newVarLists)
+   public void addVarLists(List<YoVariableList> newVarLists)
    {
       for (int i = 0; i < newVarLists.size(); i++)
       {
@@ -4632,7 +4632,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       if (yoGraphicsListRegistry.areYoGraphicsRegistered())
          throw new RuntimeException("Already added this YoGraphicsListRegistry To SimulationConstructionSet: " + yoGraphicsListRegistry);
 
-      ArrayList<GraphicsUpdatable> graphicsUpdatablesToUpdateInAPlaybackListener = yoGraphicsListRegistry.getGraphicsUpdatablesToUpdateInAPlaybackListener();
+      List<GraphicsUpdatable> graphicsUpdatablesToUpdateInAPlaybackListener = yoGraphicsListRegistry.getGraphicsUpdatablesToUpdateInAPlaybackListener();
       if (graphicsUpdatablesToUpdateInAPlaybackListener != null)
       {
 
@@ -4684,7 +4684,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
                }
 
                String label = yoGraphicsList.getLabel();
-               ArrayList<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
+               List<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
                boolean selectedState = yoGraphicsList.checkAllYoGraphicsAreShowing();
                YoGraphicCheckBoxMenuItem checkBox = new YoGraphicCheckBoxMenuItem(label, yoGraphics, selectedState);
                yoGraphicMenuManager.addCheckBox(checkBox);
@@ -4727,7 +4727,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    public void setYoGraphicsListVisible(String name, boolean visible)
    {
-      ArrayList<YoGraphicsList> lists = new ArrayList<>();
+      List<YoGraphicsList> lists = new ArrayList<>();
       int numberOfElements = yoGraphicListRegistries.size();
 
       for (int i = 0; i < numberOfElements; i++)
@@ -4755,7 +4755,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    }
 
-   public ArrayList<YoGraphicsListRegistry> getYoGraphicsListRegistries()
+   public List<YoGraphicsListRegistry> getYoGraphicsListRegistries()
    {
       return yoGraphicListRegistries;
    }

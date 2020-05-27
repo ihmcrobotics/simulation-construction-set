@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -26,7 +26,7 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
    private final YoVariableRegistry registry = new YoVariableRegistry("CollisionGroundContactModel");
    private YoDouble groundRestitution, groundFriction;
 
-   private ArrayList<GroundContactPoint> gcPoints;
+   private List<GroundContactPoint> gcPoints;
    private GroundProfile3D profile3D;
    private MovingGroundProfile movingProfile;
 
@@ -55,12 +55,12 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
       this(robot.getGroundContactPoints(groundContactGroupIdentifier), epsilon, mu, parentRegistry);
    }
 
-   public CollisionGroundContactModel(ArrayList<GroundContactPoint> gcPoints, YoVariableRegistry parentRegistry)
+   public CollisionGroundContactModel(List<GroundContactPoint> gcPoints, YoVariableRegistry parentRegistry)
    {
       this(gcPoints, defaultCoefficientOfRestitution, defaultCoefficientOfFriction, parentRegistry);
    }
 
-   public CollisionGroundContactModel(ArrayList<GroundContactPoint> gcPoints, double epsilon, double mu, YoVariableRegistry parentRegistry)
+   public CollisionGroundContactModel(List<GroundContactPoint> gcPoints, double epsilon, double mu, YoVariableRegistry parentRegistry)
    {
       this.gcPoints = gcPoints;
 

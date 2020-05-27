@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import us.ihmc.commons.MathTools;
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 
 public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
 {
@@ -48,7 +48,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
@@ -66,7 +66,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
       return height;
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       normal.set(0.0, 0.0, 1.0);
    }

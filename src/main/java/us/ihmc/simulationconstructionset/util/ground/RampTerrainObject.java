@@ -9,7 +9,8 @@ import us.ihmc.euclid.shape.primitives.Ramp3D;
 import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
@@ -24,8 +25,6 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
    private final BoundingBox3D boundingBox;
 
    private Graphics3DObject linkGraphics;
-
-   private static final double rampPlaneThickness = 0.02;
 
    private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
@@ -75,7 +74,7 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double heightAt = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
@@ -93,7 +92,7 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
       return 0.0;
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       double threshhold = 0.015;
       normal.setX(0.0);
@@ -143,14 +142,14 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
       }
    }
 
-   public void closestIntersectionTo(double x, double y, double z, Point3D intersection)
+   public void closestIntersectionTo(double x, double y, double z, Point3DBasics intersection)
    {
       intersection.setX(x); // Go Straight Up for now...
       intersection.setY(y);
       intersection.setZ(heightAt(x, y, z));
    }
 
-   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersection, Vector3D normal)
+   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics intersection, Vector3DBasics normal)
    {
       intersection.setX(x); // Go Straight Up for now...
       intersection.setY(y);
@@ -160,7 +159,7 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
    }
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       double heightAt = heightAt(x, y, z);
       if (z > heightAt)

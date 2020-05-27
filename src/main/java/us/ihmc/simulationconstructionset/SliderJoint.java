@@ -1,8 +1,9 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.SliderJointPhysics;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
@@ -32,58 +33,15 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
    public double q_min = Double.NEGATIVE_INFINITY, q_max = Double.POSITIVE_INFINITY, k_limit, b_limit, b_damp = 0.0, f_stiction = 0.0;
 
    /**
-    * Constructs a new slider joint and adds it to the specified Robot. There are three possible axis
-    * of translation for this joint: X, Y and Z.
-    *
-    * @param jname  name of this joint
-    * @param offset Vector3d defining the offset from the robot origin to the joint
-    * @param rob    Robot to which this joint belongs
-    * @param jaxis  int representing the joint axis
-    */
-   public SliderJoint(String jname, Vector3D offset, Robot rob, Axis3D jaxis)
-   {
-      super(jname, offset, rob);
-      physics = new SliderJointPhysics(this);
-
-      registry = rob.getRobotsYoVariableRegistry();
-
-      q = new YoDouble("q_" + jname, "SliderJoint position", registry);
-      qd = new YoDouble("qd_" + jname, "SliderJoint linear velocity", registry);
-      qdd = new YoDouble("qdd_" + jname, "SliderJoint linear acceleration", registry);
-      tau = new YoDouble("tau_" + jname, "SliderJoint torque", registry);
-
-      physics.u_i = new Vector3D();
-
-      if (jaxis == Axis3D.X)
-      {
-         physics.u_i.setX(1.0);
-      }
-      else if (jaxis == Axis3D.Y)
-      {
-         physics.u_i.setY(1.0);
-      }
-      else if (jaxis == Axis3D.Z)
-      {
-         physics.u_i.setZ(1.0);
-      }
-      else
-      {
-         throw new RuntimeException("Undefined jaxis value!");
-      }
-
-      this.setSliderTransform3D(jointTransform3D, physics.u_i); // jaxis);
-   }
-
-   /**
     * Creates a new slider joint and adds it to the specified robot. This method allows the joint axis
     * to be defined by a vector, u_hat.
     *
     * @param jname  name of this joint
     * @param offset Vector3d defining the offset from the robot origin to the joint
     * @param rob    Robot to which this joint belongs
-    * @param u_hat  Vector3d defining the joint axis in world coordinates
+    * @param axis   Vector3d defining the joint axis in world coordinates
     */
-   public SliderJoint(String jname, Vector3D offset, Robot rob, Vector3D u_hat)
+   public SliderJoint(String jname, Tuple3DReadOnly offset, Robot rob, Vector3DReadOnly axis)
    {
       super(jname, offset, rob);
       physics = new SliderJointPhysics(this);
@@ -95,7 +53,7 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
       qdd = new YoDouble("qdd_" + jname, "Slider joint linear acceleration", registry);
       tau = new YoDouble("tau_" + jname, "Slider joint torque", registry);
 
-      physics.u_i = new Vector3D(u_hat);
+      physics.u_i = new Vector3D(axis);
       physics.u_i.normalize();
 
       this.setSliderTransform3D(jointTransform3D, physics.u_i);
@@ -195,7 +153,7 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
    }
 
    /**
-    * Retrieves the current velocity and postion storing those values into the provided double array.
+    * Retrieves the current velocity and position storing those values into the provided double array.
     * The position is store at index 0 while the velocity is stored at index 1.
     *
     * @param state array in which the state is to be stored

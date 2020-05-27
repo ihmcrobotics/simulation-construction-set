@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 
@@ -646,7 +647,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.setIndex(keyPoint);
       scs.addCameraKey();
       scs.removeCameraKey();
-      ArrayList<Integer> keyPointFromSCS2 = scs.getCameraKeyPoints();
+      List<Integer> keyPointFromSCS2 = scs.getCameraKeyPoints();
       assertEquals(0, keyPointFromSCS2.size(), epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
@@ -700,7 +701,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       boolean isGroundVisibleFromSCS2 = stateIfTerrainIsVisible(scs);
       assertTrue(isGroundVisibleFromSCS2);
 
-      ArrayList<YoGraphicsListRegistry> yoGraphicListRegistriesFromSCS = scs.getYoGraphicsListRegistries();
+      List<YoGraphicsListRegistry> yoGraphicListRegistriesFromSCS = scs.getYoGraphicsListRegistries();
       assertArrayOfObjectsContainsTheObject(yoGraphicListRegistriesFromSCS, yoGraphicsListRegistry);
 
       scs.setYoGraphicsListVisible(yoGraphicsListName, true);
@@ -738,8 +739,8 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @Test // timeout = 30000
    public void testGetVariableMethods() throws AWTException
    {
-      ArrayList<YoVariable<?>> allVariablesFromRobot = simpleRobot.getAllVariables();
-      ArrayList<YoVariable<?>> allVariablesFromSCS = scs.getAllVariables();
+      List<YoVariable<?>> allVariablesFromRobot = simpleRobot.getAllVariables();
+      List<YoVariable<?>> allVariablesFromSCS = scs.getAllVariables();
       assertEquals(allVariablesFromRobot, allVariablesFromSCS);
 
       int allVariablesArrayFromRobot = simpleRobot.getAllVariablesArray().length;
@@ -754,16 +755,16 @@ public class SimulationConstructionSetUsingDirectCallsTest
       YoVariable<?> yoVariableFromSCS2 = scs.getVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       assertEquals(yoVariableFromRobot, yoVariableFromSCS2);
 
-      ArrayList<YoVariable<?>> yoVariableArrayFromRobot = simpleRobot.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
-      ArrayList<YoVariable<?>> yoVariableArrayFromSCS = scs.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableArrayFromRobot = simpleRobot.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableArrayFromSCS = scs.getVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       assertEquals(yoVariableArrayFromRobot, yoVariableArrayFromSCS);
 
-      ArrayList<YoVariable<?>> yoVariableFromRobot2 = simpleRobot.getVariables(simpleRobotFirstVariableName);
-      ArrayList<YoVariable<?>> yoVariableFromSCS3 = scs.getVariables(simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableFromRobot2 = simpleRobot.getVariables(simpleRobotFirstVariableName);
+      List<YoVariable<?>> yoVariableFromSCS3 = scs.getVariables(simpleRobotFirstVariableName);
       assertEquals(yoVariableFromRobot2, yoVariableFromSCS3);
 
-      ArrayList<YoVariable<?>> yoVariableFromRobot3 = simpleRobot.getVariables(simpleRobotRegistryNameSpace);
-      ArrayList<YoVariable<?>> yoVariableFromSCS4 = scs.getVariables(simpleRobotRegistryNameSpace);
+      List<YoVariable<?>> yoVariableFromRobot3 = simpleRobot.getVariables(simpleRobotRegistryNameSpace);
+      List<YoVariable<?>> yoVariableFromSCS4 = scs.getVariables(simpleRobotRegistryNameSpace);
       assertEquals(yoVariableFromRobot3, yoVariableFromSCS4);
 
       boolean hasUniqueVariableRobot = simpleRobot.hasUniqueVariable(simpleRobotFirstVariableName);
@@ -774,21 +775,21 @@ public class SimulationConstructionSetUsingDirectCallsTest
       boolean hasUniqueVariableSCS2 = scs.hasUniqueVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       assertEquals(hasUniqueVariableRobot2, hasUniqueVariableSCS2);
 
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingRobot = getSimpleRobotVariablesThatContain(searchString, false, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingSCS = scs.getVariablesThatContain(searchString);
+      List<YoVariable<?>> arrayOfVariablesContainingRobot = getSimpleRobotVariablesThatContain(searchString, false, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesContainingSCS = scs.getVariablesThatContain(searchString);
       assertEquals(arrayOfVariablesContainingRobot, arrayOfVariablesContainingSCS);
 
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingRobot2 = getSimpleRobotVariablesThatContain(searchString, true, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesContainingSCS2 = scs.getVariablesThatContain(searchString, true);
+      List<YoVariable<?>> arrayOfVariablesContainingRobot2 = getSimpleRobotVariablesThatContain(searchString, true, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesContainingSCS2 = scs.getVariablesThatContain(searchString, true);
       assertEquals(arrayOfVariablesContainingRobot2, arrayOfVariablesContainingSCS2);
 
-      ArrayList<YoVariable<?>> arrayOfVariablesStartingRobot = getSimpleRobotVariablesThatStartWith(searchStringStart, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesStartingSCS = scs.getVariablesThatStartWith(searchStringStart);
+      List<YoVariable<?>> arrayOfVariablesStartingRobot = getSimpleRobotVariablesThatStartWith(searchStringStart, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesStartingSCS = scs.getVariablesThatStartWith(searchStringStart);
       assertEquals(arrayOfVariablesStartingRobot, arrayOfVariablesStartingSCS);
 
       String[] varNames = getVariableNamesGivenArrayListOfYoVariables(arrayOfVariablesContainingRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesRegExprRobot = getSimpleRobotRegExpVariables(varNames, regularExpressions, simpleRobot);
-      ArrayList<YoVariable<?>> arrayOfVariablesRegExprSCS = scs.getVars(varNames, regularExpressions);
+      List<YoVariable<?>> arrayOfVariablesRegExprRobot = getSimpleRobotRegExpVariables(varNames, regularExpressions, simpleRobot);
+      List<YoVariable<?>> arrayOfVariablesRegExprSCS = scs.getVars(varNames, regularExpressions);
       assertEquals(arrayOfVariablesRegExprRobot, arrayOfVariablesRegExprSCS);
    }
 
@@ -972,10 +973,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
                                                                                               variableGroup2Values,
                                                                                               variableGroup3,
                                                                                               variableGroup3Values);
-      ArrayList<YoVariableList> yoVariableArrayLists = createArrayListOfDoubleYoVariableWithDummyRegistry(variableGroup4,
-                                                                                                          variableGroup4Values,
-                                                                                                          variableGroup5,
-                                                                                                          variableGroup5Values);
+      List<YoVariableList> yoVariableArrayLists = createArrayListOfDoubleYoVariableWithDummyRegistry(variableGroup4,
+                                                                                                     variableGroup4Values,
+                                                                                                     variableGroup5,
+                                                                                                     variableGroup5Values);
 
       scs.setupEntryBox(simpleRobotFirstVariableName);
       ThreadTools.sleep(THREAD_SLEEP_TIME);
@@ -1083,7 +1084,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.setSimulateDoneCriterion(simulationDoneCriterion);
       scs.registerToggleKeyPointModeCommandListener(toggleKeyPointModeCommandListener);
 
-      ArrayList<PlayCycleListener> playCycleListenersFromSCS = scs.getPlayCycleListeners();
+      List<PlayCycleListener> playCycleListenersFromSCS = scs.getPlayCycleListeners();
       assertArrayOfObjectsContainsTheObject(playCycleListenersFromSCS, playCycleListener);
 
       simulationDoneListenerHasBeenNotified.set(false);
@@ -1238,7 +1239,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private void assertIfGUIComponentsAreDisableOrEnabled(SimulationConstructionSet scs, boolean assertAreEnabled)
    {
       StandardGUIActions standardGUIActions = scs.getStandardGUIActions();
-      ArrayList<AbstractAction> guiActions = standardGUIActions.getGuiActions();
+      List<AbstractAction> guiActions = standardGUIActions.getGuiActions();
       for (int i = 0; i < guiActions.size(); i++)
       {
          AbstractAction guiAction = guiActions.get(i);
@@ -1384,7 +1385,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    //      return arrayListOfCollisionGroup;
    //   }
 
-   private <T> void assertArrayOfObjectsContainsTheArrayOfObject(ArrayList<T> mainArrayList, ArrayList<T> arrayList)
+   private <T> void assertArrayOfObjectsContainsTheArrayOfObject(List<T> mainArrayList, List<T> arrayList)
    {
       int numberOfElements = arrayList.size();
 
@@ -1394,7 +1395,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       }
    }
 
-   private <T> void assertArrayOfObjectsContainsTheObject(ArrayList<T> arrayList, T object)
+   private <T> void assertArrayOfObjectsContainsTheObject(List<T> arrayList, T object)
    {
       int numberOfElements = arrayList.size();
       boolean ret = false;
@@ -1407,7 +1408,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertTrue(ret);
    }
 
-   private void assertYoVariableListContainsArrayListOfVariables(YoVariableList yoVariableList, ArrayList<YoVariableList> arrayLists)
+   private void assertYoVariableListContainsArrayListOfVariables(YoVariableList yoVariableList, List<YoVariableList> arrayLists)
    {
       int numberOfList = arrayLists.size();
 
@@ -1436,10 +1437,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
       }
    }
 
-   private ArrayList<YoVariableList> createArrayListOfDoubleYoVariableWithDummyRegistry(String[] variableNames1, double[] varValues1, String[] variableNames2,
-                                                                                        double[] varValues2)
+   private List<YoVariableList> createArrayListOfDoubleYoVariableWithDummyRegistry(String[] variableNames1, double[] varValues1, String[] variableNames2,
+                                                                                   double[] varValues2)
    {
-      ArrayList<YoVariableList> arrayLists = new ArrayList<>();
+      List<YoVariableList> arrayLists = new ArrayList<>();
       YoVariableList[] yoVariableList = createTwoVarListOfDoubleYoVariablesWithDummyRegistry(variableNames1, varValues1, variableNames2, varValues2);
 
       for (int i = 0; i < yoVariableList.length; i++)
@@ -2081,10 +2082,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.setOutPoint();
    }
 
-   private ArrayList<YoVariable<?>> getSimpleRobotVariablesThatContain(String searchString, boolean caseSensitive, Robot robotModel)
+   private List<YoVariable<?>> getSimpleRobotVariablesThatContain(String searchString, boolean caseSensitive, Robot robotModel)
    {
-      ArrayList<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
-      ArrayList<YoVariable<?>> ret = null;
+      List<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
+      List<YoVariable<?>> ret = null;
 
       if (currentlyMatched != null)
       {
@@ -2112,10 +2113,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return ret;
    }
 
-   private ArrayList<YoVariable<?>> getSimpleRobotVariablesThatStartWith(String searchString, Robot robotModel)
+   private List<YoVariable<?>> getSimpleRobotVariablesThatStartWith(String searchString, Robot robotModel)
    {
-      ArrayList<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
-      ArrayList<YoVariable<?>> ret = null;
+      List<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
+      List<YoVariable<?>> ret = null;
 
       for (int i = 0; i < currentlyMatched.size(); i++)
       {
@@ -2135,7 +2136,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return ret;
    }
 
-   private String[] getVariableNamesGivenArrayListOfYoVariables(ArrayList<YoVariable<?>> yoVariableList)
+   private String[] getVariableNamesGivenArrayListOfYoVariables(List<YoVariable<?>> yoVariableList)
    {
       String[] ret = null;
 
@@ -2154,9 +2155,9 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return ret;
    }
 
-   private ArrayList<YoVariable<?>> getSimpleRobotRegExpVariables(String[] varNames, String[] regularExpressions, Robot robotModel)
+   private List<YoVariable<?>> getSimpleRobotRegExpVariables(String[] varNames, String[] regularExpressions, Robot robotModel)
    {
-      ArrayList<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
+      List<YoVariable<?>> currentlyMatched = robotModel.getAllVariables();
       YoVariableList tempList = new YoVariableList("temp");
 
       for (int i = 0; i < currentlyMatched.size(); i++)

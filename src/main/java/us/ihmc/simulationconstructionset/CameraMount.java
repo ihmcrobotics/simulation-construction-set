@@ -1,8 +1,11 @@
 package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformBasics;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraConfiguration;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraMountInterface;
@@ -26,24 +29,24 @@ public class CameraMount implements CameraMountInterface
    private double fieldOfView, clipDistanceNear, clipDistanceFar;
    private int imageWidth, imageHeight;
 
-   public CameraMount(String name, Vector3D offsetVector, Robot rob)
+   public CameraMount(String name, Tuple3DReadOnly offsetVector, Robot rob)
    {
       this(name, offsetVector, CameraConfiguration.DEFAULT_FIELD_OF_VIEW, CameraConfiguration.DEFAULT_CLIP_DISTANCE_NEAR,
            CameraConfiguration.DEFAULT_CLIP_DISTANCE_FAR, rob);
    }
 
-   public CameraMount(String name, RigidBodyTransform camRotation, Robot rob)
+   public CameraMount(String name, RigidBodyTransformReadOnly camPose, Robot rob)
    {
-      this(name, camRotation, CameraConfiguration.DEFAULT_FIELD_OF_VIEW, CameraConfiguration.DEFAULT_CLIP_DISTANCE_NEAR,
+      this(name, camPose, CameraConfiguration.DEFAULT_FIELD_OF_VIEW, CameraConfiguration.DEFAULT_CLIP_DISTANCE_NEAR,
            CameraConfiguration.DEFAULT_CLIP_DISTANCE_FAR, rob);
    }
 
-   public CameraMount(String name, Vector3D offsetVector, double fieldOfView, double clipDistanceNear, double clipDistanceFar, Robot rob)
+   public CameraMount(String name, Tuple3DReadOnly offsetVector, double fieldOfView, double clipDistanceNear, double clipDistanceFar, Robot rob)
    {
       this(name, new RigidBodyTransform(new Quaternion(), offsetVector), fieldOfView, clipDistanceNear, clipDistanceFar, rob);
    }
 
-   public CameraMount(String name, RigidBodyTransform offset, double fieldOfView, double clipDistanceNear, double clipDistanceFar, Robot rob)
+   public CameraMount(String name, RigidBodyTransformReadOnly offset, double fieldOfView, double clipDistanceNear, double clipDistanceFar, Robot rob)
    {
       this.name = name;
       this.rob = rob;
@@ -78,7 +81,7 @@ public class CameraMount implements CameraMountInterface
    }
 
    private boolean enablePanTiltRoll = false;
-   private RigidBodyTransform panTiltRollTransform3D, temp1, temp2;
+   private RigidBodyTransform panTiltRollTransform3D, temp1;
 
    public void enablePanTiltRoll()
    {
@@ -90,7 +93,6 @@ public class CameraMount implements CameraMountInterface
 
       panTiltRollTransform3D = new RigidBodyTransform();
       temp1 = new RigidBodyTransform();
-      temp2 = new RigidBodyTransform();
 
       enablePanTiltRoll = true;
 
@@ -99,7 +101,7 @@ public class CameraMount implements CameraMountInterface
 
    private Point3D tempPoint3d;
 
-   public void lookAt(Point3D center)
+   public void lookAt(Point3DReadOnly center)
    {
       lookAt(center.getX(), center.getY(), center.getZ());
    }
@@ -127,7 +129,7 @@ public class CameraMount implements CameraMountInterface
       tilt.set(Math.atan2(-tempPoint3d.getZ(), Math.sqrt(tempPoint3d.getX() * tempPoint3d.getX() + tempPoint3d.getY() * tempPoint3d.getY())));
    }
 
-   protected void updateTransform(RigidBodyTransform t1)
+   protected void updateTransform(RigidBodyTransformReadOnly t1)
    {
       transformToMount.set(t1); // transformToMount. = t1 * offsetTransform;
       transformToMount.multiply(offsetTransform); // transformToMount. = t1 * offsetTransform;
@@ -154,7 +156,7 @@ public class CameraMount implements CameraMountInterface
 
    }
 
-   public void getTransformToMount(RigidBodyTransform transformToPack)
+   public void getTransformToMount(RigidBodyTransformBasics transformToPack)
    {
       transformToPack.set(transformToMount);
    }
@@ -165,12 +167,12 @@ public class CameraMount implements CameraMountInterface
       transformToPack.set(transformToCamera);
    }
 
-   public void getOffsetTransform(RigidBodyTransform offsetTransformToPack)
+   public void getOffsetTransform(RigidBodyTransformBasics offsetTransformToPack)
    {
       offsetTransformToPack.set(offsetTransform);
    }
 
-   public void setOffset(RigidBodyTransform newOffsetTransform)
+   public void setOffset(RigidBodyTransformReadOnly newOffsetTransform)
    {
       offsetTransform.set(newOffsetTransform);
    }

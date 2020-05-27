@@ -12,6 +12,8 @@ import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
@@ -120,7 +122,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double heightAt = heightAt(x, y, z);
       surfaceNormalAt(x, y, heightAt, normalToPack);
@@ -147,7 +149,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
       return (xLocal >= xLocalMin) && (xLocal <= xLocalMax) && (yLocal >= yLocalMin) && (yLocal <= yLocalMax);
    }
 
-   public void surfaceNormalAt(double xGlobal, double yGlobal, double z, Vector3D normal)
+   public void surfaceNormalAt(double xGlobal, double yGlobal, double z, Vector3DBasics normal)
    {
       Point2D localPoint = transformToLocalCoordinates(new Point2D(xGlobal, yGlobal));
       double xLocal = localPoint.getX();
@@ -204,7 +206,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
 
    }
 
-   public void closestIntersectionTo(double x, double y, double z, Point3D intersection)
+   public void closestIntersectionTo(double x, double y, double z, Point3DBasics intersection)
    {
       intersection.setX(x); // Go Straight Up for now...
       intersection.setY(y);
@@ -218,7 +220,7 @@ public class RotatableRampTerrainObject implements TerrainObject3D, HeightMapWit
    }
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       closestIntersectionTo(x, y, z, intersectionToPack);
       surfaceNormalAt(x, y, z, normalToPack);

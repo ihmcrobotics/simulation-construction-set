@@ -99,13 +99,13 @@ public class KinematicPointTest
    @Test // timeout=300000
    public void testGetPositionPoint()
    {
-      Point3D positionReceivedFromGetMethod = kinematicPoint.getPositionPoint();
+      Point3D positionReceivedFromGetMethod = kinematicPoint.getPositionCopy();
       assertTrue(0 == positionReceivedFromGetMethod.getX());
       assertTrue(0 == positionReceivedFromGetMethod.getY());
       assertTrue(0 == positionReceivedFromGetMethod.getZ());
 
       kinematicPoint.getYoPosition().set(new Point3D(5.0, 5.1, 5.2));
-      positionReceivedFromGetMethod = kinematicPoint.getPositionPoint();
+      positionReceivedFromGetMethod = kinematicPoint.getPositionCopy();
       assertTrue(5.0 == positionReceivedFromGetMethod.getX());
       assertTrue(5.1 == positionReceivedFromGetMethod.getY());
       assertTrue(5.2 == positionReceivedFromGetMethod.getZ());
@@ -114,13 +114,13 @@ public class KinematicPointTest
    @Test // timeout=300000
    public void testGetVelocityVector()
    {
-      Vector3D vectorReceivedFromGetMethod = kinematicPoint.getVelocityVector();
+      Vector3D vectorReceivedFromGetMethod = kinematicPoint.getVelocityCopy();
       assertTrue(0 == vectorReceivedFromGetMethod.getX());
       assertTrue(0 == vectorReceivedFromGetMethod.getY());
       assertTrue(0 == vectorReceivedFromGetMethod.getZ());
 
       kinematicPoint.getYoVelocity().set(new Vector3D(5.0, 5.1, 5.2));
-      vectorReceivedFromGetMethod = kinematicPoint.getVelocityVector();
+      vectorReceivedFromGetMethod = kinematicPoint.getVelocityCopy();
       assertTrue(5.0 == vectorReceivedFromGetMethod.getX());
       assertTrue(5.1 == vectorReceivedFromGetMethod.getY());
       assertTrue(5.2 == vectorReceivedFromGetMethod.getZ());
@@ -130,7 +130,7 @@ public class KinematicPointTest
    @Test // timeout=300000
    public void testGetVelocity()
    {
-      Vector3D velocityToPack = kinematicPoint.getVelocityVector();
+      Vector3D velocityToPack = kinematicPoint.getVelocityCopy();
       kinematicPoint.getVelocity(velocityToPack);
       assertTrue(0 == velocityToPack.getX());
       assertTrue(0 == velocityToPack.getY());
@@ -150,9 +150,9 @@ public class KinematicPointTest
       YoFramePoint3D yoPosition = kinematicPoint.getYoPosition();
       String frameName = yoPosition.getReferenceFrame().getName();
 
-      assertEquals("( 0.000,  0.000,  0.000 )-" + frameName, yoPosition.toString());
+      assertEquals("( 0.000,  0.000,  0.000 ) - " + frameName, yoPosition.toString());
       yoPosition.set(new Point3D(5.0, 5.1, 5.2));
-      assertEquals("( 5.000,  5.100,  5.200 )-" + frameName, yoPosition.toString());
+      assertEquals("( 5.000,  5.100,  5.200 ) - " + frameName, yoPosition.toString());
    }
 
    @Test // timeout=300000
@@ -161,9 +161,9 @@ public class KinematicPointTest
       YoFrameVector3D yoVelocity = kinematicPoint.getYoVelocity();
       String frameName = yoVelocity.getReferenceFrame().getName();
 
-      assertEquals("( 0.000,  0.000,  0.000 )-" + frameName, yoVelocity.toString());
+      assertEquals("( 0.000,  0.000,  0.000 ) - " + frameName, yoVelocity.toString());
       yoVelocity.set(new Vector3D(5.0, 5.1, 5.2));
-      assertEquals("( 5.000,  5.100,  5.200 )-" + frameName, yoVelocity.toString());
+      assertEquals("( 5.000,  5.100,  5.200 ) - " + frameName, yoVelocity.toString());
    }
 
    @Test // timeout=300000

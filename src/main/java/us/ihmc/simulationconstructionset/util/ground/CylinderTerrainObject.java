@@ -13,6 +13,8 @@ import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -68,12 +70,12 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
       terrainCollisionShapes.add(cylinderShape);
    }
 
-   public CylinderTerrainObject(Vector3D center, double pitchDownDegrees, double yawDegrees, double height, double radius, AppearanceDefinition app)
+   public CylinderTerrainObject(Vector3DReadOnly center, double pitchDownDegrees, double yawDegrees, double height, double radius, AppearanceDefinition app)
    {
       this(yawPitchDegreesTransform(center, yawDegrees, pitchDownDegrees), height, radius, app);
    }
 
-   private static RigidBodyTransform yawPitchDegreesTransform(Vector3D center, double yawCCWDegrees, double pitchDownDegrees)
+   private static RigidBodyTransform yawPitchDegreesTransform(Vector3DReadOnly center, double yawCCWDegrees, double pitchDownDegrees)
    {
       RigidBodyTransform location = new RigidBodyTransform();
       location.getRotation().setYawPitchRoll(Math.toRadians(yawCCWDegrees), Math.toRadians(pitchDownDegrees), 0.0);
@@ -111,7 +113,7 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double heightAt = heightAt(x, y, 1e9);
       surfaceNormalAt(x, y, heightAt, normalToPack);
@@ -192,26 +194,26 @@ public class CylinderTerrainObject implements TerrainObject3D, HeightMapWithNorm
    private final Point3D ignoreIntesectionPoint = new Point3D();
    private final Vector3D ignoreNormal = new Vector3D();
 
-   public void closestIntersectionTo(double x, double y, double z, Point3D intersectionToPack)
+   public void closestIntersectionTo(double x, double y, double z, Point3DBasics intersectionToPack)
    {
       tempPoint.set(x, y, z);
       cylinder.evaluatePoint3DCollision(tempPoint, intersectionToPack, ignoreNormal);
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       tempPoint.set(x, y, z);
       cylinder.evaluatePoint3DCollision(tempPoint, ignoreIntesectionPoint, normalToPack);
    }
 
-   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       tempPoint.set(x, y, z);
       cylinder.evaluatePoint3DCollision(tempPoint, intersectionToPack, normalToPack);
    }
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       tempPoint.set(x, y, z);
       return cylinder.evaluatePoint3DCollision(tempPoint, intersectionToPack, normalToPack);

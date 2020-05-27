@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset.simulatedSensors;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.jMonkeyEngineToolkit.GPULidar;
 import us.ihmc.jMonkeyEngineToolkit.Graphics3DAdapter;
 import us.ihmc.robotics.robotDescription.LidarSensorDescription;
@@ -9,7 +10,6 @@ import us.ihmc.simulationconstructionset.SimulatedSensor;
 
 public class LidarMount implements SimulatedSensor
 {
-
    private final LidarSensorDescription description;
    protected RigidBodyTransform transformToHere = new RigidBodyTransform();
    private final RigidBodyTransform transformFromJoint;
@@ -26,7 +26,7 @@ public class LidarMount implements SimulatedSensor
    }
 
    @Override
-   public void updateTransform(RigidBodyTransform transformToHere, double time)
+   public void updateTransform(RigidBodyTransformReadOnly transformToHere, double time)
    {
       this.transformToHere.set(transformToHere);
       this.transformToHere.multiply(transformFromJoint);
@@ -75,7 +75,7 @@ public class LidarMount implements SimulatedSensor
       return transformToHere;
    }
 
-   public void updateTransformFromJoint(RigidBodyTransform transformFromJoint)
+   public void updateTransformFromJoint(RigidBodyTransformReadOnly transformFromJoint)
    {
       this.transformFromJoint.multiply(transformFromJoint);
    }

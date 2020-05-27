@@ -2,6 +2,7 @@ package us.ihmc.simulationconstructionset.graphics;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 import us.ihmc.graphicsDescription.structure.Graphics3DNode;
@@ -16,7 +17,7 @@ public class GraphicsRobot implements GraphicsUpdatable
    private final Graphics3DNode rootNode;
 
    private final LinkedHashMap<CommonJoint, GraphicsJoint> allJoints = new LinkedHashMap<>();
-   private final ArrayList<GraphicsJoint> graphicsJoints = new ArrayList<>();
+   private final List<GraphicsJoint> graphicsJoints = new ArrayList<>();
 
    public GraphicsRobot(Robot robot)
    {
@@ -56,7 +57,7 @@ public class GraphicsRobot implements GraphicsUpdatable
       return rootNode;
    }
 
-   private void addJoints(ArrayList<Joint> joints, GraphicsJoint parentJoint)
+   private void addJoints(List<Joint> joints, GraphicsJoint parentJoint)
    {
       for (Joint joint : joints)
       {

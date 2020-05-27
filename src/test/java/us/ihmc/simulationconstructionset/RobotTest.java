@@ -859,7 +859,7 @@ public class RobotTest
 
       // Change the link stuff:
       jointOffset1.scale(0.77);
-      joint1.changeOffsetVector(jointOffset1);
+      joint1.setOffset(jointOffset1);
 
       mass1 = mass1 * 1.5;
       comOffset1.scale(0.33);
@@ -870,7 +870,7 @@ public class RobotTest
       link1.setMomentOfInertia(momentOfInertia1);
 
       jointOffset2.scale(3.33);
-      joint2.changeOffsetVector(jointOffset2);
+      joint2.setOffset(jointOffset2);
 
       mass2 = mass2 + 4.5;
       comOffset2.scale(3.91);
@@ -883,7 +883,7 @@ public class RobotTest
       joint2.setLink(newLink2);
 
       jointOffset3.scale(0.33);
-      joint3.changeOffsetVector(jointOffset3);
+      joint3.setOffset(jointOffset3);
 
       mass3 = mass3 + 11.5;
       comOffset3.scale(2.33);

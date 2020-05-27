@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset.physics.collision;
 import static us.ihmc.robotics.Assert.assertEquals;
 import static us.ihmc.robotics.Assert.assertTrue;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -342,7 +342,7 @@ public abstract class SCSCollisionDetectorTest
       }
 
       @Override
-      public void addContactingExternalForcePoints(Link link, ArrayList<ContactingExternalForcePoint> contactingExternalForcePoints)
+      public void addContactingExternalForcePoints(Link link, List<ContactingExternalForcePoint> contactingExternalForcePoints)
       {
       }
    }

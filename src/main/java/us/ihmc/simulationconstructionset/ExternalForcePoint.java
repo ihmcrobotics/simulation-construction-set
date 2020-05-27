@@ -2,8 +2,10 @@ package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.JointPhysics;
@@ -42,7 +44,7 @@ public class ExternalForcePoint extends KinematicPoint
     * @param offset in world when all of the robot's joints are at zero
     * @param robot
     */
-   public ExternalForcePoint(String name, Vector3DReadOnly offset, Robot robot)
+   public ExternalForcePoint(String name, Tuple3DReadOnly offset, Robot robot)
    {
       this(name, offset, robot.getRobotsYoVariableRegistry());
    }
@@ -52,7 +54,7 @@ public class ExternalForcePoint extends KinematicPoint
     * @param offset   in world when all of the robot's joints are at zero
     * @param registry
     */
-   public ExternalForcePoint(String name, Vector3DReadOnly offset, YoVariableRegistry registry)
+   public ExternalForcePoint(String name, Tuple3DReadOnly offset, YoVariableRegistry registry)
    {
       super(name, offset, registry);
 
@@ -285,7 +287,7 @@ public class ExternalForcePoint extends KinematicPoint
       return impulse;
    }
 
-   private void computeRotationFromNormalVector(RotationMatrix rot, Vector3DReadOnly vec)
+   private void computeRotationFromNormalVector(RotationMatrixBasics rot, Vector3DReadOnly vec)
    {
       // Z axis points in direction of vec...
       zAxis.set(vec);

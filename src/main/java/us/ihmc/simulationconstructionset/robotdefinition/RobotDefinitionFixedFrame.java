@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import us.ihmc.euclid.matrix.Matrix3D;
@@ -38,7 +39,7 @@ public class RobotDefinitionFixedFrame
 
    public void createRobotDefinitionFromRobot(Robot r)
    {
-      ArrayList<Joint> rootJoints = r.getRootJoints();
+      List<Joint> rootJoints = r.getRootJoints();
       for (Joint rootJoint : rootJoints)
       {
          rootJointDefinitions.add(createJointDefinition(rootJoint, null));
@@ -432,7 +433,7 @@ public class RobotDefinitionFixedFrame
 
       jointDef.setLinkDefinition(linkDef);
 
-      ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
+      List<Joint> childrenJoints = joint.getChildrenJoints();
 
       for (Joint childJoint : childrenJoints)
       {

@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,7 +24,7 @@ public class EntryBoxArrayPanel extends JPanel
    public static final int MAX_ENTRY_BOXES = 100; // 40;
    private static final boolean DEBUG = false;
 
-   private ArrayList<YoEntryBox> entryBoxesOnThisPanel;
+   private List<YoEntryBox> entryBoxesOnThisPanel;
    private SelectedVariableHolder selectedVariableHolder;
    private final FlowLayout layout;
 
@@ -31,7 +32,7 @@ public class EntryBoxArrayPanel extends JPanel
    private TimerTask alertChangeListenersTask;
    private final long OBSERVER_NOTIFICATION_PERIOD = 250;
 
-   public EntryBoxArrayPanel(Container frame, SelectedVariableHolder holder, ArrayList<YoVariable<?>> varsToEnter)
+   public EntryBoxArrayPanel(Container frame, SelectedVariableHolder holder, List<? extends YoVariable<?>> varsToEnter)
    {
       setName("EntryBoxArrayPanel");
 
@@ -69,7 +70,7 @@ public class EntryBoxArrayPanel extends JPanel
          @Override
          public void run()
          {
-            final ArrayList<YoEntryBox> entryBoxes = new ArrayList<>(entryBoxesOnThisPanel);
+            final List<YoEntryBox> entryBoxes = new ArrayList<>(entryBoxesOnThisPanel);
             if (entryBoxes.size() > 0)
             {
                EventDispatchThreadHelper.justRun(new Runnable()
@@ -141,7 +142,7 @@ public class EntryBoxArrayPanel extends JPanel
 
    }
 
-   public ArrayList<YoEntryBox> getEntryBoxesOnThisPanel()
+   public List<YoEntryBox> getEntryBoxesOnThisPanel()
    {
       return entryBoxesOnThisPanel;
    }
@@ -286,7 +287,7 @@ public class EntryBoxArrayPanel extends JPanel
    {
       String returnString = "<Entry Boxes>";
       int numOfFullBoxes = 0;
-      ArrayList<YoEntryBox> entryBoxesOnThisPanel = getEntryBoxesOnThisPanel();
+      List<YoEntryBox> entryBoxesOnThisPanel = getEntryBoxesOnThisPanel();
 
       for (int i = 0; i < entryBoxesOnThisPanel.size(); i++)
       {
