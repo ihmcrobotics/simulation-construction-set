@@ -54,10 +54,10 @@ mainDependencies {
    api("us.ihmc:euclid-shape:0.14.2")
    api("us.ihmc:euclid-geometry:0.14.2")
    api("us.ihmc:ihmc-commons:0.29.0")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.16.0")
-   api("us.ihmc:ihmc-robot-description:0.16.0")
-   api("us.ihmc:ihmc-graphics-description:0.16.0")
-   api("us.ihmc:ihmc-swing-plotting:0.16.0")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.17.0")
+   api("us.ihmc:ihmc-robot-description:0.17.0")
+   api("us.ihmc:ihmc-graphics-description:0.17.0")
+   api("us.ihmc:ihmc-swing-plotting:0.17.0")
    api(ihmc.sourceSetProject("utilities"))
 }
 
