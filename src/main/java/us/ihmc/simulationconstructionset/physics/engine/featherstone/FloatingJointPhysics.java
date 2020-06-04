@@ -3,8 +3,8 @@ package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
@@ -32,14 +32,14 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
 
    // private Matrix3d R0_i = new Matrix3d();
    private Vector3D a_hat_world_top = new Vector3D(), a_hat_world_bot = new Vector3D();
-   private DenseMatrix64F a_hat_matrix = new DenseMatrix64F(6, 1);
-   private DenseMatrix64F Z_hat_matrix = new DenseMatrix64F(6, 1);
-   private DenseMatrix64F Y_hat_matrix = new DenseMatrix64F(6, 1);
-   private DenseMatrix64F I_hat_matrix = new DenseMatrix64F(6, 6);
+   private DMatrixRMaj a_hat_matrix = new DMatrixRMaj(6, 1);
+   private DMatrixRMaj Z_hat_matrix = new DMatrixRMaj(6, 1);
+   private DMatrixRMaj Y_hat_matrix = new DMatrixRMaj(6, 1);
+   private DMatrixRMaj I_hat_matrix = new DMatrixRMaj(6, 6);
 
    private Vector3D wdXr = new Vector3D(), wXr = new Vector3D(), wXwXr = new Vector3D();
    private Vector3D delta_qd_xyz = new Vector3D();
-   private final DenseMatrix64F I_hat_inverse = new DenseMatrix64F(6, 6);
+   private final DMatrixRMaj I_hat_inverse = new DMatrixRMaj(6, 6);
 
    private double q_x_n, q_y_n, q_z_n, qd_x_n, qd_y_n, qd_z_n, q_qs_n, q_qx_n, q_qy_n, q_qz_n, qd_wx_n, qd_wy_n, qd_wz_n;
 
@@ -197,12 +197,12 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
          I_hat_i.getMatrix(I_hat_matrix);
 
          // if (I_hat_inverse == null) I_hat_inverse = new Matrix(I_hat_matrix.getRowDimension(), I_hat_matrix.getColumnDimension());
-         CommonOps.invert(I_hat_matrix, I_hat_inverse);
+         CommonOps_DDRM.invert(I_hat_matrix, I_hat_inverse);
          Z_hat_i.getMatrix(Z_hat_matrix);
 
          // System.out.println(Z_hat_i);
          // a_hat_matrix = I_hat_inverse.times(Z_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
          a_hat_i.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
          a_hat_i.bottom.set(-a_hat_matrix.get(3, 0), -a_hat_matrix.get(4, 0), -a_hat_matrix.get(5, 0));
 
@@ -469,7 +469,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       Y_hat_i.getMatrix(Y_hat_matrix);
 
       // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-      CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+      CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
       delta_v_me.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
       delta_v_me.bottom.set(-a_hat_matrix.get(3, 0), -a_hat_matrix.get(4, 0), -a_hat_matrix.get(5, 0));
    }
@@ -482,7 +482,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       Y_hat_i.getMatrix(Y_hat_matrix);
 
       // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-      CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+      CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
       // System.out.println("Y_hat_i: " + Y_hat_i);
       delta_v_me.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));

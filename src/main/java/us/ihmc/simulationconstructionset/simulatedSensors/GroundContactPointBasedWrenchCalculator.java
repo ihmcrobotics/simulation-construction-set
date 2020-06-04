@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -26,8 +26,8 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
    private final RigidBodyTransform transformToParentJoint;
 
    private boolean doWrenchCorruption = false;
-   private final DenseMatrix64F wrenchMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
-   private final DenseMatrix64F corruptionMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
+   private final DMatrixRMaj wrenchMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
+   private final DMatrixRMaj corruptionMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
    private final Map<String, YoFrameVector3D> yoContactForceInSensorFrame = new HashMap<>();
    private final ReferenceFrame sensorFrame;
 
@@ -128,7 +128,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
    }
 
    @Override
-   public DenseMatrix64F getWrench()
+   public DMatrixRMaj getWrench()
    {
       return wrenchMatrix;
    }
