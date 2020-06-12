@@ -2,10 +2,12 @@ package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
+import us.ihmc.euclid.tools.TupleTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.euclid.tuple4D.Quaternion;
+import us.ihmc.log.LogTools;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVector3D;
@@ -160,8 +162,22 @@ public class LoopClosureSoftConstraint
       link.getParentJoint().addExternalForcePoint(constraintB);
    }
 
+   private boolean isFirstUpdate = true;
+
    public void update()
    {
+      if (isFirstUpdate)
+      {
+         if (proportionalGains.containsNaN() || derivativeGains.containsNaN())
+            throw new IllegalArgumentException("The gains for the loop closure constraint: " + name
+                  + " have not been configured. If created from description, see: " + LoopClosureSoftConstraint.class.getSimpleName());
+         if (TupleTools.isTupleZero(proportionalGains, 0.0) || TupleTools.isTupleZero(derivativeGains, 0.0))
+            LogTools.warn("The gains for the loop closure constraint: " + name + " have not been configured. If created from description, see: "
+                  + LoopClosureSoftConstraint.class.getSimpleName());
+
+         isFirstUpdate = false;
+      }
+
       // Position error in world
       positionError.sub(constraintB.getYoPosition(), constraintA.getYoPosition());
       // Position error in A's local coordinates.
