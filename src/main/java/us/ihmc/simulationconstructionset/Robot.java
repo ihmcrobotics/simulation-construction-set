@@ -306,9 +306,20 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
+   public void doLoopClosure()
+   {
+      List<Joint> children = this.getRootJoints();
+
+      for (int i = 0; i < children.size(); i++)
+      {
+         Joint rootJoint = children.get(i);
+         rootJoint.physics.doLoopClosureRecursive();
+      }
+   }
+
    /**
-    * Retrieves an List containing the rootJoints of this robot. These joints make up the entirety
-    * of the robot's visual component as all joints and links are at some level their children.
+    * Retrieves an List containing the rootJoints of this robot. These joints make up the entirety of
+    * the robot's visual component as all joints and links are at some level their children.
     *
     * @return List containing the root joints of the robot.
     */
@@ -592,8 +603,8 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Returns an List appropriate to the type of sensor being queried containing all the sensors
-    * of that type for each joint.
+    * Returns an List appropriate to the type of sensor being queried containing all the sensors of
+    * that type for each joint.
     */
    @SuppressWarnings("unchecked")
    public <T extends SimulatedSensor> List<T> getSensors(Class<T> sensorType)
@@ -621,6 +632,17 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       {
          Joint rootJoint = children.get(i);
          rootJoint.recursiveGetOneDegreeOfFreedomJoints(oneDegreeOfFreedomJoints);
+      }
+   }
+
+   public void getAllLoopClosureSoftConstraints(List<LoopClosureSoftConstraint> constraintsToPack)
+   {
+      List<Joint> children = this.getRootJoints();
+
+      for (int i = 0; i < children.size(); i++)
+      {
+         Joint rootJoint = children.get(i);
+         rootJoint.recursiveGetChildrenConstraints(constraintsToPack);
       }
    }
 

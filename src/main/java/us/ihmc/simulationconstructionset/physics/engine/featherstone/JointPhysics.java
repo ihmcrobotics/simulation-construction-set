@@ -1440,6 +1440,19 @@ public abstract class JointPhysics<J extends Joint>
       }
    }
 
+   public void doLoopClosureRecursive()
+   {
+      for (int i = 0; i < owner.childrenConstraints.size(); i++)
+      {
+         owner.childrenConstraints.get(i).update();
+      }
+
+      for (int i = 0; i < owner.childrenJoints.size(); i++)
+      {
+         owner.childrenJoints.get(i).physics.doLoopClosureRecursive();
+      }
+   }
+
    /**
     * Recurses down the tree ensuring each joint has reasonable accelerations returning false on the
     * first joint to fail.
@@ -1572,8 +1585,8 @@ public abstract class JointPhysics<J extends Joint>
    }
 
    /**
-    * Recurse over the children of this joint and add their KinematicPoints to the provided List.
-    * This list includes both KinematicPoints and ExternalForcePoints as the latter is a child of the
+    * Recurse over the children of this joint and add their KinematicPoints to the provided List. This
+    * list includes both KinematicPoints and ExternalForcePoints as the latter is a child of the
     * former.
     *
     * @param list List to which the points are added.
@@ -1594,8 +1607,7 @@ public abstract class JointPhysics<J extends Joint>
    }
 
    /**
-    * Recurse over the children of this joint and add their ExternalForcePoints to the provided
-    * List.
+    * Recurse over the children of this joint and add their ExternalForcePoints to the provided List.
     *
     * @param list List to which the points are added.
     * @see ExternalForcePoint ExternalForcePoint
@@ -1634,8 +1646,7 @@ public abstract class JointPhysics<J extends Joint>
    }
 
    /**
-    * Recurse over the children of this joint and add their GroundContactPoints to the provided
-    * List.
+    * Recurse over the children of this joint and add their GroundContactPoints to the provided List.
     *
     * @param list List to which the points are added.
     * @see GroundContactPoint GroundContactPoint
