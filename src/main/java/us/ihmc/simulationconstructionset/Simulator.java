@@ -90,6 +90,10 @@ public class Simulator implements java.io.Serializable
             // Contact models that are done outside of the robot.
             robot.decideGroundContactPointsInContact(); // +++JEP OPTIMIZE. This should be in a GroundContactDetector...
 
+            // Computes forces for closing kinematic loops.
+            // TODO Should be resolved in robot.doDynamics.
+            robot.doLoopClosure();
+
             if (scripts != null) // Run the scripts
             {
                for (Script script : scripts)
