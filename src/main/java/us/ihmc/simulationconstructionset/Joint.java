@@ -27,7 +27,7 @@ import us.ihmc.yoVariables.variable.YoDouble;
  * <p>
  * Description: Package for Simulating Dynamic Robots and Mechanisms
  * <p>
- * 
+ *
  * @author Jerry Pratt
  * @version Beta 1.0
  */
@@ -55,7 +55,10 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
    protected int numDOF;
    public Robot rob;
 
-   public RigidBodyTransform transformToNext = new RigidBodyTransform();
+   /**
+    * Stores the transform from after this joint to world.
+    */
+   public final RigidBodyTransform transformToNext = new RigidBodyTransform();
 
    /**
     * Offset from the previous joint.
@@ -68,7 +71,8 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
    protected List<IMUMount> imuMounts;
    protected List<WrenchCalculatorInterface> forceSensors;
 
-   public List<Joint> childrenJoints;
+   public final List<Joint> childrenJoints = new ArrayList<>();
+   public final List<LoopClosureSoftConstraint> childrenConstraints = new ArrayList<>();
 
    private final List<SimulatedSensor> sensors = new ArrayList<>();
 
@@ -93,8 +97,6 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
       this.numDOF = numDOF;
 
       setOffset(offsetVec);
-
-      childrenJoints = new ArrayList<>();
    }
 
    public Joint getParentJoint()
@@ -132,6 +134,21 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
       for (Joint joint : childrenJoints)
       {
          joint.recursiveGetOneDegreeOfFreedomJoints(oneDegreeOfFreedomJointsToPack);
+      }
+   }
+
+   public List<LoopClosureSoftConstraint> getChildrenConstraints()
+   {
+      return childrenConstraints;
+   }
+
+   public void recursiveGetChildrenConstraints(List<LoopClosureSoftConstraint> constraintsToPack)
+   {
+      constraintsToPack.addAll(childrenConstraints);
+
+      for (Joint joint : childrenJoints)
+      {
+         joint.recursiveGetChildrenConstraints(constraintsToPack);
       }
    }
 
@@ -496,6 +513,12 @@ public abstract class Joint implements CommonJoint, java.io.Serializable
       childJoint.parentJoint = this; // Set his parent to me for later back tracking...
 
       childrenJoints.add(childJoint);
+   }
+
+   public void addLoopClosureConstraint(LoopClosureSoftConstraint childConstraint)
+   {
+      childConstraint.setParentJoint(this);
+      childrenConstraints.add(childConstraint);
    }
 
    /**

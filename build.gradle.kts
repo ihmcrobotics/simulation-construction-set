@@ -8,7 +8,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.17.0"
+   version = "0.18.0"
    vcsUrl = "https://github.com/ihmcrobotics/simulation-construction-set"
    openSource = true
    
@@ -53,16 +53,16 @@ mainDependencies {
    api("us.ihmc:euclid-frame:0.14.2-ejml-0.39-beta-1")
    api("us.ihmc:euclid-shape:0.14.2-ejml-0.39-beta-1")
    api("us.ihmc:euclid-geometry:0.14.2-ejml-0.39-beta-1")
-   api("us.ihmc:ihmc-commons:0.29.0")
+   api("us.ihmc:ihmc-commons:0.30.0")
    api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.17.0-ejml-0.39-beta-2")
-   api("us.ihmc:ihmc-robot-description:0.17.0-ejml-0.39-beta-2")
+   api("us.ihmc:ihmc-robot-description:0.18.0-ejml-0.39-beta-1")
    api("us.ihmc:ihmc-graphics-description:0.17.0-ejml-0.39-beta-1")
    api("us.ihmc:ihmc-swing-plotting:0.17.0-ejml-0.39-beta-1")
    api(ihmc.sourceSetProject("utilities"))
 }
 
 testDependencies {
-   api("us.ihmc:ihmc-commons-testing:0.29.0")
+   api("us.ihmc:ihmc-commons-testing:0.30.0")
 }
 
 utilitiesDependencies {
