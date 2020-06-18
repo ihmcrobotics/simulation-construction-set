@@ -1,7 +1,7 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 import us.ihmc.commons.MathTools;
 import us.ihmc.euclid.Axis3D;
@@ -38,12 +38,12 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
     * Manipulator equation matrices, for matrix definitions see
     * {@link #assertStateIsCloseToClosedFormCalculation}
     */
-   private final DenseMatrix64F H = new DenseMatrix64F(2, 2);
-   private final DenseMatrix64F C = new DenseMatrix64F(2, 2);
-   private final DenseMatrix64F G = new DenseMatrix64F(2, 1);
-   private final DenseMatrix64F qd = new DenseMatrix64F(2, 1);
-   private final DenseMatrix64F qdd = new DenseMatrix64F(2, 1);
-   private final DenseMatrix64F rightHandSide = new DenseMatrix64F(2, 1);
+   private final DMatrixRMaj H = new DMatrixRMaj(2, 2);
+   private final DMatrixRMaj C = new DMatrixRMaj(2, 2);
+   private final DMatrixRMaj G = new DMatrixRMaj(2, 1);
+   private final DMatrixRMaj qd = new DMatrixRMaj(2, 1);
+   private final DMatrixRMaj qdd = new DMatrixRMaj(2, 1);
+   private final DMatrixRMaj rightHandSide = new DMatrixRMaj(2, 1);
 
    public DoublePendulumRobot(String name, double initialQFirstJoint, double initialQdFirstJoint, double initialQSecondJoint, double initialQdSecondJoint)
    {
@@ -130,9 +130,9 @@ public class DoublePendulumRobot extends RobotWithClosedFormDynamics
       qd.set(1, 0, qd2);
 
       rightHandSide.set(G);
-      CommonOps.multAdd(C, qd, rightHandSide);
-      CommonOps.scale(-1.0, rightHandSide);
-      CommonOps.solve(H, rightHandSide, qdd);
+      CommonOps_DDRM.multAdd(C, qd, rightHandSide);
+      CommonOps_DDRM.scale(-1.0, rightHandSide);
+      CommonOps_DDRM.solve(H, rightHandSide, qdd);
 
       if (Math.abs(qdd.get(0, 0) - qdd1) > epsilon || Math.abs(qdd.get(1, 0) - qdd2) > epsilon)
       {

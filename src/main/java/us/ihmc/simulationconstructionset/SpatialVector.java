@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrix;
 
 import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
@@ -86,7 +86,7 @@ public final class SpatialVector implements java.io.Serializable
       bottom.set(sV.bottom);
    }
 
-   public final void getMatrix(DenseMatrix64F M)
+   public final void getMatrix(DMatrix M)
    {
       M.set(0, 0, top.getX());
       M.set(1, 0, top.getY());
@@ -96,21 +96,21 @@ public final class SpatialVector implements java.io.Serializable
       M.set(5, 0, bottom.getZ());
    }
 
-   public void getPlanarXYMatrix(DenseMatrix64F M)
+   public void getPlanarXYMatrix(DMatrix M)
    {
       M.set(0, 0, top.getX());
       M.set(1, 0, top.getY());
       M.set(2, 0, bottom.getZ());
    }
 
-   public void getPlanarXZMatrix(DenseMatrix64F M)
+   public void getPlanarXZMatrix(DMatrix M)
    {
       M.set(0, 0, top.getX());
       M.set(1, 0, top.getZ());
       M.set(2, 0, bottom.getY());
    }
 
-   public void getPlanarYZMatrix(DenseMatrix64F M)
+   public void getPlanarYZMatrix(DMatrix M)
    {
       M.set(0, 0, top.getY());
       M.set(1, 0, top.getZ());

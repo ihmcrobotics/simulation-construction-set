@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.simulatedSensors;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.simulationconstructionset.Joint;
@@ -13,7 +13,7 @@ public interface WrenchCalculatorInterface
 
    void calculate();
 
-   DenseMatrix64F getWrench();
+   DMatrixRMaj getWrench();
 
    Joint getJoint();
 

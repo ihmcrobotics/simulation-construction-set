@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset.simulatedSensors;
 
 import java.util.List;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -23,8 +23,8 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    private final RigidBodyTransform transformToParentJoint;
 
    private boolean doWrenchCorruption = false;
-   private final DenseMatrix64F wrenchMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
-   private final DenseMatrix64F corruptionMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
+   private final DMatrixRMaj wrenchMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
+   private final DMatrixRMaj corruptionMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
 
    private final ReferenceFrame sensorFrame;
 
@@ -109,7 +109,7 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    }
 
    @Override
-   public DenseMatrix64F getWrench()
+   public DMatrixRMaj getWrench()
    {
       return wrenchMatrix;
    }

@@ -6,7 +6,7 @@ import static us.ihmc.robotics.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.euclid.Axis3D;
@@ -55,7 +55,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
 
       calculator.calculate();
 
-      DenseMatrix64F tauXFXAndFZ = calculator.getWrench();
+      DMatrixRMaj tauXFXAndFZ = calculator.getWrench();
       assertEquals(1.0, tauXFXAndFZ.get(0, 0), epsilon);
       assertEquals(0.0, tauXFXAndFZ.get(3, 0), epsilon);
       assertEquals(1.0, tauXFXAndFZ.get(5, 0), epsilon);
@@ -77,7 +77,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
 
       calculator.calculate();
 
-      DenseMatrix64F wholeWrench = calculator.getWrench();
+      DMatrixRMaj wholeWrench = calculator.getWrench();
       assertTrue(wholeWrench.getNumRows() == 6);
       assertEquals(wholeWrench.get(0, 0), -2.0, epsilon);
       assertEquals(wholeWrench.get(1, 0), -2.0, epsilon);
