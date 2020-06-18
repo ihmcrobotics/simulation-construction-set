@@ -3,8 +3,8 @@ package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
 
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
@@ -173,11 +173,11 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          I_hat_i.getPlanarXYMatrix(I_hat_matrix);
 
          // I_hat_inverse = I_hat_matrix.inverse();
-         CommonOps.invert(I_hat_matrix, I_hat_inverse);
+         CommonOps_DDRM.invert(I_hat_matrix, I_hat_inverse);
          Z_hat_i.getPlanarXYMatrix(Z_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Z_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
 
          a_hat_i.top.set(0.0, 0.0, -a_hat_matrix.get(0, 0));
          a_hat_i.bottom.set(-a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0), 0.0);
@@ -188,11 +188,11 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          I_hat_i.getPlanarXZMatrix(I_hat_matrix);
 
          // I_hat_inverse = I_hat_matrix.inverse();
-         CommonOps.invert(I_hat_matrix, I_hat_inverse);
+         CommonOps_DDRM.invert(I_hat_matrix, I_hat_inverse);
          Z_hat_i.getPlanarXZMatrix(Z_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Z_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
 
          a_hat_i.top.set(0.0, -a_hat_matrix.get(0, 0), 0.0);
          a_hat_i.bottom.set(-a_hat_matrix.get(1, 0), 0.0, -a_hat_matrix.get(2, 0));
@@ -203,11 +203,11 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          I_hat_i.getPlanarYZMatrix(I_hat_matrix);
 
          // I_hat_inverse = I_hat_matrix.inverse();
-         CommonOps.invert(I_hat_matrix, I_hat_inverse);
+         CommonOps_DDRM.invert(I_hat_matrix, I_hat_inverse);
          Z_hat_i.getPlanarYZMatrix(Z_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Z_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
 
          a_hat_i.top.set(-a_hat_matrix.get(0, 0), 0.0, 0.0);
          a_hat_i.bottom.set(0.0, -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
@@ -383,7 +383,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          Y_hat_i.getPlanarXYMatrix(Y_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
          delta_v_me.top.set(0.0, 0.0, -a_hat_matrix.get(0, 0));
          delta_v_me.bottom.set(-a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0), 0.0);
@@ -394,7 +394,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          Y_hat_i.getPlanarXZMatrix(Y_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
          delta_v_me.top.set(0.0, -a_hat_matrix.get(0, 0), 0.0);
          delta_v_me.bottom.set(-a_hat_matrix.get(1, 0), 0.0, -a_hat_matrix.get(2, 0));
@@ -405,7 +405,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          Y_hat_i.getPlanarYZMatrix(Y_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
          delta_v_me.top.set(-a_hat_matrix.get(0, 0), 0.0, 0.0);
          delta_v_me.bottom.set(0.0, -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
@@ -426,7 +426,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          Y_hat_i.getPlanarXYMatrix(Y_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
          delta_v_me.top.set(0.0, 0.0, -a_hat_matrix.get(0, 0));
          delta_v_me.bottom.set(-a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0), 0.0);
@@ -445,7 +445,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          Y_hat_i.getPlanarXZMatrix(Y_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
          delta_v_me.top.set(0.0, -a_hat_matrix.get(0, 0), 0.0);
          delta_v_me.bottom.set(-a_hat_matrix.get(1, 0), 0.0, -a_hat_matrix.get(2, 0));
@@ -464,7 +464,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
          Y_hat_i.getPlanarYZMatrix(Y_hat_matrix);
 
          // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
          delta_v_me.top.set(-a_hat_matrix.get(0, 0), 0.0, 0.0);
          delta_v_me.bottom.set(0.0, -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
@@ -480,15 +480,15 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
 
    }
 
-   private DenseMatrix64F I_hat_matrix = new DenseMatrix64F(3, 3); // Matrix(6,6);
-   private DenseMatrix64F Z_hat_matrix = new DenseMatrix64F(3, 1); // new Matrix(6,1);
-   private DenseMatrix64F a_hat_matrix = new DenseMatrix64F(3, 1); // new Matrix(6,1);
+   private DMatrixRMaj I_hat_matrix = new DMatrixRMaj(3, 3); // Matrix(6,6);
+   private DMatrixRMaj Z_hat_matrix = new DMatrixRMaj(3, 1); // new Matrix(6,1);
+   private DMatrixRMaj a_hat_matrix = new DMatrixRMaj(3, 1); // new Matrix(6,1);
 
    // private Matrix3d R0_i = new Matrix3d();
    private final Vector3D a_hat_world_bot = new Vector3D();
 
-   private DenseMatrix64F Y_hat_matrix = new DenseMatrix64F(3, 1); // new Matrix(6,1);
-   private DenseMatrix64F I_hat_inverse = new DenseMatrix64F(3, 3);
+   private DMatrixRMaj Y_hat_matrix = new DMatrixRMaj(3, 1); // new Matrix(6,1);
+   private DMatrixRMaj I_hat_inverse = new DMatrixRMaj(3, 3);
 
    @Override
    protected boolean jointDependentVerifyReasonableAccelerations()

@@ -27,6 +27,7 @@ video.maxHeapSizeGB = 8
 gui.doFirst = { scs.captureVideo() }
 
 mainDependencies {
+   api("org.ejml:ejml-core:0.39")
    api("net.jafama:jafama:2.1.0")
    api("org.jfree:jfreechart:1.0.17")
    api("org.apache.xmlgraphics:batik-svggen:1.7")
@@ -37,7 +38,6 @@ mainDependencies {
    api("org.apache.commons:commons-lang3:3.9")
    api("org.apache.pdfbox:pdfbox:1.8.4")
    api("net.sourceforge.jmatio:jmatio:1.0")
-   api("org.ejml:core:0.30")
    api("xml-apis:xml-apis:2.0.2")
    api("com.google.guava:guava:18.0")
    api("org.easytesting:fest:1.0.16")
@@ -47,26 +47,25 @@ mainDependencies {
    }
 
    api("us.ihmc.thirdparty.jinput:jinput:200128")
-   api("us.ihmc:ihmc-yovariables:0.7.0")
+   api("us.ihmc:ihmc-yovariables:0.8.0")
    api("us.ihmc:ihmc-video-codecs:2.1.5")
-   api("us.ihmc:euclid:0.14.2")
-   api("us.ihmc:euclid-frame:0.14.2")
-   api("us.ihmc:euclid-shape:0.14.2")
-   api("us.ihmc:euclid-geometry:0.14.2")
+   api("us.ihmc:euclid:0.15.0")
+   api("us.ihmc:euclid-frame:0.15.0")
+   api("us.ihmc:euclid-shape:0.15.0")
+   api("us.ihmc:euclid-geometry:0.15.0")
    api("us.ihmc:ihmc-commons:0.30.0")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.17.0")
-   api("us.ihmc:ihmc-robot-description:0.18.0")
-   api("us.ihmc:ihmc-graphics-description:0.17.0")
-   api("us.ihmc:ihmc-swing-plotting:0.17.0")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.18.0")
+   api("us.ihmc:ihmc-robot-description:0.19.0")
+   api("us.ihmc:ihmc-graphics-description:0.18.0")
+   api("us.ihmc:ihmc-swing-plotting:0.18.0")
    api(ihmc.sourceSetProject("utilities"))
 }
 
 testDependencies {
-   api("org.ejml:dense64:0.30")
    api("us.ihmc:ihmc-commons-testing:0.30.0")
 }
 
 utilitiesDependencies {
-   api("us.ihmc:euclid:0.14.2")
-   api("us.ihmc:ihmc-yovariables:0.7.0")
+   api("us.ihmc:euclid:0.15.0")
+   api("us.ihmc:ihmc-yovariables:0.8.0")
 }

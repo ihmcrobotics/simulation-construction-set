@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrix;
 
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
@@ -172,7 +172,7 @@ public class Link implements java.io.Serializable
       computePrincipalMomentsOfInertia();
    }
 
-   public void setMomentOfInertia(DenseMatrix64F momentOfInertia)
+   public void setMomentOfInertia(DMatrix momentOfInertia)
    {
       Inertia.setM00(momentOfInertia.get(0, 0));
       Inertia.setM01(momentOfInertia.get(0, 1));
