@@ -55,7 +55,7 @@ mainDependencies {
    api("us.ihmc:euclid-geometry:0.15.0")
    api("us.ihmc:ihmc-commons:0.30.0")
    api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.18.0")
-   api("us.ihmc:ihmc-robot-description:0.18.0-ejml-0.39-beta-1")
+   api("us.ihmc:ihmc-robot-description:0.19.0")
    api("us.ihmc:ihmc-graphics-description:0.18.0")
    api("us.ihmc:ihmc-swing-plotting:0.18.0")
    api(ihmc.sourceSetProject("utilities"))
