@@ -698,6 +698,15 @@ public class DataFileReader
 
          String varName = line.substring(0, equalsIndex).trim();
          String varVal = line.substring(equalsIndex + 1, semiIndex).trim();
+         NameSpace nameSpace = new NameSpace(varName).getParent();
+
+         if (nameSpace != null && registry != null)
+         {
+            varName = new NameSpace(varName).getShortName();
+
+            if (!nameSpace.startsWith(registry.getNameSpace()))
+               nameSpace.prepend(registry.getNameSpace());
+         }
 
          YoVariable variable = varList.getVariable(varName);
 
@@ -706,13 +715,8 @@ public class DataFileReader
          {
             if (createMissingVariables)
             {
-               NameSpace nameSpace = new NameSpace(varName).getParent();
-
                if (nameSpace != null)
                {
-                  if (!nameSpace.startsWith(registry.getNameSpace()))
-                     nameSpace.prepend(registry.getNameSpace());
-
                   YoRegistry registryToUse = YoFactories.getOrCreateAndAddRegistry(registry, nameSpace);
                   if (registryToUse == null)
                   {
@@ -721,7 +725,6 @@ public class DataFileReader
                      registryToUse = registry;
                   }
 
-                  varName = new NameSpace(varName).getShortName();
                   variable = new YoDouble(varName, registryToUse);
                }
                else
