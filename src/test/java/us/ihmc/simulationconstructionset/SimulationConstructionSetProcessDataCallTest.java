@@ -68,6 +68,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          assertEquals(testNum1 - testNum2, startValue, 0);
       }
+      scs.closeAndDispose();
    }
 
    @Test // timeout=1000
@@ -126,6 +127,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          assertEquals(testNum1 + testNum2, maxValue - 1, 0);
       }
+      scs.closeAndDispose();
    }
 
    @Test // timeout=1000
@@ -183,6 +185,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          assertEquals(testNum1 - testNum2, 0, 0);
       }
+      scs.closeAndDispose();
    }
 
    @Test // timeout=1000
@@ -241,7 +244,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          assertEquals(testNum1 - testNum2, 0, 0);
       }
-
+      scs.closeAndDispose();
    }
 
    public static class CopierProcessingFunction implements DataProcessingFunction

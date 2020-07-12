@@ -152,6 +152,7 @@ public class RobotTest
       EuclidCoreTestTools.assertTuple3DEquals(computeAngularMomentum(robot1), computeAngularMomentum(robot2), epsilonAfter);
       assertEquals(computeScalarInertiaAroundJointAxis(link11, pin1), computeScalarInertiaAroundJointAxis(link12, pin2), epsilonAfter);
       assertEquals(computeScalarInertiaAroundJointAxis(link21, pin1), computeScalarInertiaAroundJointAxis(link22, pin2), epsilonAfter);
+      scs.closeAndDispose();
    }
 
    @Test // timeout=300000
@@ -224,6 +225,7 @@ public class RobotTest
       linearMomentumDerivativeNumerical.sub(linearMomentumDT, linearMomentum0);
       linearMomentumDerivativeNumerical.scale(1.0 / dt);
       EuclidCoreTestTools.assertTuple3DEquals(linearMomentumDerivativeNumerical, force, 1e-10);
+      scs.closeAndDispose();
 
       //    sleepIfShowingGUI();
    }

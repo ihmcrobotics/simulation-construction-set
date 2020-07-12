@@ -84,6 +84,7 @@ public class FeatherstoneAlgorithmTest
       {
          fail();
       }
+      scs.closeAndDispose();
    }
 
    private class DynamicsChecker implements RobotController

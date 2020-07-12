@@ -70,6 +70,8 @@ public class DataProcessingFunctionTest
       assertEquals(variableOne.getDoubleValue(), robot.getTime(), 1e-7);
       assertEquals(variableTwo.getDoubleValue(), 1.1, 1e-7);
       assertEquals(variableThree.getDoubleValue(), 9.23, 1e-7);
+
+      scs.closeAndDispose();
    }
 
 }
