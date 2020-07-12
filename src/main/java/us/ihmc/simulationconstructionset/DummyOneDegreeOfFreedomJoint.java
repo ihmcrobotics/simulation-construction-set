@@ -6,7 +6,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.DummyOneDegreeOfFreedomJointPhysics;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariableList;
 
@@ -44,7 +44,7 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
       physics.u_i.set(u_hat);
       physics.u_i.normalize();
 
-      YoVariableRegistry registry = rob.getRobotsYoVariableRegistry();
+      YoRegistry registry = rob.getRobotsYoRegistry();
       q = new YoDouble("q_" + jname, "PinJoint angle", registry);
       qd = new YoDouble("qd_" + jname, "PinJoint anglular velocity", registry);
       qdd = new YoDouble("qdd_" + jname, "PinJoint angular acceleration", registry);

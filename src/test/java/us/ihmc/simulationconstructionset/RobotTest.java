@@ -25,7 +25,7 @@ import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
@@ -170,7 +170,7 @@ public class RobotTest
       Vector3D comOffset = floatingBody.getComOffset();
 
       Vector3D externalForcePointOffset = new Vector3D(random.nextDouble(), random.nextDouble(), random.nextDouble());
-      ExternalForcePoint externalForcePoint = new ExternalForcePoint("efp", externalForcePointOffset, robot.getRobotsYoVariableRegistry());
+      ExternalForcePoint externalForcePoint = new ExternalForcePoint("efp", externalForcePointOffset, robot.getRobotsYoRegistry());
       root1.addExternalForcePoint(externalForcePoint);
       Vector3D force = new Vector3D(random.nextDouble(), random.nextDouble(), random.nextDouble());
       externalForcePoint.setForce(force);
@@ -989,7 +989,7 @@ public class RobotTest
       double rotationalKineticEnergyStart = robot.computeRotationalKineticEnergy();
       double totalEnergyStart = translationalKineticEnergyStart + rotationalKineticEnergyStart;
 
-      YoVariableRegistry registry = robot.getRobotsYoVariableRegistry();
+      YoRegistry registry = robot.getRobotsYoRegistry();
       YoDouble translationalKineticEnergy = new YoDouble("translationalKineticEnergy", registry);
       YoDouble rotationalKineticEnergy = new YoDouble("rotationalKineticEnergy", registry);
       YoDouble totalEnergy = new YoDouble("totalEnergy", registry);

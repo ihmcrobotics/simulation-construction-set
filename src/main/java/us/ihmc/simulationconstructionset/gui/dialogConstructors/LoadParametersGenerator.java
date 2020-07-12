@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.yoVariables.parameters.XmlParameterReader;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class LoadParametersGenerator implements LoadParametersConstructor
 {
@@ -32,7 +32,7 @@ public class LoadParametersGenerator implements LoadParametersConstructor
             XmlParameterReader reader = new XmlParameterReader(is);
             is.close();
 
-            for (YoVariableRegistry child : fileChooser.getRegistries())
+            for (YoRegistry child : fileChooser.getRegistries())
             {
                reader.readParametersInRegistry(child);
             }

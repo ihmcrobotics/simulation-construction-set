@@ -39,7 +39,6 @@ import us.ihmc.graphicsDescription.Graphics3DSpotLight;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 import us.ihmc.graphicsDescription.HeightMap;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.color.MutableColor;
 import us.ihmc.graphicsDescription.image.DepthImageCallback;
 import us.ihmc.graphicsDescription.image.ImageCallback;
@@ -102,9 +101,10 @@ import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
 import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
 import us.ihmc.yoVariables.listener.RewoundListener;
-import us.ihmc.yoVariables.listener.YoVariableRegistryChangedListener;
+import us.ihmc.yoVariables.listener.YoRegistryChangedListener;
 import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoTools;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
 
@@ -346,7 +346,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private StandardAllCommandsExecutor standardAllCommandsExecutor;
 
    private VarGroupList varGroupList = new VarGroupList();
-   private YoVariableRegistry rootRegistry;
+   private YoRegistry rootRegistry;
 
    private JFrame jFrame;
    private JApplet jApplet;
@@ -493,7 +493,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       standardAllCommandsExecutor = new StandardAllCommandsExecutor();
 
       final boolean showGUI = graphicsAdapter != null && parameters.getCreateGUI();
-      rootRegistry = new YoVariableRegistry(rootRegistryName);
+      rootRegistry = new YoRegistry(rootRegistryName);
 
       if (showGUI)
       {
@@ -516,9 +516,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       myDataBuffer = mySimulation.getDataBuffer();
       simulationSynchronizer = mySimulation.getSimulationSynchronizer();
 
-      List<YoVariable<?>> originalRootVariables = rootRegistry.getAllVariablesIncludingDescendants();
+      List<YoVariable> originalRootVariables = rootRegistry.subtreeVariables();
 
-      for (YoVariable<?> yoVariable : originalRootVariables)
+      for (YoVariable yoVariable : originalRootVariables)
       {
          System.out.println("Original Variable: " + yoVariable);
       }
@@ -534,7 +534,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       {
          for (Robot robot : robots)
          {
-            rootRegistry.addChild(robot.getRobotsYoVariableRegistry());
+            rootRegistry.addChild(robot.getRobotsYoRegistry());
          }
       }
 
@@ -600,42 +600,43 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       standardAllCommandsExecutor.setup(this, myGUI, myDataBuffer);
    }
 
+   private YoRegistryChangedListener rootRegistryListener;
+
    private void createAndAttachAChangedListenerToTheRootRegistry()
    {
-      YoVariableRegistryChangedListener listener = new YoVariableRegistryChangedListener()
+      rootRegistryListener = new YoRegistryChangedListener()
       {
          @Override
-         public void yoVariableWasRegistered(YoVariableRegistry registry, YoVariable<?> registeredYoVariable)
+         public void onChanged(Change change)
          {
-            // System.err.println("Registering YoVariable to the SCS root Registry after the SCS has been started! yoVariableWasRegistered: "
-            // + registeredYoVariable);
-
-            // Make sure RCS still works with all of this!
-            myDataBuffer.addVariable(registeredYoVariable);
-         }
-
-         @Override
-         public void yoVariableRegistryWasCleared(YoVariableRegistry clearedYoVariableRegistry)
-         {
-            throw new RuntimeException("Clearing the SCS root Registry after the SCS has been started! Probably shouldn't do that...");
-         }
-
-         @Override
-         public void yoVariableRegistryWasAdded(YoVariableRegistry addedRegistry)
-         {
-            // System.err.println("Adding a child YoVariableRegistry to the SCS root Registry after the SCS has been started! yoVariableRegistryWasAdded: "
-            // + addedRegistry);
-
-            myDataBuffer.addVariables(addedRegistry.getAllVariablesIncludingDescendants());
-
-            if (myGUI != null)
+            if (change.wasVariableAdded())
             {
-               myGUI.updateNameSpaceHierarchyTree();
+               // System.err.println("Registering YoVariable to the SCS root Registry after the SCS has been started! yoVariableWasRegistered: "
+               // + registeredYoVariable);
+
+               // Make sure RCS still works with all of this!
+               myDataBuffer.addVariable(change.getTargetVariable());
+            }
+            if (change.wasCleared())
+            {
+               throw new RuntimeException("Clearing the SCS root Registry after the SCS has been started! Probably shouldn't do that...");
+            }
+            if (change.wasRegistryAdded())
+            {
+               // System.err.println("Adding a child YoRegistry to the SCS root Registry after the SCS has been started! YoRegistryWasAdded: "
+               // + addedRegistry);
+
+               myDataBuffer.addVariables(change.getTargetRegistry().subtreeVariables());
+
+               if (myGUI != null)
+               {
+                  myGUI.updateNameSpaceHierarchyTree();
+               }
             }
          }
       };
 
-      rootRegistry.attachYoVariableRegistryChangedListener(listener);
+      rootRegistry.addChangedListener(rootRegistryListener);
    }
 
    public SimulationConstructionSet(Robot robot, JApplet jApplet, SimulationConstructionSetParameters parameters)
@@ -785,12 +786,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       jFrame.setAlwaysOnTop(alwaysOnTop);
    }
 
-   public YoVariableRegistry getRootRegistry()
+   public YoRegistry getRootRegistry()
    {
       return rootRegistry;
    }
 
-   public void addYoVariableRegistry(YoVariableRegistry registry)
+   public void addYoRegistry(YoRegistry registry)
    {
       if (registry == null)
       {
@@ -801,48 +802,42 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public List<YoVariable<?>> getAllVariables()
+   public List<YoVariable> getVariables()
    {
-      return mySimulation.getAllVariables();
-   }
-
-   @Override
-   public YoVariable<?>[] getAllVariablesArray()
-   {
-      return mySimulation.getAllVariablesArray();
+      return mySimulation.getVariables();
    }
 
    // Every time you call this in a control system, an angel loses its wings. Only call this for reflection and testing type purposes, such as
    // trying to compare if two simulations ran the same way.
    // For control systems, write a method to get the specific variable you need. Saves tons of work when refactoring later
    @Override
-   public YoVariable<?> getVariable(String varname)
+   public YoVariable findVariable(String varname)
    {
-      return mySimulation.getVariable(varname);
+      return mySimulation.findVariable(varname);
    }
 
    @Override
-   public YoVariable<?> getVariable(String nameSpace, String varname)
+   public YoVariable findVariable(String nameSpace, String varname)
    {
-      return mySimulation.getVariable(nameSpace, varname);
+      return mySimulation.findVariable(nameSpace, varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String nameSpace, String varname)
+   public List<YoVariable> findVariables(String nameSpace, String varname)
    {
-      return mySimulation.getVariables(nameSpace, varname);
+      return mySimulation.findVariables(nameSpace, varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String varname)
+   public List<YoVariable> findVariables(String varname)
    {
-      return mySimulation.getVariables(varname);
+      return mySimulation.findVariables(varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(NameSpace nameSpace)
+   public List<YoVariable> findVariables(NameSpace nameSpace)
    {
-      return mySimulation.getVariables(nameSpace);
+      return mySimulation.findVariables(nameSpace);
    }
 
    @Override
@@ -858,53 +853,52 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Retrieves an List containing the YoVariables whos names contain the search string. If none
-    * exist, it returns null.
+    * Retrieves an List containing the YoVariables whos names contain the search string. If none exist,
+    * it returns null.
     *
     * @param searchString  String for which YoVariable names are checked.
     * @param caseSensitive Indicates if the search is to be case sensitive.
     * @return List of the YoVariables whos names contained searchString.
     */
-   public List<YoVariable<?>> getVariablesThatContain(String searchString, boolean caseSensitive)
+   public List<YoVariable> getVariablesThatContain(String searchString, boolean caseSensitive)
    {
       return mySimulation.getVariablesThatContain(searchString, caseSensitive);
    }
 
    /**
-    * Retrieves an List containing the YoVariables with names that contain searchString. If none
-    * exist, it returns null. This method assumes the string is case insensitive.
+    * Retrieves an List containing the YoVariables with names that contain searchString. If none exist,
+    * it returns null. This method assumes the string is case insensitive.
     *
     * @param searchString String for which YoVariable names are checked.
     * @return List of the YoVariables whos names contained searchString.
     */
-   public List<YoVariable<?>> getVariablesThatContain(String searchString)
+   public List<YoVariable> getVariablesThatContain(String searchString)
    {
       return mySimulation.getVariablesThatContain(searchString, false);
    }
 
    /**
-    * Retrieves an List containing the YoVariables with names that start with the searchString. If
-    * none exist, it returns null.
+    * Retrieves an List containing the YoVariables with names that start with the searchString. If none
+    * exist, it returns null.
     *
     * @param searchString String for which YoVariable names are checked.
     * @return List of the YoVariables whos names begin with searchString.
     */
-   public List<YoVariable<?>> getVariablesThatStartWith(String searchString)
+   public List<YoVariable> getVariablesThatStartWith(String searchString)
    {
       return mySimulation.getVariablesThatStartWith(searchString);
    }
 
    /**
     * Given an array of YoVariable names and an array of regular expressions this function returns an
-    * List of the YoVariables whos name's fit the regular expression. If a given variable fits
-    * multiple expressions it will be added multiple times.
+    * List of the YoVariables whos name's fit the regular expression. If a given variable fits multiple
+    * expressions it will be added multiple times.
     *
     * @param varNames           String array of the name of YoVariables to be checked.
     * @param regularExpressions String array of regular expressions to use.
-    * @return List of the YoVariables which have names that match the provided regular
-    *         expressions.
+    * @return List of the YoVariables which have names that match the provided regular expressions.
     */
-   public List<YoVariable<?>> getVars(String[] varNames, String[] regularExpressions)
+   public List<YoVariable> getVars(String[] varNames, String[] regularExpressions)
    {
       return mySimulation.getVars(varNames, regularExpressions);
    }
@@ -1325,7 +1319,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       ThreadTools.startAThread(this, "Simulation Contruction Set");
 
       if (SHOW_REGISTRY_SIZES_ON_STARTUP)
-         YoVariableRegistry.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
+         YoTools.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
 
       while (!hasSimulationThreadStarted())
       {
@@ -1378,7 +1372,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (rootRegistry != null)
       {
-         rootRegistry.closeAndDispose();
+         rootRegistry.removeChangedListener(rootRegistryListener);
+         rootRegistry.clear();
       }
 
       if (standardAllCommandsExecutor != null)
@@ -2163,8 +2158,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    {
       //TODO: Clean this up and clean up setRobot too.
 
-      YoVariableRegistry robotsYoVariableRegistry = robot.getRobotsYoVariableRegistry();
-      YoVariableRegistry parentRegistry = robotsYoVariableRegistry.getParent();
+      YoRegistry robotsYoRegistry = robot.getRobotsYoRegistry();
+      YoRegistry parentRegistry = robotsYoRegistry.getParent();
       if (parentRegistry != null)
       {
          throw new RuntimeException("SimulationConstructionSet.addRobot(). Trying to add robot registry as child to root registry, but it already has a parent registry: "
@@ -2172,7 +2167,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       boolean notifyListeners = false; // TODO: This is very hackish. If listeners are on, then the variables will be added to the data buffer. But mySimulation.setRobots() in a few lines does that...
-      rootRegistry.addChild(robotsYoVariableRegistry, notifyListeners);
+      rootRegistry.addChild(robotsYoRegistry, notifyListeners);
 
       mySimulation.addRobot(robot);
 
@@ -2183,11 +2178,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       {
          myGUI.addRobot(robot);
 
-         List<RewoundListener> simulationRewoundListeners = robot.getSimulationRewoundListeners();
-         for (RewoundListener simulationRewoundListener : simulationRewoundListeners)
-         {
-            myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
-         }
          // *** JJC a add variable search panel was removed from here.
       }
    }
@@ -2199,8 +2189,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void setRobot(Robot robot)
    {
-      YoVariableRegistry robotsYoVariableRegistry = robot.getRobotsYoVariableRegistry();
-      YoVariableRegistry parentRegistry = robotsYoVariableRegistry.getParent();
+      YoRegistry robotsYoRegistry = robot.getRobotsYoRegistry();
+      YoRegistry parentRegistry = robotsYoRegistry.getParent();
       if (parentRegistry != null)
       {
          throw new RuntimeException("SimulationConstructionSet.setRobot(). Trying to add robot registry as child to root registry, but it already has a parent registry: "
@@ -2208,7 +2198,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       boolean notifyListeners = false; // TODO: This is very hackish. If listeners are on, then the variables will be added to the data buffer. But mySimulation.setRobots() in a few lines does that...
-      rootRegistry.addChild(robotsYoVariableRegistry, notifyListeners);
+      rootRegistry.addChild(robotsYoRegistry, notifyListeners);
 
       mySimulation.setRobots(new Robot[] {robot});
 
@@ -2218,20 +2208,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       if (myGUI != null)
       {
          myGUI.setRobots(robots);
-
-         if (robots != null)
-         {
-            for (Robot robotToAddToGUI : robots)
-            {
-               List<RewoundListener> simulationRewoundListeners = robotToAddToGUI.getSimulationRewoundListeners();
-               for (RewoundListener simulationRewoundListener : simulationRewoundListeners)
-               {
-                  myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
-               }
-            }
-
-            // *** JJC a add variable search panel was removed from here.
-         }
       }
    }
 
@@ -2551,7 +2527,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       // t = rob.getVariable("t");
 
       if (SHOW_REGISTRY_SIZES_ON_STARTUP)
-         YoVariableRegistry.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
+         YoTools.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
 
       // Three state loop, simulation is either playing, running, or waiting
       while (true)
@@ -3763,7 +3739,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
       // List vars = myGUI.getVarsFromGroup(varGroup);
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
 
       // dataWriter.writeSpreadsheetFormattedData(myDataBuffer, (mySimulation.getDT() * mySimulation.getRecordFreq()), vars);
       dataWriter.writeSpreadsheetFormattedData(myDataBuffer, vars);
@@ -3785,7 +3761,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void writeData(String varGroupName, boolean binary, boolean compress, File chosenFile)
    {
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
       writeData(vars, binary, compress, chosenFile);
    }
 
@@ -3803,7 +3779,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @param chosenFile File to which data will be saved
     */
    @Override
-   public void writeData(List<YoVariable<?>> vars, boolean binary, boolean compress, File chosenFile)
+   public void writeData(List<YoVariable> vars, boolean binary, boolean compress, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
@@ -3816,7 +3792,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroup, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroup, varGroupList);
       dataWriter.writeMatlabBinaryData(mySimulation.getDT() * mySimulation.getRecordFreq(), myDataBuffer, vars);
    }
 
@@ -3941,7 +3917,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       System.out.println("Writing State File " + chosenFile.getName()); // filename);
 
       // List vars = myGUI.getVarsFromGroup(varGroup);
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
       dataWriter.writeState(robots[0].getName(), mySimulation.getDT() * mySimulation.getRecordFreq(), vars, binary, compress);
    }
 
@@ -3959,7 +3935,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
 
       dataWriter.writeSpreadsheetFormattedState(myDataBuffer, vars);
    }
@@ -4082,7 +4058,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
    }
 
-   // private void addVariablesToSimulationAndGUI(YoVariableRegistry registry)
+   // private void addVariablesToSimulationAndGUI(YoRegistry registry)
    // {
    //    addVariablesToSimulationAndGUI(registry.createVarListsIncludingChildren());
    // }
@@ -4288,8 +4264,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Adds all of the YoVariables contained in the provided List of VarLists to the simulation. If
-    * any of the variables are already present an exception will occur and that particular VarList will
+    * Adds all of the YoVariables contained in the provided List of VarLists to the simulation. If any
+    * of the variables are already present an exception will occur and that particular VarList will
     * fail. Each varlist will have its own tab in the var panel.
     *
     * @param newVarLists List
@@ -4908,7 +4884,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     *
     * @param registry
     */
-   public void setParameterRootPath(YoVariableRegistry registry)
+   public void setParameterRootPath(YoRegistry registry)
    {
       parameterRootPath = registry.getNameSpace();
    }

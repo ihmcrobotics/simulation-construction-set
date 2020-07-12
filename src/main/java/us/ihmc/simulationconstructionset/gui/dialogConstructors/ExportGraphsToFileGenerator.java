@@ -189,7 +189,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
 
    public static MLDouble convertToMatlabArray(DataEntry entry, int inPoint, int outPoint)
    {
-      YoVariable<?> variable = entry.getVariable();
+      YoVariable variable = entry.getVariable();
 
       double[] inData = entry.getData();
       double[] data;

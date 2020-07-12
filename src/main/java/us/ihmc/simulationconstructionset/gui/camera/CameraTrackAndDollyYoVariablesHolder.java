@@ -16,20 +16,20 @@ public class CameraTrackAndDollyYoVariablesHolder implements CameraTrackingAndDo
       {
          if (holder.hasUniqueVariable("q_x"))
          {
-            setTrackXVar((YoDouble) holder.getVariable("q_x"));
-            setDollyXVar((YoDouble) holder.getVariable("q_x"));
+            setTrackXVar((YoDouble) holder.findVariable("q_x"));
+            setDollyXVar((YoDouble) holder.findVariable("q_x"));
          }
 
          if (holder.hasUniqueVariable("q_y"))
          {
-            setTrackYVar((YoDouble) holder.getVariable("q_y"));
-            setDollyYVar((YoDouble) holder.getVariable("q_y"));
+            setTrackYVar((YoDouble) holder.findVariable("q_y"));
+            setDollyYVar((YoDouble) holder.findVariable("q_y"));
          }
 
          if (holder.hasUniqueVariable("q_z"))
          {
-            setTrackZVar((YoDouble) holder.getVariable("q_z"));
-            setDollyZVar((YoDouble) holder.getVariable("q_z"));
+            setTrackZVar((YoDouble) holder.findVariable("q_z"));
+            setDollyZVar((YoDouble) holder.findVariable("q_z"));
          }
       }
 

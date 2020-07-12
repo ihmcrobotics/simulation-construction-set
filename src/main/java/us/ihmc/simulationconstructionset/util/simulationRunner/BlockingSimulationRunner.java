@@ -248,13 +248,13 @@ public class BlockingSimulationRunner
 
    public void createValidDesiredICPListener()
    {
-      YoDouble desiredICPX = (YoDouble) scs.getVariable("desiredICPX");
-      YoDouble desiredICPY = (YoDouble) scs.getVariable("desiredICPY");
+      YoDouble desiredICPX = (YoDouble) scs.findVariable("desiredICPX");
+      YoDouble desiredICPY = (YoDouble) scs.findVariable("desiredICPY");
 
       desiredICPX.addVariableChangedListener(new VariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> v)
+         public void notifyOfVariableChange(YoVariable v)
          {
             if (!Double.isFinite(v.getValueAsDouble()))
                hasICPBeenInvalid.set(true);
@@ -263,7 +263,7 @@ public class BlockingSimulationRunner
       desiredICPY.addVariableChangedListener(new VariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> v)
+         public void notifyOfVariableChange(YoVariable v)
          {
             if (!Double.isFinite(v.getValueAsDouble()))
                hasICPBeenInvalid.set(true);

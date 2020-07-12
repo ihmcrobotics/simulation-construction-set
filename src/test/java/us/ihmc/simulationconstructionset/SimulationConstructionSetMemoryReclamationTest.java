@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.tools.MemoryTools;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 @Tag("gui")
@@ -126,14 +126,14 @@ public class SimulationConstructionSetMemoryReclamationTest
       if (useARobot)
       {
          FallingBrickRobot robot = new FallingBrickRobot();
-         YoVariableRegistry registry = new YoVariableRegistry("TestRegistry");
+         YoRegistry registry = new YoRegistry("TestRegistry");
 
          for (int i = 0; i < 5000; i++)
          {
             new YoDouble("variable" + i, registry);
          }
 
-         robot.addYoVariableRegistry(registry);
+         robot.addYoRegistry(registry);
 
          SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
          parameters.setDataBufferSize(5000);

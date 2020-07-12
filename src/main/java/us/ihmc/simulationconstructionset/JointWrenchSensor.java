@@ -18,8 +18,8 @@ public class JointWrenchSensor
    {
       this.name = name;
 
-      jointWrenchForce = new YoFrameVector3D(name + "_f", null, robot.getRobotsYoVariableRegistry());
-      jointWrenchTorque = new YoFrameVector3D(name + "_t", null, robot.getRobotsYoVariableRegistry());
+      jointWrenchForce = new YoFrameVector3D(name + "_f", null, robot.getRobotsYoRegistry());
+      jointWrenchTorque = new YoFrameVector3D(name + "_t", null, robot.getRobotsYoRegistry());
 
       this.offsetFromJoint.set(offsetFromJoint);
    }

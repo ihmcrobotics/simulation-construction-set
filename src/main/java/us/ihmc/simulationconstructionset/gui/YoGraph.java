@@ -381,7 +381,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
    public void addVariableFromSelectedVariableHolder()
    {
-      YoVariable<?> yoVariable = selectedVariableHolder.getSelectedVariable();
+      YoVariable yoVariable = selectedVariableHolder.getSelectedVariable();
       if (yoVariable != null)
          addVariable(dataEntryHolder.getEntry(yoVariable));
    }

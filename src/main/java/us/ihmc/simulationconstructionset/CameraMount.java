@@ -9,7 +9,7 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraConfiguration;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraMountInterface;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class CameraMount implements CameraMountInterface
@@ -85,7 +85,7 @@ public class CameraMount implements CameraMountInterface
 
    public void enablePanTiltRoll()
    {
-      YoVariableRegistry registry = new YoVariableRegistry("CameraMount");
+      YoRegistry registry = new YoRegistry("CameraMount");
 
       pan = new YoDouble("pan_" + name, registry);
       tilt = new YoDouble("tilt_" + name, registry);
@@ -96,7 +96,7 @@ public class CameraMount implements CameraMountInterface
 
       enablePanTiltRoll = true;
 
-      rob.addYoVariableRegistry(registry);
+      rob.addYoRegistry(registry);
    }
 
    private Point3D tempPoint3d;

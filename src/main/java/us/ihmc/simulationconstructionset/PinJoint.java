@@ -7,7 +7,7 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.PinJointPhysics;
 import us.ihmc.simulationconstructionset.torqueSpeedCurve.TorqueSpeedCurve;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 /**
@@ -41,7 +41,7 @@ public class PinJoint extends OneDegreeOfFreedomJoint
    public YoDouble qd_max, b_vel_limit;
    public YoDouble tau_max;
 
-   protected YoVariableRegistry registry;
+   protected YoRegistry registry;
 
    public TorqueSpeedCurve torqueSpeedCurve;
 
@@ -60,7 +60,7 @@ public class PinJoint extends OneDegreeOfFreedomJoint
       super(jname, offset, rob);
       physics = new PinJointPhysics(this);
 
-      registry = rob.getRobotsYoVariableRegistry();
+      registry = rob.getRobotsYoRegistry();
 
       initializeYoVariables(jname, registry);
 
@@ -401,9 +401,9 @@ public class PinJoint extends OneDegreeOfFreedomJoint
     * Initializes the YoVariables relevant for this joint.
     * 
     * @param jname    the name of the joint
-    * @param registry the YoVariableRegistry to which the YoVariables should be added.
+    * @param registry the YoRegistry to which the YoVariables should be added.
     */
-   protected void initializeYoVariables(String jname, YoVariableRegistry registry)
+   protected void initializeYoVariables(String jname, YoRegistry registry)
    {
       q = new YoDouble("q_" + jname, "PinJoint angle", registry);
       qd = new YoDouble("qd_" + jname, "PinJoint anglular velocity", registry);

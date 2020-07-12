@@ -18,7 +18,7 @@ import us.ihmc.jMonkeyEngineToolkit.jme.JMEGraphics3DAdapter;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
@@ -43,7 +43,7 @@ public class DynamicGraphicObjectEvaluation
       final SimulationConstructionSet scs = new SimulationConstructionSet(robot, graphicsAdapter, parameters);
       scs.setDT(0.1, 1);
 
-      YoVariableRegistry registry = new YoVariableRegistry("Polygon");
+      YoRegistry registry = new YoRegistry("Polygon");
       YoGraphicsListRegistry yoGraphicsListRegistry = new YoGraphicsListRegistry();
 
       // Polygon:
@@ -116,7 +116,7 @@ public class DynamicGraphicObjectEvaluation
       yoGraphicsListRegistry.registerGraphicsUpdatableToUpdateInAPlaybackListener(yoGraphicYoFramePolygon);
 
       scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       Graphics3DObject coordinateSystem = new Graphics3DObject();
       coordinateSystem.addCoordinateSystem(1.0);

@@ -5,7 +5,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.SliderJointPhysics;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 /**
@@ -23,7 +23,7 @@ import us.ihmc.yoVariables.variable.YoDouble;
 public class SliderJoint extends OneDegreeOfFreedomJoint
 {
    private static final long serialVersionUID = 1364230363983913667L;
-   private final YoVariableRegistry registry;
+   private final YoRegistry registry;
    protected YoDouble q, qd, qdd, tau;
    public YoDouble tauJointLimit, tauDamping;
 
@@ -46,7 +46,7 @@ public class SliderJoint extends OneDegreeOfFreedomJoint
       super(jname, offset, rob);
       physics = new SliderJointPhysics(this);
 
-      registry = rob.getRobotsYoVariableRegistry();
+      registry = rob.getRobotsYoRegistry();
 
       q = new YoDouble("q_" + jname, "Slider joint displacement", registry);
       qd = new YoDouble("qd_" + jname, "Slider joint linear velocity", registry);

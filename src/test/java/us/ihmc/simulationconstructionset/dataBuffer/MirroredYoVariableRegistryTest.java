@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.yoVariables.listener.VariableChangedListener;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -19,7 +19,7 @@ public class MirroredYoVariableRegistryTest
    @Test // timeout = 30000
    public void testMirroredRegistryIsTheSameAsOriginalAfterCreation()
    {
-      YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
 
       MirroredYoVariableRegistry mirroredRegistry = new MirroredYoVariableRegistry(originalRegistry);
 
@@ -27,10 +27,10 @@ public class MirroredYoVariableRegistryTest
    }
 
    @Test // timeout = 30000
-   public void testYoVariableRegistryChildren()
+   public void testYoRegistryChildren()
    {
-      YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
-      YoVariableRegistry childRegistry = createTestRegistry("ChildRegistry", TEST_VARIABLE_COUNT);
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      YoRegistry childRegistry = createTestRegistry("ChildRegistry", TEST_VARIABLE_COUNT);
 
       originalRegistry.addChild(childRegistry);
 
@@ -46,68 +46,68 @@ public class MirroredYoVariableRegistryTest
    @Test // timeout = 30000
    public void testChangesArePropagatedFromOriginal()
    {
-      YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
-      MirroredYoVariableRegistry mirroredYoVariableRegistry = new MirroredYoVariableRegistry(originalRegistry);
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      MirroredYoVariableRegistry mirroredYoRegistry = new MirroredYoVariableRegistry(originalRegistry);
 
-      for (YoVariable<?> yoVariable : originalRegistry.getAllVariables())
+      for (YoVariable yoVariable : originalRegistry.subtreeVariables())
       {
          yoVariable.setValueFromDouble(1.0);
       }
 
       // Should *not* be equal until updateValuesFromOriginal or updateMirror is called
-      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
+      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredYoRegistry));
 
-      mirroredYoVariableRegistry.updateValuesFromOriginal();
+      mirroredYoRegistry.updateValuesFromOriginal();
 
-      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
+      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoRegistry));
    }
 
    @Test // timeout = 30000
    public void testChangesArePropagatedFromMirror()
    {
-      YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
-      MirroredYoVariableRegistry mirroredYoVariableRegistry = new MirroredYoVariableRegistry(originalRegistry);
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      MirroredYoVariableRegistry mirroredYoRegistry = new MirroredYoVariableRegistry(originalRegistry);
 
-      for (YoVariable<?> yoVariable : mirroredYoVariableRegistry.getAllVariables())
+      for (YoVariable yoVariable : mirroredYoRegistry.subtreeVariables())
       {
          yoVariable.setValueFromDouble(2.0);
       }
 
       // Should *not* be equal until updateChangedValues or updateMirror is called
-      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
+      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredYoRegistry));
 
-      mirroredYoVariableRegistry.updateChangedValues();
+      mirroredYoRegistry.updateChangedValues();
 
-      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
+      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoRegistry));
    }
 
    @Test // timeout = 30000
    public void testMirrorValuesArePreferredWhenConflict()
    {
-      YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
-      MirroredYoVariableRegistry mirroredYoVariableRegistry = new MirroredYoVariableRegistry(originalRegistry);
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      MirroredYoVariableRegistry mirroredYoRegistry = new MirroredYoVariableRegistry(originalRegistry);
 
       final double newValueForOriginal = 2.0;
       final double newValueForMirror = 3.0;
 
-      for (YoVariable<?> yoVariable : originalRegistry.getAllVariables())
+      for (YoVariable yoVariable : originalRegistry.subtreeVariables())
       {
          yoVariable.setValueFromDouble(newValueForOriginal);
       }
 
-      for (YoVariable<?> yoVariable : mirroredYoVariableRegistry.getAllVariables())
+      for (YoVariable yoVariable : mirroredYoRegistry.subtreeVariables())
       {
          yoVariable.setValueFromDouble(newValueForMirror);
       }
 
       // Should *not* be equal until updateMirror is called
-      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
+      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredYoRegistry));
 
-      mirroredYoVariableRegistry.updateMirror();
+      mirroredYoRegistry.updateMirror();
 
-      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoVariableRegistry));
+      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoRegistry));
 
-      for (YoVariable<?> yoVariable : mirroredYoVariableRegistry.getAllVariables())
+      for (YoVariable yoVariable : mirroredYoRegistry.subtreeVariables())
       {
          assertEquals(yoVariable.getValueAsDouble(), newValueForMirror, 1e-10);
       }
@@ -116,50 +116,50 @@ public class MirroredYoVariableRegistryTest
    @Test // timeout = 30000
    public void testOriginalListenersAreCalledWhenMirrorChanges()
    {
-      YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
-      MirroredYoVariableRegistry mirroredYoVariableRegistry = new MirroredYoVariableRegistry(originalRegistry);
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      MirroredYoVariableRegistry mirroredYoRegistry = new MirroredYoVariableRegistry(originalRegistry);
 
       ListenerCounter listenerCounter = new ListenerCounter();
-      for (YoVariable<?> yoVariable : originalRegistry.getAllVariables())
+      for (YoVariable yoVariable : originalRegistry.subtreeVariables())
       {
          yoVariable.addVariableChangedListener(listenerCounter);
       }
 
-      for (YoVariable<?> yoVariable : mirroredYoVariableRegistry.getAllVariables())
+      for (YoVariable yoVariable : mirroredYoRegistry.subtreeVariables())
       {
          yoVariable.setValueFromDouble(1.0);
       }
 
-      mirroredYoVariableRegistry.updateMirror();
+      mirroredYoRegistry.updateMirror();
 
-      assertEquals(listenerCounter.callCount, originalRegistry.getAllVariables().size());
+      assertEquals(listenerCounter.callCount, originalRegistry.subtreeVariables().size());
    }
 
    @Test // timeout = 30000
    public void testMirrorListenersAreCalledWhenOriginalChanges()
    {
-      YoVariableRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
-      MirroredYoVariableRegistry mirroredYoVariableRegistry = new MirroredYoVariableRegistry(originalRegistry);
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      MirroredYoVariableRegistry mirroredYoRegistry = new MirroredYoVariableRegistry(originalRegistry);
 
       ListenerCounter listenerCounter = new ListenerCounter();
-      for (YoVariable<?> yoVariable : mirroredYoVariableRegistry.getAllVariables())
+      for (YoVariable yoVariable : mirroredYoRegistry.subtreeVariables())
       {
          yoVariable.addVariableChangedListener(listenerCounter);
       }
 
-      for (YoVariable<?> yoVariable : originalRegistry.getAllVariables())
+      for (YoVariable yoVariable : originalRegistry.subtreeVariables())
       {
          yoVariable.setValueFromDouble(1.0);
       }
 
-      mirroredYoVariableRegistry.updateMirror();
+      mirroredYoRegistry.updateMirror();
 
-      assertEquals(listenerCounter.callCount, mirroredYoVariableRegistry.getAllVariables().size());
+      assertEquals(listenerCounter.callCount, mirroredYoRegistry.subtreeVariables().size());
    }
 
-   private static YoVariableRegistry createTestRegistry(String name, int variableCount)
+   private static YoRegistry createTestRegistry(String name, int variableCount)
    {
-      YoVariableRegistry registry = new YoVariableRegistry(name);
+      YoRegistry registry = new YoRegistry(name);
       for (int i = 0; i < variableCount; i++)
       {
          new YoDouble("Variable" + i, registry);
@@ -167,15 +167,15 @@ public class MirroredYoVariableRegistryTest
       return registry;
    }
 
-   private static boolean areRegistryVariablesAreEqual(YoVariableRegistry registry1, YoVariableRegistry registry2)
+   private static boolean areRegistryVariablesAreEqual(YoRegistry registry1, YoRegistry registry2)
    {
-      if (registry1.getAllVariables().size() != registry2.getAllVariables().size())
+      if (registry1.subtreeVariables().size() != registry2.subtreeVariables().size())
          return false;
 
-      for (int i = 0; i < registry1.getAllVariables().size(); i++)
+      for (int i = 0; i < registry1.subtreeVariables().size(); i++)
       {
-         YoVariable<?> original = registry1.getAllVariables().get(i);
-         YoVariable<?> copy = registry2.getAllVariables().get(i);
+         YoVariable original = registry1.subtreeVariables().get(i);
+         YoVariable copy = registry2.subtreeVariables().get(i);
          if (!areYoVariablesEqual(original, copy))
          {
             return false;
@@ -184,7 +184,7 @@ public class MirroredYoVariableRegistryTest
       return true;
    }
 
-   private static boolean areYoVariablesEqual(YoVariable<?> var1, YoVariable<?> var2)
+   private static boolean areYoVariablesEqual(YoVariable var1, YoVariable var2)
    {
       return StringUtils.equals(var1.getName(), var2.getName()) && var1.getValueAsDouble() == var2.getValueAsDouble();
    }
@@ -194,7 +194,7 @@ public class MirroredYoVariableRegistryTest
       public int callCount = 0;
 
       @Override
-      public void notifyOfVariableChange(YoVariable<?> v)
+      public void notifyOfVariableChange(YoVariable v)
       {
          ++callCount;
       }

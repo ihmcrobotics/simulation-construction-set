@@ -6,7 +6,7 @@ import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
@@ -27,20 +27,20 @@ public class GroundContactPoint extends ExternalForcePoint
 
    public GroundContactPoint(String name, Robot robot)
    {
-      this(name, null, robot.getRobotsYoVariableRegistry());
+      this(name, null, robot.getRobotsYoRegistry());
    }
 
-   public GroundContactPoint(String name, YoVariableRegistry registry)
+   public GroundContactPoint(String name, YoRegistry registry)
    {
       this(name, null, registry);
    }
 
    public GroundContactPoint(String name, Tuple3DReadOnly offset, Robot robot)
    {
-      this(name, offset, robot.getRobotsYoVariableRegistry());
+      this(name, offset, robot.getRobotsYoRegistry());
    }
 
-   public GroundContactPoint(String name, Tuple3DReadOnly offset, YoVariableRegistry registry)
+   public GroundContactPoint(String name, Tuple3DReadOnly offset, YoRegistry registry)
    {
       super(name, offset, registry);
 

@@ -4,7 +4,7 @@ import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple4D.Quaternion;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoFrameQuaternion;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
@@ -42,7 +42,7 @@ public class IMUMount
 
       transformFromMountToJoint = new RigidBodyTransform(offset);
 
-      YoVariableRegistry registry = robot.getRobotsYoVariableRegistry();
+      YoRegistry registry = robot.getRobotsYoRegistry();
 
       orientation = new YoFrameQuaternion(name + "Orientation", null, registry);
 

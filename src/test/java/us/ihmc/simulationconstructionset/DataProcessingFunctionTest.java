@@ -8,7 +8,7 @@ import us.ihmc.simulationconstructionset.util.ControllerFailureException;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class DataProcessingFunctionTest
@@ -20,13 +20,13 @@ public class DataProcessingFunctionTest
    {
       final Robot robot = new Robot("DataProcessingFunctionTestRobot");
 
-      YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
+      YoRegistry registry = new YoRegistry(getClass().getSimpleName());
 
       final YoDouble variableOne = new YoDouble("variableOne", registry);
       final YoDouble variableTwo = new YoDouble("variableTwo", registry);
       final YoDouble variableThree = new YoDouble("variableThree", registry);
 
-      robot.addYoVariableRegistry(registry);
+      robot.addYoRegistry(registry);
 
       SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(SHOW_GUI);

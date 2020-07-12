@@ -1,12 +1,12 @@
 package us.ihmc.simulationconstructionset.util;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public interface RobotControlElement
 {
    public abstract void initialize();
 
-   public abstract YoVariableRegistry getYoVariableRegistry();
+   public abstract YoRegistry getYoRegistry();
 
    public default String getName()
    {

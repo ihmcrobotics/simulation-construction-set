@@ -13,7 +13,7 @@ import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactOval;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPolygon;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPosition;
 import us.ihmc.plotting.Plotter;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
 import us.ihmc.yoVariables.variable.YoFrameLine2D;
 import us.ihmc.yoVariables.variable.YoFrameLineSegment2D;
@@ -33,7 +33,7 @@ public class YoArtifactDemo
       //      plotter.setViewRange(1.0);
       plotter.setShowLabels(true);
 
-      YoVariableRegistry registry = new YoVariableRegistry("plotterDemo");
+      YoRegistry registry = new YoRegistry("plotterDemo");
 
       YoFramePoint2D center = new YoFramePoint2D("center", ReferenceFrame.getWorldFrame(), registry);
       YoFrameVector2D radii = new YoFrameVector2D("radii", ReferenceFrame.getWorldFrame(), registry);

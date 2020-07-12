@@ -66,15 +66,15 @@ public abstract class GroundProfileTest
       if (VISUALIZE)
       {
          Robot robot = new Robot("Test");
-         LinearStickSlipGroundContactModel groundModel = new LinearStickSlipGroundContactModel(robot, robot.getRobotsYoVariableRegistry());
+         LinearStickSlipGroundContactModel groundModel = new LinearStickSlipGroundContactModel(robot, robot.getRobotsYoRegistry());
          groundModel.setGroundProfile3D(groundProfile);
 
          robot.setGroundContactModel(groundModel);
 
          YoGraphicsListRegistry yoGraphicsListRegistry = new YoGraphicsListRegistry();
-         bagOfBalls = new BagOfBalls(robot.getRobotsYoVariableRegistry(), yoGraphicsListRegistry);
-         surfaceNormalPointForViz = new YoFramePoint3D("surfaceNormalPointForViz", ReferenceFrame.getWorldFrame(), robot.getRobotsYoVariableRegistry());
-         surfaceNormalViz = new YoFrameVector3D("surfaceNormalVector", ReferenceFrame.getWorldFrame(), robot.getRobotsYoVariableRegistry());
+         bagOfBalls = new BagOfBalls(robot.getRobotsYoRegistry(), yoGraphicsListRegistry);
+         surfaceNormalPointForViz = new YoFramePoint3D("surfaceNormalPointForViz", ReferenceFrame.getWorldFrame(), robot.getRobotsYoRegistry());
+         surfaceNormalViz = new YoFrameVector3D("surfaceNormalVector", ReferenceFrame.getWorldFrame(), robot.getRobotsYoRegistry());
          YoGraphicVector surfaceNormalGraphicVector = new YoGraphicVector("surfaceNormalViz",
                                                                           surfaceNormalPointForViz,
                                                                           surfaceNormalViz,

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
@@ -25,7 +25,7 @@ public class TimeScript implements Script
    private ArrayList<TimeScriptEntry> sortedTimeScriptEntryList = new ArrayList<>();
    private final YoInteger nextTimeScriptIndex;
 
-   public TimeScript(YoVariableRegistry registry)
+   public TimeScript(YoRegistry registry)
    {
       nextTimeScriptIndex = new YoInteger("nextTimeScriptIndex", registry);
       nextTimeScriptIndex.set(0);
@@ -194,7 +194,7 @@ public class TimeScript implements Script
          }
 
          String varname = line.substring(0, equalIndex).trim();
-         YoVariable variable = holder.getVariable(varname);
+         YoVariable variable = holder.findVariable(varname);
          if (variable == null)
          {
             System.err.println("Warning!  Variable not recognized: " + varname);

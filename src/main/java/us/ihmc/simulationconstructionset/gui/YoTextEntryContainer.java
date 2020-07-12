@@ -18,7 +18,7 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
    private static final int TEXT_BOX_WIDTH = 100;
    private static final int BOX_HEIGHT = YoEntryBox.COMPONENT_HEIGHT;
    private NumberFormat numFormat;
-   private YoVariable<?> variableInThisBox;
+   private YoVariable variableInThisBox;
    private JLabel label;
    private JTextField jTextField;
 
@@ -27,7 +27,7 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
    }
 
    @Override
-   public YoVariable<?> getVariable()
+   public YoVariable getVariable()
    {
       return variableInThisBox;
    }
@@ -97,7 +97,7 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
    }
 
    @Override
-   public void removeVariable(YoVariable<?> variable)
+   public void removeVariable(YoVariable variable)
    {
       if (getVariable() == variable)
          variableInThisBox = null;
@@ -135,7 +135,7 @@ public class YoTextEntryContainer implements YoVariableEntryContainer
    }
 
    @Override
-   public void bindToVariable(YoEntryBox yoEntryBox, YoVariable<?> variable)
+   public void bindToVariable(YoEntryBox yoEntryBox, YoVariable variable)
    {
       variableInThisBox = variable;
       label.setText("  " + variable.getName() + "  ");

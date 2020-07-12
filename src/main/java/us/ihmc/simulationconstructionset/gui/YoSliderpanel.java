@@ -15,12 +15,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.registry.YoTools;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 @SuppressWarnings("serial")
 public class YoSliderpanel extends JPanel implements MouseListener, VariableChangedListener
 {
-   private YoVariable<?> var;
+   private static final int SHORT_NAME_LENGTH = 20;
+   private YoVariable var;
    private double min = 0.0;
    private double max = 0.0;
    private JTextField maxField;
@@ -32,7 +34,7 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
 
    double precision = 1000;
 
-   public YoSliderpanel(YoVariable<?> var)
+   public YoSliderpanel(YoVariable var)
    {
       this.var = var;
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -61,7 +63,7 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
 
    private void setup()
    {
-      name = new JLabel(var.getShortName());
+      name = new JLabel(YoTools.shortenString(var.getName(), SHORT_NAME_LENGTH));
       min = var.getValueAsDouble() - defaultMinMaxOffset;
       max = var.getValueAsDouble() + defaultMinMaxOffset;
 
@@ -190,7 +192,7 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
    }
 
    @Override
-   public void notifyOfVariableChange(YoVariable<?> v)
+   public void notifyOfVariableChange(YoVariable v)
    {
       value.setText(v.getValueAsDouble() + "");
       setSliderValueOnVariableChange();

@@ -8,20 +8,20 @@ import javax.swing.event.ChangeListener;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoVariableRegistryParameterPanel extends YoVariablePanel
 {
    private static final long serialVersionUID = -4138864557620938578L;
-   private final List<YoVariable<?>> parameters = new ArrayList<>();
+   private final List<YoVariable> parameters = new ArrayList<>();
 
-   public YoVariableRegistryParameterPanel(YoVariableRegistry registry, SelectedVariableHolder holder, YoVariablePanelJPopupMenu varPanelJPopupMenu)
+   public YoVariableRegistryParameterPanel(YoRegistry registry, SelectedVariableHolder holder, YoVariablePanelJPopupMenu varPanelJPopupMenu)
    {
       super(registry.getName(), holder, varPanelJPopupMenu);
 
-      List<YoVariable<?>> registryVariables = registry.getAllVariablesInThisListOnly();
-      for (YoVariable<?> var : registryVariables)
+      List<YoVariable> registryVariables = registry.subtreeVariables();
+      for (YoVariable var : registryVariables)
       {
          if (var.isParameter())
          {
@@ -32,13 +32,13 @@ public class YoVariableRegistryParameterPanel extends YoVariablePanel
    }
 
    @Override
-   protected YoVariable<?> getYoVariable(int index)
+   protected YoVariable getYoVariable(int index)
    {
       return parameters.get(index);
    }
 
    @Override
-   protected List<YoVariable<?>> getAllYoVariablesCopy()
+   protected List<YoVariable> getAllYoVariablesCopy()
    {
       return new ArrayList<>(parameters);
    }
@@ -50,9 +50,9 @@ public class YoVariableRegistryParameterPanel extends YoVariablePanel
    }
 
    @Override
-   public YoVariable<?> getYoVariable(String name)
+   public YoVariable getYoVariable(String name)
    {
-      for (YoVariable<?> var : parameters)
+      for (YoVariable var : parameters)
       {
          if (var.getName().equals(name))
          {
@@ -65,6 +65,6 @@ public class YoVariableRegistryParameterPanel extends YoVariablePanel
    @Override
    public void addChangeListener(ChangeListener changeListener)
    {
-      throw new RuntimeException("YoVariableRegistryVarList.addChangeListener() not yet implemented.");
+      throw new RuntimeException("YoRegistryVarList.addChangeListener() not yet implemented.");
    }
 }

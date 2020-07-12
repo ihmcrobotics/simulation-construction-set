@@ -7,10 +7,10 @@ import us.ihmc.yoVariables.variable.YoVariable;
 public class VariableDifference
 {
    private final double timeOfDifference;
-   private final YoVariable<?> variableOne;
-   private final YoVariable<?> variableTwo;
+   private final YoVariable variableOne;
+   private final YoVariable variableTwo;
 
-   public VariableDifference(double timeOfDifference, YoVariable<?> variableOne, YoVariable<?> variableTwo)
+   public VariableDifference(double timeOfDifference, YoVariable variableOne, YoVariable variableTwo)
    {
       this.timeOfDifference = timeOfDifference;
 
@@ -23,12 +23,12 @@ public class VariableDifference
       return timeOfDifference;
    }
 
-   public YoVariable<?> getVariableOne()
+   public YoVariable getVariableOne()
    {
       return variableOne;
    }
 
-   public YoVariable<?> getVariableTwo()
+   public YoVariable getVariableTwo()
    {
       return variableTwo;
    }

@@ -777,19 +777,19 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
 
       CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyYoVariablesHolder = (CameraTrackAndDollyYoVariablesHolder) camera.getCameraTrackAndDollyVariablesHolder();
 
-      YoDouble trackXVar = (YoDouble) holder.getVariable(config.getTrackXVar());
-      YoDouble trackYVar = (YoDouble) holder.getVariable(config.getTrackYVar());
-      YoDouble trackZVar = (YoDouble) holder.getVariable(config.getTrackZVar());
+      YoDouble trackXVar = (YoDouble) holder.findVariable(config.getTrackXVar());
+      YoDouble trackYVar = (YoDouble) holder.findVariable(config.getTrackYVar());
+      YoDouble trackZVar = (YoDouble) holder.findVariable(config.getTrackZVar());
       cameraTrackAndDollyYoVariablesHolder.setTrackingVars(trackXVar, trackYVar, trackZVar);
 
-      YoDouble dollyXVar = (YoDouble) holder.getVariable(config.getDollyXVar());
-      YoDouble dollyYVar = (YoDouble) holder.getVariable(config.getDollyYVar());
-      YoDouble dollyZVar = (YoDouble) holder.getVariable(config.getDollyZVar());
+      YoDouble dollyXVar = (YoDouble) holder.findVariable(config.getDollyXVar());
+      YoDouble dollyYVar = (YoDouble) holder.findVariable(config.getDollyYVar());
+      YoDouble dollyZVar = (YoDouble) holder.findVariable(config.getDollyZVar());
       cameraTrackAndDollyYoVariablesHolder.setDollyVars(dollyXVar, dollyYVar, dollyZVar);
 
       if (config.getFieldOfViewVar() != null)
       {
-         YoDouble fieldOfViewVar = (YoDouble) yoVariableHolder.getVariable(config.getFieldOfViewVar());
+         YoDouble fieldOfViewVar = (YoDouble) yoVariableHolder.findVariable(config.getFieldOfViewVar());
          cameraTrackAndDollyYoVariablesHolder.setFieldOfViewVar(fieldOfViewVar);
       }
 

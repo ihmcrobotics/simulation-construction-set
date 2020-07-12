@@ -453,7 +453,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
    public void addSelectedVariableGraph()
    {
-      YoVariable<?> variable = selectedVariableHolder.getSelectedVariable();
+      YoVariable variable = selectedVariableHolder.getSelectedVariable();
       DataBufferEntry entry = dataBuffer.getEntry(variable);
       YoGraph g = new YoGraph(this, this, selectedVariableHolder, dataBuffer, dataBuffer, parentFrame);
       g.addVariable(entry);

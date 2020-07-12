@@ -200,7 +200,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
                                                                            groundContactPoints,
                                                                            joint,
                                                                            forceSensorDescription.getTransformToJoint(),
-                                                                           yoVariableRegistry);
+                                                                           yoRegistry);
 
             if (forceSensorDescription.useShapeCollision())
             {
@@ -210,7 +210,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
                                                                           contactPoints,
                                                                           joint,
                                                                           forceSensorDescription.getTransformToJoint(),
-                                                                          yoVariableRegistry);
+                                                                          yoRegistry);
             }
          }
          else
@@ -280,7 +280,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
             estimatedNumberOfContactPoints += collisionMesh.getEstimatedNumberOfContactPoints();
          }
 
-         link.enableContactingExternalForcePoints(estimatedNumberOfContactPoints, yoVariableRegistry);
+         link.enableContactingExternalForcePoints(estimatedNumberOfContactPoints, yoRegistry);
       }
    }
 
@@ -370,7 +370,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
                                                                            groundContactPoints,
                                                                            joint,
                                                                            forceSensorDescription.getTransformToJoint(),
-                                                                           yoVariableRegistry);
+                                                                           yoRegistry);
          }
          else
          {

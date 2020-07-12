@@ -11,7 +11,7 @@ import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
@@ -39,12 +39,12 @@ public class SimulationConstructionSetFestTest
       FallingBrickRobot robot = new FallingBrickRobot();
 
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
-      YoVariableRegistry registryOne = new YoVariableRegistry("RegistryOne");
+      YoRegistry registryOne = new YoRegistry("RegistryOne");
       YoEnum<Axis3D> enumForTests = new YoEnum<>("enumForTests", registryOne, Axis3D.class);
-      YoVariableRegistry registryTwo = new YoVariableRegistry("RegistryTwo");
+      YoRegistry registryTwo = new YoRegistry("RegistryTwo");
       YoBoolean booleanForTests = new YoBoolean("booleanForTests", registryTwo);
       registryOne.addChild(registryTwo);
-      scs.addYoVariableRegistry(registryOne);
+      scs.addYoRegistry(registryOne);
 
       scs.setFrameMaximized();
       scs.startOnAThread();
@@ -124,7 +124,7 @@ public class SimulationConstructionSetFestTest
       testFixture.middleClickInNthGraph(2);
 
       testFixture.selectVariableAndSetValueInSearchTab("q_z", 1.31);
-      YoDouble q_z = (YoDouble) scs.getVariable("q_z");
+      YoDouble q_z = (YoDouble) scs.findVariable("q_z");
       assertEquals(1.31, q_z.getDoubleValue(), 1e-9);
 
       // Simulate and replay

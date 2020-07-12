@@ -23,7 +23,7 @@ import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
 import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
 import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisualizer;
 import us.ihmc.simulationconstructionset.util.ground.TerrainObject3D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class CollisionManager
 {
@@ -96,7 +96,7 @@ public class CollisionManager
          }
       }
 
-      environmentStaticLink.enableCollisions(10, getCollisionHandler(), environmentRobot.getRobotsYoVariableRegistry());
+      environmentStaticLink.enableCollisions(10, getCollisionHandler(), environmentRobot.getRobotsYoRegistry());
    }
 
    public void createCollisionShapesFromRobots(Robot[] robots)
@@ -111,7 +111,7 @@ public class CollisionManager
       for (int i = 0; i < robots.length; i++)
       {
          Robot robot = robots[i];
-         createCollisionShapesFromLinks(robot, collisionShapeFactory, collisionHandler, robot.getRobotsYoVariableRegistry());
+         createCollisionShapesFromLinks(robot, collisionShapeFactory, collisionHandler, robot.getRobotsYoRegistry());
       }
 
       this.collisionDetector = collisionDetector;
@@ -133,7 +133,7 @@ public class CollisionManager
    }
 
    private static void createCollisionShapesFromLinks(Robot robot, CollisionShapeFactory collisionShapeFactory, CollisionHandler collisionHandler,
-                                                      YoVariableRegistry registry)
+                                                      YoRegistry registry)
    {
       List<Joint> rootJoints = robot.getRootJoints();
       for (int i = 0; i < rootJoints.size(); i++)
@@ -144,7 +144,7 @@ public class CollisionManager
    }
 
    private static void createCollisionShapesFromLinksRecursively(Joint joint, CollisionShapeFactory collisionShapeFactory, CollisionHandler collisionHandler,
-                                                                 YoVariableRegistry registry)
+                                                                 YoRegistry registry)
    {
       Link link = joint.getLink();
       List<CollisionMeshDescription> collisionMeshDescriptions = link.getCollisionMeshDescriptions();

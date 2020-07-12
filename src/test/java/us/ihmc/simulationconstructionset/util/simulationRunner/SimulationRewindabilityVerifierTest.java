@@ -12,7 +12,7 @@ import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
 import us.ihmc.simulationconstructionset.util.RobotController;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class SimulationRewindabilityVerifierTest
@@ -162,7 +162,7 @@ public class SimulationRewindabilityVerifierTest
 
    private static class RewindableController implements RobotController
    {
-      protected final YoVariableRegistry registry = new YoVariableRegistry("controller");
+      protected final YoRegistry registry = new YoRegistry("controller");
 
       protected final YoDouble variableOne = new YoDouble("variableOne", registry);
       protected final YoDouble variableTwo = new YoDouble("variableTwo", registry);
@@ -186,7 +186,7 @@ public class SimulationRewindabilityVerifierTest
       }
 
       @Override
-      public YoVariableRegistry getYoVariableRegistry()
+      public YoRegistry getYoRegistry()
       {
          return registry;
       }

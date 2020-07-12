@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.simulationconstructionset.DataFileReader;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariableList;
 
@@ -95,8 +95,8 @@ public class StateFileComparer
       YoVariableList varListOne = new YoVariableList("VarListOne");
       YoVariableList varListTwo = new YoVariableList("VarListTwo");
 
-      YoVariableRegistry registryOne = new YoVariableRegistry("");
-      YoVariableRegistry registryTwo = new YoVariableRegistry("");
+      YoRegistry registryOne = new YoRegistry("");
+      YoRegistry registryTwo = new YoRegistry("");
 
       try
       {

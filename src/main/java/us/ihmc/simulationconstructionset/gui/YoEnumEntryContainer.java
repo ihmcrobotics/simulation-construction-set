@@ -39,7 +39,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    }
 
    @Override
-   public YoVariable<?> getVariable()
+   public YoVariable getVariable()
    {
       return variableInThisBox;
    }
@@ -68,7 +68,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    }
 
    @Override
-   public void removeVariable(YoVariable<?> variable)
+   public void removeVariable(YoVariable variable)
    {
       if (getVariable() == variable)
          variableInThisBox = null;
@@ -104,7 +104,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
    }
 
    @Override
-   public void bindToVariable(YoEntryBox yoEntryBox, YoVariable<?> variable)
+   public void bindToVariable(YoEntryBox yoEntryBox, YoVariable variable)
    {
       if (variable instanceof YoEnum<?>)
       {

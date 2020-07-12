@@ -9,7 +9,7 @@ import us.ihmc.yoVariables.variable.YoVariable;
 
 public class DataBufferTools
 {
-   public static List<YoVariable<?>> getVarsFromGroup(DataBuffer dataBuffer, String varGroupName, VarGroupList varGroupList)
+   public static List<YoVariable> getVarsFromGroup(DataBuffer dataBuffer, String varGroupName, VarGroupList varGroupList)
    {
       if (varGroupName.equals("all"))
       {

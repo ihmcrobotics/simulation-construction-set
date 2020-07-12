@@ -8,7 +8,7 @@ import java.util.Set;
 
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.yoVariables.listener.VariableChangedListener;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class SimulationRewindabilityVerifierWithStackTracing
@@ -16,7 +16,7 @@ public class SimulationRewindabilityVerifierWithStackTracing
    private final double EPSILON = 1e-14;
 
    private final VariablesThatShouldMatchList VariablesThatShouldMatchList;
-   private final YoVariableRegistry rootRegistryOne, rootRegistryTwo;
+   private final YoRegistry rootRegistryOne, rootRegistryTwo;
    private final LinkedHashMap<Thread, ArrayList<VariableChangeAndStackTrace>> changesForSimOne = new LinkedHashMap<>();
    private final LinkedHashMap<Thread, ArrayList<VariableChangeAndStackTrace>> changesForSimTwo = new LinkedHashMap<>();
 
@@ -33,12 +33,12 @@ public class SimulationRewindabilityVerifierWithStackTracing
       VariableChangedListener variableChangedListenerForSimOne = new VariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> variableInRegistryOne)
+         public void notifyOfVariableChange(YoVariable variableInRegistryOne)
          {
             if (!recordDifferencesForSimOne)
                return;
 
-            YoVariable<?> variableInRegistryTwo = VariablesThatShouldMatchList.getYoVariableInListTwo(variableInRegistryOne.getFullNameWithNameSpace());
+            YoVariable variableInRegistryTwo = VariablesThatShouldMatchList.getYoVariableInListTwo(variableInRegistryOne.getFullNameWithNameSpace());
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
             Thread thread = Thread.currentThread();
@@ -61,12 +61,12 @@ public class SimulationRewindabilityVerifierWithStackTracing
       VariableChangedListener variableChangedListenerForSimTwo = new VariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> variableInRegistryTwo)
+         public void notifyOfVariableChange(YoVariable variableInRegistryTwo)
          {
             if (!recordDifferencesForSimTwo)
                return;
 
-            YoVariable<?> variableInRegistryOne = VariablesThatShouldMatchList.getYoVariableInListOne(variableInRegistryTwo.getFullNameWithNameSpace());
+            YoVariable variableInRegistryOne = VariablesThatShouldMatchList.getYoVariableInListOne(variableInRegistryTwo.getFullNameWithNameSpace());
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
             Thread thread = Thread.currentThread();
@@ -86,8 +86,8 @@ public class SimulationRewindabilityVerifierWithStackTracing
          }
       };
 
-      List<YoVariable<?>[]> variablesThatShouldMatch = VariablesThatShouldMatchList.getVariablesThatShouldMatch();
-      for (YoVariable<?>[] variablesToMatch : variablesThatShouldMatch)
+      List<YoVariable[]> variablesThatShouldMatch = VariablesThatShouldMatchList.getVariablesThatShouldMatch();
+      for (YoVariable[] variablesToMatch : variablesThatShouldMatch)
       {
          variablesToMatch[0].addVariableChangedListener(variableChangedListenerForSimOne);
          variablesToMatch[1].addVariableChangedListener(variableChangedListenerForSimTwo);
@@ -352,12 +352,12 @@ public class SimulationRewindabilityVerifierWithStackTracing
    private class VariableChangeAndStackTrace
    {
       private final Thread thread;
-      private final YoVariable<?> variableOne;
-      private final YoVariable<?> variableTwo;
+      private final YoVariable variableOne;
+      private final YoVariable variableTwo;
       private final double variableValue;
       private final StackTraceElement[] stackTrace;
 
-      public VariableChangeAndStackTrace(Thread thread, YoVariable<?> variableOne, YoVariable<?> variableTwo, double variableValue,
+      public VariableChangeAndStackTrace(Thread thread, YoVariable variableOne, YoVariable variableTwo, double variableValue,
                                          StackTraceElement[] stackTrace)
       {
          this.thread = thread;

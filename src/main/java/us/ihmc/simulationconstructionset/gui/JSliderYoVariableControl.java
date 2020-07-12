@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -33,7 +33,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 {
    private static final int SLIDER_MIN_VALUE = 0;
    private static final int SLIDER_MAX_VALUE = 100;
-   private YoVariable<?> yoVariable;
+   private YoVariable yoVariable;
 
    private static final long serialVersionUID = 8570638563928914747L;
 
@@ -254,7 +254,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
       yoVariable.setValueFromDouble(value, false);
 
       //We do not want to notify ourself that the variable changed
-      ArrayList<VariableChangedListener> listOfListeners = yoVariable.getVariableChangedListeners();
+      List<VariableChangedListener> listOfListeners = yoVariable.getVariableChangedListeners();
 
       for (VariableChangedListener variableChangedListener : listOfListeners)
       {
@@ -348,7 +348,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
       }
 
       @Override
-      public void notifyOfVariableChange(YoVariable<?> v)
+      public void notifyOfVariableChange(YoVariable v)
       {
          //change slider
          jSliderYoVariableControl.setSliderPosition(convertParameterValueToSlider(v.getValueAsDouble()));

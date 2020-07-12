@@ -29,20 +29,20 @@ import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableSearchPanel;
 import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySelectedListener
 {
    private static final long serialVersionUID = -3403238490036872889L;
 
-   private final YoVariableRegistry rootRegistry;
+   private final YoRegistry rootRegistry;
    private final LinkedHashMap<JComponent, Integer> tabIndices = new LinkedHashMap<>();
 
    private JTabbedPane tabPane;
 
    private YoVariablePanel visibleVarPanel;
-   private YoVariableRegistry visibleVarPanelRegistry;
+   private YoRegistry visibleVarPanelRegistry;
 
    private JScrollPane scrollPane;
    private NameSpaceHierarchyTree nameSpaceHierarchyTree;
@@ -64,7 +64,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    public YoVariableExplorerTabbedPane(YoVariableDoubleClickListener yoVariableDoubleClickListener, JFrame frame,
                                        BookmarkedVariablesHolder bookmarkedVariablesHolder, final SelectedVariableHolder selectedVariableHolder,
                                        EntryBoxArrayPanel entryBoxArrayPanel, WriteDataCommandExecutor writeDataCommandExecutor,
-                                       YoVariableRegistry rootRegistry)
+                                       YoRegistry rootRegistry)
    {
       setName("CombinedVarPanel");
       setLayout(new BorderLayout());
@@ -168,7 +168,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    {
       NameSpace fullNameSpace = new NameSpace(nameSpaceName);
 
-      YoVariableRegistry registry = rootRegistry.getRegistry(fullNameSpace);
+      YoRegistry registry = rootRegistry.findRegistry(fullNameSpace);
 
       if (registry == null)
       {
@@ -178,7 +178,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       setVisibleVarPanel(registry);
    }
 
-   public void setVisibleVarPanel(YoVariableRegistry registry)
+   public void setVisibleVarPanel(YoRegistry registry)
    {
       YoVariablePanel varPanel;
       if (onlyParameters.isSelected())
@@ -193,7 +193,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       setVisibleVarPanel(varPanel, registry);
    }
 
-   private void setVisibleVarPanel(YoVariablePanel varPanel, YoVariableRegistry registry)
+   private void setVisibleVarPanel(YoVariablePanel varPanel, YoRegistry registry)
    {
       if (visibleVarPanel != null)
       {
@@ -314,7 +314,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       }
    }
 
-   public void showNameSpace(YoVariableRegistry titleOfNameSpace)
+   public void showNameSpace(YoRegistry titleOfNameSpace)
    {
       tabPane.setSelectedComponent(nameSpaceHierarchyTree);
       nameSpaceHierarchyTree.showNameSpace(titleOfNameSpace);
@@ -326,7 +326,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    }
 
    @Override
-   public void registryWasSelected(YoVariableRegistry selectedRegistry)
+   public void registryWasSelected(YoRegistry selectedRegistry)
    {
       setVisibleVarPanel(selectedRegistry);
    }

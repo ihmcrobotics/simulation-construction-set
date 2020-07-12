@@ -49,13 +49,13 @@ public class YoVariableListPanel extends YoVariablePanel
    }
 
    @Override
-   protected YoVariable<?> getYoVariable(int index)
+   protected YoVariable getYoVariable(int index)
    {
       return varList.getVariable(index);
    }
 
    @Override
-   protected List<YoVariable<?>> getAllYoVariablesCopy()
+   protected List<YoVariable> getAllYoVariablesCopy()
    {
       return new ArrayList<>(varList.getVariables());
    }
@@ -67,12 +67,12 @@ public class YoVariableListPanel extends YoVariablePanel
    }
 
    @Override
-   public YoVariable<?> getYoVariable(String name)
+   public YoVariable getYoVariable(String name)
    {
       return varList.getVariable(name);
    }
 
-   public void addVariable(final YoVariable<?> v)
+   public void addVariable(final YoVariable v)
    {
       if (v != null)
       {
@@ -89,7 +89,7 @@ public class YoVariableListPanel extends YoVariablePanel
       }
    }
 
-   public void removeVariable(YoVariable<?> v)
+   public void removeVariable(YoVariable v)
    {
       int indexOfVariableValueToRemove = varList.getIndexOfVariable(v);
       if ((indexOfVariableValueToRemove >= 0) && (indexOfVariableValueToRemove < getYoVariableSpinners().size()))

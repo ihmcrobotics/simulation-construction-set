@@ -5,7 +5,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeWithLink;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 import us.ihmc.yoVariables.variable.YoInteger;
@@ -25,7 +25,7 @@ public class ContactingExternalForcePoint extends ExternalForcePoint
    private CollisionShapeWithLink collisionShape;
    private int numberOfPointsInContactWithSameShape = 0;
 
-   public ContactingExternalForcePoint(String name, Joint parentJoint, YoVariableRegistry registry)
+   public ContactingExternalForcePoint(String name, Joint parentJoint, YoRegistry registry)
    {
       super(name, registry);
 

@@ -23,7 +23,7 @@ public class YoVariableDoubleClickListener implements DoubleClickListener
    }
 
    @Override
-   public void doubleClicked(YoVariable<?> v)
+   public void doubleClicked(YoVariable v)
    {
       DataBufferEntry entry = dataBuffer.getEntry(v);
 

@@ -39,41 +39,12 @@ public class DataFileWriter
       outFile = file;
    }
 
-   /*
-    * public void writeData(String model, double recordDT, DataBuffer dataBuffer) { ArrayList entries =
-    * dataBuffer.getEntries(); try { //System.out.println("Creating output Streams");
-    * //FileOutputStream outStream = new FileOutputStream(outFile); //DataOutputStream dataStream = new
-    * DataOutputStream(outStream); DataOutputStream dataStream = new DataOutputStream(new
-    * BufferedOutputStream(new FileOutputStream(outFile))); dataStream.writeBytes("$BEGIN_HEADER\n");
-    * //Calendar cal = Calendar.getInstance(); Date today = new Date(); //cal.setTime(today);
-    * //cal.get(cal.DATE); //dataStream.write dataStream.writeBytes("$WHEN " + today.toString() +
-    * "\n"); dataStream.writeBytes("$MODEL " + model + "\n"); dataStream.writeBytes("$INDIVIDUAL\n");
-    * dataStream.writeBytes("$SUN_DATA\n"); dataStream.writeBytes("$BINARY\n");
-    * dataStream.writeBytes("$COLUMN\n"); dataStream.writeBytes("$DT " + String.valueOf(recordDT) +
-    * "\n"); dataStream.writeBytes("$NVAR " + String.valueOf(entries.size()) + "\n"); for(int
-    * i=0;i<entries.size();i++) { DataBufferEntry entry = (DataBufferEntry) entries.get(i); YoVariable
-    * variable = entry.getVariable(); dataStream.writeBytes("$VAR " + variable.getName() + " " +
-    * entry.getManualMinScaling() + " " + entry.getManualMaxScaling() + "\n"); } int bufferLength =
-    * dataBuffer.getBufferInOutLength(); dataStream.writeBytes("$N " + String.valueOf(bufferLength) +
-    * "\n"); dataStream.writeBytes("$END_HEADER\n"); // Write the binary data here: for(int
-    * i=0;i<entries.size();i++) { DataBufferEntry entry = (DataBufferEntry) entries.get(i); double[]
-    * data = entry.getWindowedData(dataBuffer.getInPoint(), dataBuffer.getOutPoint(), bufferLength);
-    * for(int j=0;j<bufferLength;j++) { dataStream.writeFloat(((float) data[j])); } }
-    * dataStream.close(); //outStream.close(); } catch (IOException e){} } public void
-    * writeState(String model, double recordDT, ArrayList variables) { //ArrayList variables =
-    * combinedVarPanel.getAllVars(); try { //System.out.println("Creating output Streams");
-    * BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile)));
-    * for(int i=0;i<variables.size();i++) { YoVariable variable = (YoVariable) variables.get(i);
-    * out.write(variable.getName() + " = " + variable.getDoubleValue() + ";\n"); } out.close(); } catch
-    * (IOException e){} }
-    */
-
-   public void writeData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean binary, boolean compress)
+   public void writeData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable> vars, boolean binary, boolean compress)
    {
       writeData(model, recordDT, dataBuffer, vars, binary, compress, null);
    }
 
-   public void writeData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean binary, boolean compress, Robot robot)
+   public void writeData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable> vars, boolean binary, boolean compress, Robot robot)
    {
       if (binary)
          writeBinaryData(model, recordDT, dataBuffer, vars, compress, robot);
@@ -84,7 +55,7 @@ public class DataFileWriter
 
    }
 
-   public void writeState(String model, double recordDT, List<YoVariable<?>> variables, boolean binary, boolean compress)
+   public void writeState(String model, double recordDT, List<YoVariable> variables, boolean binary, boolean compress)
    {
       if (binary)
          writeBinaryState(model, recordDT, variables, compress);
@@ -108,7 +79,7 @@ public class DataFileWriter
    }
 
    private void writeHeaderInformation(DataOutput dataOutputStream, List<DataBufferEntry> entries, String model, double recordDT, DataBuffer dataBuffer,
-                                       List<YoVariable<?>> vars, boolean compress, Robot robot)
+                                       List<YoVariable> vars, boolean compress, Robot robot)
          throws IOException
    {
       String columnFormatted = "$COLUMN";
@@ -118,7 +89,7 @@ public class DataFileWriter
    }
 
    private void writeHeaderInformation(DataOutput dataOutputStream, List<DataBufferEntry> entries, String model, String columnOrRowFormatted,
-                                       double recordDT, int bufferLength, List<YoVariable<?>> vars, boolean compress, Robot robot)
+                                       double recordDT, int bufferLength, List<YoVariable> vars, boolean compress, Robot robot)
          throws IOException
    {
       //    if (DEBUG) System.out.println("Writing out $BEGIN_HEADER");
@@ -149,7 +120,7 @@ public class DataFileWriter
          for (int i = 0; i < entries.size(); i++)
          {
             DataBufferEntry entry = entries.get(i);
-            YoVariable<?> variable = entry.getVariable();
+            YoVariable variable = entry.getVariable();
 
             if (vars.contains(variable))
                nVars++;
@@ -167,7 +138,7 @@ public class DataFileWriter
          for (int i = 0; i < entries.size(); i++)
          {
             DataBufferEntry entry = entries.get(i);
-            YoVariable<?> variable = entry.getVariable();
+            YoVariable variable = entry.getVariable();
 
             if (vars.contains(variable))
             {
@@ -181,7 +152,7 @@ public class DataFileWriter
       {
          for (int i = 0; i < vars.size(); i++)
          {
-            YoVariable<?> variable = vars.get(i);
+            YoVariable variable = vars.get(i);
 
             //          dataOutputStream.writeBytes("$VAR " + variable.getName() + " -1.0 1.0\n");
             dataOutputStream.writeBytes("$VAR " + variable.getFullNameWithNameSpace() + " -1.0 1.0\n");
@@ -241,13 +212,13 @@ public class DataFileWriter
    }
 
    public DataOutputStream openDataOutputStreamAndWriteHeaderInformationForLoggingData(String model, double recordDT, DataBuffer dataBuffer,
-                                                                                       List<YoVariable<?>> vars, boolean compress) // , Robot robot
+                                                                                       List<YoVariable> vars, boolean compress) // , Robot robot
    {
       return openDataOutputStreamAndWriteHeaderInformationForLoggingData(model, recordDT, dataBuffer, vars, compress, null);
    }
 
    private DataOutputStream openDataOutputStreamAndWriteHeaderInformationForLoggingData(String model, double recordDT, DataBuffer dataBuffer,
-                                                                                        List<YoVariable<?>> vars, boolean compress, Robot robot)
+                                                                                        List<YoVariable> vars, boolean compress, Robot robot)
    {
       DataOutputStream dataOutputStream = null;
 
@@ -273,9 +244,9 @@ public class DataFileWriter
       return dataOutputStream;
    }
 
-   public void writeOutOneRowOfLogData(DataOutput dataOutputStream, List<YoVariable<?>> variablesToWrite) throws IOException
+   public void writeOutOneRowOfLogData(DataOutput dataOutputStream, List<YoVariable> variablesToWrite) throws IOException
    {
-      for (YoVariable<?> variableToWrite : variablesToWrite)
+      for (YoVariable variableToWrite : variablesToWrite)
       {
          double value = variableToWrite.getValueAsDouble();
          dataOutputStream.writeFloat((float) value);
@@ -294,7 +265,7 @@ public class DataFileWriter
       }
    }
 
-   public void writeMatlabBinaryData(double recordDT, DataBuffer dataBufferSortedByNamespace, List<YoVariable<?>> vars)
+   public void writeMatlabBinaryData(double recordDT, DataBuffer dataBufferSortedByNamespace, List<YoVariable> vars)
    {
       MatFileIncrementalWriter writer;
       try
@@ -311,7 +282,7 @@ public class DataFileWriter
          for (int i = 0; i < entries.size(); i++)
          {
             DataBufferEntry entry = entries.get(i);
-            YoVariable<?> variable = entry.getVariable();
+            YoVariable variable = entry.getVariable();
 
             List<String> subNames = variable.getNameSpace().getSubNames();
             int subNameDepth = 0;
@@ -374,7 +345,7 @@ public class DataFileWriter
       }
    }
 
-   private void writeBinaryData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean compress, Robot robot)
+   private void writeBinaryData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable> vars, boolean compress, Robot robot)
    {
       try
       {
@@ -389,7 +360,7 @@ public class DataFileWriter
          for (int i = 0; i < entries.size(); i++)
          {
             DataBufferEntry entry = entries.get(i);
-            YoVariable<?> variable = entry.getVariable();
+            YoVariable variable = entry.getVariable();
 
             if (vars.contains(variable))
             {
@@ -409,7 +380,7 @@ public class DataFileWriter
       }
    }
 
-   private void writeASCIIData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable<?>> vars, boolean compress)
+   private void writeASCIIData(String model, double recordDT, DataBuffer dataBuffer, List<YoVariable> vars, boolean compress)
    {
       List<DataBufferEntry> entries = dataBuffer.getEntries();
 
@@ -441,7 +412,7 @@ public class DataFileWriter
          for (int i = 0; i < entries.size(); i++)
          {
             DataBufferEntry entry = entries.get(i);
-            YoVariable<?> variable = entry.getVariable();
+            YoVariable variable = entry.getVariable();
 
             if (vars.contains(variable))
             {
@@ -480,7 +451,7 @@ public class DataFileWriter
       }
    }
 
-   public void writeSpreadsheetFormattedData(DataBuffer dataBuffer, List<? extends YoVariable<?>> vars)
+   public void writeSpreadsheetFormattedData(DataBuffer dataBuffer, List<? extends YoVariable> vars)
    {
       List<DataBufferEntry> entries = dataBuffer.getEntries();
 
@@ -507,7 +478,7 @@ public class DataFileWriter
          for (int i = 0; i < entries.size(); i++)
          {
             DataBufferEntry entry = entries.get(i);
-            YoVariable<?> variable = entry.getVariable();
+            YoVariable variable = entry.getVariable();
 
             if (vars.contains(variable))
             {
@@ -559,7 +530,7 @@ public class DataFileWriter
 
    }
 
-   private void writeBinaryState(String model, double recordDT, List<YoVariable<?>> variables, boolean compress)
+   private void writeBinaryState(String model, double recordDT, List<YoVariable> variables, boolean compress)
    {
       try
       {
@@ -589,7 +560,7 @@ public class DataFileWriter
 
          for (int i = 0; i < variables.size(); i++)
          {
-            YoVariable<?> variable = variables.get(i);
+            YoVariable variable = variables.get(i);
 
             dataStream.writeBytes("$VAR " + variable.getFullNameWithNameSpace() + " 1.0 1.0 " + "\n");
 
@@ -603,7 +574,7 @@ public class DataFileWriter
 
          for (int i = 0; i < variables.size(); i++)
          {
-            YoVariable<?> variable = variables.get(i);
+            YoVariable variable = variables.get(i);
 
             dataStream.writeFloat(((float) variable.getValueAsDouble()));
          }
@@ -615,7 +586,7 @@ public class DataFileWriter
       }
    }
 
-   private void writeASCIIState(String model, double recordDT, List<YoVariable<?>> variables, boolean compress)
+   private void writeASCIIState(String model, double recordDT, List<YoVariable> variables, boolean compress)
    {
       try
       {
@@ -626,11 +597,11 @@ public class DataFileWriter
          else
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile)));
 
-         for (YoVariable<?> variable : variables)
+         for (YoVariable variable : variables)
          {
-            String nameSpaceName = variable.getYoVariableRegistry().getNameSpace().getName();
+            String nameSpaceName = variable.getYoRegistry().getNameSpace().getName();
             String variableName = variable.getName();
-            String variableValue = variable.getNumericValueAsAString();
+            String variableValue = variable.getValueAsString();
             out.write(nameSpaceName + "." + variableName + " = " + variableValue + ";\n");
          }
 
@@ -641,13 +612,13 @@ public class DataFileWriter
       }
    }
 
-   public void writeSpreadsheetFormattedState(DataBuffer dataBuffer, List<? extends YoVariable<?>> vars)
+   public void writeSpreadsheetFormattedState(DataBuffer dataBuffer, List<? extends YoVariable> vars)
    {
       try
       {
          BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile)));
 
-         for (YoVariable<?> variable : vars)
+         for (YoVariable variable : vars)
          {
             out.write(variable.getFullNameWithNameSpace());
 
@@ -658,9 +629,9 @@ public class DataFileWriter
 
          out.write("\n");
 
-         for (YoVariable<?> variable : vars)
+         for (YoVariable variable : vars)
          {
-            String variableValue = variable.getNumericValueAsAString();
+            String variableValue = variable.getValueAsString();
             out.write(variableValue);
 
             boolean lastVariable = (variable == vars.get(vars.size() - 1));

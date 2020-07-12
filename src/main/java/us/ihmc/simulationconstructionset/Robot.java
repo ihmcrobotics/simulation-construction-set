@@ -27,9 +27,8 @@ import us.ihmc.simulationconstructionset.simulatedSensors.LidarMount;
 import us.ihmc.simulationconstructionset.simulatedSensors.WrenchCalculatorInterface;
 import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
@@ -49,7 +48,7 @@ import us.ihmc.yoVariables.variable.YoVariableList;
  */
 public class Robot implements YoVariableHolder, GroundContactPointsHolder
 {
-   protected YoVariableRegistry yoVariableRegistry;
+   protected YoRegistry yoRegistry;
    protected final List<YoGraphicsListRegistry> yoGraphicsListRegistries = new ArrayList<>();
    private List<Joint> rootJoints;
 
@@ -119,7 +118,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       {
          GroundContactPoint groundContactPoint = new GroundContactPoint(groundContactDefinitionFixedFrame.getName(),
                                                                         groundContactDefinitionFixedFrame.getOffset(),
-                                                                        getRobotsYoVariableRegistry());
+                                                                        getRobotsYoRegistry());
          currentJoint.addGroundContactPoint(groundContactPoint);
       }
 
@@ -127,7 +126,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       {
          ExternalForcePoint externalForcePoint = new ExternalForcePoint(externalForcePointDefinitionFixedFrame.getName(),
                                                                         externalForcePointDefinitionFixedFrame.getOffset(),
-                                                                        getRobotsYoVariableRegistry());
+                                                                        getRobotsYoRegistry());
          currentJoint.addExternalForcePoint(externalForcePoint);
       }
 
@@ -152,14 +151,14 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    public Robot(String name)
    {
       this.name = name;
-      yoVariableRegistry = new YoVariableRegistry(name);
+      yoRegistry = new YoRegistry(name);
 
       rootJoints = new ArrayList<>();
 
-      t = new YoDouble("t", yoVariableRegistry);
-      gravityX = new YoDouble("gravityX", yoVariableRegistry);
-      gravityY = new YoDouble("gravityY", yoVariableRegistry);
-      gravityZ = new YoDouble("gravityZ", yoVariableRegistry);
+      t = new YoDouble("t", yoRegistry);
+      gravityX = new YoDouble("gravityX", yoRegistry);
+      gravityY = new YoDouble("gravityY", yoRegistry);
+      gravityZ = new YoDouble("gravityZ", yoRegistry);
 
       setDefaultGravityToEarthWithMetricUnits();
    }
@@ -246,17 +245,16 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Adds a YoVariableRegistry to the robot. Will be added as a child registry to the robot's
-    * registry.
+    * Adds a YoRegistry to the robot. Will be added as a child registry to the robot's registry.
     *
-    * @param registry YoVariableRegistry
+    * @param registry YoRegistry
     */
-   public void addYoVariableRegistry(YoVariableRegistry registry)
+   public void addYoRegistry(YoRegistry registry)
    {
       if (registry == null)
          throw new RuntimeException("Cannot add a null registry to " + name + "!!!!");
 
-      getRobotsYoVariableRegistry().addChild(registry);
+      getRobotsYoRegistry().addChild(registry);
    }
 
    public void addYoGraphicsListRegistry(YoGraphicsListRegistry yoGraphicsListRegistry)
@@ -433,9 +431,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    public void setController(RobotControllerAndParameters controllerAndParameters)
    {
-      YoVariableRegistry registry = controllerAndParameters.getController().getYoVariableRegistry();
+      YoRegistry registry = controllerAndParameters.getController().getYoRegistry();
       controllers.add(controllerAndParameters);
-      addYoVariableRegistry(registry);
+      addYoRegistry(registry);
    }
 
    /**
@@ -896,14 +894,14 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-   public YoVariableRegistry getRobotsYoVariableRegistry()
+   public YoRegistry getRobotsYoRegistry()
    {
-      return yoVariableRegistry;
+      return yoRegistry;
    }
 
-   public void setRobotsYoVariableRegistry(YoVariableRegistry registry)
+   public void setRobotsYoRegistry(YoRegistry registry)
    {
-      yoVariableRegistry = registry;
+      yoRegistry = registry;
    }
 
    /**
@@ -1596,7 +1594,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    //   stream.println("import us.ihmc.simulationconstructionset.*;");
    //   stream.println("import java.util.*;");
    //   stream.println("");
-   //   stream.println("public class " + baseName + "ControllerBase implements YoVariableRegistry");
+   //   stream.println("public class " + baseName + "ControllerBase implements YoRegistry");
    //   stream.println("{");
    //   println(stream, 3, "protected " + name + " rob;");
    //   stream.println("");
@@ -1861,7 +1859,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       for (int varNum = 0; varNum < list.size(); varNum++)
       {
-         YoVariable<?> var = list.getVariable(varNum);
+         YoVariable var = list.getVariable(varNum);
 
          if (varNum != 0)
          {
@@ -1881,16 +1879,6 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    }
 
-   public List<YoVariableList> createAllVarLists()
-   {
-      return getRobotsYoVariableRegistry().createVarListsIncludingChildren();
-   }
-
-   public List<RewoundListener> getSimulationRewoundListeners()
-   {
-      return getRobotsYoVariableRegistry().getAllSimulationRewoundListeners();
-   }
-
    public List<RobotControllerAndParameters> getControllers()
    {
       return controllers;
@@ -1902,57 +1890,51 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    @Override
-   public YoVariable<?> getVariable(String variableName)
+   public YoVariable findVariable(String variableName)
    {
-      return getRobotsYoVariableRegistry().getVariable(variableName);
+      return getRobotsYoRegistry().findVariable(variableName);
    }
 
    @Override
    public boolean hasUniqueVariable(String variableName)
    {
-      return getRobotsYoVariableRegistry().hasUniqueVariable(variableName);
+      return getRobotsYoRegistry().hasUniqueVariable(variableName);
    }
 
    @Override
-   public List<YoVariable<?>> getAllVariables()
+   public List<YoVariable> getVariables()
    {
-      return getRobotsYoVariableRegistry().getAllVariablesIncludingDescendants();
+      return getRobotsYoRegistry().subtreeVariables();
    }
 
    @Override
-   public YoVariable<?>[] getAllVariablesArray()
+   public YoVariable findVariable(String nameSpaceEnding, String name)
    {
-      return getRobotsYoVariableRegistry().getAllVariablesArray();
-   }
-
-   @Override
-   public YoVariable<?> getVariable(String nameSpaceEnding, String name)
-   {
-      return getRobotsYoVariableRegistry().getVariable(nameSpaceEnding, name);
+      return getRobotsYoRegistry().findVariable(nameSpaceEnding, name);
    }
 
    @Override
    public boolean hasUniqueVariable(String nameSpaceEnding, String name)
    {
-      return getRobotsYoVariableRegistry().hasUniqueVariable(nameSpaceEnding, name);
+      return getRobotsYoRegistry().hasUniqueVariable(nameSpaceEnding, name);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String nameSpaceEnding, String name)
+   public List<YoVariable> findVariables(String nameSpaceEnding, String name)
    {
-      return getRobotsYoVariableRegistry().getVariables(nameSpaceEnding, name);
+      return getRobotsYoRegistry().findVariables(nameSpaceEnding, name);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String name)
+   public List<YoVariable> findVariables(String name)
    {
-      return getRobotsYoVariableRegistry().getVariables(name);
+      return getRobotsYoRegistry().findVariables(name);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(NameSpace nameSpace)
+   public List<YoVariable> findVariables(NameSpace nameSpace)
    {
-      return getRobotsYoVariableRegistry().getVariables(nameSpace);
+      return getRobotsYoRegistry().findVariables(nameSpace);
    }
 
    public List<Graphics3DObject> getStaticLinkGraphics()

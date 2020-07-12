@@ -26,9 +26,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JApplet;
@@ -118,8 +118,6 @@ import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPo
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableSearchPanel;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.AdditionalPanelTools.FrameMap;
-import us.ihmc.simulationconstructionset.util.SimpleFileReader;
-import us.ihmc.simulationconstructionset.util.SimpleFileWriter;
 import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.tools.TimestampProvider;
@@ -127,8 +125,8 @@ import us.ihmc.tools.thread.CloseableAndDisposableRegistry;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
 import us.ihmc.yoVariables.providers.DoubleProvider;
-import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoTools;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
@@ -209,10 +207,8 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    private boolean rePaintOnSetPoint = true;
    private int multiViewCanvas = 0;
    private List<Component> tempPanelsHolder = new ArrayList<>();
-   private YoVariableRegistry rootRegistry;
+   private YoRegistry rootRegistry;
    private String configFileName = "defaultRegistry.conf";
-
-   private String registryFileEnding = "_RegistryConfiguration";
 
    private String guiConfigFileEnding = "GuiConfiguration.dat";
 
@@ -229,7 +225,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public StandardSimulationGUI(Graphics3DAdapter graphics3dAdapter, SimulationSynchronizer simulationSynchronizer, AllCommandsExecutor allCommandsExecutor,
                                 AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim, YoVariableHolder yoVariableHolder,
-                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JApplet jApplet, YoVariableRegistry rootRegistry)
+                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JApplet jApplet, YoRegistry rootRegistry)
    {
       this(graphics3dAdapter, simulationSynchronizer, allCommandsExecutor, allDialogConstructorsHolder, sim, yoVariableHolder, robots, buffer, varGroupList,
            null, jApplet, rootRegistry);
@@ -237,7 +233,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public StandardSimulationGUI(Graphics3DAdapter graphics3dAdapter, SimulationSynchronizer simulationSynchronizer, AllCommandsExecutor allCommandsExecutor,
                                 AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim, YoVariableHolder yoVariableHolder,
-                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JFrame frame, YoVariableRegistry rootRegistry)
+                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JFrame frame, YoRegistry rootRegistry)
    {
       this(graphics3dAdapter, simulationSynchronizer, allCommandsExecutor, allDialogConstructorsHolder, sim, yoVariableHolder, robots, buffer, varGroupList,
            frame, null, rootRegistry);
@@ -245,7 +241,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public StandardSimulationGUI(Graphics3DAdapter graphics3dAdapter, SimulationSynchronizer simulationSynchronizer, AllCommandsExecutor allCommandsExecutor,
                                 AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim, YoVariableHolder yoVariableHolder,
-                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JFrame frame, JApplet jApplet, YoVariableRegistry rootRegistry)
+                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JFrame frame, JApplet jApplet, YoRegistry rootRegistry)
    {
       this.graphics3dAdapter = graphics3dAdapter;
       this.simulationSynchronizer = simulationSynchronizer;
@@ -306,7 +302,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public void addRobot(Robot robot)
    {
-      boolean wereAlreadySet = (robots != null);
+      boolean wereAlreadySet = robots != null;
 
       if (!wereAlreadySet)
       {
@@ -328,7 +324,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public void setRobots(Robot[] robots)
    {
-      boolean wereAlreadySet = (this.robots != null);
+      boolean wereAlreadySet = this.robots != null;
 
       if (wereAlreadySet)
       {
@@ -340,7 +336,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       HeightMap heightMap = null;
 
       // TODO: GroundProfile is just that of the first robot. Need to make it part of the sim or something...
-      if ((robots != null) && (robots.length > 0))
+      if (robots != null && robots.length > 0)
       {
          GroundContactModel groundContactModel = robots[0].getGroundContactModel();
          heightMap = HeightMapFromGroundContactModel.getHeightMap(groundContactModel);
@@ -645,7 +641,6 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
                {
                   saveDefaultGUIConfigurationFile();
                }
-               saveRegistryConfigurations();
 
                if (sim.systemExitDisabled())
                   sim.closeAndDispose();
@@ -807,7 +802,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       }
 
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      splitPane.setDividerLocation((screenSize.height * 7 / 8) / 2);
+      splitPane.setDividerLocation(screenSize.height * 7 / 8 / 2);
 
       // splitPane.add(numericContentPane);
       // Menu and Buttons:
@@ -1030,7 +1025,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public void addVarList(final YoVariableList list)
    {
-      if ((list != null) && (!list.isEmpty()))
+      if (list != null && !list.isEmpty())
       {
          EventDispatchThreadHelper.invokeAndWait(new Runnable()
          {
@@ -1146,7 +1141,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public void setupGraph(String[][] varnames)
    {
-      if ((varnames.length > 1) && (varnames[1].length > 0))
+      if (varnames.length > 1 && varnames[1].length > 0)
       {
          String graphConfiguration = varnames[1][0];
 
@@ -1553,15 +1548,15 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       if (nameSpace != null)
       {
-         xVar = (YoDouble) rootRegistry.getVariable(nameSpace, xName);
-         yVar = (YoDouble) rootRegistry.getVariable(nameSpace, yName);
-         zVar = (YoDouble) rootRegistry.getVariable(nameSpace, zName);
+         xVar = (YoDouble) rootRegistry.findVariable(nameSpace, xName);
+         yVar = (YoDouble) rootRegistry.findVariable(nameSpace, yName);
+         zVar = (YoDouble) rootRegistry.findVariable(nameSpace, zName);
       }
       else
       {
-         xVar = (YoDouble) rootRegistry.getVariable(xName);
-         yVar = (YoDouble) rootRegistry.getVariable(yName);
-         zVar = (YoDouble) rootRegistry.getVariable(zName);
+         xVar = (YoDouble) rootRegistry.findVariable(xName);
+         yVar = (YoDouble) rootRegistry.findVariable(yName);
+         zVar = (YoDouble) rootRegistry.findVariable(zName);
       }
 
       viewportPanel.setCameraTrackingVars(xVar, yVar, zVar);
@@ -1578,15 +1573,15 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       if (nameSpace != null)
       {
-         xVar = (YoDouble) rootRegistry.getVariable(nameSpace, xName);
-         yVar = (YoDouble) rootRegistry.getVariable(nameSpace, yName);
-         zVar = (YoDouble) rootRegistry.getVariable(nameSpace, zName);
+         xVar = (YoDouble) rootRegistry.findVariable(nameSpace, xName);
+         yVar = (YoDouble) rootRegistry.findVariable(nameSpace, yName);
+         zVar = (YoDouble) rootRegistry.findVariable(nameSpace, zName);
       }
       else
       {
-         xVar = (YoDouble) rootRegistry.getVariable(xName);
-         yVar = (YoDouble) rootRegistry.getVariable(yName);
-         zVar = (YoDouble) rootRegistry.getVariable(zName);
+         xVar = (YoDouble) rootRegistry.findVariable(xName);
+         yVar = (YoDouble) rootRegistry.findVariable(yName);
+         zVar = (YoDouble) rootRegistry.findVariable(zName);
       }
 
       viewportPanel.setCameraDollyVars(xVar, yVar, zVar);
@@ -1845,7 +1840,11 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       String[] varNames = group.getVars();
       String[] regularExpressions = group.getRegularExpressions();
-      List<YoVariable<?>> matchedVariables = rootRegistry.getMatchingVariables(varNames, regularExpressions);
+      List<YoVariable> matchedVariables = new ArrayList<>();
+      if (varNames != null)
+         Stream.of(varNames).map(varName -> rootRegistry.findVariable(varName)).filter(var -> var != null).forEach(matchedVariables::add);
+      if (regularExpressions != null)
+         Stream.of(regularExpressions).map(regex -> YoTools.searchVariablesRegex(regex, rootRegistry)).forEach(matchedVariables::addAll);
       YoVariableList varList = new YoVariableList(name);
       varList.addVariables(matchedVariables);
 
@@ -1954,7 +1953,11 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       String[] entryBoxVars = group.getEntryBoxVars();
       String[] entryBoxRegularExpressions = group.getEntryBoxRegularExpressions();
-      List<YoVariable<?>> matchingVariables = rootRegistry.getMatchingVariables(entryBoxVars, entryBoxRegularExpressions);
+      List<YoVariable> matchingVariables = new ArrayList<>();
+      if (entryBoxVars != null)
+         Stream.of(entryBoxVars).map(varName -> rootRegistry.findVariable(varName)).filter(var -> var != null).forEach(matchingVariables::add);
+      if (entryBoxRegularExpressions != null)
+         Stream.of(entryBoxRegularExpressions).map(regex -> YoTools.searchVariablesRegex(regex, rootRegistry)).forEach(matchingVariables::addAll);
 
       EntryBoxArrayPanel tmpEntryBoxArrayPanel = new EntryBoxArrayPanel(parentContainer, selectedVariableHolder, matchingVariables);
       tmpEntryBoxArrayPanel.setName(name);
@@ -1981,7 +1984,11 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       String[] entryBoxVars = group.getEntryBoxVars();
       String[] entryBoxRegularExpressions = group.getEntryBoxRegularExpressions();
-      List<YoVariable<?>> matchingVariables = rootRegistry.getMatchingVariables(entryBoxVars, entryBoxRegularExpressions);
+      List<YoVariable> matchingVariables = new ArrayList<>();
+      if (entryBoxVars != null)
+         Stream.of(entryBoxVars).map(varName -> rootRegistry.findVariable(varName)).filter(var -> var != null).forEach(matchingVariables::add);
+      if (entryBoxRegularExpressions != null)
+         Stream.of(entryBoxRegularExpressions).map(regex -> YoTools.searchVariablesRegex(regex, rootRegistry)).forEach(matchingVariables::addAll);
 
       setupEntryBox(matchingVariables);
 
@@ -1997,7 +2004,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public void setupEntryBox(String varname)
    {
-      final YoVariable<?> v = rootRegistry.getVariable(varname);
+      final YoVariable v = rootRegistry.findVariable(varname);
 
       if (v != null)
       {
@@ -2014,7 +2021,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       // numericContentPane.updateUI();
    }
 
-   public void setupEntryBox(final List<? extends YoVariable<?>> variables)
+   public void setupEntryBox(final List<? extends YoVariable> variables)
    {
       if (variables == null)
       {
@@ -2028,7 +2035,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
          {
             for (int i = 0; i < variables.size(); i++)
             {
-               YoVariable<?> v = variables.get(i);
+               YoVariable v = variables.get(i);
 
                if (v != null)
                {
@@ -2050,7 +2057,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
       for (int i = 0; i < varnames.length; i++)
       {
-         YoVariable<?> v = rootRegistry.getVariable(varnames[i]);
+         YoVariable v = rootRegistry.findVariable(varnames[i]);
 
          if (v != null)
          {
@@ -2165,8 +2172,8 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
          int currentPlaceOfLastDivider = 0;
          for (int j = 0; j < dividers.size(); j++)
          {
-            dividers.get(j).setDividerLocation(currentPlaceOfLastDivider + mainPanel.getWidth() / ((dividers.size() + 1)));
-            currentPlaceOfLastDivider += mainPanel.getWidth() / ((dividers.size() + 1));
+            dividers.get(j).setDividerLocation(currentPlaceOfLastDivider + mainPanel.getWidth() / (dividers.size() + 1));
+            currentPlaceOfLastDivider += mainPanel.getWidth() / (dividers.size() + 1);
          }
 
          mainPanel.add(jSplitPane);
@@ -2663,8 +2670,6 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    {
       GUIConfigurationSaveAndLoad guiConfigurationSaveAndLoad = new GUIConfigurationSaveAndLoad(guiEnablerAndDisabler, this);
       guiConfigurationSaveAndLoad.loadGUIConfiguration(getDefaultFile(guiConfigFileEnding));
-
-      loadRegistryConfiguration();
    }
 
    public void saveNormalGUIConfigurationFile()
@@ -2677,100 +2682,6 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    {
       GUIConfigurationSaveAndLoad guiConfigurationSaveAndLoad = new GUIConfigurationSaveAndLoad(guiEnablerAndDisabler, this);
       guiConfigurationSaveAndLoad.defaultSave(getDefaultFile(guiConfigFileEnding));
-   }
-
-   public void loadRegistryConfiguration()
-   {
-      String defaultFile = getDefaultFile(registryFileEnding);
-      if (defaultFile == null)
-         return;
-
-      File loadFile = new File(defaultFile);
-      if (loadFile.exists())
-      {
-         List<YoVariableRegistry> treeNodes = rootRegistry.getAllRegistriesIncludingChildren();
-
-         // getAllRegistrys(rootRegistry, treeNodes);
-
-         // System.out.println(i+" "+realCound+" "+rootRegistry.createVarListsIncludingChildren().size());
-         SimpleFileReader reader = new SimpleFileReader(loadFile);
-         String nextLine;
-         while ((nextLine = reader.nextLine()) != null)
-         {
-            nextLine = nextLine.trim();
-            StringTokenizer tok = new StringTokenizer(nextLine, "*");
-            String name = tok.nextToken();
-            YoVariableRegistry current = findRegistry(name, treeNodes);
-
-            if (current == null)
-            {
-               // TODO: JEP 1/7/2013. I changed this so that it doesn't create the registry if it doesn't exist.
-               // Otherwise if you try to add registries after loading, you'll get a repeated registry error.
-               // FixMe this may be a better way of finding the registries instead of searching for them.
-               // current = rootRegistry.getOrCreateAndAddRegistry(new NameSpace(name));
-               try
-               {
-                  current = rootRegistry.getRegistry(new NameSpace(name));
-               }
-               catch (RuntimeException exception)
-               {
-                  //TODO: Create some way to automatically figure out the registry stuff
-                  // and fix the config files when they don't have a registry.
-                  //                  LogTools.warn("Warning: Could not find registry " + name);
-                  // new Throwable().printStackTrace();
-               }
-            }
-
-            if (current != null)
-            {
-               if (tok.nextToken().equals("true"))
-               {
-                  current.setSending(true);
-               }
-               else
-                  current.setSending(false);
-
-               if (tok.nextToken().equals("true"))
-               {
-                  current.setLogging(true);
-               }
-               else
-                  current.setLogging(false);
-            }
-         }
-      }
-   }
-
-   private YoVariableRegistry findRegistry(String name, List<YoVariableRegistry> allReg)
-   {
-      for (YoVariableRegistry reg : allReg)
-      {
-         if (reg.getNameSpace().getName().equals(name))
-         {
-            return reg;
-         }
-      }
-
-      return null;
-   }
-
-   public void saveRegistryConfigurations()
-   {
-      String filename = getDefaultFile(registryFileEnding);
-      if (filename == null)
-         return;
-
-      SimpleFileWriter writer = new SimpleFileWriter(new File(filename));
-      List<YoVariableRegistry> treeNodes = rootRegistry.getAllRegistriesIncludingChildren();
-
-      String outString = "";
-      for (YoVariableRegistry node : treeNodes)
-      {
-         outString += node.getNameSpace().getName() + "*" + node.isSent() + "*" + node.isLogged() + "\n";
-      }
-
-      writer.write(outString);
-      writer.close();
    }
 
    private String getDefaultFile(String extension)
@@ -2899,7 +2810,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public Component getExtraPanel(String panelName)
    {
-      return (extraPanelConfigurationList.getExtraPanelConfiguration(panelName).getPanel());
+      return extraPanelConfigurationList.getExtraPanelConfiguration(panelName).getPanel();
    }
 
    public void makeCheckMarksConsistentForExtraPanels(String panelName, boolean isSelected)
@@ -3468,12 +3379,12 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       selectedVariableHolder.addChangeListener(listener);
    }
 
-   public YoVariable<?> getSelectedVariable()
+   public YoVariable getSelectedVariable()
    {
       return selectedVariableHolder.getSelectedVariable();
    }
 
-   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable<?>> filter)
+   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable> filter)
    {
       yoVariableExplorerTabbedPane.getYoVariableSearchPanel().setFrameMap(frameMap, filter);
    }

@@ -16,7 +16,8 @@ import us.ihmc.simulationconstructionset.robotdefinition.RobotDefinitionFixedFra
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
 import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoFactories;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
@@ -120,12 +121,12 @@ public class DataFileReader
       return ret;
    }
 
-   public int readData(YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer) throws IOException
+   public int readData(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer) throws IOException
    {
       return readData(newVars, rootRegistryToAddNewVariablesTo, dataBuffer, null);
    }
 
-   public int readData(YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
+   public int readData(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
          throws IOException
    {
       if (inFile != null)
@@ -136,7 +137,7 @@ public class DataFileReader
          return -1;
    }
 
-   private int readDataFile(YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
+   private int readDataFile(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
          throws IOException
    {
       //    try
@@ -163,7 +164,7 @@ public class DataFileReader
 
    }
 
-   private int readDataURL(YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
+   private int readDataURL(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
          throws IOException
    {
       //    try
@@ -191,7 +192,7 @@ public class DataFileReader
 
    }
 
-   public int readData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer,
+   public int readData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer,
                        SimulationConstructionSet sim)
          throws IOException
    {
@@ -344,7 +345,7 @@ public class DataFileReader
       }
    }
 
-   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo,
+   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo,
                                         DataBuffer dataBuffer)
          throws IOException
    {
@@ -373,17 +374,17 @@ public class DataFileReader
       }
    }
 
-   private DataBufferEntry getDataBufferEntry(String varName, DataBuffer dataBuffer, YoVariableRegistry rootRegistryToAddNewVariablesTo, YoVariableList newVars)
+   private DataBufferEntry getDataBufferEntry(String varName, DataBuffer dataBuffer, YoRegistry rootRegistryToAddNewVariablesTo, YoVariableList newVars)
          throws IOException
    {
-      YoVariable<?> newVariable = dataBuffer.getVariable(varName);
+      YoVariable newVariable = dataBuffer.findVariable(varName);
 
       if (newVariable == null)
       {
-         NameSpace nameSpace = NameSpace.createNameSpaceFromAFullVariableName(varName);
-         String variableName = NameSpace.stripOffNameSpaceToGetVariableName(varName);
+         NameSpace nameSpace = new NameSpace(varName).getParent();
+         String variableName = new NameSpace(varName).getShortName();
 
-         YoVariableRegistry registry = rootRegistryToAddNewVariablesTo.getOrCreateAndAddRegistry(nameSpace);
+         YoRegistry registry = YoFactories.getOrCreateAndAddRegistry(rootRegistryToAddNewVariablesTo, nameSpace);
 
          newVariable = new YoDouble(variableName, "Created Variable in DataFileReader", registry);
          newVars.addVariable(newVariable);
@@ -408,7 +409,7 @@ public class DataFileReader
       return newEntry;
    }
 
-   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoVariableRegistry rootRegistryToAddNewVariablesTo,
+   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo,
                                      DataBuffer dataBuffer)
          throws IOException
    {
@@ -486,7 +487,7 @@ public class DataFileReader
    }
 
    private int readASCIIData(YoDataInputStream dataStream, YoVariableList newVars, DataBuffer dataBuffer, String line,
-                             YoVariableRegistry rootRegistryToAddNewVariablesTo)
+                             YoRegistry rootRegistryToAddNewVariablesTo)
          throws IOException
    {
       nPoints = -1;
@@ -580,7 +581,7 @@ public class DataFileReader
    }
 
    private int readASCIICommaSeparatedData(YoDataInputStream dataStream, YoVariableList newVars, DataBuffer dataBuffer,
-                                           YoVariableRegistry rootRegistryToAddNewVariablesTo)
+                                           YoRegistry rootRegistryToAddNewVariablesTo)
          throws IOException
    {
       nPoints = -1;
@@ -683,7 +684,7 @@ public class DataFileReader
       readState(varList, false, printErrorForMissingVariables, null);
    }
 
-   public void readState(YoVariableList varList, boolean createMissingVariables, boolean printErrorForMissingVariables, YoVariableRegistry registry)
+   public void readState(YoVariableList varList, boolean createMissingVariables, boolean printErrorForMissingVariables, YoRegistry registry)
          throws IOException
    {
       BufferedReader in;
@@ -701,17 +702,17 @@ public class DataFileReader
          String varName = line.substring(0, equalsIndex).trim();
          String varVal = line.substring(equalsIndex + 1, semiIndex).trim();
 
-         YoVariable<?> variable = varList.getVariable(varName);
+         YoVariable variable = varList.getVariable(varName);
 
          boolean variableNotFound = (variable == null);
          if (variableNotFound)
          {
             if (createMissingVariables)
             {
-               NameSpace nameSpace = NameSpace.createNameSpaceFromAFullVariableName(varName);
+               NameSpace nameSpace = new NameSpace(varName).getParent();
                if (nameSpace != null)
                {
-                  YoVariableRegistry registryToUse = registry.getOrCreateAndAddRegistry(nameSpace);
+                  YoRegistry registryToUse = YoFactories.getOrCreateAndAddRegistry(registry, nameSpace);
                   if (registryToUse == null)
                   {
                      if (printErrorForMissingVariables)
@@ -719,7 +720,7 @@ public class DataFileReader
                      registryToUse = registry;
                   }
 
-                  varName = NameSpace.stripOffNameSpaceToGetVariableName(varName);
+                  varName = new NameSpace(varName).getShortName();
                   variable = new YoDouble(varName, registryToUse);
                }
                else

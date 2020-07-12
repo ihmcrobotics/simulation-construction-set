@@ -5,13 +5,13 @@ import static us.ihmc.robotics.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class SimulationConstructionSetProcessDataCallTest
 {
    private static final boolean DEBUG = false;
-   private YoVariableRegistry registry;
+   private YoRegistry registry;
 
    @Test // timeout=1000
    public void testForwardCount()
@@ -22,9 +22,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -79,9 +79,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -137,9 +137,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -194,9 +194,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -249,7 +249,7 @@ public class SimulationConstructionSetProcessDataCallTest
       private final YoDouble copyVariable;
       private final YoDouble testVariable;
 
-      public CopierProcessingFunction(YoDouble inputData, YoVariableRegistry registry)
+      public CopierProcessingFunction(YoDouble inputData, YoRegistry registry)
       {
          testVariable = inputData;
          copyVariable = new YoDouble("copyVariable", registry);
@@ -281,7 +281,7 @@ public class SimulationConstructionSetProcessDataCallTest
       private final YoDouble countVariable;
       private int count = 0;
 
-      public CounterProcessingFunction(YoVariableRegistry registry)
+      public CounterProcessingFunction(YoRegistry registry)
       {
          countVariable = new YoDouble("countVariable", registry);
       }

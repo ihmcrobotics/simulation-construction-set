@@ -8,7 +8,7 @@ import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
 import us.ihmc.yoVariables.dataBuffer.DataEntry;
 import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
 import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -31,7 +31,7 @@ public class YoGraphTester
       DataEntryHolder dataEntryHolder = new DataEntryHolder()
       {
          @Override
-         public DataEntry getEntry(YoVariable<?> yoVariable)
+         public DataEntry getEntry(YoVariable yoVariable)
          {
             return null;
          }
@@ -44,7 +44,7 @@ public class YoGraphTester
       YoGraph yoGraph = new YoGraph(graphIndicesHolder, yoGraphRemover, selectedVariableHolder, dataEntryHolder, timeDataHolder, jFrame);
 
       int nPoints = 200;
-      YoVariableRegistry registry = new YoVariableRegistry("registry");
+      YoRegistry registry = new YoRegistry("registry");
       YoDouble yoVariable = new YoDouble("variableOne", registry);
 
       DataBufferEntry dataEntry = new DataBufferEntry(yoVariable, nPoints);

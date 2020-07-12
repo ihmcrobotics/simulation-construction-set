@@ -205,7 +205,7 @@ public class EntryBoxArrayTabbedPanel extends JTabbedPane
       return returnString;
    }
 
-   public void addEntryBox(YoVariable<?> selectedVariable)
+   public void addEntryBox(YoVariable selectedVariable)
    {
       if (getCurrentPanel() == null)
       {

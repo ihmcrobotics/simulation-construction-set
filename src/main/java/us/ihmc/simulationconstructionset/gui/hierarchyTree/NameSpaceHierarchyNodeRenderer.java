@@ -15,16 +15,16 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class NameSpaceHierarchyNodeRenderer extends JPanel implements TreeCellRenderer
 {
    private static final long serialVersionUID = -6793795042915360102L;
 
    protected TreeLabel label;
-   private final HashMap<DefaultMutableTreeNode, YoVariableRegistry> treeNodeRegistryMap;
+   private final HashMap<DefaultMutableTreeNode, YoRegistry> treeNodeRegistryMap;
 
-   public NameSpaceHierarchyNodeRenderer(HashMap<DefaultMutableTreeNode, YoVariableRegistry> treeNodeRegistryMap)
+   public NameSpaceHierarchyNodeRenderer(HashMap<DefaultMutableTreeNode, YoRegistry> treeNodeRegistryMap)
    {
       setLayout(null);
       add(label = new TreeLabel());

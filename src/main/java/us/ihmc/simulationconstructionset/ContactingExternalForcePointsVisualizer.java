@@ -10,7 +10,7 @@ import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicVector;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
@@ -18,7 +18,7 @@ public class ContactingExternalForcePointsVisualizer
 {
    private final static ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
 
-   private final YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
+   private final YoRegistry registry = new YoRegistry(getClass().getSimpleName());
    private final List<YoFramePoint3D> contactPointsWorld = new ArrayList<>();
    private final List<YoGraphicPosition> contactPointsViz = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class ContactingExternalForcePointsVisualizer
    private final ArrayList<ContactingExternalForcePoint> contactPoints = new ArrayList<>();
 
    public ContactingExternalForcePointsVisualizer(int maxNumberOfYoGraphicPositions, YoGraphicsListRegistry yoGraphicsListRegistry,
-                                                  YoVariableRegistry parentRegistry)
+                                                  YoRegistry parentRegistry)
    {
       for (int i = 0; i < maxNumberOfYoGraphicPositions; i++)
       {

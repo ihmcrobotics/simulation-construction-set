@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 import us.ihmc.tools.gui.MyFileFilter;
 import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class ParameterFileChooser
 {
@@ -22,7 +22,7 @@ public class ParameterFileChooser
 
    private JFileChooser fileChooser;
 
-   private List<YoVariableRegistry> registries;
+   private List<YoRegistry> registries;
    private File parameterFile;
 
    private NameSpace defaultRoot = null;
@@ -47,7 +47,7 @@ public class ParameterFileChooser
       fileChooser.setAccessory(extraPanel);
    }
 
-   public boolean showDialog(Component parent, YoVariableRegistry registry, NameSpace newDefaultRoot, File file, boolean save)
+   public boolean showDialog(Component parent, YoRegistry registry, NameSpace newDefaultRoot, File file, boolean save)
    {
       if (file != null && file != parameterFilePath) // Default path changed. Browse to this file
       {
@@ -102,7 +102,7 @@ public class ParameterFileChooser
 
             try
             {
-               YoVariableRegistry root = registry.getRegistry(fullNameSpace);
+               YoRegistry root = registry.findRegistry(fullNameSpace);
                registries = Collections.unmodifiableList(root.getChildren());
             }
             catch (RuntimeException e)
@@ -158,7 +158,7 @@ public class ParameterFileChooser
       }
    }
 
-   public List<YoVariableRegistry> getRegistries()
+   public List<YoRegistry> getRegistries()
    {
       return registries;
    }

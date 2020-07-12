@@ -8,12 +8,12 @@ import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.simulationconstructionset.GroundContactModel;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.GroundContactPointsHolder;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class BidirectionGroundContactModel implements GroundContactModel
 {
-   private final YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
+   private final YoRegistry registry = new YoRegistry(getClass().getSimpleName());
 
    private static final long serialVersionUID = -2481515446904072547L;
 
@@ -27,19 +27,19 @@ public class BidirectionGroundContactModel implements GroundContactModel
    private List<GroundContactPoint> groundContactPoints;
    private GroundProfile3D groundProfile3D;
 
-   public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoVariableRegistry parentRegistry)
+   public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, DEFAULT_K_XY, DEFAULT_B_XY, DEFAULT_K_Z, DEFAULT_B_Z, parentRegistry);
    }
 
    public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double groundKxy, double groundBxy, double groundKz,
-                                        double groundBz, YoVariableRegistry parentRegistry)
+                                        double groundBz, YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, 0, groundKxy, groundBxy, groundKz, groundBz, parentRegistry);
    }
 
    public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy,
-                                        double groundBxy, double groundKz, double groundBz, YoVariableRegistry parentRegistry)
+                                        double groundBxy, double groundKz, double groundBz, YoRegistry parentRegistry)
    {
       groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
 

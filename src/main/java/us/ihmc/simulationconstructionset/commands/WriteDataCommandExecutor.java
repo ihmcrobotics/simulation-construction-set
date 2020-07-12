@@ -7,5 +7,5 @@ import us.ihmc.yoVariables.variable.YoVariable;
 
 public interface WriteDataCommandExecutor
 {
-   public abstract void writeData(List<YoVariable<?>> vars, boolean binary, boolean compress, File chosenFile);
+   public abstract void writeData(List<YoVariable> vars, boolean binary, boolean compress, File chosenFile);
 }

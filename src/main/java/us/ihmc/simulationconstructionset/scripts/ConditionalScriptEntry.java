@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset.scripts;
 
 import java.util.ArrayList;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public abstract class ConditionalScriptEntry
@@ -27,7 +27,7 @@ public abstract class ConditionalScriptEntry
    private ArrayList<ConditionalScriptEntry> parentEntries;
    private ArrayList<ConditionalScriptEntry> childEntries;
 
-   public ConditionalScriptEntry(String name, YoVariableRegistry registry, ConditionalScriptEntry[] parents)
+   public ConditionalScriptEntry(String name, YoRegistry registry, ConditionalScriptEntry[] parents)
    {
       if (name == null)
          name = "event";
@@ -46,22 +46,22 @@ public abstract class ConditionalScriptEntry
       }
    }
 
-   public ConditionalScriptEntry(YoVariableRegistry registry)
+   public ConditionalScriptEntry(YoRegistry registry)
    {
       this("event", registry, (ConditionalScriptEntry[]) null);
    }
 
-   public ConditionalScriptEntry(String name, YoVariableRegistry registry)
+   public ConditionalScriptEntry(String name, YoRegistry registry)
    {
       this(name, registry, (ConditionalScriptEntry[]) null);
    }
 
-   public ConditionalScriptEntry(String name, YoVariableRegistry registry, ConditionalScriptEntry parent)
+   public ConditionalScriptEntry(String name, YoRegistry registry, ConditionalScriptEntry parent)
    {
       this(name, registry, new ConditionalScriptEntry[] {parent});
    }
 
-   public ConditionalScriptEntry(YoVariableRegistry registry, ConditionalScriptEntry[] parents)
+   public ConditionalScriptEntry(YoRegistry registry, ConditionalScriptEntry[] parents)
    {
       this("event", registry, parents);
    }

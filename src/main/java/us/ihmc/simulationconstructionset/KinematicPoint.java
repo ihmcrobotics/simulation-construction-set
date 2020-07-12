@@ -12,7 +12,7 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.euclid.tuple4D.Vector4D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
@@ -42,7 +42,7 @@ public class KinematicPoint implements java.io.Serializable
 
    private KinematicPointUpdater kinematicPointUpdater;
 
-   private final YoVariableRegistry registry;
+   private final YoRegistry registry;
 
    protected final Vector3D tempVectorForOffsetFromCOM = new Vector3D(), tempVectorForWXr = new Vector3D(), tempVectorForVelocity = new Vector3D();
 
@@ -53,20 +53,20 @@ public class KinematicPoint implements java.io.Serializable
 
    public KinematicPoint(String name, Robot robot)
    {
-      this(name, null, robot.getRobotsYoVariableRegistry());
+      this(name, null, robot.getRobotsYoRegistry());
    }
 
-   public KinematicPoint(String name, YoVariableRegistry registry)
+   public KinematicPoint(String name, YoRegistry registry)
    {
       this(name, null, registry);
    }
 
    public KinematicPoint(String name, Tuple3DReadOnly offset, Robot robot)
    {
-      this(name, offset, robot.getRobotsYoVariableRegistry());
+      this(name, offset, robot.getRobotsYoRegistry());
    }
 
-   public KinematicPoint(String name, Tuple3DReadOnly offset, YoVariableRegistry registry)
+   public KinematicPoint(String name, Tuple3DReadOnly offset, YoRegistry registry)
    {
       this.name = name;
       this.registry = registry;
@@ -303,7 +303,7 @@ public class KinematicPoint implements java.io.Serializable
       return angularVelocityInWorld;
    }
 
-   public YoVariableRegistry getYoVariableRegistry()
+   public YoRegistry getYoRegistry()
    {
       return registry;
    }

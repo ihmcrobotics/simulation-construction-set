@@ -12,7 +12,7 @@ import us.ihmc.simulationconstructionset.gui.config.VarGroup;
 import us.ihmc.simulationconstructionset.gui.config.VarGroupList;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -20,7 +20,7 @@ public class DataBufferToolsTest
 {
    private final int testBufferSize = 100;
 
-   private YoVariableRegistry registry;
+   private YoRegistry registry;
    private DataBuffer dataBuffer = new DataBuffer(testBufferSize);
 
    private YoDouble a, b, c;
@@ -29,7 +29,7 @@ public class DataBufferToolsTest
    @BeforeEach
    public void setUp()
    {
-      registry = new YoVariableRegistry("testRegistry");
+      registry = new YoRegistry("testRegistry");
 
       a = new YoDouble("a_arm", registry);
       b = new YoDouble("b_arm", registry);
@@ -65,25 +65,25 @@ public class DataBufferToolsTest
       varGroupList.addVarGroup(varGroupTwo);
       varGroupList.addVarGroup(varGroupThree);
 
-      List<YoVariable<?>> allVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "all", varGroupList);
+      List<YoVariable> allVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "all", varGroupList);
 
       assertTrue(allVarsFromGroup.contains(a));
       assertTrue(allVarsFromGroup.contains(b));
       assertTrue(allVarsFromGroup.contains(c));
 
-      List<YoVariable<?>> aVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupOne", varGroupList);
+      List<YoVariable> aVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupOne", varGroupList);
 
       assertTrue(aVarsFromGroup.contains(a));
       assertFalse(aVarsFromGroup.contains(b));
       assertTrue(aVarsFromGroup.contains(c));
 
-      List<YoVariable<?>> regExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupTwo", varGroupList);
+      List<YoVariable> regExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupTwo", varGroupList);
 
       assertTrue(regExpVarsFromGroup.contains(a));
       assertTrue(regExpVarsFromGroup.contains(b));
       assertTrue(regExpVarsFromGroup.contains(c));
 
-      List<YoVariable<?>> cRegExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupThree", varGroupList);
+      List<YoVariable> cRegExpVarsFromGroup = DataBufferTools.getVarsFromGroup(dataBuffer, "varGroupThree", varGroupList);
 
       assertFalse(cRegExpVarsFromGroup.contains(a));
       assertFalse(cRegExpVarsFromGroup.contains(b));
