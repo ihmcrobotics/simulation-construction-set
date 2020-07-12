@@ -95,8 +95,8 @@ public class StateFileComparer
       YoVariableList varListOne = new YoVariableList("VarListOne");
       YoVariableList varListTwo = new YoVariableList("VarListTwo");
 
-      YoRegistry registryOne = new YoRegistry("registryOne");
-      YoRegistry registryTwo = new YoRegistry("registryTwo");
+      YoRegistry registryOne = new YoRegistry("root");
+      YoRegistry registryTwo = new YoRegistry("root");
 
       try
       {

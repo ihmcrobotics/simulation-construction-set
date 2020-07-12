@@ -345,8 +345,7 @@ public class DataFileReader
       }
    }
 
-   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo,
-                                        DataBuffer dataBuffer)
+   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer)
          throws IOException
    {
       for (int i = 0; i < nVars; i++)
@@ -409,8 +408,7 @@ public class DataFileReader
       return newEntry;
    }
 
-   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo,
-                                     DataBuffer dataBuffer)
+   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer)
          throws IOException
    {
       if (DEBUG)
@@ -684,8 +682,7 @@ public class DataFileReader
       readState(varList, false, printErrorForMissingVariables, null);
    }
 
-   public void readState(YoVariableList varList, boolean createMissingVariables, boolean printErrorForMissingVariables, YoRegistry registry)
-         throws IOException
+   public void readState(YoVariableList varList, boolean createMissingVariables, boolean printErrorForMissingVariables, YoRegistry registry) throws IOException
    {
       BufferedReader in;
       if (inFile.getName().endsWith(".gz"))
@@ -710,8 +707,12 @@ public class DataFileReader
             if (createMissingVariables)
             {
                NameSpace nameSpace = new NameSpace(varName).getParent();
+
                if (nameSpace != null)
                {
+                  if (!nameSpace.startsWith(registry.getNameSpace()))
+                     nameSpace.prepend(registry.getNameSpace());
+
                   YoRegistry registryToUse = YoFactories.getOrCreateAndAddRegistry(registry, nameSpace);
                   if (registryToUse == null)
                   {
