@@ -601,7 +601,7 @@ public class DataFileWriter
          {
             String nameSpaceName = variable.getYoRegistry().getNameSpace().getName();
             String variableName = variable.getName();
-            String variableValue = variable.getValueAsString();
+            String variableValue = Double.toString(variable.getValueAsDouble());
             out.write(nameSpaceName + "." + variableName + " = " + variableValue + ";\n");
          }
 
@@ -631,7 +631,7 @@ public class DataFileWriter
 
          for (YoVariable variable : vars)
          {
-            String variableValue = variable.getValueAsString();
+            String variableValue = Double.toString(variable.getValueAsDouble());
             out.write(variableValue);
 
             boolean lastVariable = (variable == vars.get(vars.size() - 1));
