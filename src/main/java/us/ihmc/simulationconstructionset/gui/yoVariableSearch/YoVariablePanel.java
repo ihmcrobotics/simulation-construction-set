@@ -34,7 +34,7 @@ import us.ihmc.simulationconstructionset.gui.DoubleClickListener;
 import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
 import us.ihmc.simulationconstructionset.gui.HorizontalSpinnerUI;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.variable.YoVariable;
 import us.ihmc.yoVariables.variable.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariableType;
@@ -43,7 +43,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 {
    private static final long serialVersionUID = -5860355582880221731L;
 
-   private static ArrayList<VariableChangedListener> variableChangedListeners = new ArrayList<>();
+   private static ArrayList<YoVariableChangedListener> variableChangedListeners = new ArrayList<>();
 
    protected static final int SPINNER_HEIGHT = 16;
    protected static final int MINIMUM_TOTAL_WIDTH = 220;
@@ -67,7 +67,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
    private final YoVariableSearchPanel searchPanel;
 
-   public static void attachVariableChangedListener(VariableChangedListener listener)
+   public static void attachVariableChangedListener(YoVariableChangedListener listener)
    {
       variableChangedListeners.add(listener);
    }
@@ -77,7 +77,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
       return showNameSpace;
    }
 
-   public static void removeVariableChangedListener(VariableChangedListener listener)
+   public static void removeVariableChangedListener(YoVariableChangedListener listener)
    {
       variableChangedListeners.remove(listener);
    }
@@ -171,11 +171,11 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
    private JSpinner createSpinnerForVariable(final YoVariable yoVariable)
    {
       SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
-      spinnerNumberModel.setStepSize(yoVariable.getYoVariableType() == YoVariableType.DOUBLE ? 0.1 : 1.0);
+      spinnerNumberModel.setStepSize(yoVariable.getType() == YoVariableType.DOUBLE ? 0.1 : 1.0);
       spinnerNumberModel.setValue(yoVariable.getValueAsDouble());
 
       final JSpinner spinner = new JSpinner(spinnerNumberModel);
-      spinner.setName(yoVariable.getFullNameWithNameSpace());
+      spinner.setName(yoVariable.getFullNameString());
 
       String tooltip = "<html>You can scroll to modify the current value<br />Press shift to be more precise OR Control to change by bigger increments</html>";
       spinner.setToolTipText(tooltip);
@@ -662,7 +662,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          YoVariable yoVariable = getClickedYoVariable(event.getY());
          if (yoVariable != null)
          {
-            String displayText = yoVariable.getFullNameWithNameSpace();
+            String displayText = yoVariable.getFullNameString();
             String descriptionText = yoVariable.getDescription();
             if (!(descriptionText.equals(null) || descriptionText.equals("")))
             {
@@ -718,8 +718,8 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
          for (int i = 0; i < variableChangedListeners.size(); i++)
          {
-            VariableChangedListener listener = variableChangedListeners.get(i);
-            listener.notifyOfVariableChange(variable);
+            YoVariableChangedListener listener = variableChangedListeners.get(i);
+            listener.changed(variable);
          }
 
          spinner.requestFocusInWindow();

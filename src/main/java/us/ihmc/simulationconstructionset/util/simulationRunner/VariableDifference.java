@@ -46,7 +46,7 @@ public class VariableDifference
       }
       else
       {
-         variableName1 = variableOne.getFullNameWithNameSpace();
+         variableName1 = variableOne.getFullNameString();
          value1 = variableOne.getValueAsDouble();
       }
 
@@ -57,7 +57,7 @@ public class VariableDifference
       }
       else
       {
-         variableName2 = variableTwo.getFullNameWithNameSpace();
+         variableName2 = variableTwo.getFullNameString();
          value2 = variableTwo.getValueAsDouble();
       }
 

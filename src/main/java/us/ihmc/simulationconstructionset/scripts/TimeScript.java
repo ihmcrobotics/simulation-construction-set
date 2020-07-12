@@ -220,7 +220,7 @@ public class TimeScript implements Script
          t_part = line.substring(equalIndex + 1, semicolonIndex).trim();
 
          // System.out.println(t_part);
-         switch (variable.getYoVariableType())
+         switch (variable.getType())
          {
             case DOUBLE:
             {

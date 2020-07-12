@@ -128,7 +128,7 @@ public class YoVariablePanelJPopupMenu extends ForcedRepaintPopupMenu
          {
             if (selectedVariableHolder.getSelectedVariable() != null)
             {
-               StringSelection stringSelection = new StringSelection(selectedVariableHolder.getSelectedVariable().getFullNameWithNameSpace());
+               StringSelection stringSelection = new StringSelection(selectedVariableHolder.getSelectedVariable().getFullNameString());
                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                clipboard.setContents(stringSelection, null);
             }

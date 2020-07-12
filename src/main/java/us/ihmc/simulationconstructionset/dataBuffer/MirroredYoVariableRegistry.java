@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -16,6 +16,7 @@ public class MirroredYoVariableRegistry extends YoRegistry
    private final ConcurrentLinkedQueue<YoVariable> changedVariablesInMirror = new ConcurrentLinkedQueue<>();
    private final ConcurrentLinkedQueue<YoVariable> changedVariablesInOriginal = new ConcurrentLinkedQueue<>();
 
+   private boolean enableChangedListener = true;
    private final YoRegistryChangedListener mirroredChangeListener = new YoRegistryChangedListener(changedVariablesInMirror);
    private final YoRegistryChangedListener originalChangeListener = new YoRegistryChangedListener(changedVariablesInOriginal);
 
@@ -47,8 +48,8 @@ public class MirroredYoVariableRegistry extends YoRegistry
 
    private void addVariableListener(YoVariable newVar, YoVariable var)
    {
-      newVar.addVariableChangedListener(mirroredChangeListener);
-      var.addVariableChangedListener(originalChangeListener);
+      newVar.addListener(mirroredChangeListener);
+      var.addListener(originalChangeListener);
    }
 
    /**
@@ -89,19 +90,12 @@ public class MirroredYoVariableRegistry extends YoRegistry
 
    private void callListenersForVariable(YoVariable variable)
    {
-      List<VariableChangedListener> variableChangedListeners = variable.getVariableChangedListeners();
-      //noinspection ForLoopReplaceableByForEach (runs in tight loop, foreach allocates memory)
-      for (int i = 0; i < variableChangedListeners.size(); i++)
-      {
-         VariableChangedListener variableChangedListener = variableChangedListeners.get(i);
-         if (variableChangedListener.getClass() != YoRegistryChangedListener.class)
-         {
-            variableChangedListener.notifyOfVariableChange(variable);
-         }
-      }
+      enableChangedListener = false;
+      variable.notifyListeners();
+      enableChangedListener = true;
    }
 
-   private static class YoRegistryChangedListener implements VariableChangedListener
+   private class YoRegistryChangedListener implements YoVariableChangedListener
    {
       final ConcurrentLinkedQueue<YoVariable> queue;
 
@@ -111,9 +105,10 @@ public class MirroredYoVariableRegistry extends YoRegistry
       }
 
       @Override
-      public void notifyOfVariableChange(YoVariable v)
+      public void changed(YoVariable v)
       {
-         queue.add(v);
+         if (enableChangedListener)
+            queue.add(v);
       }
    }
 }

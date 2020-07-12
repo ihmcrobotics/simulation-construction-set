@@ -7,7 +7,7 @@ import static us.ihmc.robotics.Assert.assertTrue;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
@@ -122,7 +122,7 @@ public class MirroredYoVariableRegistryTest
       ListenerCounter listenerCounter = new ListenerCounter();
       for (YoVariable yoVariable : originalRegistry.subtreeVariables())
       {
-         yoVariable.addVariableChangedListener(listenerCounter);
+         yoVariable.addListener(listenerCounter);
       }
 
       for (YoVariable yoVariable : mirroredYoRegistry.subtreeVariables())
@@ -144,7 +144,7 @@ public class MirroredYoVariableRegistryTest
       ListenerCounter listenerCounter = new ListenerCounter();
       for (YoVariable yoVariable : mirroredYoRegistry.subtreeVariables())
       {
-         yoVariable.addVariableChangedListener(listenerCounter);
+         yoVariable.addListener(listenerCounter);
       }
 
       for (YoVariable yoVariable : originalRegistry.subtreeVariables())
@@ -189,12 +189,12 @@ public class MirroredYoVariableRegistryTest
       return StringUtils.equals(var1.getName(), var2.getName()) && var1.getValueAsDouble() == var2.getValueAsDouble();
    }
 
-   private static class ListenerCounter implements VariableChangedListener
+   private static class ListenerCounter implements YoVariableChangedListener
    {
       public int callCount = 0;
 
       @Override
-      public void notifyOfVariableChange(YoVariable v)
+      public void changed(YoVariable v)
       {
          ++callCount;
       }

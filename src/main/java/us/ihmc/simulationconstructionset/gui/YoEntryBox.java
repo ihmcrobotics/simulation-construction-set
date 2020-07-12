@@ -20,7 +20,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.variable.YoEnum;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -40,7 +40,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
 
    private Color origionalColor = null;
 
-   private static ArrayList<VariableChangedListener> variableChangedListeners = new ArrayList<>();
+   private static ArrayList<YoVariableChangedListener> variableChangedListeners = new ArrayList<>();
 
    private YoVariableEntryContainer activeEntryContainer = new YoTextEntryContainer();
 
@@ -87,7 +87,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
       origionalColor = getBackground();
    }
 
-   public static void attachVariableChangedListener(VariableChangedListener listener)
+   public static void attachVariableChangedListener(YoVariableChangedListener listener)
    {
       variableChangedListeners.add(listener);
    }
@@ -96,12 +96,12 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
    {
       for (int i = 0; i < variableChangedListeners.size(); i++)
       {
-         VariableChangedListener listener = variableChangedListeners.get(i);
-         listener.notifyOfVariableChange(variableChanged);
+         YoVariableChangedListener listener = variableChangedListeners.get(i);
+         listener.changed(variableChanged);
       }
    }
 
-   public static void removeVariableChangedListener(VariableChangedListener listener)
+   public static void removeVariableChangedListener(YoVariableChangedListener listener)
    {
       variableChangedListeners.remove(listener);
    }
@@ -326,7 +326,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
    {
       String toolTip = variableInThisBox.getDescription();
       if ((toolTip == null) || toolTip.equals(""))
-         toolTip = variableInThisBox.getFullNameWithNameSpace();
+         toolTip = variableInThisBox.getFullNameString();
       setToolTipText(toolTip);
    }
 

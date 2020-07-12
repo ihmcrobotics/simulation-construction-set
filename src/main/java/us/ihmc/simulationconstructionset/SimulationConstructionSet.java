@@ -636,7 +636,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          }
       };
 
-      rootRegistry.addChangedListener(rootRegistryListener);
+      rootRegistry.addListener(rootRegistryListener);
    }
 
    public SimulationConstructionSet(Robot robot, JApplet jApplet, SimulationConstructionSetParameters parameters)
@@ -1372,7 +1372,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (rootRegistry != null)
       {
-         rootRegistry.removeChangedListener(rootRegistryListener);
+         rootRegistry.removeListener(rootRegistryListener);
          rootRegistry.clear();
       }
 

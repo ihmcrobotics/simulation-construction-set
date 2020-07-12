@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -30,15 +30,15 @@ public class SimulationRewindabilityVerifierWithStackTracing
       rootRegistryTwo = simulationTwo.getRootRegistry();
       VariablesThatShouldMatchList = new VariablesThatShouldMatchList(rootRegistryOne, rootRegistryTwo, exceptions);
 
-      VariableChangedListener variableChangedListenerForSimOne = new VariableChangedListener()
+      YoVariableChangedListener variableChangedListenerForSimOne = new YoVariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable variableInRegistryOne)
+         public void changed(YoVariable variableInRegistryOne)
          {
             if (!recordDifferencesForSimOne)
                return;
 
-            YoVariable variableInRegistryTwo = VariablesThatShouldMatchList.getYoVariableInListTwo(variableInRegistryOne.getFullNameWithNameSpace());
+            YoVariable variableInRegistryTwo = VariablesThatShouldMatchList.getYoVariableInListTwo(variableInRegistryOne.getFullNameString());
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
             Thread thread = Thread.currentThread();
@@ -58,15 +58,15 @@ public class SimulationRewindabilityVerifierWithStackTracing
          }
       };
 
-      VariableChangedListener variableChangedListenerForSimTwo = new VariableChangedListener()
+      YoVariableChangedListener variableChangedListenerForSimTwo = new YoVariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable variableInRegistryTwo)
+         public void changed(YoVariable variableInRegistryTwo)
          {
             if (!recordDifferencesForSimTwo)
                return;
 
-            YoVariable variableInRegistryOne = VariablesThatShouldMatchList.getYoVariableInListOne(variableInRegistryTwo.getFullNameWithNameSpace());
+            YoVariable variableInRegistryOne = VariablesThatShouldMatchList.getYoVariableInListOne(variableInRegistryTwo.getFullNameString());
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
             Thread thread = Thread.currentThread();
@@ -89,8 +89,8 @@ public class SimulationRewindabilityVerifierWithStackTracing
       List<YoVariable[]> variablesThatShouldMatch = VariablesThatShouldMatchList.getVariablesThatShouldMatch();
       for (YoVariable[] variablesToMatch : variablesThatShouldMatch)
       {
-         variablesToMatch[0].addVariableChangedListener(variableChangedListenerForSimOne);
-         variablesToMatch[1].addVariableChangedListener(variableChangedListenerForSimTwo);
+         variablesToMatch[0].addListener(variableChangedListenerForSimOne);
+         variablesToMatch[1].addListener(variableChangedListenerForSimTwo);
       }
    }
 

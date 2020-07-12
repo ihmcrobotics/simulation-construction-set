@@ -44,8 +44,8 @@ public class VariablesThatShouldMatchList
          YoVariable variableOne = variablesOne.get(i);
          YoVariable variableTwo = variablesTwo.get(i);
 
-         String nameOne = variableOne.getFullNameWithNameSpace();
-         String nameTwo = variableTwo.getFullNameWithNameSpace();
+         String nameOne = variableOne.getFullNameString();
+         String nameTwo = variableTwo.getFullNameString();
 
          if (!nameOne.equals(nameTwo))
          {
@@ -98,14 +98,14 @@ public class VariablesThatShouldMatchList
       LinkedHashMap<String, YoVariable> variablesTwoHashMap = new LinkedHashMap<>();
       for (YoVariable variableInTwo : variablesTwo)
       {
-         variablesTwoHashMap.put(variableInTwo.getFullNameWithNameSpace(), variableInTwo);
+         variablesTwoHashMap.put(variableInTwo.getFullNameString(), variableInTwo);
       }
 
       ArrayList<YoVariable> newVariablesTwo = new ArrayList<>();
 
       for (YoVariable variableInOne : variablesOne)
       {
-         YoVariable variableInTwo = variablesTwoHashMap.get(variableInOne.getFullNameWithNameSpace());
+         YoVariable variableInTwo = variablesTwoHashMap.get(variableInOne.getFullNameString());
 
          if (variableInTwo == null)
          {

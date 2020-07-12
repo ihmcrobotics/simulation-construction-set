@@ -14,12 +14,12 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.registry.YoTools;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 @SuppressWarnings("serial")
-public class YoSliderpanel extends JPanel implements MouseListener, VariableChangedListener
+public class YoSliderpanel extends JPanel implements MouseListener, YoVariableChangedListener
 {
    private static final int SHORT_NAME_LENGTH = 20;
    private YoVariable var;
@@ -39,7 +39,7 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
       this.var = var;
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       setup();
-      var.addVariableChangedListener(this);
+      var.addListener(this);
    }
 
    private int convertDoubleToPrecisionInt(double value)
@@ -192,7 +192,7 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
    }
 
    @Override
-   public void notifyOfVariableChange(YoVariable v)
+   public void changed(YoVariable v)
    {
       value.setText(v.getValueAsDouble() + "");
       setSliderValueOnVariableChange();

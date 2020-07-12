@@ -143,7 +143,7 @@ public class DataFileWriter
             if (vars.contains(variable))
             {
                //             dataOutputStream.writeBytes("$VAR " + variable.getName() + " " + entry.getManualMinScaling() + " " + entry.getManualMaxScaling() + "\n");
-               dataOutputStream.writeBytes("$VAR " + variable.getFullNameWithNameSpace() + " " + entry.getManualMinScaling() + " " + entry.getManualMaxScaling()
+               dataOutputStream.writeBytes("$VAR " + variable.getFullNameString() + " " + entry.getManualMinScaling() + " " + entry.getManualMaxScaling()
                      + "\n");
             }
          }
@@ -155,7 +155,7 @@ public class DataFileWriter
             YoVariable variable = vars.get(i);
 
             //          dataOutputStream.writeBytes("$VAR " + variable.getName() + " -1.0 1.0\n");
-            dataOutputStream.writeBytes("$VAR " + variable.getFullNameWithNameSpace() + " -1.0 1.0\n");
+            dataOutputStream.writeBytes("$VAR " + variable.getFullNameString() + " -1.0 1.0\n");
          }
 
       }
@@ -416,7 +416,7 @@ public class DataFileWriter
 
             if (vars.contains(variable))
             {
-               varnamesToWrite[vars.indexOf(variable)] = entry.getVariable().getFullNameWithNameSpace();
+               varnamesToWrite[vars.indexOf(variable)] = entry.getVariable().getFullNameString();
                varnamesToWrite[vars.indexOf(variable)] = varnamesToWrite[vars.indexOf(variable)].replace("[", "");
                varnamesToWrite[vars.indexOf(variable)] = varnamesToWrite[vars.indexOf(variable)].replace("]", "");
 
@@ -482,7 +482,7 @@ public class DataFileWriter
 
             if (vars.contains(variable))
             {
-               varnamesToWrite[vars.indexOf(variable)] = entry.getVariable().getFullNameWithNameSpace();
+               varnamesToWrite[vars.indexOf(variable)] = entry.getVariable().getFullNameString();
 
                double[] data = entry.getWindowedData(dataBuffer.getInPoint(), /* dataBuffer.getOutPoint(), */ bufferLength);
                dataToWrite[vars.indexOf(variable)] = data;
@@ -562,7 +562,7 @@ public class DataFileWriter
          {
             YoVariable variable = variables.get(i);
 
-            dataStream.writeBytes("$VAR " + variable.getFullNameWithNameSpace() + " 1.0 1.0 " + "\n");
+            dataStream.writeBytes("$VAR " + variable.getFullNameString() + " 1.0 1.0 " + "\n");
 
             //          dataStream.writeBytes("$VAR " + variable.getName() + " 1.0 1.0 " + "\n");
          }
@@ -620,7 +620,7 @@ public class DataFileWriter
 
          for (YoVariable variable : vars)
          {
-            out.write(variable.getFullNameWithNameSpace());
+            out.write(variable.getFullNameString());
 
             boolean lastVariable = (variable == vars.get(vars.size() - 1));
             if (!lastVariable)
