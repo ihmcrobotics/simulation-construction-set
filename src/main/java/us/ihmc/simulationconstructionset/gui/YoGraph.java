@@ -31,6 +31,7 @@ import javax.swing.TransferHandler;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
+import us.ihmc.euclid.tools.EuclidCoreIOTools;
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
@@ -1187,11 +1188,11 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       if (graphIndicesHolder.isIndexAtOutPoint())
       {
-         entry.getVariableNameAndValue(stringBuffer);
+         getVariableNameAndValue(entry, stringBuffer);
       }
       else
       {
-         entry.getVariableNameAndValueAtIndex(stringBuffer, graphIndicesHolder.getIndex());
+         getVariableNameAndValueAtIndex(entry, stringBuffer, graphIndicesHolder.getIndex());
       }
 
       if (showNameSpace)
@@ -1205,6 +1206,25 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       int yToDrawAt = graphHeight - 5 - (PIXELS_PER_BOTTOM_ROW * (totalEntryNamePaintRows - row - 1));
       g.drawChars(charArray, 0, length, cumOffset, yToDrawAt); // Print it.
+   }
+
+   private static final String SPACE_STRING = "  ";
+   private static final String DOUBLE_FORMAT = EuclidCoreIOTools.getStringFormat(8, 5);
+
+   public static void getVariableNameAndValue(DataEntry entry, StringBuffer stringBuffer)
+   {
+      getVariableNameAndValueString(entry, stringBuffer, entry.getVariable().getValueAsDouble());
+   }
+
+   private static void getVariableNameAndValueAtIndex(DataEntry entry, StringBuffer stringBuffer, int index)
+   {
+      getVariableNameAndValueString(entry, stringBuffer, entry.getValueAt(index));
+   }
+
+   private static void getVariableNameAndValueString(DataEntry entry, StringBuffer stringBuffer, double value)
+   {
+      YoVariable variable = entry.getVariable();
+      stringBuffer.append(variable.getName()).append(SPACE_STRING).append(variable.convertDoubleValueToString(DOUBLE_FORMAT, value));
    }
 
    @Override
@@ -1364,7 +1384,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       // if (evt.isShiftDown())
       if (!(evt.isMetaDown()) && (evt.isAltDown()))
       { // Middle Click
-         // If mouse was pressed in a label, remove that variable:
+        // If mouse was pressed in a label, remove that variable:
 
          if (y > h - totalEntryNamePaintRows * PIXELS_PER_BOTTOM_ROW)
          {
@@ -1552,7 +1572,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       if (evt.isMetaDown() && (!evt.isAltDown()))
       { // Right Click n Drag
-         // draggedX = evt.getX();
+        // draggedX = evt.getX();
 
          // if (draggedX > w) draggedX = w;
          // if (draggedX < 0) draggedX = 0;

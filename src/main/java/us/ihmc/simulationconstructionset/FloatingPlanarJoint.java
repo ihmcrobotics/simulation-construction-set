@@ -14,8 +14,8 @@ import us.ihmc.euclid.yawPitchRoll.YawPitchRoll;
 import us.ihmc.robotics.robotDescription.Plane;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.FloatingPlanarJointPhysics;
 import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
 {

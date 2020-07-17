@@ -133,7 +133,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
 
       ArrayList<String> stringCollection = new ArrayList<>();
       stringCollection.addAll(Arrays.asList(variableInThisBox.getEnumValuesAsString()));
-      if (variableInThisBox.getAllowNullValue())
+      if (variableInThisBox.isNullAllowed())
       {
          stringCollection.add("null");
       }
@@ -245,7 +245,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
 
    private int getOrdinalOf(int index)
    {
-      if (variableInThisBox.getAllowNullValue())
+      if (variableInThisBox.isNullAllowed())
       {
          if (index == variableInThisBox.getEnumSize())
          {
@@ -257,7 +257,7 @@ public class YoEnumEntryContainer implements YoVariableEntryContainer, ActionLis
 
    private int getIndexOf(int ordinal)
    {
-      if (variableInThisBox.getAllowNullValue())
+      if (variableInThisBox.isNullAllowed())
       {
          if (ordinal == YoEnum.NULL_VALUE)
          {

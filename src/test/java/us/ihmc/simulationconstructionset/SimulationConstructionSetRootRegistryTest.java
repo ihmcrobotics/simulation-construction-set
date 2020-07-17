@@ -34,7 +34,7 @@ public class SimulationConstructionSetRootRegistryTest
       DataBuffer dataBuffer = scs.getDataBuffer();
 
       assertTrue(variableOne == rootRegistry.findVariable("variableOne"));
-      assertTrue(variableOne == dataBuffer.findVariable("variableOne"));
+      assertTrue(variableOne == dataBuffer.getYoVariableList().findVariable("variableOne"));
 
       if (SHOW_GUI)
       {
@@ -147,13 +147,13 @@ public class SimulationConstructionSetRootRegistryTest
 
       // Make sure the variables are in the DataBuffer:
       DataBuffer dataBuffer = scs.getDataBuffer();
-      assertTrue(variableBeforeConstructionOne == dataBuffer.findVariable("variableBeforeConstructionOne"));
-      assertTrue(variableAfterConstructionZero == dataBuffer.findVariable("variableAfterConstructionZero"));
-      assertTrue(variableAfterConstructionOne == dataBuffer.findVariable("variableAfterConstructionOne"));
-      assertTrue(variableAfterConstructionTwo == dataBuffer.findVariable("variableAfterConstructionTwo"));
-      assertTrue(variableAfterThreadZero == dataBuffer.findVariable("variableAfterThreadZero"));
-      assertTrue(variableAfterThreadOne == dataBuffer.findVariable("variableAfterThreadOne"));
-      assertTrue(variableAfterThreadTwo == dataBuffer.findVariable("variableAfterThreadTwo"));
+      assertTrue(variableBeforeConstructionOne == dataBuffer.getYoVariableList().findVariable("variableBeforeConstructionOne"));
+      assertTrue(variableAfterConstructionZero == dataBuffer.getYoVariableList().findVariable("variableAfterConstructionZero"));
+      assertTrue(variableAfterConstructionOne == dataBuffer.getYoVariableList().findVariable("variableAfterConstructionOne"));
+      assertTrue(variableAfterConstructionTwo == dataBuffer.getYoVariableList().findVariable("variableAfterConstructionTwo"));
+      assertTrue(variableAfterThreadZero == dataBuffer.getYoVariableList().findVariable("variableAfterThreadZero"));
+      assertTrue(variableAfterThreadOne == dataBuffer.getYoVariableList().findVariable("variableAfterThreadOne"));
+      assertTrue(variableAfterThreadTwo == dataBuffer.getYoVariableList().findVariable("variableAfterThreadTwo"));
 
       // Make sure the variables are on the GUI:
       if (SHOW_GUI)

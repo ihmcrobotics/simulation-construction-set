@@ -15,10 +15,10 @@ import us.ihmc.simulationconstructionset.scripts.Script;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
 import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class Simulation implements YoVariableHolder, Serializable // Runnable,
 {
@@ -109,43 +109,43 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    @Override
    public YoVariable findVariable(String varname)
    {
-      return myDataBuffer.findVariable(varname);
+      return myDataBuffer.getYoVariableList().findVariable(varname);
    }
 
    @Override
    public boolean hasUniqueVariable(String varname)
    {
-      return myDataBuffer.hasUniqueVariable(varname);
+      return myDataBuffer.getYoVariableList().hasUniqueVariable(varname);
    }
 
    @Override
    public YoVariable findVariable(String nameSpace, String varname)
    {
-      return myDataBuffer.findVariable(nameSpace, varname);
+      return myDataBuffer.getYoVariableList().findVariable(nameSpace, varname);
    }
 
    @Override
    public boolean hasUniqueVariable(String nameSpace, String varname)
    {
-      return myDataBuffer.hasUniqueVariable(nameSpace, varname);
+      return myDataBuffer.getYoVariableList().hasUniqueVariable(nameSpace, varname);
    }
 
    @Override
    public List<YoVariable> findVariables(String nameSpace, String varname)
    {
-      return myDataBuffer.findVariables(nameSpace, varname);
+      return myDataBuffer.getYoVariableList().findVariables(nameSpace, varname);
    }
 
    @Override
    public List<YoVariable> findVariables(String varname)
    {
-      return myDataBuffer.findVariables(varname);
+      return myDataBuffer.getYoVariableList().findVariables(varname);
    }
 
    @Override
    public List<YoVariable> findVariables(NameSpace nameSpace)
    {
-      return myDataBuffer.findVariables(nameSpace);
+      return myDataBuffer.getYoVariableList().findVariables(nameSpace);
    }
 
    public void registerVariable(YoVariable variable)

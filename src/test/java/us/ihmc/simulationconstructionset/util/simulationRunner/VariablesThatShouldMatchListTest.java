@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoFactories;
 import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.tools.YoFactories;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class VariablesThatShouldMatchListTest

@@ -21,11 +21,11 @@ import org.junit.jupiter.api.Test;
 
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoInteger;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class DataFileWriterTest
 {
@@ -274,7 +274,7 @@ public class DataFileWriterTest
       for (int i = 0; i < originalVarList.size(); i++)
       {
          YoVariable originalVariable = originalVarList.getVariable(i);
-         YoVariable newVariable = newVarList.getVariable(originalVariable.getName());
+         YoVariable newVariable = newVarList.findVariable(originalVariable.getName());
 
          assertFalse(originalVariable == newVariable);
          assertEquals(originalVariable.getValueAsDouble(), newVariable.getValueAsDouble(), 1e-7);
@@ -330,7 +330,7 @@ public class DataFileWriterTest
       for (int i = 0; i < originalVarList.size(); i++)
       {
          YoVariable originalVariable = originalVarList.getVariable(i);
-         YoVariable newVariable = newVarList.getVariable(originalVariable.getName());
+         YoVariable newVariable = newVarList.findVariable(originalVariable.getName());
 
          assertFalse(originalVariable == newVariable);
          assertEquals(originalVariable.getValueAsDouble(), newVariable.getValueAsDouble(), 1e-7);

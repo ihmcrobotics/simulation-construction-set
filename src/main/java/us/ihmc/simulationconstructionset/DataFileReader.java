@@ -16,11 +16,11 @@ import us.ihmc.simulationconstructionset.robotdefinition.RobotDefinitionFixedFra
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
 import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoFactories;
 import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
+import us.ihmc.yoVariables.tools.YoFactories;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class DataFileReader
 {
@@ -376,7 +376,7 @@ public class DataFileReader
    private DataBufferEntry getDataBufferEntry(String varName, DataBuffer dataBuffer, YoRegistry rootRegistryToAddNewVariablesTo, YoVariableList newVars)
          throws IOException
    {
-      YoVariable newVariable = dataBuffer.findVariable(varName);
+      YoVariable newVariable = dataBuffer.getYoVariableList().findVariable(varName);
 
       if (newVariable == null)
       {
@@ -708,7 +708,7 @@ public class DataFileReader
                nameSpace.prepend(registry.getNameSpace());
          }
 
-         YoVariable variable = varList.getVariable(varName);
+         YoVariable variable = varList.findVariable(varName);
 
          boolean variableNotFound = (variable == null);
          if (variableNotFound)

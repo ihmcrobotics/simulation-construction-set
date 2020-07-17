@@ -99,14 +99,14 @@ import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
 import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.yoVariables.listener.YoRegistryChangedListener;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
-import us.ihmc.yoVariables.registry.YoTools;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
+import us.ihmc.yoVariables.tools.YoTools;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 /**
  * <p>

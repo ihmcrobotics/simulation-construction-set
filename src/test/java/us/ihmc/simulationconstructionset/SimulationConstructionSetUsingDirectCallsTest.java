@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -69,10 +70,11 @@ import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
 import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
+import us.ihmc.yoVariables.tools.YoSearchTools;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 @Tag("gui")
 public class SimulationConstructionSetUsingDirectCallsTest
@@ -1010,12 +1012,12 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
       scs.addVarList(yoVariableList);
       YoVariableList yoVariableListFromSCS = scs.getCombinedVarList();
-      assertYoVariableListContainsVariables(yoVariableListFromSCS, yoVariableList.getAllVariables());
+      assertYoVariableListContainsVariables(yoVariableListFromSCS, yoVariableList.getVariables());
 
       scs.addVarLists(yoVariableLists);
       YoVariableList yoVariableListFromSCS2 = scs.getCombinedVarList();
-      assertYoVariableListContainsVariables(yoVariableListFromSCS2, yoVariableLists[0].getAllVariables());
-      assertYoVariableListContainsVariables(yoVariableListFromSCS2, yoVariableLists[1].getAllVariables());
+      assertYoVariableListContainsVariables(yoVariableListFromSCS2, yoVariableLists[0].getVariables());
+      assertYoVariableListContainsVariables(yoVariableListFromSCS2, yoVariableLists[1].getVariables());
 
       scs.addVarLists(yoVariableArrayLists);
       YoVariableList yoVariableListFromSCS3 = scs.getCombinedVarList();
@@ -1414,25 +1416,25 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
       for (int j = 0; j < numberOfList; j++)
       {
-         YoVariable[] variables = arrayLists.get(j).getAllVariables();
+         List<YoVariable> variables = arrayLists.get(j).getVariables();
 
-         int numberOfVariables = variables.length;
+         int numberOfVariables = variables.size();
 
          for (int i = 0; i < numberOfVariables; i++)
          {
-            boolean containsTheVar = yoVariableList.containsVariable(variables[i]);
+            boolean containsTheVar = yoVariableList.contains(variables.get(i));
             assertTrue(containsTheVar);
          }
       }
    }
 
-   private void assertYoVariableListContainsVariables(YoVariableList yoVariableList, YoVariable[] variables)
+   private void assertYoVariableListContainsVariables(YoVariableList yoVariableList, List<YoVariable> variables)
    {
-      int numberOfVariables = variables.length;
+      int numberOfVariables = variables.size();
 
       for (int i = 0; i < numberOfVariables; i++)
       {
-         boolean containsTheVar = yoVariableList.containsVariable(variables[i]);
+         boolean containsTheVar = yoVariableList.contains(variables.get(i));
          assertTrue(containsTheVar);
       }
    }
@@ -1453,7 +1455,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private YoVariableList createVarListOfDoubleYoVariableWithDummyRegistry(String[] variableNames, double[] varValues)
    {
-      YoDouble[] yoDoubles = null;
+      List<YoDouble> yoDoubles = null;
 
       if (variableNames.length == varValues.length)
       {
@@ -1472,8 +1474,8 @@ public class SimulationConstructionSetUsingDirectCallsTest
                                                                                  double[] varValues2)
    {
       YoRegistry registry = new YoRegistry("dummy");
-      YoDouble[] yoVariables1 = createAndSetDoubleYoVariableToRegistry(variableNames1, varValues1, registry);
-      YoDouble[] yoVariables2 = createAndSetDoubleYoVariableToRegistry(variableNames2, varValues2, registry);
+      List<YoDouble> yoVariables1 = createAndSetDoubleYoVariableToRegistry(variableNames1, varValues1, registry);
+      List<YoDouble> yoVariables2 = createAndSetDoubleYoVariableToRegistry(variableNames2, varValues2, registry);
 
       YoVariableList[] yoVariableLists = new YoVariableList[2];
       yoVariableLists[0] = createYoVariableList("yoVariableList1", yoVariables1);
@@ -1482,21 +1484,21 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return yoVariableLists;
    }
 
-   private YoDouble[] createAndSetDoubleYoVariableToRegistry(String[] varNames, double[] varValues, YoRegistry registry)
+   private List<YoDouble> createAndSetDoubleYoVariableToRegistry(String[] varNames, double[] varValues, YoRegistry registry)
    {
-      YoDouble[] yoDoubles = new YoDouble[varNames.length];
+      List<YoDouble> yoDoubles = new ArrayList<>();
 
       for (int i = 0; i < varNames.length; i++)
       {
          YoDouble yoDouble = new YoDouble(varNames[i], registry);
          yoDouble.set(varValues[i]);
-         yoDoubles[i] = yoDouble;
+         yoDoubles.add(yoDouble);
       }
 
       return yoDoubles;
    }
 
-   private YoVariableList createYoVariableList(String name, YoVariable[] yoVariables)
+   private YoVariableList createYoVariableList(String name, List<? extends YoVariable> yoVariables)
    {
       YoVariableList yoVariableList = new YoVariableList(name);
       yoVariableList.addVariables(yoVariables);
@@ -2031,9 +2033,9 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return (CameraTrackAndDollyYoVariablesHolder) classicCameraController.getCameraTrackAndDollyVariablesHolder();
    }
 
-   private YoDouble[] addDoubleYoVariablesInSCSRegistry(String[] varNames, double[] varValues, SimulationConstructionSet scs)
+   private List<YoDouble> addDoubleYoVariablesInSCSRegistry(String[] varNames, double[] varValues, SimulationConstructionSet scs)
    {
-      YoDouble[] yoDoubles = null;
+      List<YoDouble> yoDoubles = null;
 
       if (varNames.length == varValues.length)
       {
@@ -2098,7 +2100,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
          {
             YoVariable entry = currentlyMatched.get(i);
 
-            if (entry.getName().toLowerCase().contains((searchString)))
+            if (entry.getName().toLowerCase().contains(searchString))
             {
                if (ret == null)
                {
@@ -2167,7 +2169,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
          tempList.addVariable(var);
       }
 
-      return tempList.getMatchingVariables(varNames, regularExpressions);
+      List<YoVariable> variables = new ArrayList<>();
+      Arrays.asList(varNames).forEach(varName -> variables.addAll(tempList.findVariables(varName)));
+      Arrays.asList(regularExpressions).forEach(regex -> variables.addAll(YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), tempList)));
+      return variables;
    }
 
    private int computeRecordFreq(double recordDT, double simulateDT)

@@ -5,8 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class VariablesThatShouldMatchList
 {

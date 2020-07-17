@@ -35,8 +35,8 @@ import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
 import us.ihmc.simulationconstructionset.gui.HorizontalSpinnerUI;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
 import us.ihmc.yoVariables.listener.YoVariableChangedListener;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariableType;
 
 public abstract class YoVariablePanel extends JPanel implements KeyListener, MouseListener, FocusListener, ComponentListener
@@ -121,8 +121,6 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
    protected abstract List<YoVariable> getAllYoVariablesCopy();
 
    public abstract YoVariable getYoVariable(String string);
-
-   public abstract void addChangeListener(ChangeListener changeListener);
 
    private void init()
    {

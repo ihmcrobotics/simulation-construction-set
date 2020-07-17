@@ -30,7 +30,7 @@ import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPo
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableSearchPanel;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
-import us.ihmc.yoVariables.variable.YoVariableList;
+import us.ihmc.yoVariables.registry.YoVariableList;
 
 public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySelectedListener
 {

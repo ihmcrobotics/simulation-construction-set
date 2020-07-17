@@ -55,8 +55,8 @@ import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.videos.ExportVideo;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.variable.YoVariableList;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
 
 public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCanvas3DHolder, ExtraPanelSelector
 {

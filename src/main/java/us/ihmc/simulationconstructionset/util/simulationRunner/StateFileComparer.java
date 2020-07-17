@@ -6,8 +6,8 @@ import java.util.List;
 
 import us.ihmc.simulationconstructionset.DataFileReader;
 import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class StateFileComparer
 {
@@ -119,7 +119,7 @@ public class StateFileComparer
       VariablesThatShouldMatchList list = new VariablesThatShouldMatchList(varListOne, varListTwo, exceptions);
       ArrayList<VariableDifference> variableDifferences = new ArrayList<>();
 
-      YoDouble timeYoVariable = (YoDouble) varListOne.getVariable("t");
+      YoDouble timeYoVariable = (YoDouble) varListOne.findVariable("t");
       double time = Double.NaN;
       if (timeYoVariable != null)
       {

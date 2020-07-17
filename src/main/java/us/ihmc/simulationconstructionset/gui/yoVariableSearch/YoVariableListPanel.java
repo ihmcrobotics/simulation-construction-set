@@ -4,12 +4,10 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.event.ChangeListener;
-
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class YoVariableListPanel extends YoVariablePanel
 {
@@ -61,15 +59,9 @@ public class YoVariableListPanel extends YoVariablePanel
    }
 
    @Override
-   public void addChangeListener(ChangeListener changeListener)
-   {
-      varList.addChangeListener(changeListener);
-   }
-
-   @Override
    public YoVariable getYoVariable(String name)
    {
-      return varList.getVariable(name);
+      return varList.findVariable(name);
    }
 
    public void addVariable(final YoVariable v)
@@ -91,7 +83,7 @@ public class YoVariableListPanel extends YoVariablePanel
 
    public void removeVariable(YoVariable v)
    {
-      int indexOfVariableValueToRemove = varList.getIndexOfVariable(v);
+      int indexOfVariableValueToRemove = varList.indexOf(v);
       if ((indexOfVariableValueToRemove >= 0) && (indexOfVariableValueToRemove < getYoVariableSpinners().size()))
       {
          System.out.println("removing var");
@@ -108,7 +100,7 @@ public class YoVariableListPanel extends YoVariablePanel
 
    public void removeAllVariables()
    {
-      varList.removeAllVariables();
+      varList.clear();
       getYoVariableSpinners().clear();
       removeAll();
 

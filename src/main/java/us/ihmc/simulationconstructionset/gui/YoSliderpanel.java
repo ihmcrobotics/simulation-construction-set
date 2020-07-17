@@ -15,7 +15,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import us.ihmc.yoVariables.listener.YoVariableChangedListener;
-import us.ihmc.yoVariables.registry.YoTools;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 @SuppressWarnings("serial")
@@ -63,7 +62,7 @@ public class YoSliderpanel extends JPanel implements MouseListener, YoVariableCh
 
    private void setup()
    {
-      name = new JLabel(YoTools.shortenString(var.getName(), SHORT_NAME_LENGTH));
+      name = new JLabel(shortenString(var.getName(), SHORT_NAME_LENGTH));
       min = var.getValueAsDouble() - defaultMinMaxOffset;
       max = var.getValueAsDouble() + defaultMinMaxOffset;
 
@@ -91,6 +90,16 @@ public class YoSliderpanel extends JPanel implements MouseListener, YoVariableCh
       this.add(slider);
       this.add(minField);
       this.add(value);
+   }
+
+   public static String shortenString(String inputString, int maxLength)
+   {
+      int length = inputString.length();
+
+      if (length <= maxLength)
+         return inputString;
+      else
+         return inputString.substring(0, maxLength / 2 - 2) + "..." + inputString.substring(length - maxLength / 2 + 1, length);
    }
 
    private void setUpMax()
