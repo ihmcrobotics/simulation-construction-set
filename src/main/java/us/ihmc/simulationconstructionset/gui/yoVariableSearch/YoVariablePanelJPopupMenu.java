@@ -147,7 +147,7 @@ public class YoVariablePanelJPopupMenu extends ForcedRepaintPopupMenu
             if (combinedVarPanel != null)
             {
 
-               combinedVarPanel.setVisibleVarPanel(selectedVariableHolder.getSelectedVariable().getYoRegistry());
+               combinedVarPanel.setVisibleVarPanel(selectedVariableHolder.getSelectedVariable().getRegistry());
             }
 
             setVisible(false);

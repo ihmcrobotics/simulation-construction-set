@@ -599,7 +599,7 @@ public class DataFileWriter
 
          for (YoVariable variable : variables)
          {
-            String nameSpaceName = variable.getYoRegistry().getNameSpace().getName();
+            String nameSpaceName = variable.getRegistry().getNameSpace().getName();
             String variableName = variable.getName();
             String variableValue = Double.toString(variable.getValueAsDouble());
             out.write(nameSpaceName + "." + variableName + " = " + variableValue + ";\n");
