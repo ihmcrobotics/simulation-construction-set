@@ -3527,17 +3527,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Specify whether or not the buffer should wrap once the end is reached. By default the buffer
-    * expands until it reaches the predefined max size. If enabled the buffer will not expand.
-    *
-    * @param wrap Should the buffer wrap to the beginning instead of expanding?
-    */
-   public void setWrapBuffer(boolean wrap)
-   {
-      myDataBuffer.setWrapBuffer(wrap);
-   }
-
-   /**
     * Either increase or decrease the data buffer's size in units of ticks. The new buffer will begin
     * with the current inPoint and end at one of two points. If the buffer size is increased all of the
     * original data persists otherwise the data is cropped between the inPoint and the new buffer size.
@@ -3554,18 +3543,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       {
          myGUI.zoomFullView();
       }
-   }
-
-   /**
-    * Sets the maximum size, in ticks, to which the buffer will expand. While nonsense values are not
-    * explicitly checked for, they will not cause the buffer to shrink or behave abnormally.
-    *
-    * @param maxBufferSize New max buffer size.
-    */
-
-   public void setMaxBufferSize(int maxBufferSize)
-   {
-      myDataBuffer.setMaxBufferSize(maxBufferSize);
    }
 
    /**

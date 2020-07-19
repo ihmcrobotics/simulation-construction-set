@@ -27,10 +27,10 @@ import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 @SuppressWarnings("serial")
 public class DataBufferPropertiesDialog extends JDialog implements ActionListener
 {
-   private JTextField maxTextField, currentTextField;
-   private JRadioButton wrapButton, enlargeButton;
+   private JTextField currentTextField;
+   private JRadioButton enlargeButton;
 
-   private int newMaxVal, newCurrentVal;
+   private int newCurrentVal;
 
    // private final static java.text.NumberFormat numFormat = new java.text.DecimalFormat(" 0.00000;-0.00000");
 
@@ -76,13 +76,7 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
       setResizable(false);
       pack();
 
-      Dimension size = maxTextField.getSize();
-      size.width = size.width * 5 / 4;
-      maxTextField.setSize(size);
-      maxTextField.setPreferredSize(size);
-      maxTextField.setMinimumSize(size);
-
-      size = currentTextField.getSize();
+      Dimension size = currentTextField.getSize();
       size.width = size.width * 5 / 4;
       currentTextField.setSize(size);
       currentTextField.setPreferredSize(size);
@@ -129,7 +123,6 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
       {
          super();
 
-         newMaxVal = dataBuffer.getMaxBufferSize();
          newCurrentVal = dataBuffer.getBufferSize();
          GridBagLayout gridbag = new GridBagLayout();
 
@@ -153,26 +146,7 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
          gridbag.setConstraints(policyLabel, constraints);
          this.add(policyLabel);
 
-         wrapButton = new JRadioButton("Wrap", dataBuffer.getWrapBuffer());
-         wrapButton.addActionListener(this);
-         constraints.gridx = 1;
-         constraints.gridy = 0;
-         constraints.gridwidth = 1;
-         constraints.anchor = GridBagConstraints.WEST;
-         gridbag.setConstraints(wrapButton, constraints);
-         this.add(wrapButton);
-
-         enlargeButton = new JRadioButton("Enlarge", !dataBuffer.getWrapBuffer());
-         enlargeButton.addActionListener(this);
-         constraints.gridx = 2;
-         constraints.gridy = 0;
-         constraints.gridwidth = 1;
-         constraints.anchor = GridBagConstraints.WEST;
-         gridbag.setConstraints(enlargeButton, constraints);
-         this.add(enlargeButton);
-
          ButtonGroup group = new ButtonGroup();
-         group.add(wrapButton);
          group.add(enlargeButton);
 
          // Row 1:
@@ -184,18 +158,6 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
          constraints.anchor = GridBagConstraints.EAST;
          gridbag.setConstraints(maxSettingsLabel, constraints);
          this.add(maxSettingsLabel);
-
-         String maxValString = String.valueOf(newMaxVal);
-         maxTextField = new JTextField(maxValString);
-         maxTextField.addActionListener(this);
-         if (dataBuffer.getWrapBuffer())
-            maxTextField.setEnabled(false);
-         constraints.gridx = 1;
-         constraints.gridy = 1;
-         constraints.gridwidth = 2;
-         constraints.anchor = GridBagConstraints.WEST;
-         gridbag.setConstraints(maxTextField, constraints);
-         this.add(maxTextField);
 
          // Row 2:
 
@@ -227,49 +189,16 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
 
       public void commitChanges()
       {
-         updateMaxTextField();
          updateCurrentTextField();
 
-         dataBuffer.setMaxBufferSize(newMaxVal);
          dataBuffer.resizeBuffer(newCurrentVal);
-
-         dataBuffer.setWrapBuffer(wrapButton.isSelected());
       }
 
       @Override
       public void actionPerformed(ActionEvent event)
       {
-         if (event.getSource() == maxTextField)
-            updateMaxTextField();
          if (event.getSource() == currentTextField)
             updateCurrentTextField();
-
-         if (event.getSource() == wrapButton)
-         {
-            maxTextField.setEnabled(false);
-         }
-
-         if (event.getSource() == enlargeButton)
-         {
-            maxTextField.setEnabled(true);
-         }
-
-      }
-
-      public void updateMaxTextField()
-      {
-         String text = maxTextField.getText();
-
-         try
-         {
-            int val = Integer.parseInt(text);
-            newMaxVal = val;
-         }
-         catch (NumberFormatException e)
-         {
-            maxTextField.setText(String.valueOf(newMaxVal));
-         }
-
       }
 
       public void updateCurrentTextField()

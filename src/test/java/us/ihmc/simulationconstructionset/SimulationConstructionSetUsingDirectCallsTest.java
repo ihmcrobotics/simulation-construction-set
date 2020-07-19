@@ -1129,21 +1129,9 @@ public class SimulationConstructionSetUsingDirectCallsTest
       int currentInPoint2 = scs.getInPoint();
       assertEquals(0, currentInPoint2, epsilon);
 
-      scs.setWrapBuffer(false);
-      boolean wrapBufferFromSCS = getWrapBufferFromSCS(scs);
-      assertFalse(wrapBufferFromSCS);
-
-      scs.setWrapBuffer(true);
-      boolean wrapBufferFromSCS2 = getWrapBufferFromSCS(scs);
-      assertTrue(wrapBufferFromSCS2);
-
       scs.changeBufferSize(initialBufferSize * 2);
       int bufferSizeFromSCS = getBufferSizeFromSCS(scs);
       assertEquals(initialBufferSize * 2, bufferSizeFromSCS, epsilon);
-
-      scs.setMaxBufferSize(initialBufferSize * 3);
-      int maxBufferSizeFromSCS = getMaxBufferSizeFromSCS(scs);
-      assertEquals(initialBufferSize * 3, maxBufferSizeFromSCS, epsilon);
 
       BufferedImage bufferedImage = scs.exportSnapshotAsBufferedImage(captureDevice);
       assertNotNull(bufferedImage);
@@ -1568,11 +1556,6 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return scs.getGUI().getActiveCaptureDevice();
    }
 
-   private int getMaxBufferSizeFromSCS(SimulationConstructionSet scs)
-   {
-      return scs.getDataBuffer().getMaxBufferSize();
-   }
-
    private int getInOutBufferLengthFromSCS(SimulationConstructionSet scs)
    {
       return scs.getDataBuffer().getBufferInOutLength();
@@ -1581,11 +1564,6 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private int getBufferSizeFromSCS(SimulationConstructionSet scs)
    {
       return scs.getDataBuffer().getBufferSize();
-   }
-
-   private boolean getWrapBufferFromSCS(SimulationConstructionSet scs)
-   {
-      return scs.getDataBuffer().getWrapBuffer();
    }
 
    private void addAndSubtractOneFromInAndOutPointIndexWithoutCrop(SimulationConstructionSet scs)

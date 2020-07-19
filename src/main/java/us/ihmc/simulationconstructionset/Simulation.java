@@ -163,7 +163,6 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
       // Create a data buffer:
       myDataBuffer = new DataBuffer(dataBufferSize);
-      myDataBuffer.setWrapBuffer(true);
 
       setRobots(robots);
    }
