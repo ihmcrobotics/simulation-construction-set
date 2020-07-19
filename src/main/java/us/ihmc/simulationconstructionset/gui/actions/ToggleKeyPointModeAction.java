@@ -8,10 +8,10 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 
 import us.ihmc.simulationconstructionset.gui.actions.dialogActions.AbstractActionTools;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
 
-public class ToggleKeyPointModeAction extends AbstractAction implements ToggleKeyPointModeCommandListener
+public class ToggleKeyPointModeAction extends AbstractAction implements KeyPointsChangedListener
 {
    private static final long serialVersionUID = 1500047530568017379L;
 
@@ -23,9 +23,9 @@ public class ToggleKeyPointModeAction extends AbstractAction implements ToggleKe
 
    private ImageIcon icon = new ImageIcon(iconImage);
 
-   private ToggleKeyPointModeCommandExecutor executor;
+   private KeyPointsHolder executor;
 
-   public ToggleKeyPointModeAction(ToggleKeyPointModeCommandExecutor executor)
+   public ToggleKeyPointModeAction(KeyPointsHolder executor)
    {
       super("Toggle Key Mode");
       this.executor = executor;
@@ -35,29 +35,31 @@ public class ToggleKeyPointModeAction extends AbstractAction implements ToggleKe
       putValue(Action.LONG_DESCRIPTION, "Long Description");
       putValue(Action.SHORT_DESCRIPTION, "Short Description");
 
-      executor.registerToggleKeyPointModeCommandListener(this);
+      executor.addListener(this);
    }
 
    @Override
-   public void updateKeyPointModeStatus()
+   public void changed(Change change)
    {
-      if (executor.isKeyPointModeToggled())
+      if (change.wasToggled())
       {
-         icon.setImage(iconImage);
-      }
-      else
-      {
-         icon.setImage(altImage);
+         if (executor.areKeyPointsEnabled())
+         {
+            icon.setImage(iconImage);
+         }
+         else
+         {
+            icon.setImage(altImage);
+         }
       }
    }
 
    @Override
    public void actionPerformed(ActionEvent actionEvent)
    {
-      executor.toggleKeyPointMode();
+      executor.toggleKeyPoints();
    }
 
-   @Override
    public void closeAndDispose()
    {
       iconImage = null;

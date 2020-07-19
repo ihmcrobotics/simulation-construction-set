@@ -17,7 +17,7 @@ import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.ViewportWindow;
 import us.ihmc.simulationconstructionset.gui.YoVariableSliderWindow;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 
 public class StandardAllCommandsExecutor implements AllCommandsExecutor
 {
@@ -26,7 +26,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    private DataBuffer dataBuffer;
 
    private ArrayList<ViewportSelectorCommandListener> viewportSelectorCommandListenersToRegister = new ArrayList<>();
-   private ArrayList<ToggleKeyPointModeCommandListener> toggleKeyPointModeCommandListenersToRegister = new ArrayList<>();
+   private ArrayList<KeyPointsChangedListener> keyPointsChangedListenersToRegister = new ArrayList<>();
 
    public StandardAllCommandsExecutor()
    {
@@ -50,9 +50,9 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.registerViewportSelectorCommandListener(listener);
       }
 
-      for (ToggleKeyPointModeCommandListener listener : toggleKeyPointModeCommandListenersToRegister)
+      for (KeyPointsChangedListener listener : keyPointsChangedListenersToRegister)
       {
-         dataBuffer.registerToggleKeyPointModeCommandListener(listener);
+         dataBuffer.getKeyPointsHandler().addListener(listener);
       }
    }
 
@@ -341,25 +341,25 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    @Override
-   public boolean isKeyPointModeToggled()
+   public boolean areKeyPointsEnabled()
    {
-      return dataBuffer.isKeyPointModeToggled();
+      return dataBuffer.getKeyPointsHandler().areKeyPointsEnabled();
    }
 
    @Override
-   public void toggleKeyPointMode()
+   public void toggleKeyPoints()
    {
-      dataBuffer.toggleKeyPointMode();
+      dataBuffer.getKeyPointsHandler().toggleKeyPoints();
    }
 
    @Override
-   public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener commandListener)
+   public void addListener(KeyPointsChangedListener listener)
    {
       if (dataBuffer != null)
-         dataBuffer.registerToggleKeyPointModeCommandListener(commandListener);
+         dataBuffer.getKeyPointsHandler().addListener(listener);
       else
       {
-         toggleKeyPointModeCommandListenersToRegister.add(commandListener);
+         keyPointsChangedListenersToRegister.add(listener);
       }
    }
 
@@ -539,16 +539,12 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          viewportSelectorCommandListenersToRegister.clear();
       }
 
-      if (toggleKeyPointModeCommandListenersToRegister != null)
+      if (keyPointsChangedListenersToRegister != null)
       {
-         for (ToggleKeyPointModeCommandListener toggleKeyPointModeCommandListener : toggleKeyPointModeCommandListenersToRegister)
-         {
-            toggleKeyPointModeCommandListener.closeAndDispose();
-         }
-         toggleKeyPointModeCommandListenersToRegister.clear();
+         keyPointsChangedListenersToRegister.clear();
       }
 
       viewportSelectorCommandListenersToRegister = null;
-      toggleKeyPointModeCommandListenersToRegister = null;
+      keyPointsChangedListenersToRegister = null;
    }
 }

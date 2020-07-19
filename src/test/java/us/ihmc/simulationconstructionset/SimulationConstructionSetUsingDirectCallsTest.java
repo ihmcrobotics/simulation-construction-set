@@ -66,7 +66,7 @@ import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionHandl
 import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisualizer;
 import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingCollisionArbiter;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
@@ -308,9 +308,9 @@ public class SimulationConstructionSetUsingDirectCallsTest
       boolean isScrollGraphsEnabled2 = scs.isSafeToScroll();
       assertFalse(isScrollGraphsEnabled2);
 
-      boolean initialKeyPointStatus = scs.isKeyPointModeToggled();
-      scs.toggleKeyPointMode();
-      boolean finalKeyPointStatus = scs.isKeyPointModeToggled();
+      boolean initialKeyPointStatus = scs.areKeyPointsEnabled();
+      scs.toggleKeyPoints();
+      boolean finalKeyPointStatus = scs.areKeyPointsEnabled();
       assertBooleansAreOpposite(initialKeyPointStatus, finalKeyPointStatus);
 
       scs.setRunName(runningName);
@@ -1062,12 +1062,12 @@ public class SimulationConstructionSetUsingDirectCallsTest
       PlaybackListener playbackListener = createPlaybackListener();
       PlayCycleListener playCycleListener = createPlayCycleListener();
       DataProcessingFunction dataProcessingFunction = createDataProcessingFunction();
-      ToggleKeyPointModeCommandListener toggleKeyPointModeCommandListener = createToggleKeyPointModeCommandListener();
+      KeyPointsChangedListener keyPointsChangedListener = createToggleKeyPointModeCommandListener();
       scs.attachPlayCycleListener(playCycleListener);
       scs.attachPlaybackListener(playbackListener);
       scs.addSimulateDoneListener(simulationDoneListener);
       scs.setSimulateDoneCriterion(simulationDoneCriterion);
-      scs.registerToggleKeyPointModeCommandListener(toggleKeyPointModeCommandListener);
+      scs.addListener(keyPointsChangedListener);
 
       List<PlayCycleListener> playCycleListenersFromSCS = scs.getPlayCycleListeners();
       assertArrayOfObjectsContainsTheObject(playCycleListenersFromSCS, playCycleListener);
@@ -1103,7 +1103,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertTrue(processDataHasBeenCalled.getBooleanValue());
 
       toggleKeyPointModeCommandListenerHasBeenCalled.set(false);
-      scs.toggleKeyPointMode();
+      scs.toggleKeyPoints();
       ThreadTools.sleep(THREAD_SLEEP_TIME);
       assertTrue(toggleKeyPointModeCommandListenerHasBeenCalled.getBooleanValue());
    }
@@ -1298,19 +1298,14 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return yoGraphicsListRegistry;
    }
 
-   private ToggleKeyPointModeCommandListener createToggleKeyPointModeCommandListener()
+   private KeyPointsChangedListener createToggleKeyPointModeCommandListener()
    {
-      ToggleKeyPointModeCommandListener toggleKeyPointModeCommandListener = new ToggleKeyPointModeCommandListener()
+      KeyPointsChangedListener toggleKeyPointModeCommandListener = new KeyPointsChangedListener()
       {
          @Override
-         public void updateKeyPointModeStatus()
+         public void changed(Change change)
          {
-            toggleKeyPointModeCommandListenerHasBeenCalled.set(true);
-         }
-
-         @Override
-         public void closeAndDispose()
-         {
+            toggleKeyPointModeCommandListenerHasBeenCalled.set(change.wasToggled());
          }
       };
 

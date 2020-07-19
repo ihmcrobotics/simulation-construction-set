@@ -329,12 +329,12 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
    @Override
    public void tickLater(int n)
    {
-      if (dataBuffer.isKeyPointModeToggled())
+      if (dataBuffer.getKeyPointsHandler().areKeyPointsEnabled())
       {
          if (n > 0)
-            setIndexLater(dataBuffer.getNextTime());
+            setIndexLater(dataBuffer.getNextKeyPoint());
          else
-            setIndexLater(dataBuffer.getPreviousTime());
+            setIndexLater(dataBuffer.getPreviousKeyPoint());
       }
       else
          doTick = n;
@@ -724,7 +724,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
    @Override
    public List<Integer> getKeyPoints()
    {
-      return dataBuffer.getKeyPoints();
+      return dataBuffer.getKeyPointsHandler().getKeyPoints();
    }
 
    private void updateGraphs()

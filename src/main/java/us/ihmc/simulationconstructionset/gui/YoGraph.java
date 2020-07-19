@@ -660,7 +660,11 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          DataEntry entry = entriesOnThisGraph.get(i);
          boolean inverted = entry.getInverted();
 
-         DataBounds windowBounds = entry.getWindowBounds(leftPlotIndex, rightPlotIndex);
+         DataBounds windowBounds;
+         if (leftIndex < rightIndex)
+            windowBounds = entry.getWindowBounds(Math.max(leftIndex, leftPlotIndex), Math.min(rightIndex, rightPlotIndex));
+         else
+            windowBounds = entry.getWindowBounds(leftPlotIndex, rightPlotIndex);
          double entryMax = windowBounds.getUpperBound();
          double entryMin = windowBounds.getLowerBound();
 

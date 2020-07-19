@@ -97,8 +97,8 @@ import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
 import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.yoVariables.listener.YoRegistryChangedListener;
 import us.ihmc.yoVariables.registry.NameSpace;
@@ -315,7 +315,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       CreateNewGraphWindowCommandExecutor, CreateNewViewportWindowCommandExecutor, CropBufferCommandExecutor, CutBufferCommandExecutor,
       ExportSnapshotCommandExecutor, GotoInPointCommandExecutor, GotoOutPointCommandExecutor, NextCameraKeyCommandExecutor, PackBufferCommandExecutor,
       PreviousCameraKeyCommandExecutor, RemoveCameraKeyCommandExecutor, SetInPointCommandExecutor, SetOutPointCommandExecutor, StepBackwardCommandExecutor,
-      StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor, ToggleKeyPointModeCommandExecutor, GUIEnablerAndDisabler, WriteDataCommandExecutor,
+      StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor, KeyPointsHolder, GUIEnablerAndDisabler, WriteDataCommandExecutor,
       TimeHolder, ParameterRootNamespaceHolder, DataBufferCommandsExecutor, TickAndUpdatable
 {
    private static final boolean TESTING_LOAD_STUFF = false;
@@ -4367,9 +4367,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @return Are key points in use?
     */
    @Override
-   public boolean isKeyPointModeToggled()
+   public boolean areKeyPointsEnabled()
    {
-      return standardAllCommandsExecutor.isKeyPointModeToggled();
+      return standardAllCommandsExecutor.areKeyPointsEnabled();
    }
 
    /**
@@ -4377,15 +4377,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * when KeyPoints are in use steps during playback will only move between KeyPoints.
     */
    @Override
-   public void toggleKeyPointMode()
+   public void toggleKeyPoints()
    {
-      standardAllCommandsExecutor.toggleKeyPointMode();
+      standardAllCommandsExecutor.toggleKeyPoints();
    }
 
    @Override
-   public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener listener)
+   public void addListener(KeyPointsChangedListener listener)
    {
-      standardAllCommandsExecutor.registerToggleKeyPointModeCommandListener(listener);
+      standardAllCommandsExecutor.addListener(listener);
    }
 
    /**

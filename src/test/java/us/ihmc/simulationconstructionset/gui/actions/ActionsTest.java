@@ -103,8 +103,9 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigu
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveRobotConfigurationDialogConstructor;
 import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener.Change;
+import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
 
 public class ActionsTest
 {
@@ -277,42 +278,92 @@ public class ActionsTest
    {
       final ToggleKeyPointModeAction[] actionHolder = new ToggleKeyPointModeAction[1];
 
-      final ToggleKeyPointModeCommandExecutor dummyExecutor = new ToggleKeyPointModeCommandExecutor()
+      final KeyPointsHolder dummyExecutor = new KeyPointsHolder()
       {
          boolean toggled = false;
 
          @Override
-         public boolean isKeyPointModeToggled()
+         public boolean areKeyPointsEnabled()
          {
             return toggled;
          }
 
          @Override
-         public void toggleKeyPointMode()
+         public void toggleKeyPoints()
          {
             toggled = !toggled;
          }
 
          @Override
-         public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener commandListener)
+         public void addListener(KeyPointsChangedListener listener)
          {
          }
       };
 
-      createMethodTesterForInterface(ToggleKeyPointModeCommandExecutor.class, dummyExecutor).testWithMock(new TestWithMock<ToggleKeyPointModeCommandExecutor>()
+      createMethodTesterForInterface(KeyPointsHolder.class, dummyExecutor).testWithMock(new TestWithMock<KeyPointsHolder>()
       {
          @Override
-         public void test(ToggleKeyPointModeCommandExecutor executor)
+         public void test(KeyPointsHolder executor)
          {
             ToggleKeyPointModeAction action = new ToggleKeyPointModeAction(executor);
-            assertFalse(dummyExecutor.isKeyPointModeToggled());
+            assertFalse(dummyExecutor.areKeyPointsEnabled());
             action.actionPerformed(null);
-            action.updateKeyPointModeStatus();
-            assertTrue(dummyExecutor.isKeyPointModeToggled());
+            action.changed(new Change()
+            {
+               @Override
+               public boolean wasToggled()
+               {
+                  return true;
+               }
+
+               @Override
+               public boolean areKeyPointsEnabled()
+               {
+                  return false;
+               }
+
+               @Override
+               public List<Integer> getRemovedKeyPoints()
+               {
+                  return null;
+               }
+
+               @Override
+               public List<Integer> getAddedKeyPoints()
+               {
+                  return null;
+               }
+            });
+            assertTrue(dummyExecutor.areKeyPointsEnabled());
 
             action.actionPerformed(null);
-            action.updateKeyPointModeStatus();
-            assertFalse(dummyExecutor.isKeyPointModeToggled());
+            action.changed(new Change()
+            {
+               @Override
+               public boolean wasToggled()
+               {
+                  return true;
+               }
+
+               @Override
+               public boolean areKeyPointsEnabled()
+               {
+                  return false;
+               }
+
+               @Override
+               public List<Integer> getRemovedKeyPoints()
+               {
+                  return null;
+               }
+
+               @Override
+               public List<Integer> getAddedKeyPoints()
+               {
+                  return null;
+               }
+            });
+            assertFalse(dummyExecutor.areKeyPointsEnabled());
 
             action.closeAndDispose();
             actionHolder[0] = action;

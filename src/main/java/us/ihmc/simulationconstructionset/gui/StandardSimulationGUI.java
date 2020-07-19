@@ -1407,7 +1407,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
     */
    public List<Integer> getKeyPoints()
    {
-      return myDataBuffer.getKeyPoints();
+      return myDataBuffer.getKeyPointsHandler().getKeyPoints();
    }
 
    public void setKeyPoint()
