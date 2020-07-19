@@ -297,11 +297,6 @@ public class ActionsTest
          public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener commandListener)
          {
          }
-
-         @Override
-         public void closeAndDispose()
-         {
-         }
       };
 
       createMethodTesterForInterface(ToggleKeyPointModeCommandExecutor.class, dummyExecutor).testWithMock(new TestWithMock<ToggleKeyPointModeCommandExecutor>()

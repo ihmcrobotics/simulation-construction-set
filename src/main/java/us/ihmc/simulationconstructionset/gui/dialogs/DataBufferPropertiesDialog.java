@@ -231,7 +231,7 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
          updateCurrentTextField();
 
          dataBuffer.setMaxBufferSize(newMaxVal);
-         dataBuffer.changeBufferSize(newCurrentVal);
+         dataBuffer.resizeBuffer(newCurrentVal);
 
          dataBuffer.setWrapBuffer(wrapButton.isSelected());
       }

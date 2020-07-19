@@ -776,17 +776,6 @@ public class SimulationConstructionSetUsingDirectCallsTest
       boolean hasUniqueVariableRobot2 = simpleRobot.hasUniqueVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       boolean hasUniqueVariableSCS2 = scs.hasUniqueVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
       assertEquals(hasUniqueVariableRobot2, hasUniqueVariableSCS2);
-
-      List<YoVariable> arrayOfVariablesContainingRobot = getSimpleRobotVariablesThatContain(searchString, false, simpleRobot);
-
-      List<YoVariable> arrayOfVariablesStartingRobot = getSimpleRobotVariablesThatStartWith(searchStringStart, simpleRobot);
-      List<YoVariable> arrayOfVariablesStartingSCS = scs.getVariablesThatStartWith(searchStringStart);
-      assertEquals(arrayOfVariablesStartingRobot, arrayOfVariablesStartingSCS);
-
-      String[] varNames = getVariableNamesGivenArrayListOfYoVariables(arrayOfVariablesContainingRobot);
-      List<YoVariable> arrayOfVariablesRegExprRobot = getSimpleRobotRegExpVariables(varNames, regularExpressions, simpleRobot);
-      List<YoVariable> arrayOfVariablesRegExprSCS = scs.getVars(varNames, regularExpressions);
-      assertEquals(arrayOfVariablesRegExprRobot, arrayOfVariablesRegExprSCS);
    }
 
    @Test // timeout = 30000

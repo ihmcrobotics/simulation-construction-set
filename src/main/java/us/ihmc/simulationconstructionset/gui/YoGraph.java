@@ -36,6 +36,7 @@ import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
 import us.ihmc.simulationconstructionset.gui.dialogs.GraphPropertiesDialog;
+import us.ihmc.yoVariables.dataBuffer.DataBounds;
 import us.ihmc.yoVariables.dataBuffer.DataEntry;
 import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
 import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
@@ -418,7 +419,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       for (int i = 0; i < numVars; i++)
       {
          DataEntry entry = entriesOnThisGraph.get(i);
-         ret = (ret || entry.hasMinMaxChanged());
+         ret = (ret || entry.haveBoundsChanged());
       }
 
       return ret;
@@ -437,11 +438,9 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          DataEntry entry = entriesOnThisGraph.get(i);
          boolean inverted = entry.getInverted();
 
-         // entry.reCalcMinMax();
-         // entry.resetMinMaxChanged();
-
-         double entryMin = entry.getMin();
-         double entryMax = entry.getMax();
+         DataBounds bounds = entry.getBounds();
+         double entryMin = bounds.getLowerBound();
+         double entryMax = bounds.getUpperBound();
 
          if (inverted)
          {
@@ -469,14 +468,14 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       for (int i = 0; i < numVars; i++)
       {
          DataEntry entry = entriesOnThisGraph.get(i);
-         entry.resetMinMaxChanged();
+         entry.resetBoundsChangedFlag();
       }
    }
 
    private void calcXYData(DataEntry entry, int nPoints, int[] xData, int[] yData, double min, double max, int width, int height, int offsetFromLeft,
                            int offsetFromTop, int leftPlotIndex, int rightPlotIndex)
    {
-      double[] data = entry.getData();
+      double[] data = entry.getBuffer();
 
       boolean inverted = entry.getInverted();
 
@@ -505,8 +504,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private void calcScatterData(DataEntry entryX, DataEntry entryY, int nPoints, int[] xData, int[] yData, double minX, double maxX, double minY, double maxY,
                                 int width, int height, int offsetFromLeft, int offsetFromTop)
    {
-      double[] dataX = entryX.getData();
-      double[] dataY = entryY.getData();
+      double[] dataX = entryX.getBuffer();
+      double[] dataY = entryY.getBuffer();
 
       for (int i = 0; i < nPoints; i++)
       {
@@ -537,21 +536,14 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          cumOffset = i * ((int) (VAR_NAME_SPACING_FOR_PRINT * 0.6)) + 3;
 
          DataEntry entry = entriesOnThisGraph.get(i);
-         double[] data = entry.getData();
+         double[] data = entry.getBuffer();
 
          double minVal = 0.0, maxVal = 1.0;
          if (graphConfiguration.getScalingMethod() == INDIVIDUAL_SCALING)
          {
-            if (entry.isAutoScaleEnabled())
-            {
-               minVal = entry.getMin();
-               maxVal = entry.getMax();
-            }
-            else
-            {
-               minVal = entry.getManualMinScaling();
-               maxVal = entry.getManualMaxScaling();
-            }
+            DataBounds bounds = entry.isUsingCustomBounds() ? entry.getCustomBounds() : entry.getBounds();
+            minVal = bounds.getLowerBound();
+            maxVal = bounds.getUpperBound();
          }
          else if (graphConfiguration.getScalingMethod() == AUTO_SCALING)
          {
@@ -668,8 +660,9 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          DataEntry entry = entriesOnThisGraph.get(i);
          boolean inverted = entry.getInverted();
 
-         double entryMax = entry.getMax(leftIndex, rightIndex, leftPlotIndex, rightPlotIndex);
-         double entryMin = entry.getMin(leftIndex, rightIndex, leftPlotIndex, rightPlotIndex);
+         DataBounds windowBounds = entry.getWindowBounds(leftPlotIndex, rightPlotIndex);
+         double entryMax = windowBounds.getUpperBound();
+         double entryMin = windowBounds.getLowerBound();
 
          if (inverted)
          {
@@ -717,8 +710,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       DataEntry input = entriesOnThisGraph.get(0);
       DataEntry output = entriesOnThisGraph.get(1);
 
-      double[] inputData = Arrays.copyOfRange(input.getData(), inPoint, outPoint);
-      double[] outputData = Arrays.copyOfRange(output.getData(), inPoint, outPoint);
+      double[] inputData = Arrays.copyOfRange(input.getBuffer(), inPoint, outPoint);
+      double[] outputData = Arrays.copyOfRange(output.getBuffer(), inPoint, outPoint);
 
       double[] timeData = Arrays.copyOfRange(timeDataHolder.getTimeData(), inPoint, outPoint);
 
@@ -733,8 +726,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       DataEntry input = entriesOnThisGraph.get(0);
       DataEntry output = entriesOnThisGraph.get(1);
 
-      double[] inputData = input.getData();
-      double[] outputData = output.getData();
+      double[] inputData = input.getBuffer();
+      double[] outputData = output.getBuffer();
 
       double[] timeData = timeDataHolder.getTimeData();
 
@@ -767,7 +760,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (DataEntry entry : entriesOnThisGraph)
       {
-         double[] data = entry.getData();
+         double[] data = entry.getBuffer();
          double[] rngData = Arrays.copyOfRange(data, inPoint, outPoint);
 
          BodePlotConstructor.plotFFT(entry.getVariableName(), rngTimeData, rngData);
@@ -782,7 +775,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (DataEntry entry : entriesOnThisGraph)
       {
-         double[] data = entry.getData();
+         double[] data = entry.getBuffer();
 
          BodePlotConstructor.plotFFT(entry.getVariableName(), timeData, data);
       }
@@ -823,7 +816,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       for (int i = 0; i < entriesOnThisGraph.size() / 2; i++)
       {
          DataEntry entryX = entriesOnThisGraph.get(i);
-         double[] dataX = entryX.getData();
+         double[] dataX = entryX.getBuffer();
 
          DataEntry entryY = entriesOnThisGraph.get(i + 1);
 
@@ -834,38 +827,23 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
          if (graphConfiguration.getScalingMethod() == INDIVIDUAL_SCALING)
          {
-            if (entryX.isAutoScaleEnabled())
-            {
-               minValX = entryX.getMin();
-               maxValX = entryX.getMax();
-            }
-            else
-            {
-               minValX = entryX.getManualMinScaling();
-               maxValX = entryX.getManualMaxScaling();
-            }
+            DataBounds xBounds = entryX.isUsingCustomBounds() ? entryX.getCustomBounds() : entryX.getBounds();
+            minValX = xBounds.getLowerBound();
+            maxValX = xBounds.getUpperBound();
 
-            if (entryY.isAutoScaleEnabled())
-            {
-               minValY = entryY.getMin();
-               maxValY = entryY.getMax();
-            }
-            else
-            {
-               minValY = entryY.getManualMinScaling();
-               maxValY = entryY.getManualMaxScaling();
-            }
+            DataBounds yBounds = entryY.isUsingCustomBounds() ? entryY.getCustomBounds() : entryY.getBounds();
+            minValY = yBounds.getLowerBound();
+            maxValY = yBounds.getUpperBound();
          }
          else if (graphConfiguration.getScalingMethod() == AUTO_SCALING)
          {
-            // minValX = minValY = this.min;   //++++++
-            // maxValX = maxValY = this.max;
+            DataBounds yBounds = entryY.getBounds();
+            minValY = yBounds.getLowerBound();
+            maxValY = yBounds.getUpperBound();
 
-            minValY = entryY.getMin();
-            maxValY = entryY.getMax();
-
-            minValX = entryX.getMin();
-            maxValX = entryX.getMax();
+            DataBounds xBounds = entryX.getBounds();
+            minValX = xBounds.getLowerBound();
+            maxValX = xBounds.getUpperBound();
          }
          else if (graphConfiguration.getScalingMethod() == MANUAL_SCALING)
          {
@@ -958,21 +936,14 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       for (int i = 0; i < numVars; i++)
       {
          DataEntry entry = entriesOnThisGraph.get(i);
-         double[] data = entry.getData();
+         double[] data = entry.getBuffer();
 
          double minVal = 0.0, maxVal = 1.0;
          if (graphConfiguration.getScalingMethod() == INDIVIDUAL_SCALING)
          {
-            if (entry.isAutoScaleEnabled())
-            {
-               minVal = entry.getMin();
-               maxVal = entry.getMax();
-            }
-            else
-            {
-               minVal = entry.getManualMinScaling();
-               maxVal = entry.getManualMaxScaling();
-            }
+            DataBounds bounds = entry.isUsingCustomBounds() ? entry.getCustomBounds() : entry.getBounds();
+            minVal = bounds.getLowerBound();
+            maxVal = bounds.getUpperBound();
          }
          else if (graphConfiguration.getScalingMethod() == AUTO_SCALING)
          {

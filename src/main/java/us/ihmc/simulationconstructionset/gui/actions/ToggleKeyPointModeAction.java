@@ -63,8 +63,6 @@ public class ToggleKeyPointModeAction extends AbstractAction implements ToggleKe
       iconImage = null;
       altImage = null;
       icon = null;
-      if (executor != null)
-         executor.closeAndDispose();
       executor = null;
    }
 }

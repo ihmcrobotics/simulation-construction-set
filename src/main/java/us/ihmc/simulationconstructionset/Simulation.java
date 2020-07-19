@@ -148,26 +148,6 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
       return myDataBuffer.findVariables(nameSpace);
    }
 
-   public void registerVariable(YoVariable variable)
-   {
-      throw new RuntimeException("Do not register variables with a Simulation.java!");
-   }
-
-   public List<YoVariable> getVariablesThatStartWith(String searchString)
-   {
-      return myDataBuffer.getVariablesThatStartWith(searchString);
-   }
-
-   public List<YoVariable> getVars(String[] varNames, String[] regularExpressions)
-   {
-      return myDataBuffer.getVars(varNames, regularExpressions);
-   }
-
-   // public Simulation(int dataBufferSize)
-   // {
-   //   this(((Robot) null), dataBufferSize);
-   // }
-
    public Simulation(Robot robot, int dataBufferSize)
    {
       this(new Robot[] {robot}, dataBufferSize);
@@ -190,8 +170,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public void closeAndDispose()
    {
-      myDataBuffer.closeAndDispose();
-
+      myDataBuffer.clear();
       myDataBuffer = null;
       mySimulator = null;
    }

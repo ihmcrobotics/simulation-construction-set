@@ -376,7 +376,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
    public void setupGraph(String varname)
    {
-      final DataBufferEntry entry = dataBuffer.getEntry(varname);
+      final DataBufferEntry entry = dataBuffer.findVariableEntry(varname);
 
       if (entry != null)
       {
@@ -413,7 +413,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
             for (int i = 0; i < varnames.length; i++)
             {
-               DataBufferEntry entry = dataBuffer.getEntry(varnames[i]);
+               DataBufferEntry entry = dataBuffer.findVariableEntry(varnames[i]);
 
                if (entry != null)
                   g.addVariable(entry);
@@ -433,7 +433,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
       YoGraph g = new YoGraph(this, this, selectedVariableHolder, dataBuffer, dataBuffer, parentFrame);
       for (int i = 0; i < varnames.length; i++)
       {
-         DataBufferEntry entry = dataBuffer.getEntry(varnames[i]);
+         DataBufferEntry entry = dataBuffer.findVariableEntry(varnames[i]);
          if (entry != null)
             g.addVariable(entry);
       }
@@ -703,11 +703,11 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
          if (graph.getEntriesOnThisGraph().size() > 0)
          {
-            returnString += graph.getEntriesOnThisGraph().get(0).getFullVariableNameWithNameSpace();
+            returnString += graph.getEntriesOnThisGraph().get(0).getVariableFullNameString();
 
             for (int i = 1; i < graph.getEntriesOnThisGraph().size(); i++)
             {
-               returnString += "," + graph.getEntriesOnThisGraph().get(i).getFullVariableNameWithNameSpace();
+               returnString += "," + graph.getEntriesOnThisGraph().get(i).getVariableFullNameString();
             }
          }
 

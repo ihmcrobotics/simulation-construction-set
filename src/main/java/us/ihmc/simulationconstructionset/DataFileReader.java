@@ -354,11 +354,9 @@ public class DataFileReader
 
          //       System.out.println("varNames.get(i) = " + varNames.get(i) + ", newEntry = " + newEntry);
 
-         double[] someData = newEntry.getData(); // new double[nPoints];
-
          for (int j = 0; j < nPoints; j++)
          {
-            someData[j] = (dataStream.readFloat());
+            newEntry.setDataAt(dataStream.readFloat(), j);
 
             // System.out.print(dataStream.readFloat() + "  ");
          }
@@ -366,7 +364,6 @@ public class DataFileReader
          // System.out.println(varNames.get(i));
          // dataHolder.addData((String) varNames.get(i),someData);
          // newVariable.setData(someData,nPoints);
-         newEntry.setData(someData, nPoints);
 
          // variables.add(newVariable);
          // System.out.println();
@@ -434,7 +431,7 @@ public class DataFileReader
             {
                int newBufferSize = Math.min(j, Integer.MAX_VALUE / 2);
                newBufferSize *= 2;
-               dataBuffer.changeBufferSize(newBufferSize);
+               dataBuffer.resizeBuffer(newBufferSize);
             }
 
             for (int i = 0; i < nVars; i++)
@@ -443,7 +440,7 @@ public class DataFileReader
 
                // System.out.print(someData);
                DataBufferEntry entry = entries[i];
-               entry.setData(someData, j);
+               entry.setDataAt(someData, j);
             }
 
             // System.out.println();
@@ -526,8 +523,6 @@ public class DataFileReader
 
             DataBufferEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
 
-            double[] someData = newEntry.getData();
-
             String valString = token.nextToken();
             if (!valString.startsWith("["))
                return -1;
@@ -540,7 +535,7 @@ public class DataFileReader
                double value = Double.parseDouble(valString);
 
                // System.out.print(value + " ");
-               someData[point] = (value);
+               newEntry.setDataAt(value, point);
                point++;
 
                if (!token.hasMoreTokens())
@@ -550,7 +545,6 @@ public class DataFileReader
 
             if (nPoints != point)
                return -1;
-            newEntry.setData(someData, nPoints);
 
             // System.out.println();
          }
@@ -647,14 +641,10 @@ public class DataFileReader
 
          DataBufferEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
 
-         double[] someData = newEntry.getData();
-
          for (int j = 0; j < nPoints; j++)
          {
-            someData[j] = (dataArrays.get(j))[i]; // Gets the ith element of the jth array to rearrange the data.
+            newEntry.setDataAt((dataArrays.get(j))[i], j);
          }
-
-         newEntry.setData(someData, nPoints);
       }
 
       dataStream.close();

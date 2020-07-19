@@ -143,7 +143,7 @@ public class DataFileWriter
             if (vars.contains(variable))
             {
                //             dataOutputStream.writeBytes("$VAR " + variable.getName() + " " + entry.getManualMinScaling() + " " + entry.getManualMaxScaling() + "\n");
-               dataOutputStream.writeBytes("$VAR " + variable.getFullNameString() + " " + entry.getManualMinScaling() + " " + entry.getManualMaxScaling()
+               dataOutputStream.writeBytes("$VAR " + variable.getFullNameString() + " " + entry.getCustomLowerBound() + " " + entry.getCustomUpperBound()
                      + "\n");
             }
          }

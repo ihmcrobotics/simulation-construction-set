@@ -853,32 +853,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Retrieves an List containing the YoVariables with names that start with the searchString. If none
-    * exist, it returns null.
-    *
-    * @param searchString String for which YoVariable names are checked.
-    * @return List of the YoVariables whos names begin with searchString.
-    */
-   public List<YoVariable> getVariablesThatStartWith(String searchString)
-   {
-      return mySimulation.getVariablesThatStartWith(searchString);
-   }
-
-   /**
-    * Given an array of YoVariable names and an array of regular expressions this function returns an
-    * List of the YoVariables whos name's fit the regular expression. If a given variable fits multiple
-    * expressions it will be added multiple times.
-    *
-    * @param varNames           String array of the name of YoVariables to be checked.
-    * @param regularExpressions String array of regular expressions to use.
-    * @return List of the YoVariables which have names that match the provided regular expressions.
-    */
-   public List<YoVariable> getVars(String[] varNames, String[] regularExpressions)
-   {
-      return mySimulation.getVars(varNames, regularExpressions);
-   }
-
-   /**
     * The time in seconds between each recorded data point. This value is ultimately stored as the
     * ratio of simulation steps per record. If the specified value is not evenly divisible by the
     * simulation time step rounding will occur. Once the value has been updated timing is recomputed.
@@ -1304,7 +1278,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    private boolean isCloseAndDispose = false;
 
-   @Override
    public void closeAndDispose()
    {
       isCloseAndDispose = true;
@@ -3567,7 +3540,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void changeBufferSize(int bufferSize)
    {
-      myDataBuffer.changeBufferSize(bufferSize);
+      myDataBuffer.resizeBuffer(bufferSize);
 
       if (myGUI != null)
       {

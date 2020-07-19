@@ -139,7 +139,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       {
          for (DataEntry dataEntry : entriesToExport)
          {
-            writer.print(dataEntry.getData()[i] + ",");
+            writer.print(dataEntry.getBuffer()[i] + ",");
          }
 
          writer.println();
@@ -191,7 +191,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
    {
       YoVariable variable = entry.getVariable();
 
-      double[] inData = entry.getData();
+      double[] inData = entry.getBuffer();
       double[] data;
 
       if (inPoint == outPoint)
