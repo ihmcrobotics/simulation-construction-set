@@ -67,7 +67,6 @@ import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisua
 import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingCollisionArbiter;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
-import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableList;
@@ -875,7 +874,6 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
       scs.setIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
-      scs.setIndexButDoNotNotifySimulationRewoundListeners(ticksIncrease);
       double currentSCSIndex9 = scs.getIndex();
       assertFalse(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(ticksIncrease, currentSCSIndex9, epsilon);

@@ -99,7 +99,6 @@ import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
-import us.ihmc.yoVariables.listener.RewoundListener;
 import us.ihmc.yoVariables.listener.YoRegistryChangedListener;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
@@ -371,6 +370,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private final SimulationSynchronizer simulationSynchronizer;
 
    private List<YoGraphicsListRegistry> yoGraphicListRegistries = new ArrayList<>();
+   private RewoundListenerHandler rewoundListenerHandler = new RewoundListenerHandler();
    private DataBuffer myDataBuffer;
    private boolean defaultLoaded = false;
    private int lastIndexPlayed = 0;
@@ -514,6 +514,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       mySimulation = simulation;
       myDataBuffer = mySimulation.getDataBuffer();
+      myDataBuffer.attachIndexChangedListener(rewoundListenerHandler);
       simulationSynchronizer = mySimulation.getSimulationSynchronizer();
 
       List<YoVariable> originalRootVariables = rootRegistry.subtreeVariables();
@@ -1587,7 +1588,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       return ret;
    }
 
-   @Override
    public boolean tickButDoNotNotifySimulationRewoundListeners(int ticks)
    {
       return tick(ticks, false);
@@ -1613,9 +1613,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       boolean ret;
 
       if (notifySimulationRewoundListeners)
+      {
          ret = myDataBuffer.tick(ticks);
+      }
       else
-         ret = myDataBuffer.tickButDoNotNotifySimulationRewoundListeners(ticks);
+      {
+         rewoundListenerHandler.setEnable(false);
+         ret = myDataBuffer.tick(ticks);
+         rewoundListenerHandler.setEnable(true);
+      }
 
       for (Robot robot : robots)
       {
@@ -2780,7 +2786,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       synchronized (myGUI.getGraphicsConch()) // Synched so we don't update during a graphics redraw...
       {
          int tick = Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1);
-         myDataBuffer.tickButDoNotNotifySimulationRewoundListeners(tick);
+         rewoundListenerHandler.setEnable(false);
+         myDataBuffer.tick(tick);
+         rewoundListenerHandler.setEnable(true);
          myGUI.updateRobots();
          myGUI.allowTickUpdatesNow();
          if (playCycleListeners != null)
@@ -2931,7 +2939,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (myDataBuffer != null)
       {
-         myDataBuffer.notifyRewindListeners();
+         rewoundListenerHandler.notifyListeners();
       }
    }
 
@@ -4357,7 +4365,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void attachSimulationRewoundListener(RewoundListener simulationRewoundListener)
    {
-      myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
+      rewoundListenerHandler.addListener(simulationRewoundListener);
    }
 
    /**
@@ -4505,10 +4513,11 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       myDataBuffer.setIndex(index);
    }
 
-   @Override
    public void setIndexButDoNotNotifySimulationRewoundListeners(int index)
    {
-      myDataBuffer.setIndexButDoNotNotifySimulationRewoundListeners(index);
+      rewoundListenerHandler.setEnable(false);
+      myDataBuffer.setIndex(index);
+      rewoundListenerHandler.setEnable(true);
    }
 
    @Override

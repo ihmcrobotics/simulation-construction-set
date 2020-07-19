@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.yoVariables.listener.RewoundListener;
 
 public class SimulationRewoundListenerTest
 {

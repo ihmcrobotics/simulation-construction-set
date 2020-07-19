@@ -463,18 +463,11 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    @Override
-   public void setIndexButDoNotNotifySimulationRewoundListeners(int index)
-   {
-      simulationConstructionSet.setIndexButDoNotNotifySimulationRewoundListeners(index);
-   }
-
-   @Override
    public boolean tick(int ticks)
    {
       return simulationConstructionSet.tick(ticks);
    }
 
-   @Override
    public boolean tickButDoNotNotifySimulationRewoundListeners(int ticks)
    {
       return simulationConstructionSet.tickButDoNotNotifySimulationRewoundListeners(ticks);
