@@ -109,53 +109,48 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    @Override
    public YoVariable findVariable(String varname)
    {
-      return myDataBuffer.getYoVariableList().findVariable(varname);
+      return myDataBuffer.findVariable(varname);
    }
 
    @Override
    public boolean hasUniqueVariable(String varname)
    {
-      return myDataBuffer.getYoVariableList().hasUniqueVariable(varname);
+      return myDataBuffer.hasUniqueVariable(varname);
    }
 
    @Override
    public YoVariable findVariable(String nameSpace, String varname)
    {
-      return myDataBuffer.getYoVariableList().findVariable(nameSpace, varname);
+      return myDataBuffer.findVariable(nameSpace, varname);
    }
 
    @Override
    public boolean hasUniqueVariable(String nameSpace, String varname)
    {
-      return myDataBuffer.getYoVariableList().hasUniqueVariable(nameSpace, varname);
+      return myDataBuffer.hasUniqueVariable(nameSpace, varname);
    }
 
    @Override
    public List<YoVariable> findVariables(String nameSpace, String varname)
    {
-      return myDataBuffer.getYoVariableList().findVariables(nameSpace, varname);
+      return myDataBuffer.findVariables(nameSpace, varname);
    }
 
    @Override
    public List<YoVariable> findVariables(String varname)
    {
-      return myDataBuffer.getYoVariableList().findVariables(varname);
+      return myDataBuffer.findVariables(varname);
    }
 
    @Override
    public List<YoVariable> findVariables(NameSpace nameSpace)
    {
-      return myDataBuffer.getYoVariableList().findVariables(nameSpace);
+      return myDataBuffer.findVariables(nameSpace);
    }
 
    public void registerVariable(YoVariable variable)
    {
       throw new RuntimeException("Do not register variables with a Simulation.java!");
-   }
-
-   public List<YoVariable> getVariablesThatContain(String searchString, boolean caseSensitive)
-   {
-      return myDataBuffer.getVariablesThatContain(searchString, caseSensitive, getVariables());
    }
 
    public List<YoVariable> getVariablesThatStartWith(String searchString)

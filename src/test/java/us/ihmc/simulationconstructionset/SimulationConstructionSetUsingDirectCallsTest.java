@@ -778,12 +778,6 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(hasUniqueVariableRobot2, hasUniqueVariableSCS2);
 
       List<YoVariable> arrayOfVariablesContainingRobot = getSimpleRobotVariablesThatContain(searchString, false, simpleRobot);
-      List<YoVariable> arrayOfVariablesContainingSCS = scs.getVariablesThatContain(searchString);
-      assertEquals(arrayOfVariablesContainingRobot, arrayOfVariablesContainingSCS);
-
-      List<YoVariable> arrayOfVariablesContainingRobot2 = getSimpleRobotVariablesThatContain(searchString, true, simpleRobot);
-      List<YoVariable> arrayOfVariablesContainingSCS2 = scs.getVariablesThatContain(searchString, true);
-      assertEquals(arrayOfVariablesContainingRobot2, arrayOfVariablesContainingSCS2);
 
       List<YoVariable> arrayOfVariablesStartingRobot = getSimpleRobotVariablesThatStartWith(searchStringStart, simpleRobot);
       List<YoVariable> arrayOfVariablesStartingSCS = scs.getVariablesThatStartWith(searchStringStart);

@@ -853,31 +853,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Retrieves an List containing the YoVariables whos names contain the search string. If none exist,
-    * it returns null.
-    *
-    * @param searchString  String for which YoVariable names are checked.
-    * @param caseSensitive Indicates if the search is to be case sensitive.
-    * @return List of the YoVariables whos names contained searchString.
-    */
-   public List<YoVariable> getVariablesThatContain(String searchString, boolean caseSensitive)
-   {
-      return mySimulation.getVariablesThatContain(searchString, caseSensitive);
-   }
-
-   /**
-    * Retrieves an List containing the YoVariables with names that contain searchString. If none exist,
-    * it returns null. This method assumes the string is case insensitive.
-    *
-    * @param searchString String for which YoVariable names are checked.
-    * @return List of the YoVariables whos names contained searchString.
-    */
-   public List<YoVariable> getVariablesThatContain(String searchString)
-   {
-      return mySimulation.getVariablesThatContain(searchString, false);
-   }
-
-   /**
     * Retrieves an List containing the YoVariables with names that start with the searchString. If none
     * exist, it returns null.
     *
@@ -3220,12 +3195,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public void setScrollGraphsEnabled(boolean enable)
    {
       if (myDataBuffer != null)
-         myDataBuffer.setSafeToChangeIndex(enable);
+         myDataBuffer.setLockIndex(!enable);
    }
 
    public boolean isSafeToScroll()
    {
-      return myDataBuffer.isSafeToChangeIndex();
+      return !myDataBuffer.isIndexLocked();
    }
 
    public void setSimulateDuration(double simulateDurationInSeconds)

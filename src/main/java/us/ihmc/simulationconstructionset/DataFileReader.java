@@ -243,10 +243,10 @@ public class DataFileReader
 
       robotConfig = replaceAll(robotConfig, "\n$", "\n");
 
-      RobotDefinitionFixedFrame compare = new RobotDefinitionFixedFrame();
 
       if (sim != null)
       {
+         RobotDefinitionFixedFrame compare = new RobotDefinitionFixedFrame();
          Robot robot = sim.getRobots()[0];
          compare.createRobotDefinitionFromRobot(robot);
 
@@ -376,7 +376,7 @@ public class DataFileReader
    private DataBufferEntry getDataBufferEntry(String varName, DataBuffer dataBuffer, YoRegistry rootRegistryToAddNewVariablesTo, YoVariableList newVars)
          throws IOException
    {
-      YoVariable newVariable = dataBuffer.getYoVariableList().findVariable(varName);
+      YoVariable newVariable = dataBuffer.findVariable(varName);
 
       if (newVariable == null)
       {
@@ -393,15 +393,7 @@ public class DataFileReader
 
       if (newEntry == null)
       {
-         if (nPoints != -1)
-         {
-            newEntry = dataBuffer.addVariable(newVariable, nPoints);
-         }
-         else
-         {
-            newEntry = dataBuffer.addVariable(newVariable, dataBuffer.getBufferSize());
-         }
-
+         newEntry = dataBuffer.addVariable(newVariable);
          //            newEntry = dataBuffer.getEntry(varName);
       }
 
