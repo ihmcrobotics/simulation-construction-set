@@ -3,9 +3,9 @@ package us.ihmc.simulationconstructionset;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.yoVariables.dataBuffer.BufferIndexChangedListener;
+import us.ihmc.yoVariables.dataBuffer.YoBufferIndexChangedListener;
 
-public class RewoundListenerHandler implements BufferIndexChangedListener
+public class RewoundListenerHandler implements YoBufferIndexChangedListener
 {
    private boolean enable = true;
    private final List<RewoundListener> listeners = new ArrayList<>();

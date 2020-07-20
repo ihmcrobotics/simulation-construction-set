@@ -37,8 +37,8 @@ import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
 import us.ihmc.simulationconstructionset.gui.dialogs.GraphPropertiesDialog;
 import us.ihmc.yoVariables.dataBuffer.DataBounds;
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
-import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryHolder;
 import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.variable.YoVariable;
@@ -59,7 +59,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private final JFrame parentFrame;
 
    private final TimeDataHolder timeDataHolder;
-   private final DataEntryHolder dataEntryHolder;
+   private final YoBufferVariableEntryHolder dataEntryHolder;
    private final GraphIndicesHolder graphIndicesHolder;
    private final YoGraphRemover yoGraphRemover;
    private final static int MAX_NUM_GRAPHS = 10;
@@ -73,7 +73,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private final Color colors[] = new Color[YoGraph.MAX_NUM_GRAPHS];
    private final Color baseLineColors[] = new Color[YoGraph.MAX_NUM_BASELINES];
 
-   private final List<DataEntry> entriesOnThisGraph;
+   private final List<YoBufferVariableEntryReader> entriesOnThisGraph;
    private final SelectedVariableHolder selectedVariableHolder;
 
    private double min = 0.0, max = 1.1;
@@ -92,7 +92,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private boolean showNameSpace = false, showBaseLines = false;
    private int focussedBaseLine = 0;
 
-   public YoGraph(GraphIndicesHolder graphIndicesHolder, YoGraphRemover yoGraphRemover, SelectedVariableHolder holder, DataEntryHolder dataEntryHolder,
+   public YoGraph(GraphIndicesHolder graphIndicesHolder, YoGraphRemover yoGraphRemover, SelectedVariableHolder holder, YoBufferVariableEntryHolder dataEntryHolder,
                   TimeDataHolder timeDataHolder, JFrame jFrame)
    {
       setName("YoGraph");
@@ -286,7 +286,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       graphConfiguration.setManualScalingMinMax(minScaling, maxScaling);
    }
 
-   public List<DataEntry> getEntriesOnThisGraph()
+   public List<YoBufferVariableEntryReader> getEntriesOnThisGraph()
    {
       return entriesOnThisGraph;
    }
@@ -340,7 +340,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       int cumulatedWidth = 0;
       int row = 0;
 
-      for (DataEntry entry : entriesOnThisGraph)
+      for (YoBufferVariableEntryReader entry : entriesOnThisGraph)
       {
          int variableWidth = fontMetrics.stringWidth(entry.getVariableName());
          int variablePlusValueWidth = variableWidth + 120;
@@ -360,7 +360,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       totalEntryNamePaintRows = row + 1;
    }
 
-   public void addVariable(DataEntry entry)
+   public void addVariable(YoBufferVariableEntryReader entry)
    {
       if (entry == null)
       {
@@ -388,7 +388,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          addVariable(dataEntryHolder.getEntry(yoVariable));
    }
 
-   public void removeEntry(DataEntry entry)
+   public void removeEntry(YoBufferVariableEntryReader entry)
    {
       if (entriesOnThisGraph.contains(entry))
          entriesOnThisGraph.remove(entry);
@@ -418,7 +418,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (int i = 0; i < numVars; i++)
       {
-         DataEntry entry = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
          ret = (ret || entry.haveBoundsChanged());
       }
 
@@ -435,7 +435,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (int i = 0; i < numVars; i++)
       {
-         DataEntry entry = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
          boolean inverted = entry.getInverted();
 
          DataBounds bounds = entry.getBounds();
@@ -467,12 +467,12 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (int i = 0; i < numVars; i++)
       {
-         DataEntry entry = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
          entry.resetBoundsChangedFlag();
       }
    }
 
-   private void calcXYData(DataEntry entry, int nPoints, int[] xData, int[] yData, double min, double max, int width, int height, int offsetFromLeft,
+   private void calcXYData(YoBufferVariableEntryReader entry, int nPoints, int[] xData, int[] yData, double min, double max, int width, int height, int offsetFromLeft,
                            int offsetFromTop, int leftPlotIndex, int rightPlotIndex)
    {
       double[] data = entry.getBuffer();
@@ -501,7 +501,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       }
    }
 
-   private void calcScatterData(DataEntry entryX, DataEntry entryY, int nPoints, int[] xData, int[] yData, double minX, double maxX, double minY, double maxY,
+   private void calcScatterData(YoBufferVariableEntryReader entryX, YoBufferVariableEntryReader entryY, int nPoints, int[] xData, int[] yData, double minX, double maxX, double minY, double maxY,
                                 int width, int height, int offsetFromLeft, int offsetFromTop)
    {
       double[] dataX = entryX.getBuffer();
@@ -535,7 +535,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       {
          cumOffset = i * ((int) (VAR_NAME_SPACING_FOR_PRINT * 0.6)) + 3;
 
-         DataEntry entry = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
          double[] data = entry.getBuffer();
 
          double minVal = 0.0, maxVal = 1.0;
@@ -657,7 +657,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (int i = 0; i < entriesOnThisGraph.size(); i++)
       {
-         DataEntry entry = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
          boolean inverted = entry.getInverted();
 
          DataBounds windowBounds;
@@ -711,8 +711,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       int inPoint = graphIndicesHolder.getInPoint();
       int outPoint = graphIndicesHolder.getOutPoint();
 
-      DataEntry input = entriesOnThisGraph.get(0);
-      DataEntry output = entriesOnThisGraph.get(1);
+      YoBufferVariableEntryReader input = entriesOnThisGraph.get(0);
+      YoBufferVariableEntryReader output = entriesOnThisGraph.get(1);
 
       double[] inputData = Arrays.copyOfRange(input.getBuffer(), inPoint, outPoint);
       double[] outputData = Arrays.copyOfRange(output.getBuffer(), inPoint, outPoint);
@@ -727,8 +727,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       if (entriesOnThisGraph.size() < 2)
          return;
 
-      DataEntry input = entriesOnThisGraph.get(0);
-      DataEntry output = entriesOnThisGraph.get(1);
+      YoBufferVariableEntryReader input = entriesOnThisGraph.get(0);
+      YoBufferVariableEntryReader output = entriesOnThisGraph.get(1);
 
       double[] inputData = input.getBuffer();
       double[] outputData = output.getBuffer();
@@ -762,7 +762,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       double[] timeData = timeDataHolder.getTimeData();
       double[] rngTimeData = Arrays.copyOfRange(timeData, inPoint, outPoint);
 
-      for (DataEntry entry : entriesOnThisGraph)
+      for (YoBufferVariableEntryReader entry : entriesOnThisGraph)
       {
          double[] data = entry.getBuffer();
          double[] rngData = Arrays.copyOfRange(data, inPoint, outPoint);
@@ -777,7 +777,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       double[] timeData = timeDataHolder.getTimeData();
 
-      for (DataEntry entry : entriesOnThisGraph)
+      for (YoBufferVariableEntryReader entry : entriesOnThisGraph)
       {
          double[] data = entry.getBuffer();
 
@@ -819,10 +819,10 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (int i = 0; i < entriesOnThisGraph.size() / 2; i++)
       {
-         DataEntry entryX = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entryX = entriesOnThisGraph.get(i);
          double[] dataX = entryX.getBuffer();
 
-         DataEntry entryY = entriesOnThisGraph.get(i + 1);
+         YoBufferVariableEntryReader entryY = entriesOnThisGraph.get(i + 1);
 
          //       double[] dataY = entryY.getData();
 
@@ -939,7 +939,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (int i = 0; i < numVars; i++)
       {
-         DataEntry entry = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
          double[] data = entry.getBuffer();
 
          double minVal = 0.0, maxVal = 1.0;
@@ -1083,7 +1083,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       for (int i = 0; i < entriesOnThisGraph.size(); i++)
       {
-         DataEntry entry = entriesOnThisGraph.get(i);
+         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
 
          if (phasePlot)
             g.setColor(colors[i / 2 % YoGraph.MAX_NUM_GRAPHS]);
@@ -1152,7 +1152,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       g.drawString("    Average = " + averageString, cumOffset, yToDrawAt);
    }
 
-   private void drawVariableNameAndValue(Graphics g, int cumOffset, int row, DataEntry entry)
+   private void drawVariableNameAndValue(Graphics g, int cumOffset, int row, YoBufferVariableEntryReader entry)
    {
       int graphHeight = getHeight();
 
@@ -1186,17 +1186,17 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private static final String SPACE_STRING = "  ";
    private static final String DOUBLE_FORMAT = EuclidCoreIOTools.getStringFormat(8, 5);
 
-   public static void getVariableNameAndValue(DataEntry entry, StringBuffer stringBuffer)
+   public static void getVariableNameAndValue(YoBufferVariableEntryReader entry, StringBuffer stringBuffer)
    {
       getVariableNameAndValueString(entry, stringBuffer, entry.getVariable().getValueAsDouble());
    }
 
-   private static void getVariableNameAndValueAtIndex(DataEntry entry, StringBuffer stringBuffer, int index)
+   private static void getVariableNameAndValueAtIndex(YoBufferVariableEntryReader entry, StringBuffer stringBuffer, int index)
    {
       getVariableNameAndValueString(entry, stringBuffer, entry.getBufferValueAt(index));
    }
 
-   private static void getVariableNameAndValueString(DataEntry entry, StringBuffer stringBuffer, double value)
+   private static void getVariableNameAndValueString(YoBufferVariableEntryReader entry, StringBuffer stringBuffer, double value)
    {
       YoVariable variable = entry.getVariable();
       stringBuffer.append(variable.getName()).append(SPACE_STRING).append(variable.convertDoubleValueToString(DOUBLE_FORMAT, value));
@@ -1403,7 +1403,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
             if (index < entriesOnThisGraph.size())
             {
-               DataEntry entry = entriesOnThisGraph.get(index);
+               YoBufferVariableEntryReader entry = entriesOnThisGraph.get(index);
                selectedVariableHolder.setSelectedVariable(entry.getVariable());
 
                if (!evt.isControlDown())
@@ -1433,7 +1433,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
             popupMenu.remove(component);
          }
 
-         for (final DataEntry dataBufferEntry : entriesOnThisGraph)
+         for (final YoBufferVariableEntryReader dataBufferEntry : entriesOnThisGraph)
          {
             final JMenuItem menuItem = new JMenuItem("Remove " + dataBufferEntry.getVariableName());
             menuItem.addActionListener(new ActionListener()

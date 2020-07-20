@@ -322,7 +322,7 @@ public class DataFileWriter
                }
 
                //store yo-variable as a new field
-               double[] data = entry.getWindowedData(dataBufferSortedByNamespace.getInPoint(), bufferLength);
+               double[] data = entry.getBufferWindow(dataBufferSortedByNamespace.getInPoint(), bufferLength);
                MLDouble outArray = new MLDouble(variable.getName(), new int[] {1, bufferLength});
                for (int j = 0; j < bufferLength; j++)
                {
@@ -364,7 +364,7 @@ public class DataFileWriter
 
             if (vars.contains(variable))
             {
-               double[] data = entry.getWindowedData(dataBuffer.getInPoint(), /* dataBuffer.getOutPoint(), */ bufferLength);
+               double[] data = entry.getBufferWindow(dataBuffer.getInPoint(), /* dataBuffer.getOutPoint(), */ bufferLength);
 
                for (int j = 0; j < bufferLength; j++)
                {
@@ -420,7 +420,7 @@ public class DataFileWriter
                varnamesToWrite[vars.indexOf(variable)] = varnamesToWrite[vars.indexOf(variable)].replace("[", "");
                varnamesToWrite[vars.indexOf(variable)] = varnamesToWrite[vars.indexOf(variable)].replace("]", "");
 
-               double[] data = entry.getWindowedData(dataBuffer.getInPoint(), /* dataBuffer.getOutPoint(), */ bufferLength);
+               double[] data = entry.getBufferWindow(dataBuffer.getInPoint(), /* dataBuffer.getOutPoint(), */ bufferLength);
                dataToWrite[vars.indexOf(variable)] = data;
             }
          }
@@ -484,7 +484,7 @@ public class DataFileWriter
             {
                varnamesToWrite[vars.indexOf(variable)] = entry.getVariable().getFullNameString();
 
-               double[] data = entry.getWindowedData(dataBuffer.getInPoint(), /* dataBuffer.getOutPoint(), */ bufferLength);
+               double[] data = entry.getBufferWindow(dataBuffer.getInPoint(), /* dataBuffer.getOutPoint(), */ bufferLength);
                dataToWrite[vars.indexOf(variable)] = data;
             }
          }

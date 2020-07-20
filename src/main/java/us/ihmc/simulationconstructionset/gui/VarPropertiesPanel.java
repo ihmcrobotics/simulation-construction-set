@@ -17,7 +17,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import us.ihmc.yoVariables.dataBuffer.DataBounds;
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
 
 @SuppressWarnings("serial")
 public class VarPropertiesPanel extends JPanel implements ActionListener
@@ -28,11 +28,11 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
    private JRadioButton autoButton, manualButton;
    private JCheckBox invertCheckBox;
 
-   private final DataEntry entry;
+   private final YoBufferVariableEntryReader entry;
 
    private double newMinVal, newMaxVal;
 
-   public VarPropertiesPanel(DataEntry entry)
+   public VarPropertiesPanel(YoBufferVariableEntryReader entry)
    {
       super();
 

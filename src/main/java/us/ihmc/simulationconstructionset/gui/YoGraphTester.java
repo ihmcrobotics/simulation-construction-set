@@ -5,8 +5,8 @@ import javax.swing.JFrame;
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
-import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryHolder;
 import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
@@ -28,10 +28,10 @@ public class YoGraphTester
          }
       };
 
-      DataEntryHolder dataEntryHolder = new DataEntryHolder()
+      YoBufferVariableEntryHolder dataEntryHolder = new YoBufferVariableEntryHolder()
       {
          @Override
-         public DataEntry getEntry(YoVariable yoVariable)
+         public YoBufferVariableEntryReader getEntry(YoVariable yoVariable)
          {
             return null;
          }
