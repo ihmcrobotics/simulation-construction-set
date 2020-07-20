@@ -28,6 +28,8 @@ import com.google.common.base.Defaults;
 
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.AddCameraKeyCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.AddKeyPointCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.CreateNewGraphWindowCommandExecutor;
@@ -101,8 +103,6 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDi
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveRobotConfigurationDialogConstructor;
-import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener.Change;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;

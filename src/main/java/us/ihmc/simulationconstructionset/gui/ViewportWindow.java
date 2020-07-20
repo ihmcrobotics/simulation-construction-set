@@ -27,6 +27,8 @@ import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.TrackingDollyCameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.ViewportAdapter;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.TimeHolder;
@@ -124,6 +126,8 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
 
       GUIEnablerAndDisabler guiEnablerAndDisabler = allCommandsExecutor;
       RunCommandsExecutor runCommandsExecutor = allCommandsExecutor;
+      GotoInPointCommandExecutor gotoInPointCommandExecutor = allCommandsExecutor;
+      GotoOutPointCommandExecutor gotoOutPointCommandExecutor = allCommandsExecutor;
       DataBufferCommandsExecutor dataBufferCommandsExecutor = allCommandsExecutor;
       final ActiveCanvas3DHolder activeCanvas3DHolder = this;
       ViewportSelectorCommandExecutor viewportSelector = myGUI;
@@ -147,6 +151,8 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder,
                                                                               myGUI,
                                                                               dataBufferCommandsExecutor,
+                                                                              gotoInPointCommandExecutor,
+                                                                              gotoOutPointCommandExecutor,
                                                                               runCommandsExecutor,
                                                                               guiEnablerAndDisabler,
                                                                               activeCanvas3DHolder,
@@ -242,6 +248,7 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
    // For Robot Camera Vision:
    public ViewportWindow(AllCommandsExecutor allCommandsExecutor, AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim,
                          Robot[] robots, TimeHolder timeHolder, YoVariableHolder yoVariableHolder, RunCommandsExecutor runCommandsExecutor,
+                         GotoInPointCommandExecutor gotoInPointCommandExecutor, GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
                          GUIEnablerAndDisabler guiEnablerAndDisabler, String selectedViewportName, ViewportConfigurationList viewportConfigurationList,
                          CameraConfigurationList cameraConfigurationList, YoVariableList varList, CameraMountList cameraMountList, VarGroupList varGroupList,
                          GraphArrayPanel myGraphArrayPanel, AboutDialogGenerator aboutEditorPane, StandardSimulationGUI myGUI,
@@ -311,6 +318,8 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder,
                                                                               myGUI,
                                                                               dataBufferCommandsExecutor,
+                                                                              gotoInPointCommandExecutor,
+                                                                              gotoOutPointCommandExecutor,
                                                                               runCommandsExecutor,
                                                                               guiEnablerAndDisabler,
                                                                               activeCanvas3DHolder,

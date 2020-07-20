@@ -95,8 +95,6 @@ import us.ihmc.tools.TimestampProvider;
 import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
-import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
 import us.ihmc.yoVariables.listener.YoRegistryChangedListener;

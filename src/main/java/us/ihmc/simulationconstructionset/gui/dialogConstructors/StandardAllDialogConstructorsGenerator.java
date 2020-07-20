@@ -4,6 +4,8 @@ import java.awt.Container;
 
 import javax.swing.JFrame;
 
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.TimeHolder;
@@ -62,6 +64,8 @@ public class StandardAllDialogConstructorsGenerator implements AllDialogConstruc
       TimeHolder timeHolder = sim;
       StandardSimulationGUI standardSimulationGUI = myGUI;
       DataBufferCommandsExecutor dataBufferCommandsExecutor = sim;
+      GotoInPointCommandExecutor gotoInPointCommandExecutor = sim;
+      GotoOutPointCommandExecutor gotoOutPointCommandExecutor = sim;
       RunCommandsExecutor runCommandsExecutor = sim;
       GUIEnablerAndDisabler guiEnablerAndDisabler = sim;
       ActiveCanvas3DHolder activeCanvas3DHolder = myGUI;
@@ -70,6 +74,8 @@ public class StandardAllDialogConstructorsGenerator implements AllDialogConstruc
       ExportVideo exportVideo = new ExportVideo(timeHolder,
                                                 standardSimulationGUI,
                                                 dataBufferCommandsExecutor,
+                                                gotoInPointCommandExecutor,
+                                                gotoOutPointCommandExecutor,
                                                 runCommandsExecutor,
                                                 guiEnablerAndDisabler,
                                                 activeCanvas3DHolder,

@@ -15,6 +15,8 @@ import us.ihmc.jMonkeyEngineToolkit.camera.CameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.ViewportAdapter;
 import us.ihmc.log.LogTools;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.TimeHolder;
 import us.ihmc.simulationconstructionset.commands.ExportVideoCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.RunCommandsExecutor;
@@ -38,11 +40,17 @@ public class ExportVideo implements ExportVideoCommandExecutor
    private final GUIEnablerAndDisabler guiEnablerAndDisabler;
    private final RunCommandsExecutor runCommandsExecutor;
 
+   private final GotoInPointCommandExecutor gotoInPointCommandExecutor;
+   private final GotoOutPointCommandExecutor gotoOutPointCommandExecutor;
+
    public ExportVideo(TimeHolder timeHolder, StandardSimulationGUI standardSimulationGUI, DataBufferCommandsExecutor dataBufferCommandsExecutor,
+                      GotoInPointCommandExecutor gotoInPointCommandExecutor, GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
                       RunCommandsExecutor runCommandsExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler, ActiveCanvas3DHolder activeCanvas3DHolder,
                       SimulationSynchronizer simulationSynchronizer)
    {
       this.timeHolder = timeHolder;
+      this.gotoInPointCommandExecutor = gotoInPointCommandExecutor;
+      this.gotoOutPointCommandExecutor = gotoOutPointCommandExecutor;
       this.simulationSynchronizer = simulationSynchronizer;
       this.standardSimulationGUI = standardSimulationGUI;
 
@@ -113,10 +121,10 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
       // stop the simulation
       runCommandsExecutor.stop();
-      dataBufferCommandsExecutor.gotoOutPoint();
+      gotoOutPointCommandExecutor.gotoOutPoint();
 
       // go to the start
-      dataBufferCommandsExecutor.gotoInPoint();
+      gotoInPointCommandExecutor.gotoInPoint();
 
       // sleep for a little
       try
@@ -196,7 +204,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
       {
       }
 
-      dataBufferCommandsExecutor.gotoInPoint();
+      gotoInPointCommandExecutor.gotoInPoint();
       BufferedImage bufferedImage = captureDevice.exportSnapshotAsBufferedImage();
 
       MP4H264MovieBuilder movieBuilder = null;
@@ -275,7 +283,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
       if (standardSimulationGUI == null)
          return null; // Only works with a GUI
 
-      dataBufferCommandsExecutor.gotoInPoint();
+      gotoInPointCommandExecutor.gotoInPoint();
 
       while (last < dataBufferCommandsExecutor.getOutPoint())
       {
