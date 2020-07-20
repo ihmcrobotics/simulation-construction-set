@@ -39,7 +39,7 @@ import us.ihmc.simulationconstructionset.gui.dialogs.GraphPropertiesDialog;
 import us.ihmc.yoVariables.dataBuffer.YoBufferBounds;
 import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
 import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryHolder;
-import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
+import us.ihmc.yoVariables.dataBuffer.YoTimeBufferHolder;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -58,7 +58,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
    private final JFrame parentFrame;
 
-   private final TimeDataHolder timeDataHolder;
+   private final YoTimeBufferHolder timeDataHolder;
    private final YoBufferVariableEntryHolder dataEntryHolder;
    private final GraphIndicesHolder graphIndicesHolder;
    private final YoGraphRemover yoGraphRemover;
@@ -93,7 +93,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private int focussedBaseLine = 0;
 
    public YoGraph(GraphIndicesHolder graphIndicesHolder, YoGraphRemover yoGraphRemover, SelectedVariableHolder holder, YoBufferVariableEntryHolder dataEntryHolder,
-                  TimeDataHolder timeDataHolder, JFrame jFrame)
+                  YoTimeBufferHolder timeDataHolder, JFrame jFrame)
    {
       setName("YoGraph");
 
@@ -717,7 +717,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       double[] inputData = Arrays.copyOfRange(input.getBuffer(), inPoint, outPoint);
       double[] outputData = Arrays.copyOfRange(output.getBuffer(), inPoint, outPoint);
 
-      double[] timeData = Arrays.copyOfRange(timeDataHolder.getTimeData(), inPoint, outPoint);
+      double[] timeData = Arrays.copyOfRange(timeDataHolder.getTimeBuffer(), inPoint, outPoint);
 
       BodePlotConstructor.plotBodeFromInputToOutput(input.getVariableName(), output.getVariableName(), timeData, inputData, outputData);
    }
@@ -733,7 +733,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       double[] inputData = input.getBuffer();
       double[] outputData = output.getBuffer();
 
-      double[] timeData = timeDataHolder.getTimeData();
+      double[] timeData = timeDataHolder.getTimeBuffer();
 
       BodePlotConstructor.plotBodeFromInputToOutput(input.getVariableName(), output.getVariableName(), timeData, inputData, outputData);
    }
@@ -759,7 +759,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       int inPoint = graphIndicesHolder.getInPoint();
       int outPoint = graphIndicesHolder.getOutPoint();
 
-      double[] timeData = timeDataHolder.getTimeData();
+      double[] timeData = timeDataHolder.getTimeBuffer();
       double[] rngTimeData = Arrays.copyOfRange(timeData, inPoint, outPoint);
 
       for (YoBufferVariableEntryReader entry : entriesOnThisGraph)
@@ -775,7 +775,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    public void createFFTPlotsFromEntries()
    {
 
-      double[] timeData = timeDataHolder.getTimeData();
+      double[] timeData = timeDataHolder.getTimeBuffer();
 
       for (YoBufferVariableEntryReader entry : entriesOnThisGraph)
       {

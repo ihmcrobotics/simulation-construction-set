@@ -7,7 +7,7 @@ import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
 import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryHolder;
-import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
+import us.ihmc.yoVariables.dataBuffer.YoTimeBufferHolder;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
@@ -37,7 +37,7 @@ public class YoGraphTester
          }
       };
 
-      TimeDataHolder timeDataHolder = new MinimalTimeDataHolder(200);
+      YoTimeBufferHolder timeDataHolder = new MinimalTimeDataHolder(200);
 
       GraphIndicesHolder graphIndicesHolder = new MinimalGraphIndicesHolder();
 
