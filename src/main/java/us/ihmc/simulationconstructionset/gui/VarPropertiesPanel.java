@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import us.ihmc.yoVariables.dataBuffer.DataBounds;
+import us.ihmc.yoVariables.dataBuffer.YoBufferBounds;
 import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
 
 @SuppressWarnings("serial")
@@ -145,7 +145,7 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       gridbag.setConstraints(minRangeLabel, constraints);
       this.add(minRangeLabel);
 
-      DataBounds bounds = entry.getBounds();
+      YoBufferBounds bounds = entry.getBounds();
       minValString = numFormat.format(bounds.getLowerBound());
       JLabel minTextLabel = new JLabel(minValString);
       constraints.gridx = 2;

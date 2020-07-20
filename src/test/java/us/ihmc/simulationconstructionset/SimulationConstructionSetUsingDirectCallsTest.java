@@ -65,7 +65,7 @@ import us.ihmc.simulationconstructionset.physics.collision.CollisionDetectionRes
 import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionHandler;
 import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisualizer;
 import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingCollisionArbiter;
-import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
+import us.ihmc.yoVariables.dataBuffer.YoBufferProcessor;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
@@ -1059,7 +1059,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       SimulationDoneCriterion simulationDoneCriterion = createSimulationDoneCriterion();
       PlaybackListener playbackListener = createPlaybackListener();
       PlayCycleListener playCycleListener = createPlayCycleListener();
-      DataProcessingFunction dataProcessingFunction = createDataProcessingFunction();
+      YoBufferProcessor dataProcessingFunction = createDataProcessingFunction();
       KeyPointsChangedListener keyPointsChangedListener = createToggleKeyPointModeCommandListener();
       scs.attachPlayCycleListener(playCycleListener);
       scs.attachPlaybackListener(playbackListener);
@@ -1306,20 +1306,14 @@ public class SimulationConstructionSetUsingDirectCallsTest
          assertTrue(two);
    }
 
-   private DataProcessingFunction createDataProcessingFunction()
+   private YoBufferProcessor createDataProcessingFunction()
    {
-      DataProcessingFunction dataProcessingFunction = new DataProcessingFunction()
+      YoBufferProcessor dataProcessingFunction = new YoBufferProcessor()
       {
          @Override
-         public void processData()
+         public void process(int startIndex, int endIndex, int currentIndex)
          {
             processDataHasBeenCalled.set(true);
-         }
-
-         @Override
-         public void initializeProcessing()
-         {
-
          }
       };
 

@@ -94,7 +94,7 @@ import us.ihmc.simulationconstructionset.util.TickAndUpdatable;
 import us.ihmc.tools.TimestampProvider;
 import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 import us.ihmc.yoVariables.dataBuffer.YoBufferReader;
-import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
+import us.ihmc.yoVariables.dataBuffer.YoBufferProcessor;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
 import us.ihmc.yoVariables.listener.YoRegistryChangedListener;
@@ -4300,20 +4300,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @param dataProcessingFunction DataProcessingFunction to be applied to the data.
     * @see DataProcessingFunction
     */
-   public void applyDataProcessingFunction(DataProcessingFunction dataProcessingFunction)
+   public void applyDataProcessingFunction(YoBufferProcessor dataProcessingFunction)
    {
-      myDataBuffer.applyDataProcessingFunction(dataProcessingFunction);
-   }
-
-   /**
-    * Applies a function to the recorded data starting from the out point to the in point.
-    *
-    * @param dataProcessingFunction DataProcessingFunction to be applied to the data.
-    * @see DataProcessingFunction
-    */
-   public void applyDataProcessingFunctionBackward(DataProcessingFunction dataProcessingFunction)
-   {
-      myDataBuffer.applyDataProcessingFunctionBackward(dataProcessingFunction);
+      myDataBuffer.applyProcessor(dataProcessingFunction);
    }
 
    /**

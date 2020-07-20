@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
-import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
+import us.ihmc.yoVariables.dataBuffer.YoBufferProcessor;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
-public class DataProcessingFunctionTest
+public class YoBufferProcessorTest
 {
    private static final boolean SHOW_GUI = false;
 
@@ -38,15 +38,10 @@ public class DataProcessingFunctionTest
       BlockingSimulationRunner runner = new BlockingSimulationRunner(scs, 100.0);
       runner.simulateAndBlock(2.0);
 
-      DataProcessingFunction dataProcessingFunction = new DataProcessingFunction()
+      YoBufferProcessor dataProcessingFunction = new YoBufferProcessor()
       {
          @Override
-         public void initializeProcessing()
-         {
-         }
-
-         @Override
-         public void processData()
+         public void process(int startIndex, int endIndex, int currentIndex)
          {
             double time = robot.getTime();
 

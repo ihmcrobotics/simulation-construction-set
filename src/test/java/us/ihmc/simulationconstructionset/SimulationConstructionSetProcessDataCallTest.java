@@ -4,7 +4,7 @@ import static us.ihmc.robotics.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
+import us.ihmc.yoVariables.dataBuffer.YoBufferProcessor;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
@@ -42,7 +42,7 @@ public class SimulationConstructionSetProcessDataCallTest
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction counterProcessingFunction = new CounterProcessingFunction(registry);
+      YoBufferProcessor counterProcessingFunction = new CounterProcessingFunction(registry, true);
       scs.applyDataProcessingFunction(counterProcessingFunction);
 
       //Exact data from Data Processing Class
@@ -100,8 +100,8 @@ public class SimulationConstructionSetProcessDataCallTest
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction counterProcessingFunction = new CounterProcessingFunction(registry);
-      scs.applyDataProcessingFunctionBackward(counterProcessingFunction);
+      YoBufferProcessor counterProcessingFunction = new CounterProcessingFunction(registry, false);
+      scs.applyDataProcessingFunction(counterProcessingFunction);
 
       //Exact data from Data Processing Class
       YoDouble counterVariable = ((CounterProcessingFunction) counterProcessingFunction).getCountVariable();
@@ -159,7 +159,7 @@ public class SimulationConstructionSetProcessDataCallTest
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction copierProcessingFunction = new CopierProcessingFunction(dataSet, registry);
+      YoBufferProcessor copierProcessingFunction = new CopierProcessingFunction(dataSet, registry, true);
       scs.applyDataProcessingFunction(copierProcessingFunction);
 
       //Exact data from Data Processing Class
@@ -217,8 +217,8 @@ public class SimulationConstructionSetProcessDataCallTest
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction copierProcessingFunction = new CopierProcessingFunction(dataSet, registry);
-      scs.applyDataProcessingFunctionBackward(copierProcessingFunction);
+      YoBufferProcessor copierProcessingFunction = new CopierProcessingFunction(dataSet, registry, false);
+      scs.applyDataProcessingFunction(copierProcessingFunction);
 
       //Exact data from Data Processing Class
       YoDouble copierVariable = ((CopierProcessingFunction) copierProcessingFunction).getCopyVariable();
@@ -247,19 +247,27 @@ public class SimulationConstructionSetProcessDataCallTest
       scs.closeAndDispose();
    }
 
-   public static class CopierProcessingFunction implements DataProcessingFunction
+   public static class CopierProcessingFunction implements YoBufferProcessor
    {
+      private final boolean forward;
       private final YoDouble copyVariable;
       private final YoDouble testVariable;
 
-      public CopierProcessingFunction(YoDouble inputData, YoRegistry registry)
+      public CopierProcessingFunction(YoDouble inputData, YoRegistry registry, boolean forward)
       {
+         this.forward = forward;
          testVariable = inputData;
          copyVariable = new YoDouble("copyVariable", registry);
       }
 
       @Override
-      public void processData()
+      public boolean goForward()
+      {
+         return forward;
+      }
+
+      @Override
+      public void process(int startIndex, int endIndex, int currentIndex)
       {
          double holderDouble;
 
@@ -271,26 +279,28 @@ public class SimulationConstructionSetProcessDataCallTest
       {
          return copyVariable;
       }
-
-      @Override
-      public void initializeProcessing()
-      {
-
-      }
    }
 
-   public static class CounterProcessingFunction implements DataProcessingFunction
+   public static class CounterProcessingFunction implements YoBufferProcessor
    {
+      private final boolean forward;
       private final YoDouble countVariable;
       private int count = 0;
 
-      public CounterProcessingFunction(YoRegistry registry)
+      public CounterProcessingFunction(YoRegistry registry, boolean forward)
       {
+         this.forward = forward;
          countVariable = new YoDouble("countVariable", registry);
       }
 
       @Override
-      public void processData()
+      public boolean goForward()
+      {
+         return forward;
+      }
+
+      @Override
+      public void process(int startIndex, int endIndex, int currentIndex)
       {
          countVariable.set(count);
          count++;
@@ -299,12 +309,6 @@ public class SimulationConstructionSetProcessDataCallTest
       public YoDouble getCountVariable()
       {
          return countVariable;
-      }
-
-      @Override
-      public void initializeProcessing()
-      {
-
       }
    }
 }
