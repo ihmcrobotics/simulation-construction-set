@@ -606,7 +606,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       rootRegistryListener = new YoRegistryChangedListener()
       {
          @Override
-         public void onChanged(Change change)
+         public void changed(Change change)
          {
             if (change.wasVariableAdded())
             {
