@@ -73,7 +73,7 @@ public class DataFileWriterTest
          variableSix.set(Math.random() > 0.5);
          variableSeven.set((int) (Math.random() * 1000.0));
 
-         dataBuffer.tickAndUpdate();
+         dataBuffer.tickAndWriteIntoBuffer();
       }
 
       Robot robot = new Robot("testRobot");
@@ -306,8 +306,7 @@ public class DataFileWriterTest
 
       for (int i = 0; i < bufferSize / 2; i++)
       {
-         dataBuffer.setDataAtIndexToYoVariableValues();
-         dataBuffer.tick(1);
+         dataBuffer.tickAndReadFromBuffer(1);
       }
 
       dataBuffer.setInOutPointFullBuffer();

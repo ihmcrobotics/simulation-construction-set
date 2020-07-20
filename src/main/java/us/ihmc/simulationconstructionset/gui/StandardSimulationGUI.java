@@ -1428,7 +1428,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    private void addCameraKey(TrackingDollyCameraController j3dCameraController)
    {
-      j3dCameraController.setCameraKeyPoint(myDataBuffer.getIndex());
+      j3dCameraController.setCameraKeyPoint(myDataBuffer.getCurrentIndex());
       repaintWindows();
    }
 
@@ -1446,7 +1446,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    private void removeCameraKey(TrackingDollyCameraController j3dCameraController)
    {
-      j3dCameraController.removeCameraKeyPoint(myDataBuffer.getIndex());
+      j3dCameraController.removeCameraKeyPoint(myDataBuffer.getCurrentIndex());
       repaintWindows();
    }
 
@@ -1457,7 +1457,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    private void nextCameraKey(TrackingDollyCameraController j3dCameraController)
    {
-      j3dCameraController.nextCameraKeyPoint(myDataBuffer.getIndex());
+      j3dCameraController.nextCameraKeyPoint(myDataBuffer.getCurrentIndex());
       repaintWindows();
    }
 
@@ -1468,7 +1468,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    private void previousCameraKey(TrackingDollyCameraController j3dCameraController)
    {
-      j3dCameraController.previousCameraKeyPoint(myDataBuffer.getIndex());
+      j3dCameraController.previousCameraKeyPoint(myDataBuffer.getCurrentIndex());
       repaintWindows();
    }
 
@@ -1634,12 +1634,12 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       for (int i = 0; i < cameras.length; i++)
       {
          if (cameras[i].useKeyCameraPoints())
-            cameras[i].setKeyFrameTime(myDataBuffer.getIndex());
+            cameras[i].setKeyFrameTime(myDataBuffer.getCurrentIndex());
       }
 
       for (TickUpdateListener tickUpdateListener : tickUpdateListeners)
       {
-         tickUpdateListener.update(myDataBuffer.getIndex());
+         tickUpdateListener.update(myDataBuffer.getCurrentIndex());
       }
 
       return ret;

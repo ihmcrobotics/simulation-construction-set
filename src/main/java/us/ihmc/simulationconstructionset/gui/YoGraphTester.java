@@ -55,7 +55,7 @@ public class YoGraphTester
       {
          yoVariable.set(value);
          value = value + 0.001;
-         dataEntry.setDataAtIndexToYoVariableValue(i);
+         dataEntry.writeIntoBufferAt(i);
       }
 
       yoGraph.addVariable(dataEntry);

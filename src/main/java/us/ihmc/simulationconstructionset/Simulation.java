@@ -331,7 +331,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
             }
          }
 
-         myDataBuffer.tickAndUpdate();
+         myDataBuffer.tickAndWriteIntoBuffer();
          numTicks -= RECORD_FREQ;
       }
 
@@ -359,7 +359,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public void tickAndUpdate()
    {
-      myDataBuffer.tickAndUpdate();
+      myDataBuffer.tickAndWriteIntoBuffer();
    }
 
    public synchronized void simulate(double simulationTime) throws UnreasonableAccelerationException

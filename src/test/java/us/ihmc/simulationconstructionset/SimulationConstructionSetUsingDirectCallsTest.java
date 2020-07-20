@@ -639,13 +639,13 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(cameraFieldOfView, cameraFieldOfViewFromSCS, epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.addCameraKey();
       Integer keyPointFromSCS = scs.getCameraKeyPoints().get(0);
       assertEquals(keyPoint, keyPointFromSCS.intValue(), epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.addCameraKey();
       scs.removeCameraKey();
       List<Integer> keyPointFromSCS2 = scs.getCameraKeyPoints();
@@ -653,10 +653,10 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
       scs.setCameraFix(cameraFixXYZValues[0], cameraFixXYZValues[1], cameraFixXYZValues[2]);
-      scs.setIndex(inputPoint);
+      scs.setCurrentIndex(inputPoint);
       scs.addCameraKey();
       scs.setCameraFix(cameraFixXYZValues2[0], cameraFixXYZValues2[1], cameraFixXYZValues2[2]);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.addCameraKey();
       scs.nextCameraKey();
       double[] cameraFixXYZValuesFromSCS2 = getCameraFixXYZValues(scs);
@@ -808,73 +808,73 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @Test // timeout = 30000
    public void testSimulationTickControl()
    {
-      scs.setIndex(index);
-      int indexFromSCS = scs.getIndex();
+      scs.setCurrentIndex(index);
+      int indexFromSCS = scs.getCurrentIndex();
       assertEquals(index, indexFromSCS, epsilon);
 
       createSimulationRewoundListenerAndAttachToSCS(scs);
       simulateForTime(scs, simulateTime);
       int ticksPerCycle = (int) scs.getTicksPerPlayCycle();
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
       scs.tickButDoNotNotifySimulationRewoundListeners(ticksIncrease);
-      double currentSCSIndex = scs.getIndex();
+      double currentSCSIndex = scs.getCurrentIndex();
       assertFalse(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(ticksIncrease, currentSCSIndex, epsilon);
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
       scs.tick();
-      double currentSCSIndex2 = scs.getIndex();
+      double currentSCSIndex2 = scs.getCurrentIndex();
       assertTrue(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(ticksPerCycle, currentSCSIndex2, epsilon);
 
-      scs.setIndex(ticksPerCycle);
+      scs.setCurrentIndex(ticksPerCycle);
       simulationRewoundListenerHasBeenNotified.set(false);
       scs.unTick();
-      int currentSCSIndex3 = scs.getIndex();
+      int currentSCSIndex3 = scs.getCurrentIndex();
       assertTrue(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(0.0, currentSCSIndex3, epsilon);
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
-      scs.tick(ticksIncrease);
-      double currentSCSIndex4 = scs.getIndex();
+      scs.tickAndReadFromBuffer(ticksIncrease);
+      double currentSCSIndex4 = scs.getCurrentIndex();
       assertTrue(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(ticksIncrease, currentSCSIndex4, epsilon);
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
       scs.setTick(ticksIncrease);
-      double currentSCSIndex5 = scs.getIndex();
+      double currentSCSIndex5 = scs.getCurrentIndex();
       assertTrue(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(ticksIncrease * ticksPerCycle, currentSCSIndex5, epsilon);
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
       scs.tickAndUpdate();
-      double currentSCSIndex6 = scs.getIndex();
+      double currentSCSIndex6 = scs.getCurrentIndex();
       assertFalse(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(1.0, currentSCSIndex6, epsilon);
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
       scs.updateAndTick();
-      double currentSCSIndex7 = scs.getIndex();
+      double currentSCSIndex7 = scs.getCurrentIndex();
       assertTrue(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(1.0, currentSCSIndex7, epsilon);
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
       scs.tickAndUpdateLeisurely(ticksIncrease);
-      double currentSCSIndex8 = scs.getIndex();
+      double currentSCSIndex8 = scs.getCurrentIndex();
       assertFalse(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(1.0, currentSCSIndex8, epsilon);
 
-      scs.setIndex(0);
+      scs.setCurrentIndex(0);
       simulationRewoundListenerHasBeenNotified.set(false);
-      double currentSCSIndex9 = scs.getIndex();
+      double currentSCSIndex9 = scs.getCurrentIndex();
       assertFalse(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(ticksIncrease, currentSCSIndex9, epsilon);
 
@@ -883,67 +883,67 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertFalse(isThreadRunningFromSCS);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      boolean isMiddleIndexFromSCS = scs.isIndexBetweenInAndOutPoint(middleIndex);
+      boolean isMiddleIndexFromSCS = scs.isIndexBetweenBounds(middleIndex);
       assertEquals(true, isMiddleIndexFromSCS);
-      isMiddleIndexFromSCS = scs.isIndexBetweenInAndOutPoint(nonMiddleIndex);
+      isMiddleIndexFromSCS = scs.isIndexBetweenBounds(nonMiddleIndex);
       assertEquals(false, isMiddleIndexFromSCS);
 
       setInputPointInSCS(scs, inputPoint);
-      scs.setIndex(outputPoint);
+      scs.setCurrentIndex(outputPoint);
       scs.gotoInPointNow();
-      int inputPointFromSCS = scs.getIndex();
+      int inputPointFromSCS = scs.getCurrentIndex();
       assertEquals(inputPoint, inputPointFromSCS);
 
       setOutputPointInSCS(scs, outputPoint);
-      scs.setIndex(inputPoint);
+      scs.setCurrentIndex(inputPoint);
       scs.gotoOutPointNow();
-      int outputPointFromSCS = scs.getIndex();
+      int outputPointFromSCS = scs.getCurrentIndex();
       assertEquals(outputPoint, outputPointFromSCS);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.addKeyPoint();
       Integer keyPointFromSCS = scs.getKeyPoints().get(0);
       assertEquals(keyPoint, keyPointFromSCS.intValue(), epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.stepBackwardNow();
-      int currentIndexFromSCS = scs.getIndex();
+      int currentIndexFromSCS = scs.getCurrentIndex();
       assertEquals(keyPoint - 1, currentIndexFromSCS, epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.stepForwardNow(indexStep);
-      int currentIndexFromSCS2 = scs.getIndex();
+      int currentIndexFromSCS2 = scs.getCurrentIndex();
       assertEquals(keyPoint + indexStep, currentIndexFromSCS2, epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.stepForward(indexStep);
       scs.run();
-      int currentIndexFromSCS3 = scs.getIndex();
+      int currentIndexFromSCS3 = scs.getCurrentIndex();
       assertEquals(keyPoint + indexStep, currentIndexFromSCS3, epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.stepForward();
       scs.run();
-      int currentIndexFromSCS4 = scs.getIndex();
+      int currentIndexFromSCS4 = scs.getCurrentIndex();
       assertEquals(keyPoint + 1, currentIndexFromSCS4, epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.stepBackward(indexStep);
       scs.run();
-      int currentIndexFromSCS5 = scs.getIndex();
+      int currentIndexFromSCS5 = scs.getCurrentIndex();
       assertEquals(keyPoint - indexStep, currentIndexFromSCS5, epsilon);
 
       setInputAndOutputPointsWithoutCroppingInSCS(scs, inputPoint, outputPoint);
-      scs.setIndex(keyPoint);
+      scs.setCurrentIndex(keyPoint);
       scs.stepBackward();
       scs.run();
-      int currentIndexFromSCS6 = scs.getIndex();
+      int currentIndexFromSCS6 = scs.getCurrentIndex();
       assertEquals(keyPoint - 1, currentIndexFromSCS6, epsilon);
    }
 
@@ -1575,14 +1575,14 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private void addOneToInPointIndexWithoutCrop(SimulationConstructionSet scs)
    {
       int currentInPoint = scs.getInPoint();
-      scs.setIndex(currentInPoint + 1);
+      scs.setCurrentIndex(currentInPoint + 1);
       scs.setInPoint();
    }
 
    private void subtractOneToOutPointIndexWithoutCrop(SimulationConstructionSet scs)
    {
       int currentOutPoint = scs.getOutPoint();
-      scs.setIndex(currentOutPoint - 1);
+      scs.setCurrentIndex(currentOutPoint - 1);
       scs.setOutPoint();
    }
 
@@ -2028,13 +2028,13 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private void setInputPointInSCS(SimulationConstructionSet scs, int inputPointIndex)
    {
-      scs.setIndex(inputPointIndex);
+      scs.setCurrentIndex(inputPointIndex);
       scs.setInPoint();
    }
 
    private void setOutputPointInSCS(SimulationConstructionSet scs, int outputPointIndex)
    {
-      scs.setIndex(outputPointIndex);
+      scs.setCurrentIndex(outputPointIndex);
       scs.setOutPoint();
    }
 

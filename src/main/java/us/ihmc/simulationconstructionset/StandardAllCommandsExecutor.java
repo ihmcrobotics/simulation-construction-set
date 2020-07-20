@@ -312,7 +312,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.stepBackward();
       else
       {
-         dataBuffer.tick(-1);
+         dataBuffer.tickAndReadFromBuffer(-1);
       }
    }
 
@@ -323,7 +323,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.stepForward();
       else
       {
-         dataBuffer.tick(1);
+         dataBuffer.tickAndReadFromBuffer(1);
       }
    }
 
@@ -457,15 +457,15 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    @Override
-   public void setIndex(int index)
+   public void setCurrentIndex(int index)
    {
-      simulationConstructionSet.setIndex(index);
+      simulationConstructionSet.setCurrentIndex(index);
    }
 
    @Override
-   public boolean tick(int ticks)
+   public boolean tickAndReadFromBuffer(int ticks)
    {
-      return simulationConstructionSet.tick(ticks);
+      return simulationConstructionSet.tickAndReadFromBuffer(ticks);
    }
 
    public boolean tickButDoNotNotifySimulationRewoundListeners(int ticks)
@@ -474,21 +474,27 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    @Override
-   public int getIndex()
+   public int getCurrentIndex()
    {
-      return simulationConstructionSet.getIndex();
+      return simulationConstructionSet.getCurrentIndex();
    }
 
    @Override
-   public boolean isIndexBetweenInAndOutPoint(int indexToCheck)
+   public boolean isIndexBetweenBounds(int indexToCheck)
    {
-      return simulationConstructionSet.isIndexBetweenInAndOutPoint(indexToCheck);
+      return simulationConstructionSet.isIndexBetweenBounds(indexToCheck);
    }
 
    @Override
    public int getOutPoint()
    {
       return simulationConstructionSet.getOutPoint();
+   }
+
+   @Override
+   public int getBufferSize()
+   {
+      return simulationConstructionSet.getBufferSize();
    }
 
    @Override

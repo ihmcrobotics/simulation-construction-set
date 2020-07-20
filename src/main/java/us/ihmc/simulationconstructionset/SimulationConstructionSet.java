@@ -688,15 +688,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @return Simulation index
     */
    @Override
-   public int getIndex()
+   public int getCurrentIndex()
    {
-      return myDataBuffer.getIndex();
+      return myDataBuffer.getCurrentIndex();
    }
 
    @Override
-   public boolean isIndexBetweenInAndOutPoint(int indexToCheck)
+   public boolean isIndexBetweenBounds(int indexToCheck)
    {
-      return myDataBuffer.isIndexBetweenInAndOutPoint(indexToCheck);
+      return myDataBuffer.isIndexBetweenBounds(indexToCheck);
    }
 
    /**
@@ -1528,14 +1528,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public boolean updateAndTick()
    {
-      boolean ret = myDataBuffer.updateAndTick();
+      myDataBuffer.writeIntoBuffer();
+      boolean indexRolledOver = myDataBuffer.tickAndReadFromBuffer(1);
       if (myGUI != null)
       {
          myGUI.updateGraphs();
          myGUI.updateSimulationGraphics();
       }
 
-      return ret;
+      return indexRolledOver;
    }
 
    /**
@@ -1548,7 +1549,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public boolean tick()
    {
-      boolean ret = myDataBuffer.tick((int) TICKS_PER_PLAY_CYCLE);
+      boolean ret = myDataBuffer.tickAndReadFromBuffer((int) TICKS_PER_PLAY_CYCLE);
 
       for (Robot robot : robots)
       {
@@ -1569,7 +1570,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    public boolean unTick()
    {
-      boolean ret = myDataBuffer.tick((int) -TICKS_PER_PLAY_CYCLE);
+      boolean ret = myDataBuffer.tickAndReadFromBuffer((int) -TICKS_PER_PLAY_CYCLE);
 
       for (Robot robot : robots)
       {
@@ -1594,7 +1595,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public boolean tick(int ticks)
+   public boolean tickAndReadFromBuffer(int ticks)
    {
       return tick(ticks, true);
    }
@@ -1614,12 +1615,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (notifySimulationRewoundListeners)
       {
-         ret = myDataBuffer.tick(ticks);
+         ret = myDataBuffer.tickAndReadFromBuffer(ticks);
       }
       else
       {
          rewoundListenerHandler.setEnable(false);
-         ret = myDataBuffer.tick(ticks);
+         ret = myDataBuffer.tickAndReadFromBuffer(ticks);
          rewoundListenerHandler.setEnable(true);
       }
 
@@ -1639,7 +1640,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    public boolean setTick(int tick)
    {
-      boolean ret = myDataBuffer.tick((int) ((double) tick * TICKS_PER_PLAY_CYCLE));
+      boolean ret = myDataBuffer.tickAndReadFromBuffer((int) ((double) tick * TICKS_PER_PLAY_CYCLE));
       for (Robot robot : robots)
       {
          robot.updateForPlayback();
@@ -2666,7 +2667,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
          ticksSimulated -= recordFreq; // This prevents the following stuff from happening continuosly after one record cycle
 
-         myDataBuffer.tickAndUpdate(); // Update the data buffer and the min max values of each point it contains
+         myDataBuffer.tickAndWriteIntoBuffer(); // Update the data buffer and the min max values of each point it contains
 
          if (myGUI != null)
          {
@@ -2755,7 +2756,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          return; // Only works with a GUI
       }
 
-      lastIndexPlayed = myDataBuffer.getIndex();
+      lastIndexPlayed = myDataBuffer.getCurrentIndex();
 
       //    count++;
 
@@ -2787,7 +2788,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       {
          int tick = Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1);
          rewoundListenerHandler.setEnable(false);
-         myDataBuffer.tick(tick);
+         myDataBuffer.tickAndReadFromBuffer(tick);
          rewoundListenerHandler.setEnable(true);
          myGUI.updateRobots();
          myGUI.allowTickUpdatesNow();
@@ -2844,7 +2845,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       while (lastIndexPlayed < myDataBuffer.getOutPoint())
       {
-         lastIndexPlayed = myDataBuffer.getIndex();
+         lastIndexPlayed = myDataBuffer.getCurrentIndex();
 
          File file = new File(path, NameNoExtension + "_" + lastIndexPlayed + ".jpeg");
 
@@ -2853,7 +2854,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
          synchronized (simulationSynchronizer) // Synched so we don't update during a graphics redraw...
          {
-            myDataBuffer.tick(1);
+            myDataBuffer.tickAndReadFromBuffer(1);
             myGUI.updateRobots();
             myGUI.updateSimulationGraphics();
             myGUI.allowTickUpdatesNow();
@@ -3109,7 +3110,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
          mySimulation.notifySimulateDoneListeners();
 
-         myDataBuffer.tickAndUpdate();
+         myDataBuffer.tickAndWriteIntoBuffer();
 
          if (myGUI != null)
          {
@@ -3421,7 +3422,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(-steps);
+         myDataBuffer.tickAndReadFromBuffer(-steps);
       }
    }
 
@@ -3437,7 +3438,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(-1);
+         myDataBuffer.tickAndReadFromBuffer(-1);
       }
    }
 
@@ -3466,7 +3467,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(steps);
+         myDataBuffer.tickAndReadFromBuffer(steps);
       }
    }
 
@@ -3484,7 +3485,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(steps);
+         myDataBuffer.tickAndReadFromBuffer(steps);
       }
    }
 
@@ -4053,7 +4054,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       try
       {
          dataReader.readState(mySimulation.getCombinedVarList(), printErrorForMissingVariables);
-         myDataBuffer.tickAndUpdate();
+         myDataBuffer.tickAndWriteIntoBuffer();
          myDataBuffer.setInPoint();
          myDataBuffer.setOutPoint();
 
@@ -4485,15 +4486,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public void setIndex(int index)
+   public void setCurrentIndex(int index)
    {
-      myDataBuffer.setIndex(index);
+      myDataBuffer.setCurrentIndex(index);
    }
 
    public void setIndexButDoNotNotifySimulationRewoundListeners(int index)
    {
       rewoundListenerHandler.setEnable(false);
-      myDataBuffer.setIndex(index);
+      myDataBuffer.setCurrentIndex(index);
       rewoundListenerHandler.setEnable(true);
    }
 
@@ -4501,6 +4502,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public int getOutPoint()
    {
       return myDataBuffer.getOutPoint();
+   }
+
+   @Override
+   public int getBufferSize()
+   {
+      return myDataBuffer.getBufferSize();
    }
 
    public GraphicsDynamicGraphicsObject addYoGraphic(YoGraphic yoGraphicObject)

@@ -37,7 +37,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
@@ -53,7 +53,7 @@ public class SimulationConstructionSetProcessDataCallTest
          System.out.println("===testForwardCount===");
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + counterVariable.getDoubleValue());
          }
       }
@@ -62,7 +62,7 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = counterVariable.getDoubleValue();
 
@@ -95,7 +95,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
@@ -112,7 +112,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + counterVariable.getDoubleValue());
          }
       }
@@ -121,7 +121,7 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = counterVariable.getDoubleValue();
 
@@ -154,7 +154,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
@@ -170,7 +170,7 @@ public class SimulationConstructionSetProcessDataCallTest
          System.out.println("===testForwardCopy===");
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + copierVariable.getDoubleValue());
          }
       }
@@ -179,7 +179,7 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = copierVariable.getDoubleValue();
 
@@ -212,7 +212,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
@@ -229,7 +229,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + copierVariable.getDoubleValue());
          }
       }
@@ -238,7 +238,7 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = copierVariable.getDoubleValue();
 

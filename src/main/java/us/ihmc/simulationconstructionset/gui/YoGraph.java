@@ -1193,7 +1193,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
    private static void getVariableNameAndValueAtIndex(DataEntry entry, StringBuffer stringBuffer, int index)
    {
-      getVariableNameAndValueString(entry, stringBuffer, entry.getValueAt(index));
+      getVariableNameAndValueString(entry, stringBuffer, entry.getBufferValueAt(index));
    }
 
    private static void getVariableNameAndValueString(DataEntry entry, StringBuffer stringBuffer, double value)

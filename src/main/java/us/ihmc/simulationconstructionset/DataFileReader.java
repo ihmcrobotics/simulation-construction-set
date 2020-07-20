@@ -286,7 +286,7 @@ public class DataFileReader
 
          dataBuffer.setInPoint(0);
          dataBuffer.setOutPoint(nPoints - 1);
-         dataBuffer.setIndex(0);
+         dataBuffer.setCurrentIndex(0);
       }
 
       // vars.setMaxIndex(nPoints);
@@ -356,7 +356,7 @@ public class DataFileReader
 
          for (int j = 0; j < nPoints; j++)
          {
-            newEntry.setDataAt(dataStream.readFloat(), j);
+            newEntry.setBufferValueAt(dataStream.readFloat(), j);
 
             // System.out.print(dataStream.readFloat() + "  ");
          }
@@ -440,7 +440,7 @@ public class DataFileReader
 
                // System.out.print(someData);
                DataBufferEntry entry = entries[i];
-               entry.setDataAt(someData, j);
+               entry.setBufferValueAt(someData, j);
             }
 
             // System.out.println();
@@ -535,7 +535,7 @@ public class DataFileReader
                double value = Double.parseDouble(valString);
 
                // System.out.print(value + " ");
-               newEntry.setDataAt(value, point);
+               newEntry.setBufferValueAt(value, point);
                point++;
 
                if (!token.hasMoreTokens())
@@ -557,7 +557,7 @@ public class DataFileReader
       System.out.println("recordDT equals: " + recordDT);
       dataBuffer.setInPoint(0);
       dataBuffer.setOutPoint(nPoints - 1);
-      dataBuffer.setIndex(0);
+      dataBuffer.setCurrentIndex(0);
 
       //    }
       //    catch (IOException e){return -1;}
@@ -643,7 +643,7 @@ public class DataFileReader
 
          for (int j = 0; j < nPoints; j++)
          {
-            newEntry.setDataAt((dataArrays.get(j))[i], j);
+            newEntry.setBufferValueAt((dataArrays.get(j))[i], j);
          }
       }
 
@@ -652,7 +652,7 @@ public class DataFileReader
       System.out.println("recordDT equals: " + recordDT);
       dataBuffer.setInPoint(0);
       dataBuffer.setOutPoint(nPoints - 1);
-      dataBuffer.setIndex(0);
+      dataBuffer.setCurrentIndex(0);
 
       //    }
       //    catch (IOException e){return -1;}

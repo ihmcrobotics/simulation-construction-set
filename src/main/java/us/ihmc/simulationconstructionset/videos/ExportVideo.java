@@ -134,7 +134,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
       // TICKS_PER_PLAY_CYCLE = sim.getTicksPerPlayCycle();
 
       String fileNameNoExtension = fileName.substring(0, XMLReaderUtility.getEndIndexOfSubString(0, fileName, ".") - 1);
-      dataBufferCommandsExecutor.setIndex(currentTick);
+      dataBufferCommandsExecutor.setCurrentIndex(currentTick);
 
       try
       {
@@ -227,7 +227,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
                double currentTime = timeHolder.getTime();
                while (timeHolder.getTime() < currentTime + playBackRate / frameRate && !reachedEndPoint)
                {
-                  reachedEndPoint = dataBufferCommandsExecutor.tick(1);
+                  reachedEndPoint = dataBufferCommandsExecutor.tickAndReadFromBuffer(1);
                }
                standardSimulationGUI.updateRobots();
                standardSimulationGUI.updateGraphs();
@@ -279,7 +279,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
       while (last < dataBufferCommandsExecutor.getOutPoint())
       {
-         last = dataBufferCommandsExecutor.getIndex();
+         last = dataBufferCommandsExecutor.getCurrentIndex();
 
          File file = new File(path, NameNoExtension + "_" + last + ".jpeg");
 
@@ -292,7 +292,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
          {
             printIfDebug("Done Waiting For simulationSynchronizer 2");
 
-            dataBufferCommandsExecutor.tick(1);
+            dataBufferCommandsExecutor.tickAndReadFromBuffer(1);
             standardSimulationGUI.updateRobots();
             standardSimulationGUI.allowTickUpdatesNow();
          }

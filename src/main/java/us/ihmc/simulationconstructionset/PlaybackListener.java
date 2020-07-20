@@ -1,8 +1,8 @@
 package us.ihmc.simulationconstructionset;
 
-import us.ihmc.yoVariables.dataBuffer.IndexChangedListener;
+import us.ihmc.yoVariables.dataBuffer.BufferIndexChangedListener;
 
-public interface PlaybackListener extends IndexChangedListener
+public interface PlaybackListener extends BufferIndexChangedListener
 {
    public void play(double realTimeRate);
 

@@ -56,7 +56,7 @@ public class DataProcessingFunctionTest
          }
       };
 
-      scs.tick(50);
+      scs.tickAndReadFromBuffer(50);
       assertEquals(variableOne.getDoubleValue(), 0.0, 1e-7);
       assertEquals(variableTwo.getDoubleValue(), 0.0, 1e-7);
       assertEquals(variableThree.getDoubleValue(), 0.0, 1e-7);
@@ -64,7 +64,7 @@ public class DataProcessingFunctionTest
       scs.applyDataProcessingFunction(dataProcessingFunction);
 
       scs.gotoInPointNow();
-      scs.tick(500);
+      scs.tickAndReadFromBuffer(500);
 
       assertEquals(variableOne.getDoubleValue(), 0.5, 1e-7);
       assertEquals(variableOne.getDoubleValue(), robot.getTime(), 1e-7);

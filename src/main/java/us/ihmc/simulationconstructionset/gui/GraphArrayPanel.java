@@ -177,7 +177,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
    public boolean tick(int n)
    {
-      boolean ret = dataBuffer.tick(n);
+      boolean ret = dataBuffer.tickAndReadFromBuffer(n);
       repaintGraphs();
 
       // this.repaint(); //+++JEP
@@ -199,7 +199,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
    @Override
    public int getIndex()
    {
-      return dataBuffer.getIndex();
+      return dataBuffer.getCurrentIndex();
    }
 
    @Override
@@ -352,7 +352,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
       if (doTick != 0)
       {
-         dataBuffer.tick(doTick);
+         dataBuffer.tickAndReadFromBuffer(doTick);
 
          // this.repaintGraphs();
          ret = true;
@@ -361,7 +361,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
       if (doIndex != -1)
       {
-         dataBuffer.setIndex(doIndex);
+         dataBuffer.setCurrentIndex(doIndex);
          doIndex = -1;
 
          // this.repaintGraphs();
