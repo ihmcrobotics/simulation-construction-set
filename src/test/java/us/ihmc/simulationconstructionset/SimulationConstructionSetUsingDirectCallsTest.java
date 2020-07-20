@@ -1585,7 +1585,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       PlaybackListener listener = new PlaybackListener()
       {
          @Override
-         public void notifyOfIndexChange(int newIndex)
+         public void indexChanged(int newIndex)
          {
 
          }

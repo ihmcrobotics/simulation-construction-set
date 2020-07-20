@@ -34,7 +34,7 @@ public class RewoundListenerHandler implements YoBufferIndexChangedListener
    }
 
    @Override
-   public void notifyOfIndexChange(int newIndex)
+   public void indexChanged(int newIndex)
    {
       if (!enable)
          return;
