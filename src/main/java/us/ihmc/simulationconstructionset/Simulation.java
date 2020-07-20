@@ -14,7 +14,7 @@ import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingColli
 import us.ihmc.simulationconstructionset.scripts.Script;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoVariableHolder;
 import us.ihmc.yoVariables.registry.YoVariableList;
@@ -41,7 +41,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    // private final YoVariable time;
    private Simulator mySimulator;
-   private DataBuffer myDataBuffer;
+   private YoBuffer myDataBuffer;
 
    private YoVariableList myCombinedVarList = new YoVariableList("Combined");
 
@@ -162,7 +162,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          robots = null;
 
       // Create a data buffer:
-      myDataBuffer = new DataBuffer(dataBufferSize);
+      myDataBuffer = new YoBuffer(dataBufferSize);
 
       setRobots(robots);
    }
@@ -245,7 +245,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
       myCombinedVarList.addVariables(robot.getRobotsYoRegistry().subtreeVariables());
    }
 
-   public DataBuffer getDataBuffer()
+   public YoBuffer getDataBuffer()
    {
       return myDataBuffer;
    }

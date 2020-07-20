@@ -25,7 +25,7 @@ import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.GUIEnablerAndDisabler;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
-import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
+import us.ihmc.yoVariables.dataBuffer.YoBufferReader;
 
 public class ExportVideo implements ExportVideoCommandExecutor
 {
@@ -36,14 +36,14 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
    private final SimulationSynchronizer simulationSynchronizer;
 
-   private final DataBufferCommandsExecutor dataBufferCommandsExecutor;
+   private final YoBufferReader dataBufferCommandsExecutor;
    private final GUIEnablerAndDisabler guiEnablerAndDisabler;
    private final RunCommandsExecutor runCommandsExecutor;
 
    private final GotoInPointCommandExecutor gotoInPointCommandExecutor;
    private final GotoOutPointCommandExecutor gotoOutPointCommandExecutor;
 
-   public ExportVideo(TimeHolder timeHolder, StandardSimulationGUI standardSimulationGUI, DataBufferCommandsExecutor dataBufferCommandsExecutor,
+   public ExportVideo(TimeHolder timeHolder, StandardSimulationGUI standardSimulationGUI, YoBufferReader dataBufferCommandsExecutor,
                       GotoInPointCommandExecutor gotoInPointCommandExecutor, GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
                       RunCommandsExecutor runCommandsExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler, ActiveCanvas3DHolder activeCanvas3DHolder,
                       SimulationSynchronizer simulationSynchronizer)

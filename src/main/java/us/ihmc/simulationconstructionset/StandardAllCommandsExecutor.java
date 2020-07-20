@@ -16,14 +16,14 @@ import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.ViewportWindow;
 import us.ihmc.simulationconstructionset.gui.YoVariableSliderWindow;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 
 public class StandardAllCommandsExecutor implements AllCommandsExecutor
 {
    private StandardSimulationGUI standardSimulationGUI;
    private SimulationConstructionSet simulationConstructionSet;
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
 
    private ArrayList<ViewportSelectorCommandListener> viewportSelectorCommandListenersToRegister = new ArrayList<>();
    private ArrayList<KeyPointsChangedListener> keyPointsChangedListenersToRegister = new ArrayList<>();
@@ -32,7 +32,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    {
    }
 
-   public void setup(SimulationConstructionSet simulationConstructionSet, StandardSimulationGUI standardSimulationGUI, DataBuffer dataBuffer)
+   public void setup(SimulationConstructionSet simulationConstructionSet, StandardSimulationGUI standardSimulationGUI, YoBuffer dataBuffer)
    {
       if (this.simulationConstructionSet != null)
          throw new RuntimeException("this.simulationConstructionSet != null");

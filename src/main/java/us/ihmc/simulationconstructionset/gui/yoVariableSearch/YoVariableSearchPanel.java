@@ -40,8 +40,8 @@ import us.ihmc.simulationconstructionset.gui.YoEntryBox;
 import us.ihmc.simulationconstructionset.gui.YoVariableExplorerTabbedPane;
 import us.ihmc.simulationconstructionset.util.AdditionalPanelTools.FrameMap;
 import us.ihmc.simulationconstructionset.util.RegularExpression;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -52,7 +52,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
    private static final boolean USE_BOOKMARKS_PANEL = false;
 
    private VariableSearchBox variableSearchBox;
-   private final DataBuffer dataBuffer;
+   private final YoBuffer dataBuffer;
    private YoVariableListPanel yoVariableSearchResultsPanel;
    private final JTextArea entryBoxDescriptionArea;
    private final YoEntryBox entryBox;
@@ -66,7 +66,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
 
    private boolean showOnlyParameters = false;
 
-   public YoVariableSearchPanel(SelectedVariableHolder holder, DataBuffer dataBuffer, GraphArrayPanel graphArrayPanel,
+   public YoVariableSearchPanel(SelectedVariableHolder holder, YoBuffer dataBuffer, GraphArrayPanel graphArrayPanel,
                                 EntryBoxArrayTabbedPanel entryBoxArrayPanel, BookmarkedVariablesHolder bookmarkedVariablesHolder,
                                 YoVariableExplorerTabbedPane combinedVarPanel)
    {
@@ -394,7 +394,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          public List<YoVariable> search(String searchText)
          {
             List<YoVariable> ret = new ArrayList<>();
-            List<DataBufferEntry> entries = dataBuffer.getEntries();
+            List<YoBufferVariableEntry> entries = dataBuffer.getEntries();
             for (int i = 0; i < entries.size(); i++)
             {
                if (stopSearch)
@@ -402,7 +402,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
                   return null;
                }
 
-               DataBufferEntry entry = entries.get(i);
+               YoBufferVariableEntry entry = entries.get(i);
                boolean match = RegularExpression.check(entry.getVariable().getName(), searchText);
 
                if (match && showOnlyParameters)

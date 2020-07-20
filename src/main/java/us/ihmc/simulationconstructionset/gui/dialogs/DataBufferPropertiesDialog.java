@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import us.ihmc.simulationconstructionset.gui.DataBufferChangeListener;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 
 @SuppressWarnings("serial")
 public class DataBufferPropertiesDialog extends JDialog implements ActionListener
@@ -38,9 +38,9 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
    private BufferPropertiesPanel bufferPropertiesPanel;
 
    private DataBufferChangeListener listener;
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
 
-   public DataBufferPropertiesDialog(Container parentContainer, JFrame frame, DataBuffer dataBuffer, DataBufferChangeListener listener)
+   public DataBufferPropertiesDialog(Container parentContainer, JFrame frame, YoBuffer dataBuffer, DataBufferChangeListener listener)
    {
       super(frame, "Data Buffer Properties", false);
 

@@ -19,7 +19,7 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoBoolean;
@@ -36,7 +36,7 @@ public class DataFileWriterTest
    {
       int numDataPoints = 10000;
 
-      DataBuffer dataBuffer = new DataBuffer(numDataPoints);
+      YoBuffer dataBuffer = new YoBuffer(numDataPoints);
 
       YoRegistry rootRegistry = new YoRegistry("rootRegistry");
       YoRegistry registryOne = new YoRegistry("registryOne");
@@ -102,7 +102,7 @@ public class DataFileWriterTest
 
    }
 
-   private void testDataWriteReadIsTheSame(DataBuffer dataBuffer, List<YoVariable> allVariables, boolean binary, boolean compress,
+   private void testDataWriteReadIsTheSame(YoBuffer dataBuffer, List<YoVariable> allVariables, boolean binary, boolean compress,
                                            boolean spreadsheetFormatted, Robot robot)
          throws IOException, URISyntaxException
    {
@@ -130,7 +130,7 @@ public class DataFileWriterTest
       }
 
       DataFileReader dataFileReader = new DataFileReader(testFile);
-      DataBuffer readBackBuffer = new DataBuffer(dataBuffer.getBufferSize());
+      YoBuffer readBackBuffer = new YoBuffer(dataBuffer.getBufferSize());
       YoRegistry readBackRegistry = new YoRegistry("rootRegistry");
 
       YoVariableList newVars = new YoVariableList("newVars");
@@ -300,7 +300,7 @@ public class DataFileWriterTest
       originalVarList.addVariables(variables);
 
       int bufferSize = 50;
-      DataBuffer dataBuffer = new DataBuffer(bufferSize);
+      YoBuffer dataBuffer = new YoBuffer(bufferSize);
 
       dataBuffer.addVariables(variables);
 
@@ -321,7 +321,7 @@ public class DataFileWriterTest
       YoVariableList newVarList = new YoVariableList("newVarList");
       YoRegistry registry = new YoRegistry("rootRegistry");
 
-      DataBuffer newDataBuffer = new DataBuffer(16384);
+      YoBuffer newDataBuffer = new YoBuffer(16384);
       dataFileReader.readData(newVarList, registry, newDataBuffer);
 
       assertEquals(originalVarList.size(), newVarList.size());
@@ -349,7 +349,7 @@ public class DataFileWriterTest
       dataFileWriter.writeState("model", recordDT, variables, binary, compress);
    }
 
-   private void writeALongDataFile(File file, DataBuffer dataBuffer, List<YoVariable> variables, Robot robot)
+   private void writeALongDataFile(File file, YoBuffer dataBuffer, List<YoVariable> variables, Robot robot)
    {
       DataFileWriter dataFileWriter = new DataFileWriter(file);
 

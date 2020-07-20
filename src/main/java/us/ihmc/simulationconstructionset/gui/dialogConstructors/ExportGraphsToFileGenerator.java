@@ -24,7 +24,7 @@ import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
 import us.ihmc.tools.gui.MyFileFilter;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 import us.ihmc.yoVariables.dataBuffer.DataEntry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -44,7 +44,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
    private JPanel accessory;
    private JCheckBox saveAllGraphs;
 
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
 
    public ExportGraphsToFileGenerator(SimulationConstructionSet scs, JFrame frame, GraphArrayPanel graphArrayPanel, StandardSimulationGUI myGUI)
    {

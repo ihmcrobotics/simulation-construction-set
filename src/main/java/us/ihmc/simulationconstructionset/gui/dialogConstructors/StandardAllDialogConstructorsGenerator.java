@@ -19,8 +19,8 @@ import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.config.VarGroupList;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.videos.ExportVideo;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBufferReader;
 
 public class StandardAllDialogConstructorsGenerator implements AllDialogConstructorsHolder
 {
@@ -53,7 +53,7 @@ public class StandardAllDialogConstructorsGenerator implements AllDialogConstruc
 
    private AboutDialogGenerator aboutDialogConstructor;
 
-   public StandardAllDialogConstructorsGenerator(SimulationConstructionSet sim, Robot[] robots, DataBuffer myDataBuffer, StandardSimulationGUI myGUI,
+   public StandardAllDialogConstructorsGenerator(SimulationConstructionSet sim, Robot[] robots, YoBuffer myDataBuffer, StandardSimulationGUI myGUI,
                                                  VarGroupList varGroupList, GraphArrayPanel myGraphArrayPanel, ViewportSelectorCommandExecutor viewportSelector,
                                                  Container parentContainer, JFrame frame, SimulationSynchronizer simulationSynchronizer,
                                                  StandardGUIActions standardGUIActions)
@@ -63,7 +63,7 @@ public class StandardAllDialogConstructorsGenerator implements AllDialogConstruc
 
       TimeHolder timeHolder = sim;
       StandardSimulationGUI standardSimulationGUI = myGUI;
-      DataBufferCommandsExecutor dataBufferCommandsExecutor = sim;
+      YoBufferReader dataBufferCommandsExecutor = sim;
       GotoInPointCommandExecutor gotoInPointCommandExecutor = sim;
       GotoOutPointCommandExecutor gotoOutPointCommandExecutor = sim;
       RunCommandsExecutor runCommandsExecutor = sim;

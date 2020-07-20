@@ -92,8 +92,8 @@ import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.RealTimeRateEnforcer;
 import us.ihmc.simulationconstructionset.util.TickAndUpdatable;
 import us.ihmc.tools.TimestampProvider;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBufferReader;
 import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
 import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
@@ -313,7 +313,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       ExportSnapshotCommandExecutor, GotoInPointCommandExecutor, GotoOutPointCommandExecutor, NextCameraKeyCommandExecutor, PackBufferCommandExecutor,
       PreviousCameraKeyCommandExecutor, RemoveCameraKeyCommandExecutor, SetInPointCommandExecutor, SetOutPointCommandExecutor, StepBackwardCommandExecutor,
       StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor, KeyPointsHolder, GUIEnablerAndDisabler, WriteDataCommandExecutor,
-      TimeHolder, ParameterRootNamespaceHolder, DataBufferCommandsExecutor, TickAndUpdatable
+      TimeHolder, ParameterRootNamespaceHolder, YoBufferReader, TickAndUpdatable
 {
    private static final boolean TESTING_LOAD_STUFF = false;
 
@@ -369,7 +369,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    private List<YoGraphicsListRegistry> yoGraphicListRegistries = new ArrayList<>();
    private RewoundListenerHandler rewoundListenerHandler = new RewoundListenerHandler();
-   private DataBuffer myDataBuffer;
+   private YoBuffer myDataBuffer;
    private boolean defaultLoaded = false;
    private int lastIndexPlayed = 0;
 
@@ -3755,7 +3755,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     *
     * @return The internal dataBuffer.
     */
-   public DataBuffer getDataBuffer()
+   public YoBuffer getDataBuffer()
    {
       return myDataBuffer;
    }

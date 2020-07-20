@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import us.ihmc.simulationconstructionset.gui.config.VarGroup;
 import us.ihmc.simulationconstructionset.gui.config.VarGroupList;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
@@ -21,10 +21,10 @@ public class DataBufferToolsTest
    private final int testBufferSize = 100;
 
    private YoRegistry registry;
-   private DataBuffer dataBuffer = new DataBuffer(testBufferSize);
+   private YoBuffer dataBuffer = new YoBuffer(testBufferSize);
 
    private YoDouble a, b, c;
-   private DataBufferEntry aBuffer, bBuffer, cBuffer;
+   private YoBufferVariableEntry aBuffer, bBuffer, cBuffer;
 
    @BeforeEach
    public void setUp()
@@ -35,9 +35,9 @@ public class DataBufferToolsTest
       b = new YoDouble("b_arm", registry);
       c = new YoDouble("c_arm", registry);
 
-      aBuffer = new DataBufferEntry(a, testBufferSize);
-      bBuffer = new DataBufferEntry(b, testBufferSize);
-      cBuffer = new DataBufferEntry(c, testBufferSize);
+      aBuffer = new YoBufferVariableEntry(a, testBufferSize);
+      bBuffer = new YoBufferVariableEntry(b, testBufferSize);
+      cBuffer = new YoBufferVariableEntry(c, testBufferSize);
    }
 
    @Test // timeout=300000

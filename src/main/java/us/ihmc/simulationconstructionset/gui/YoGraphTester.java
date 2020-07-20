@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.dataBuffer.DataEntry;
 import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
 import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
@@ -47,7 +47,7 @@ public class YoGraphTester
       YoRegistry registry = new YoRegistry("registry");
       YoDouble yoVariable = new YoDouble("variableOne", registry);
 
-      DataBufferEntry dataEntry = new DataBufferEntry(yoVariable, nPoints);
+      YoBufferVariableEntry dataEntry = new YoBufferVariableEntry(yoVariable, nPoints);
 
       double value = 0.0;
 

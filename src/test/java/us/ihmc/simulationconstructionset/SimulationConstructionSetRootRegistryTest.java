@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.YoVariableExplorerTabbedPane;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanel;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
@@ -31,7 +31,7 @@ public class SimulationConstructionSetRootRegistryTest
       scs.startOnAThread();
 
       YoRegistry rootRegistry = scs.getRootRegistry();
-      DataBuffer dataBuffer = scs.getDataBuffer();
+      YoBuffer dataBuffer = scs.getDataBuffer();
 
       assertTrue(variableOne == rootRegistry.findVariable("variableOne"));
       assertTrue(variableOne == dataBuffer.findVariable("variableOne"));
@@ -146,7 +146,7 @@ public class SimulationConstructionSetRootRegistryTest
       assertTrue(variableAfterThreadTwo == rootRegistry.findVariable("variableAfterThreadTwo"));
 
       // Make sure the variables are in the DataBuffer:
-      DataBuffer dataBuffer = scs.getDataBuffer();
+      YoBuffer dataBuffer = scs.getDataBuffer();
       assertTrue(variableBeforeConstructionOne == dataBuffer.findVariable("variableBeforeConstructionOne"));
       assertTrue(variableAfterConstructionZero == dataBuffer.findVariable("variableAfterConstructionZero"));
       assertTrue(variableAfterConstructionOne == dataBuffer.findVariable("variableAfterConstructionOne"));

@@ -122,7 +122,7 @@ import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.tools.TimestampProvider;
 import us.ihmc.tools.thread.CloseableAndDisposableRegistry;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
 import us.ihmc.yoVariables.providers.DoubleProvider;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableHolder;
@@ -171,7 +171,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
    // Menu Items we need here:
    private JMenuBar menuBar;
    private YoVariableExplorerTabbedPane yoVariableExplorerTabbedPane;
-   private DataBuffer myDataBuffer;
+   private YoBuffer myDataBuffer;
    protected EntryBoxArrayTabbedPanel myEntryBoxArrayPanel;
    protected GraphArrayPanel myGraphArrayPanel;
    private JPanel numericContentPane;
@@ -225,7 +225,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public StandardSimulationGUI(Graphics3DAdapter graphics3dAdapter, SimulationSynchronizer simulationSynchronizer, AllCommandsExecutor allCommandsExecutor,
                                 AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim, YoVariableHolder yoVariableHolder,
-                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JApplet jApplet, YoRegistry rootRegistry)
+                                Robot[] robots, YoBuffer buffer, VarGroupList varGroupList, JApplet jApplet, YoRegistry rootRegistry)
    {
       this(graphics3dAdapter, simulationSynchronizer, allCommandsExecutor, allDialogConstructorsHolder, sim, yoVariableHolder, robots, buffer, varGroupList,
            null, jApplet, rootRegistry);
@@ -233,7 +233,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public StandardSimulationGUI(Graphics3DAdapter graphics3dAdapter, SimulationSynchronizer simulationSynchronizer, AllCommandsExecutor allCommandsExecutor,
                                 AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim, YoVariableHolder yoVariableHolder,
-                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JFrame frame, YoRegistry rootRegistry)
+                                Robot[] robots, YoBuffer buffer, VarGroupList varGroupList, JFrame frame, YoRegistry rootRegistry)
    {
       this(graphics3dAdapter, simulationSynchronizer, allCommandsExecutor, allDialogConstructorsHolder, sim, yoVariableHolder, robots, buffer, varGroupList,
            frame, null, rootRegistry);
@@ -241,7 +241,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public StandardSimulationGUI(Graphics3DAdapter graphics3dAdapter, SimulationSynchronizer simulationSynchronizer, AllCommandsExecutor allCommandsExecutor,
                                 AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim, YoVariableHolder yoVariableHolder,
-                                Robot[] robots, DataBuffer buffer, VarGroupList varGroupList, JFrame frame, JApplet jApplet, YoRegistry rootRegistry)
+                                Robot[] robots, YoBuffer buffer, VarGroupList varGroupList, JFrame frame, JApplet jApplet, YoRegistry rootRegistry)
    {
       this.graphics3dAdapter = graphics3dAdapter;
       this.simulationSynchronizer = simulationSynchronizer;

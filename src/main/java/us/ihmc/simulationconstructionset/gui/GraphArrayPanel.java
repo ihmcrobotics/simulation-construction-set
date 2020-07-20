@@ -18,8 +18,8 @@ import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
 import us.ihmc.simulationconstructionset.commands.ZoomGraphCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGraphRemover, DataBufferChangeListener, Printable, ZoomGraphCommandExecutor
@@ -29,7 +29,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
    private ArrayList<YoGraph> graphsOnThisPanel;
 
    private JFrame parentFrame;
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
 
    private int numColumns = 1;
    public final int MAX_GRAPHS = 24;
@@ -40,7 +40,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
    private SelectedVariableHolder selectedVariableHolder;
 
-   public GraphArrayPanel(SelectedVariableHolder holder, DataBuffer buffer, JFrame frame, StandardSimulationGUI standardSimulationGUI)
+   public GraphArrayPanel(SelectedVariableHolder holder, YoBuffer buffer, JFrame frame, StandardSimulationGUI standardSimulationGUI)
    {
       // super(new GridLayout(0,2,2,2));
       super(new GridLayout(0, 1, 2, 2));
@@ -376,7 +376,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
    public void setupGraph(String varname)
    {
-      final DataBufferEntry entry = dataBuffer.findVariableEntry(varname);
+      final YoBufferVariableEntry entry = dataBuffer.findVariableEntry(varname);
 
       if (entry != null)
       {
@@ -413,7 +413,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
             for (int i = 0; i < varnames.length; i++)
             {
-               DataBufferEntry entry = dataBuffer.findVariableEntry(varnames[i]);
+               YoBufferVariableEntry entry = dataBuffer.findVariableEntry(varnames[i]);
 
                if (entry != null)
                   g.addVariable(entry);
@@ -433,7 +433,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
       YoGraph g = new YoGraph(this, this, selectedVariableHolder, dataBuffer, dataBuffer, parentFrame);
       for (int i = 0; i < varnames.length; i++)
       {
-         DataBufferEntry entry = dataBuffer.findVariableEntry(varnames[i]);
+         YoBufferVariableEntry entry = dataBuffer.findVariableEntry(varnames[i]);
          if (entry != null)
             g.addVariable(entry);
       }
@@ -454,7 +454,7 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
    public void addSelectedVariableGraph()
    {
       YoVariable variable = selectedVariableHolder.getSelectedVariable();
-      DataBufferEntry entry = dataBuffer.getEntry(variable);
+      YoBufferVariableEntry entry = dataBuffer.getEntry(variable);
       YoGraph g = new YoGraph(this, this, selectedVariableHolder, dataBuffer, dataBuffer, parentFrame);
       g.addVariable(entry);
       addGraph(g);

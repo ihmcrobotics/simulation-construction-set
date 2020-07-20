@@ -13,8 +13,8 @@ import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 
 import us.ihmc.simulationconstructionset.robotdefinition.RobotDefinitionFixedFrame;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
+import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableList;
@@ -121,12 +121,12 @@ public class DataFileReader
       return ret;
    }
 
-   public int readData(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer) throws IOException
+   public int readData(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, YoBuffer dataBuffer) throws IOException
    {
       return readData(newVars, rootRegistryToAddNewVariablesTo, dataBuffer, null);
    }
 
-   public int readData(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
+   public int readData(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, YoBuffer dataBuffer, SimulationConstructionSet sim)
          throws IOException
    {
       if (inFile != null)
@@ -137,7 +137,7 @@ public class DataFileReader
          return -1;
    }
 
-   private int readDataFile(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
+   private int readDataFile(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, YoBuffer dataBuffer, SimulationConstructionSet sim)
          throws IOException
    {
       //    try
@@ -164,7 +164,7 @@ public class DataFileReader
 
    }
 
-   private int readDataURL(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer, SimulationConstructionSet sim)
+   private int readDataURL(YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, YoBuffer dataBuffer, SimulationConstructionSet sim)
          throws IOException
    {
       //    try
@@ -192,7 +192,7 @@ public class DataFileReader
 
    }
 
-   public int readData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer,
+   public int readData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, YoBuffer dataBuffer,
                        SimulationConstructionSet sim)
          throws IOException
    {
@@ -345,12 +345,12 @@ public class DataFileReader
       }
    }
 
-   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer)
+   private void loadColumnFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, YoBuffer dataBuffer)
          throws IOException
    {
       for (int i = 0; i < nVars; i++)
       {
-         DataBufferEntry newEntry = getDataBufferEntry(varNames.get(i), dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
+         YoBufferVariableEntry newEntry = getDataBufferEntry(varNames.get(i), dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
 
          //       System.out.println("varNames.get(i) = " + varNames.get(i) + ", newEntry = " + newEntry);
 
@@ -370,7 +370,7 @@ public class DataFileReader
       }
    }
 
-   private DataBufferEntry getDataBufferEntry(String varName, DataBuffer dataBuffer, YoRegistry rootRegistryToAddNewVariablesTo, YoVariableList newVars)
+   private YoBufferVariableEntry getDataBufferEntry(String varName, YoBuffer dataBuffer, YoRegistry rootRegistryToAddNewVariablesTo, YoVariableList newVars)
          throws IOException
    {
       YoVariable newVariable = dataBuffer.findVariable(varName);
@@ -386,7 +386,7 @@ public class DataFileReader
          newVars.addVariable(newVariable);
       }
 
-      DataBufferEntry newEntry = dataBuffer.getEntry(newVariable);
+      YoBufferVariableEntry newEntry = dataBuffer.getEntry(newVariable);
 
       if (newEntry == null)
       {
@@ -397,7 +397,7 @@ public class DataFileReader
       return newEntry;
    }
 
-   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, DataBuffer dataBuffer)
+   private void loadRowFormattedData(YoDataInputStream dataStream, YoVariableList newVars, YoRegistry rootRegistryToAddNewVariablesTo, YoBuffer dataBuffer)
          throws IOException
    {
       if (DEBUG)
@@ -405,7 +405,7 @@ public class DataFileReader
 
       //    try
       //    {
-      DataBufferEntry[] entries = new DataBufferEntry[nVars];
+      YoBufferVariableEntry[] entries = new YoBufferVariableEntry[nVars];
 
       for (int i = 0; i < nVars; i++)
       {
@@ -439,7 +439,7 @@ public class DataFileReader
                double someData = (dataStream.readFloat());
 
                // System.out.print(someData);
-               DataBufferEntry entry = entries[i];
+               YoBufferVariableEntry entry = entries[i];
                entry.setBufferValueAt(someData, j);
             }
 
@@ -473,7 +473,7 @@ public class DataFileReader
 
    }
 
-   private int readASCIIData(YoDataInputStream dataStream, YoVariableList newVars, DataBuffer dataBuffer, String line,
+   private int readASCIIData(YoDataInputStream dataStream, YoVariableList newVars, YoBuffer dataBuffer, String line,
                              YoRegistry rootRegistryToAddNewVariablesTo)
          throws IOException
    {
@@ -521,7 +521,7 @@ public class DataFileReader
                // System.out.println("nPoints = " + nPoints);
             }
 
-            DataBufferEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
+            YoBufferVariableEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
 
             String valString = token.nextToken();
             if (!valString.startsWith("["))
@@ -564,7 +564,7 @@ public class DataFileReader
       return nPoints;
    }
 
-   private int readASCIICommaSeparatedData(YoDataInputStream dataStream, YoVariableList newVars, DataBuffer dataBuffer,
+   private int readASCIICommaSeparatedData(YoDataInputStream dataStream, YoVariableList newVars, YoBuffer dataBuffer,
                                            YoRegistry rootRegistryToAddNewVariablesTo)
          throws IOException
    {
@@ -639,7 +639,7 @@ public class DataFileReader
       {
          String varName = varNames.get(i);
 
-         DataBufferEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
+         YoBufferVariableEntry newEntry = getDataBufferEntry(varName, dataBuffer, rootRegistryToAddNewVariablesTo, newVars);
 
          for (int j = 0; j < nPoints; j++)
          {
