@@ -8,8 +8,8 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 
 import us.ihmc.simulationconstructionset.gui.actions.dialogActions.AbstractActionTools;
-import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
-import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsHolder;
 
 public class ToggleKeyPointModeAction extends AbstractAction implements KeyPointsChangedListener
 {

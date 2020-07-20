@@ -4,7 +4,7 @@ import static us.ihmc.robotics.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.dataBuffer.YoBufferProcessor;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferProcessor;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 

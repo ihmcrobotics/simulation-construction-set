@@ -24,8 +24,8 @@ import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
 import us.ihmc.tools.gui.MyFileFilter;
-import us.ihmc.yoVariables.dataBuffer.YoBuffer;
-import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructor

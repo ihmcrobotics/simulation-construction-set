@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 
 import us.ihmc.simulationconstructionset.gui.DataBufferChangeListener;
 import us.ihmc.simulationconstructionset.gui.dialogs.DataBufferPropertiesDialog;
-import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.YoBuffer;
 
 public class DataBufferPropertiesDialogGenerator implements DataBufferPropertiesDialogConstructor
 {

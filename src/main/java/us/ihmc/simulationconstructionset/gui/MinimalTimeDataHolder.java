@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import us.ihmc.yoVariables.dataBuffer.YoTimeBufferHolder;
+import us.ihmc.yoVariables.buffer.interfaces.YoTimeBufferHolder;
 
 public class MinimalTimeDataHolder implements YoTimeBufferHolder
 {

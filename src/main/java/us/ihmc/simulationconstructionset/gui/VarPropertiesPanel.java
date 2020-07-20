@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import us.ihmc.yoVariables.dataBuffer.YoBufferBounds;
-import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
+import us.ihmc.yoVariables.buffer.YoBufferBounds;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 
 @SuppressWarnings("serial")
 public class VarPropertiesPanel extends JPanel implements ActionListener

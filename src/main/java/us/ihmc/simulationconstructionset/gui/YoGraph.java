@@ -36,10 +36,10 @@ import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
 import us.ihmc.simulationconstructionset.gui.dialogs.GraphPropertiesDialog;
-import us.ihmc.yoVariables.dataBuffer.YoBufferBounds;
-import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
-import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryHolder;
-import us.ihmc.yoVariables.dataBuffer.YoTimeBufferHolder;
+import us.ihmc.yoVariables.buffer.YoBufferBounds;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryHolder;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
+import us.ihmc.yoVariables.buffer.interfaces.YoTimeBufferHolder;
 import us.ihmc.yoVariables.registry.NameSpace;
 import us.ihmc.yoVariables.variable.YoVariable;
 

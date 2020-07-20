@@ -3,7 +3,7 @@ package us.ihmc.simulationconstructionset;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.yoVariables.dataBuffer.YoBufferIndexChangedListener;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferIndexChangedListener;
 
 public class RewoundListenerHandler implements YoBufferIndexChangedListener
 {

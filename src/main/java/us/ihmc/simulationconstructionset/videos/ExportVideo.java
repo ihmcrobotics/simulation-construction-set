@@ -25,7 +25,7 @@ import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.GUIEnablerAndDisabler;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
-import us.ihmc.yoVariables.dataBuffer.YoBufferReader;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferReader;
 
 public class ExportVideo implements ExportVideoCommandExecutor
 {

@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import us.ihmc.simulationconstructionset.gui.GraphPropertiesPanel;
 import us.ihmc.simulationconstructionset.gui.VarPropertiesPanel;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
-import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntryReader;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 
 @SuppressWarnings("serial")
 public class GraphPropertiesDialog extends JDialog implements ActionListener

@@ -103,9 +103,9 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDi
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveRobotConfigurationDialogConstructor;
-import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener;
-import us.ihmc.yoVariables.dataBuffer.KeyPointsChangedListener.Change;
-import us.ihmc.yoVariables.dataBuffer.KeyPointsHolder;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsHolder;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener.Change;
 
 public class ActionsTest
 {

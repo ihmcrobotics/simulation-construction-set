@@ -6,8 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import us.ihmc.simulationconstructionset.gui.dialogs.VarPropertiesDialog;
-import us.ihmc.yoVariables.dataBuffer.YoBuffer;
-import us.ihmc.yoVariables.dataBuffer.YoBufferVariableEntry;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoVariableDoubleClickListener implements DoubleClickListener

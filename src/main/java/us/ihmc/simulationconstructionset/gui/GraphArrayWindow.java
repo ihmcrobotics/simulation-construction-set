@@ -31,7 +31,7 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.PrintGraphsDialo
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.PrintGraphsDialogGenerator;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogGenerator;
-import us.ihmc.yoVariables.dataBuffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.YoBuffer;
 
 public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor, GraphGroupSelector
 {
