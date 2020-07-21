@@ -197,7 +197,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    @Override
    public void cropBuffer()
    {
-      dataBuffer.cropData();
+      dataBuffer.cropBuffer();
       if (standardSimulationGUI != null)
          standardSimulationGUI.zoomFullView();
    }
@@ -205,7 +205,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    @Override
    public void packBuffer()
    {
-      dataBuffer.packData();
+      dataBuffer.shiftBuffer();
       if (standardSimulationGUI != null)
          standardSimulationGUI.updateGraphs();
    }
@@ -213,7 +213,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    @Override
    public void cutBuffer()
    {
-      dataBuffer.cutData();
+      dataBuffer.cutBuffer();
       if (standardSimulationGUI != null)
          standardSimulationGUI.zoomFullView();
    }

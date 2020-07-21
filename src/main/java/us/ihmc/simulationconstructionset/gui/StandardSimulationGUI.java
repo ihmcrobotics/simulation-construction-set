@@ -1412,7 +1412,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public void setKeyPoint()
    {
-      myDataBuffer.setKeyPoint();
+      myDataBuffer.toggleKeyPoint();
       repaintWindows();
    }
 

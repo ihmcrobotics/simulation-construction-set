@@ -512,7 +512,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       mySimulation = simulation;
       myDataBuffer = mySimulation.getDataBuffer();
-      myDataBuffer.attachIndexChangedListener(rewoundListenerHandler);
+      myDataBuffer.addListener(rewoundListenerHandler);
       simulationSynchronizer = mySimulation.getSimulationSynchronizer();
 
       List<YoVariable> originalRootVariables = rootRegistry.subtreeVariables();
@@ -551,7 +551,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          });
       }
 
-      mySimulation.getDataBuffer().copyValuesThrough(); // Copy the values through so that anything the user changed during initialization will be YoVariablized, and the default on all graphs.
+      mySimulation.getDataBuffer().fillBuffer(); // Copy the values through so that anything the user changed during initialization will be YoVariablized, and the default on all graphs.
 
       attachPlaybackListener(new PlaybackListener()
       {
@@ -4213,7 +4213,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
        * This makes sure that the initial values of all YoVariables that are added to the scs (i.e. at
        * index 0 of the data buffer) are properly stored in the data buffer
        */
-      getDataBuffer().copyValuesThrough();
+      getDataBuffer().fillBuffer();
    }
 
    // /**
@@ -4275,7 +4275,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       playbackListeners.add(playbackListener);
 
-      myDataBuffer.attachIndexChangedListener(playbackListener);
+      myDataBuffer.addListener(playbackListener);
    }
 
    /**

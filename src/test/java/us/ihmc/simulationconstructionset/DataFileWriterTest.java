@@ -137,7 +137,7 @@ public class DataFileWriterTest
 
       dataFileReader.readData(newVars, readBackRegistry, readBackBuffer);
 
-      boolean dataIsEqual = readBackBuffer.checkIfDataIsEqual(dataBuffer, 1e-7);
+      boolean dataIsEqual = readBackBuffer.epsilonEquals(dataBuffer, 1e-7);
       assertTrue(dataIsEqual);
    }
 

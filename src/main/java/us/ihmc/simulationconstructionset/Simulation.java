@@ -188,7 +188,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          }
       }
 
-      myDataBuffer.copyValuesThrough();
+      myDataBuffer.fillBuffer();
       updateRobots(robots);
    }
 
@@ -224,7 +224,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
       setDT(SIMULATION_DT, RECORD_FREQ);
       addVariablesFromARobot(robot);
 
-      myDataBuffer.copyValuesThrough();
+      myDataBuffer.fillBuffer();
       updateRobots(robots);
    }
 

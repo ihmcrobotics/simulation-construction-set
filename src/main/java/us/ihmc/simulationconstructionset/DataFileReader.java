@@ -271,12 +271,12 @@ public class DataFileReader
          // vars.clearAll(nPoints);
          if (nPoints != -1)
          {
-            dataBuffer.clearAll(nPoints);
+            dataBuffer.clearBuffers(nPoints);
          }
 
          else
          {
-            dataBuffer.clearAll(1024);
+            dataBuffer.clearBuffers(1024);
          }
 
          if (columnFormatted)
@@ -516,7 +516,7 @@ public class DataFileReader
             if (nPoints == -1)
             {
                nPoints = token.countTokens() - 1;
-               dataBuffer.clearAll(nPoints);
+               dataBuffer.clearBuffers(nPoints);
 
                // System.out.println("nPoints = " + nPoints);
             }
@@ -633,7 +633,7 @@ public class DataFileReader
 
       // Now we have all the data, now we need to put it into the dataBuffer:
       nPoints = dataArrays.size();
-      dataBuffer.clearAll(nPoints);
+      dataBuffer.clearBuffers(nPoints);
 
       for (int i = 0; i < varNames.size(); i++)
       {
