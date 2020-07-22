@@ -368,10 +368,9 @@ public class ActionsTest
             action.closeAndDispose();
             actionHolder[0] = action;
          }
-      }).assertMethodsCalledInOrder(new MethodInvocation("registerToggleKeyPointModeCommandListener", actionHolder[0]),
-                                    new MethodInvocation("toggleKeyPointMode"),
-                                    new MethodInvocation("toggleKeyPointMode"),
-                                    new MethodInvocation("closeAndDispose"));
+      }).assertMethodsCalledInOrder(new MethodInvocation("addListener", actionHolder[0]),
+                                    new MethodInvocation("toggleKeyPoints"),
+                                    new MethodInvocation("toggleKeyPoints"));
    }
 
    @Test // timeout=300000

@@ -63,7 +63,7 @@ public class DataFileWriterTest
       dataBuffer.addVariable(variableSix);
       dataBuffer.addVariable(variableSeven);
 
-      for (int i = 0; i < numDataPoints; i++)
+      for (int i = 0; i < numDataPoints - 1; i++)
       {
          variableOne.set(Math.random());
          variableTwo.set(Math.random());

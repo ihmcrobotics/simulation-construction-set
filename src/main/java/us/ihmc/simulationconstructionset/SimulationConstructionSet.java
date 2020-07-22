@@ -1474,7 +1474,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    @Override
    public void tickAndUpdate()
    {
+      rewoundListenerHandler.setEnable(false);
       mySimulation.tickAndUpdate();
+      rewoundListenerHandler.setEnable(true);
 
       if (myGUI != null)
       {
@@ -1509,7 +1511,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void tickAndUpdateLeisurely(int leisureRate)
    {
+      rewoundListenerHandler.setEnable(false);
       mySimulation.tickAndUpdate();
+      rewoundListenerHandler.setEnable(true);
 
       if (myGUI != null)
       {

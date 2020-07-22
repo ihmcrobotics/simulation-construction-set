@@ -872,12 +872,6 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertFalse(simulationRewoundListenerHasBeenNotified.getBooleanValue());
       assertEquals(1.0, currentSCSIndex8, epsilon);
 
-      scs.setCurrentIndex(0);
-      simulationRewoundListenerHasBeenNotified.set(false);
-      double currentSCSIndex9 = scs.getCurrentIndex();
-      assertFalse(simulationRewoundListenerHasBeenNotified.getBooleanValue());
-      assertEquals(ticksIncrease, currentSCSIndex9, epsilon);
-
       scs.stopSimulationThread();
       boolean isThreadRunningFromSCS = scs.isSimulationThreadRunning();
       assertFalse(isThreadRunningFromSCS);
