@@ -60,8 +60,8 @@ public class DynamicGraphicObjectEvaluation
       yoPolygon.set(polygon);
       YoFramePoseUsingYawPitchRoll yoPolyOrigin = new YoFramePoseUsingYawPitchRoll("PolyOrigin", worldFrame, registry);
       YoGraphicPolygon yoGraphicPolygon = new YoGraphicPolygon("Polygon", yoPolygon, yoPolyOrigin, 3.0, appearance);
-      yoPolyOrigin.setXYZ(0.1, 0.2, 1.0);
-      yoPolyOrigin.setYawPitchRoll(-0.1, -0.4, -0.3);
+      yoPolyOrigin.setPosition(0.1, 0.2, 1.0);
+      yoPolyOrigin.setOrientationYawPitchRoll(-0.1, -0.4, -0.3);
 
       // 3D Text:
       final YoGraphicText3D yoGraphicText = new YoGraphicText3D("Text", "Hello", "text", "", registry, 0.2, YoAppearance.Blue());

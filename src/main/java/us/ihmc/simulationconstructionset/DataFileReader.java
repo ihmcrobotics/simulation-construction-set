@@ -356,7 +356,7 @@ public class DataFileReader
 
          for (int j = 0; j < nPoints; j++)
          {
-            newEntry.setBufferValueAt(dataStream.readFloat(), j);
+            newEntry.writeBufferAt(dataStream.readFloat(), j);
 
             // System.out.print(dataStream.readFloat() + "  ");
          }
@@ -440,7 +440,7 @@ public class DataFileReader
 
                // System.out.print(someData);
                YoBufferVariableEntry entry = entries[i];
-               entry.setBufferValueAt(someData, j);
+               entry.writeBufferAt(someData, j);
             }
 
             // System.out.println();
@@ -535,7 +535,7 @@ public class DataFileReader
                double value = Double.parseDouble(valString);
 
                // System.out.print(value + " ");
-               newEntry.setBufferValueAt(value, point);
+               newEntry.writeBufferAt(value, point);
                point++;
 
                if (!token.hasMoreTokens())
@@ -643,7 +643,7 @@ public class DataFileReader
 
          for (int j = 0; j < nPoints; j++)
          {
-            newEntry.setBufferValueAt((dataArrays.get(j))[i], j);
+            newEntry.writeBufferAt((dataArrays.get(j))[i], j);
          }
       }
 
