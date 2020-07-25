@@ -256,7 +256,7 @@ public class DataFileWriterTest
       Random random = new Random(seed);
       List<YoVariable> variables = createALargeNumberOfVariables(random, numberOfVariables);
       YoVariableList originalVarList = new YoVariableList("originalVarList");
-      originalVarList.addVariables(variables);
+      originalVarList.addAll(variables);
 
       writeALongStateFile(fileOne, variables);
 
@@ -273,7 +273,7 @@ public class DataFileWriterTest
 
       for (int i = 0; i < originalVarList.size(); i++)
       {
-         YoVariable originalVariable = originalVarList.getVariable(i);
+         YoVariable originalVariable = originalVarList.get(i);
          YoVariable newVariable = newVarList.findVariable(originalVariable.getName());
 
          assertFalse(originalVariable == newVariable);
@@ -297,7 +297,7 @@ public class DataFileWriterTest
       Random random = new Random(seed);
       List<YoVariable> variables = createALargeNumberOfVariables(random, numberOfVariables);
       YoVariableList originalVarList = new YoVariableList("originalVarList");
-      originalVarList.addVariables(variables);
+      originalVarList.addAll(variables);
 
       int bufferSize = 50;
       YoBuffer dataBuffer = new YoBuffer(bufferSize);
@@ -328,7 +328,7 @@ public class DataFileWriterTest
 
       for (int i = 0; i < originalVarList.size(); i++)
       {
-         YoVariable originalVariable = originalVarList.getVariable(i);
+         YoVariable originalVariable = originalVarList.get(i);
          YoVariable newVariable = newVarList.findVariable(originalVariable.getName());
 
          assertFalse(originalVariable == newVariable);

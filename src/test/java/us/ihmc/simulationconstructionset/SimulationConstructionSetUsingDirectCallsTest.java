@@ -1453,7 +1453,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private YoVariableList createYoVariableList(String name, List<? extends YoVariable> yoVariables)
    {
       YoVariableList yoVariableList = new YoVariableList(name);
-      yoVariableList.addVariables(yoVariables);
+      yoVariableList.addAll(yoVariables);
 
       return yoVariableList;
    }
@@ -2108,7 +2108,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       {
          YoVariable var = currentlyMatched.get(i);
 
-         tempList.addVariable(var);
+         tempList.add(var);
       }
 
       List<YoVariable> variables = new ArrayList<>();

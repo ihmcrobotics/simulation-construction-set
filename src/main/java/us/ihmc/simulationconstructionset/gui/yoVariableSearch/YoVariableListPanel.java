@@ -49,7 +49,7 @@ public class YoVariableListPanel extends YoVariablePanel
    @Override
    protected YoVariable getYoVariable(int index)
    {
-      return varList.getVariable(index);
+      return varList.get(index);
    }
 
    @Override
@@ -68,7 +68,7 @@ public class YoVariableListPanel extends YoVariablePanel
    {
       if (v != null)
       {
-         varList.addVariable(v);
+         varList.add(v);
 
          EventDispatchThreadHelper.invokeAndWait(new Runnable()
          {
@@ -91,7 +91,7 @@ public class YoVariableListPanel extends YoVariablePanel
          this.remove(field);
       }
 
-      varList.removeVariable(v);
+      varList.remove(v);
       invalidate();
       revalidate();
       updateUI();

@@ -1859,7 +1859,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       for (int varNum = 0; varNum < list.size(); varNum++)
       {
-         YoVariable var = list.getVariable(varNum);
+         YoVariable var = list.get(varNum);
 
          if (varNum != 0)
          {

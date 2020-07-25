@@ -1846,7 +1846,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       if (regularExpressions != null)
          Stream.of(regularExpressions).map(regex -> YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), rootRegistry)).forEach(matchedVariables::addAll);
       YoVariableList varList = new YoVariableList(name);
-      varList.addVariables(matchedVariables);
+      varList.addAll(matchedVariables);
 
       addVarListVarPanel(varList);
    }

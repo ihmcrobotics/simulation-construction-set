@@ -242,7 +242,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    private void addVariablesFromARobot(Robot robot)
    {
       myDataBuffer.addVariables(robot.getRobotsYoRegistry().subtreeVariables());
-      myCombinedVarList.addVariables(robot.getRobotsYoRegistry().subtreeVariables());
+      myCombinedVarList.addAll(robot.getRobotsYoRegistry().subtreeVariables());
    }
 
    public YoBuffer getDataBuffer()
@@ -405,7 +405,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public void addVarList(YoVariableList newVarList)
    {
-      myCombinedVarList.addVariables(newVarList);
+      myCombinedVarList.addAll(newVarList);
       myDataBuffer.addVariables(newVarList.getVariables());
    }
 

@@ -383,7 +383,7 @@ public class DataFileReader
          YoRegistry registry = YoFactories.getOrCreateAndAddRegistry(rootRegistryToAddNewVariablesTo, nameSpace);
 
          newVariable = new YoDouble(variableName, "Created Variable in DataFileReader", registry);
-         newVars.addVariable(newVariable);
+         newVars.add(newVariable);
       }
 
       YoBufferVariableEntry newEntry = dataBuffer.getEntry(newVariable);
@@ -714,7 +714,7 @@ public class DataFileReader
                   variable = new YoDouble(varName, registry);
                }
 
-               varList.addVariable(variable);
+               varList.add(variable);
             }
             else
             {
