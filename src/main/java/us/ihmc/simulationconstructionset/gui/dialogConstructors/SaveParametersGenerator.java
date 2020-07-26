@@ -29,7 +29,7 @@ public class SaveParametersGenerator implements SaveParametersConstructor
          XmlParameterWriter writer = new XmlParameterWriter();
          for (YoRegistry child : fileChooser.getRegistries())
          {
-            writer.writeParametersInRegistry(child);
+            writer.addParameters(child);
          }
          try
          {
