@@ -380,7 +380,7 @@ public class DataFileReader
          NameSpace nameSpace = new NameSpace(varName).getParent();
          String variableName = new NameSpace(varName).getShortName();
 
-         YoRegistry registry = YoFactories.getOrCreateAndAddRegistry(rootRegistryToAddNewVariablesTo, nameSpace);
+         YoRegistry registry = YoFactories.findOrCreateRegistry(rootRegistryToAddNewVariablesTo, nameSpace);
 
          newVariable = new YoDouble(variableName, "Created Variable in DataFileReader", registry);
          newVars.add(newVariable);
@@ -699,7 +699,7 @@ public class DataFileReader
             {
                if (nameSpace != null)
                {
-                  YoRegistry registryToUse = YoFactories.getOrCreateAndAddRegistry(registry, nameSpace);
+                  YoRegistry registryToUse = YoFactories.findOrCreateRegistry(registry, nameSpace);
                   if (registryToUse == null)
                   {
                      if (printErrorForMissingVariables)

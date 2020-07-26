@@ -22,8 +22,8 @@ public class VariablesThatShouldMatchListTest
       YoRegistry registryOne = new YoRegistry("root");
       YoRegistry registryTwo = new YoRegistry("root");
 
-      YoFactories.getOrCreateAndAddRegistry(registryOne, new NameSpace("root.one.two.three.four"));
-      YoFactories.getOrCreateAndAddRegistry(registryTwo, new NameSpace("root.one.two.three.four"));
+      YoFactories.findOrCreateRegistry(registryOne, new NameSpace("root.one.two.three.four"));
+      YoFactories.findOrCreateRegistry(registryTwo, new NameSpace("root.one.two.three.four"));
 
       ArrayList<YoDouble[]> theseShouldMatch = new ArrayList<>();
 
@@ -132,8 +132,8 @@ public class VariablesThatShouldMatchListTest
    private YoDouble[] createAndAddVariable(String name, String fullNameSpace, YoRegistry rootRegistryOne, YoRegistry rootRegistryTwo)
    {
       YoDouble[] ret = new YoDouble[2];
-      ret[0] = new YoDouble(name, YoFactories.getOrCreateAndAddRegistry(rootRegistryOne, new NameSpace(fullNameSpace)));
-      ret[1] = new YoDouble(name, YoFactories.getOrCreateAndAddRegistry(rootRegistryTwo, new NameSpace(fullNameSpace)));
+      ret[0] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryOne, new NameSpace(fullNameSpace)));
+      ret[1] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryTwo, new NameSpace(fullNameSpace)));
 
       return ret;
    }
