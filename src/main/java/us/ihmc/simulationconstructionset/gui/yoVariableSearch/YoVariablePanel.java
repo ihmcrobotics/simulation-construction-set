@@ -63,7 +63,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
    private static final Color REGULAR_COLOR = Color.black;
    private static final Color SELECTED_COLOR = Color.red;
 
-   private static boolean showNameSpace = false;
+   private static boolean showNamespace = false;
 
    private final YoVariableSearchPanel searchPanel;
 
@@ -72,9 +72,9 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
       variableChangedListeners.add(listener);
    }
 
-   public static boolean areNameSpacesShown()
+   public static boolean areNamespacesShown()
    {
-      return showNameSpace;
+      return showNamespace;
    }
 
    public static void removeVariableChangedListener(YoVariableChangedListener listener)
@@ -82,9 +82,9 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
       variableChangedListeners.remove(listener);
    }
 
-   public static void addNameSpaceToVarNames()
+   public static void addNamespaceToVarNames()
    {
-      showNameSpace = !showNameSpace;
+      showNamespace = !showNamespace;
    }
 
    public YoVariablePanel(String name, SelectedVariableHolder holder, YoVariablePanelJPopupMenu varPanelJPopupMenu, YoVariableSearchPanel searchPanel)
@@ -308,9 +308,9 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
       String formattedName;
       FontMetrics fontMetrics = graphics.getFontMetrics();
       String name = "";
-      if (showNameSpace)
+      if (showNamespace)
       {
-         name = v.getNameSpace().getShortName() + "." + v.getName();
+         name = v.getNamespace().getShortName() + "." + v.getName();
       }
       else
          name = v.getName();

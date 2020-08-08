@@ -344,19 +344,19 @@ public class SimulationGUITestFixture
       playbackPropertiesMenu.click();
    }
 
-   public void selectNameSpaceTab()
+   public void selectNamespaceTab()
    {
       JTabbedPaneFixture combinedVarPanelTabbedPane = focusedWindow.tabbedPane("CombinedVarPanel");
-      combinedVarPanelTabbedPane.selectTab("Name Space");
+      combinedVarPanelTabbedPane.selectTab("Namespace");
    }
 
-   public void selectNameSpace(String nameSpace)
+   public void selectNamespace(String namespace)
    {
       JTabbedPaneFixture combinedVarPanelTabbedPane = focusedWindow.tabbedPane("CombinedVarPanel");
-      combinedVarPanelTabbedPane.selectTab("Name Space");
+      combinedVarPanelTabbedPane.selectTab("Namespace");
       JTreeFixture tree = focusedWindow.tree();
 
-      tree.doubleClickPath(nameSpace);
+      tree.doubleClickPath(namespace);
    }
 
    public void selectSearchTab()

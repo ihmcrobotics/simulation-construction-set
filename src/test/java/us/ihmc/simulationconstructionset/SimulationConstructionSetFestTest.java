@@ -56,13 +56,13 @@ public class SimulationConstructionSetFestTest
       testFixture.removeAllGraphs();
       testFixture.removeAllEntryBoxes();
 
-      testFixture.selectNameSpaceTab();
-      testFixture.selectNameSpace("root/RegistryOne");
+      testFixture.selectNamespaceTab();
+      testFixture.selectNamespace("root/RegistryOne");
       testFixture.selectVariableInOpenTab("enumForTests");
       ThreadTools.sleep(500);
 
-      testFixture.selectNameSpaceTab();
-      testFixture.selectNameSpace("root/RegistryOne/RegistryTwo");
+      testFixture.selectNamespaceTab();
+      testFixture.selectNamespace("root/RegistryOne/RegistryTwo");
       testFixture.selectVariableInOpenTab("booleanForTests");
       ThreadTools.sleep(500);
 
@@ -102,7 +102,7 @@ public class SimulationConstructionSetFestTest
       assertTrue(enumForTests.getEnumValue() == Axis3D.Z);
 
       // Search for variables, change their values, and plot them:
-      //    testFixture.selectNameSpaceTab();
+      //    testFixture.selectNamespaceTab();
       //    ThreadTools.sleep(1000);
 
       testFixture.selectSearchTab();

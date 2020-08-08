@@ -119,21 +119,21 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    }
 
    @Override
-   public YoVariable findVariable(String nameSpace, String varname)
+   public YoVariable findVariable(String namespace, String varname)
    {
-      return myDataBuffer.findVariable(nameSpace, varname);
+      return myDataBuffer.findVariable(namespace, varname);
    }
 
    @Override
-   public boolean hasUniqueVariable(String nameSpace, String varname)
+   public boolean hasUniqueVariable(String namespace, String varname)
    {
-      return myDataBuffer.hasUniqueVariable(nameSpace, varname);
+      return myDataBuffer.hasUniqueVariable(namespace, varname);
    }
 
    @Override
-   public List<YoVariable> findVariables(String nameSpace, String varname)
+   public List<YoVariable> findVariables(String namespace, String varname)
    {
-      return myDataBuffer.findVariables(nameSpace, varname);
+      return myDataBuffer.findVariables(namespace, varname);
    }
 
    @Override
@@ -143,9 +143,9 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    }
 
    @Override
-   public List<YoVariable> findVariables(YoNamespace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace namespace)
    {
-      return myDataBuffer.findVariables(nameSpace);
+      return myDataBuffer.findVariables(namespace);
    }
 
    public Simulation(Robot robot, int dataBufferSize)

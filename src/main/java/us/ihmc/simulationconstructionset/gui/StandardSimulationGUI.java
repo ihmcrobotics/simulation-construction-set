@@ -112,7 +112,7 @@ import us.ihmc.simulationconstructionset.gui.config.ViewportConfigurationList;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.AllDialogConstructorsHolder;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.GUIEnablerAndDisabler;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.StandardAllDialogConstructorsGenerator;
-import us.ihmc.simulationconstructionset.gui.hierarchyTree.NameSpaceHierarchyTree;
+import us.ihmc.simulationconstructionset.gui.hierarchyTree.NamespaceHierarchyTree;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableListPanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableSearchPanel;
@@ -966,10 +966,10 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       return yoVariableExplorerTabbedPane;
    }
 
-   public void updateNameSpaceHierarchyTree()
+   public void updateNamespaceHierarchyTree()
    {
-      NameSpaceHierarchyTree nameSpaceHierarchyTree = yoVariableExplorerTabbedPane.getNameSpaceHierarchyTree();
-      nameSpaceHierarchyTree.createdNewRegistries();
+      NamespaceHierarchyTree namespaceHierarchyTree = yoVariableExplorerTabbedPane.getNamespaceHierarchyTree();
+      namespaceHierarchyTree.createdNewRegistries();
    }
 
    public void attachExitActionListener(ExitActionListener listener)
@@ -1542,15 +1542,15 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       setCameraTrackingVars(null, xName, yName, zName);
    }
 
-   public void setCameraTrackingVars(String nameSpace, String xName, String yName, String zName)
+   public void setCameraTrackingVars(String namespace, String xName, String yName, String zName)
    {
       YoDouble xVar, yVar, zVar;
 
-      if (nameSpace != null)
+      if (namespace != null)
       {
-         xVar = (YoDouble) rootRegistry.findVariable(nameSpace, xName);
-         yVar = (YoDouble) rootRegistry.findVariable(nameSpace, yName);
-         zVar = (YoDouble) rootRegistry.findVariable(nameSpace, zName);
+         xVar = (YoDouble) rootRegistry.findVariable(namespace, xName);
+         yVar = (YoDouble) rootRegistry.findVariable(namespace, yName);
+         zVar = (YoDouble) rootRegistry.findVariable(namespace, zName);
       }
       else
       {
@@ -1567,15 +1567,15 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       setCameraDollyVars(null, xName, yName, zName);
    }
 
-   public void setCameraDollyVars(String nameSpace, String xName, String yName, String zName)
+   public void setCameraDollyVars(String namespace, String xName, String yName, String zName)
    {
       YoDouble xVar, yVar, zVar;
 
-      if (nameSpace != null)
+      if (namespace != null)
       {
-         xVar = (YoDouble) rootRegistry.findVariable(nameSpace, xName);
-         yVar = (YoDouble) rootRegistry.findVariable(nameSpace, yName);
-         zVar = (YoDouble) rootRegistry.findVariable(nameSpace, zName);
+         xVar = (YoDouble) rootRegistry.findVariable(namespace, xName);
+         yVar = (YoDouble) rootRegistry.findVariable(namespace, yName);
+         zVar = (YoDouble) rootRegistry.findVariable(namespace, zName);
       }
       else
       {

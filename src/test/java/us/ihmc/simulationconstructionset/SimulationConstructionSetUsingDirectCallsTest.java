@@ -164,11 +164,11 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private final String[][][] graphGroupVarsWithConfig = {{cameraTrackingXYZVarNames, {"config_1"}}, {cameraDollyXYZVarNames, {"config_2"}}};
    private final String simpleRobotFirstVariableName = getFirstVariableNameFromRobotRegistry(simpleRobot);
    private final String simpleRobotLastVariableName = getLastVariableNameFromRobotRegistry(simpleRobot);
-   private final String simpleRobotRegistryNameSpace = getRegistryNameSpaceFromRobot(simpleRobot);
+   private final String simpleRobotRegistryNamespace = getRegistryNamespaceFromRobot(simpleRobot);
    private final String[] regularExpressions = new String[] {"gc.*.fs"};
    private final Dimension dimension = new Dimension(250, 350);
 
-   private YoNamespace simpleRegistryNameSpace;
+   private YoNamespace simpleRegistryNamespace;
    private YoRegistry simpleRegistry;
    private YoRegistry dummyRegistry;
    private Link staticLink;
@@ -206,7 +206,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () ->
       {
-         simpleRegistryNameSpace = new YoNamespace(rootRegistryName + "." + simpleRegistryName);
+         simpleRegistryNamespace = new YoNamespace(rootRegistryName + "." + simpleRegistryName);
          simpleRegistry = new YoRegistry(simpleRegistryName);
          dummyRegistry = new YoRegistry("dummyRegistry");
          staticLink = new Link("simpleLink");
@@ -247,7 +247,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       scs.closeAndDispose();
       scs = null;
 
-      simpleRegistryNameSpace = null;
+      simpleRegistryNamespace = null;
       simpleRegistry = null;
       dummyRegistry = null;
       staticLink = null;
@@ -282,7 +282,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(rootRegistryName, rootRegistryNameFromSCS);
 
       scs.addYoRegistry(simpleRegistry);
-      YoRegistry simpleRegistryFromSCS = scs.getRootRegistry().findRegistry(simpleRegistryNameSpace);
+      YoRegistry simpleRegistryFromSCS = scs.getRootRegistry().findRegistry(simpleRegistryNamespace);
       assertEquals(simpleRegistry, simpleRegistryFromSCS);
 
       ExitActionListener exitActionListener = createExitActionListener();
@@ -753,27 +753,27 @@ public class SimulationConstructionSetUsingDirectCallsTest
       assertEquals(simpleRobotFirstVariableName, variableNameFromSCS);
 
       YoVariable yoVariableFromRobot = simpleRobot.findVariable(simpleRobotFirstVariableName);
-      YoVariable yoVariableFromSCS2 = scs.findVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
+      YoVariable yoVariableFromSCS2 = scs.findVariable(simpleRobotRegistryNamespace, simpleRobotFirstVariableName);
       assertEquals(yoVariableFromRobot, yoVariableFromSCS2);
 
-      List<YoVariable> yoVariableArrayFromRobot = simpleRobot.findVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
-      List<YoVariable> yoVariableArrayFromSCS = scs.findVariables(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
+      List<YoVariable> yoVariableArrayFromRobot = simpleRobot.findVariables(simpleRobotRegistryNamespace, simpleRobotFirstVariableName);
+      List<YoVariable> yoVariableArrayFromSCS = scs.findVariables(simpleRobotRegistryNamespace, simpleRobotFirstVariableName);
       assertEquals(yoVariableArrayFromRobot, yoVariableArrayFromSCS);
 
       List<YoVariable> yoVariableFromRobot2 = simpleRobot.findVariables(simpleRobotFirstVariableName);
       List<YoVariable> yoVariableFromSCS3 = scs.findVariables(simpleRobotFirstVariableName);
       assertEquals(yoVariableFromRobot2, yoVariableFromSCS3);
 
-      List<YoVariable> yoVariableFromRobot3 = simpleRobot.findVariables(simpleRobotRegistryNameSpace);
-      List<YoVariable> yoVariableFromSCS4 = scs.findVariables(simpleRobotRegistryNameSpace);
+      List<YoVariable> yoVariableFromRobot3 = simpleRobot.findVariables(simpleRobotRegistryNamespace);
+      List<YoVariable> yoVariableFromSCS4 = scs.findVariables(simpleRobotRegistryNamespace);
       assertEquals(yoVariableFromRobot3, yoVariableFromSCS4);
 
       boolean hasUniqueVariableRobot = simpleRobot.hasUniqueVariable(simpleRobotFirstVariableName);
       boolean hasUniqueVariableSCS = scs.hasUniqueVariable(simpleRobotFirstVariableName);
       assertEquals(hasUniqueVariableRobot, hasUniqueVariableSCS);
 
-      boolean hasUniqueVariableRobot2 = simpleRobot.hasUniqueVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
-      boolean hasUniqueVariableSCS2 = scs.hasUniqueVariable(simpleRobotRegistryNameSpace, simpleRobotFirstVariableName);
+      boolean hasUniqueVariableRobot2 = simpleRobot.hasUniqueVariable(simpleRobotRegistryNamespace, simpleRobotFirstVariableName);
+      boolean hasUniqueVariableSCS2 = scs.hasUniqueVariable(simpleRobotRegistryNamespace, simpleRobotFirstVariableName);
       assertEquals(hasUniqueVariableRobot2, hasUniqueVariableSCS2);
    }
 
@@ -1992,9 +1992,9 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return yoDoubles;
    }
 
-   private String getRegistryNameSpaceFromRobot(Robot robotModel)
+   private String getRegistryNamespaceFromRobot(Robot robotModel)
    {
-      return robotModel.getRobotsYoRegistry().getNameSpace().getName();
+      return robotModel.getRobotsYoRegistry().getNamespace().getName();
    }
 
    private String getFirstVariableNameFromRobotRegistry(Robot robotModel)

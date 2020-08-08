@@ -22,8 +22,8 @@ import javax.swing.event.ChangeListener;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.commands.WriteDataCommandExecutor;
-import us.ihmc.simulationconstructionset.gui.hierarchyTree.NameSpaceHierarchyTree;
-import us.ihmc.simulationconstructionset.gui.hierarchyTree.NameSpaceSearchPanel;
+import us.ihmc.simulationconstructionset.gui.hierarchyTree.NamespaceHierarchyTree;
+import us.ihmc.simulationconstructionset.gui.hierarchyTree.NamespaceSearchPanel;
 import us.ihmc.simulationconstructionset.gui.hierarchyTree.RegistrySelectedListener;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
@@ -45,7 +45,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    private YoRegistry visibleVarPanelRegistry;
 
    private JScrollPane scrollPane;
-   private NameSpaceHierarchyTree nameSpaceHierarchyTree;
+   private NamespaceHierarchyTree namespaceHierarchyTree;
    private JSplitPane splitPane;
    private JPanel variableDisplayPanel;
    private YoVariableSearchPanel variableSearchPanel;
@@ -100,8 +100,8 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
       scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-      nameSpaceHierarchyTree = new NameSpaceHierarchyTree(this, frame, writeDataCommandExecutor, rootRegistry);
-      NameSpaceSearchPanel nameSpaceSearchPanel = new NameSpaceSearchPanel(nameSpaceHierarchyTree);
+      namespaceHierarchyTree = new NamespaceHierarchyTree(this, frame, writeDataCommandExecutor, rootRegistry);
+      NamespaceSearchPanel namespaceSearchPanel = new NamespaceSearchPanel(namespaceHierarchyTree);
 
       BookmarkedVariablesPanel bookmarkedVariablesPanel = new BookmarkedVariablesPanel(new YoVariableList("Bookmarked Variables"),
                                                                                        selectedVariableHolder,
@@ -117,7 +117,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       variableDisplayPanel.add(splitPane, BorderLayout.CENTER);
       variableDisplayPanel.add(entryBox, BorderLayout.SOUTH);
 
-      insertTab("Name Space", nameSpaceSearchPanel, tabIndex++);
+      insertTab("Name Space", namespaceSearchPanel, tabIndex++);
       insertTab("Variables", variableDisplayPanel, tabIndex++);
 
       tabPane.setSelectedIndex(0);
@@ -147,7 +147,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
    // public void addVisibleVarPanel(VarPanel varPanel)
    // {
    //    // ***jjc removed this because the tree is now generated based on the root tree
-   //    // nameSpaceHierarchyTree.addNode(varPanel);
+   //    // namespaceHierarchyTree.addNode(varPanel);
    //    
    ////     System.out.println("Adding visible varPanel: " + varPanel.getName());
    ////     varPanels.put(varPanel.getName(), varPanel);
@@ -164,15 +164,15 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       setVisibleVarPanel(extraVarPanel, null);
    }
 
-   public void setVisibleVarPanel(String nameSpaceName)
+   public void setVisibleVarPanel(String namespaceName)
    {
-      YoNamespace fullNameSpace = new YoNamespace(nameSpaceName);
+      YoNamespace fullNamespace = new YoNamespace(namespaceName);
 
-      YoRegistry registry = rootRegistry.findRegistry(fullNameSpace);
+      YoRegistry registry = rootRegistry.findRegistry(fullNamespace);
 
       if (registry == null)
       {
-         System.err.println("CombinedVarPanel.setVisibleVarPanel() can't find registry named " + nameSpaceName);
+         System.err.println("CombinedVarPanel.setVisibleVarPanel() can't find registry named " + namespaceName);
       }
 
       setVisibleVarPanel(registry);
@@ -280,7 +280,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
          scrollPane = null;
       }
 
-      nameSpaceHierarchyTree = null;
+      namespaceHierarchyTree = null;
 
       if (splitPane != null)
       {
@@ -314,15 +314,15 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       }
    }
 
-   public void showNameSpace(YoRegistry titleOfNameSpace)
+   public void showNamespace(YoRegistry titleOfNamespace)
    {
-      tabPane.setSelectedComponent(nameSpaceHierarchyTree);
-      nameSpaceHierarchyTree.showNameSpace(titleOfNameSpace);
+      tabPane.setSelectedComponent(namespaceHierarchyTree);
+      namespaceHierarchyTree.showNamespace(titleOfNamespace);
    }
 
-   public NameSpaceHierarchyTree getNameSpaceHierarchyTree()
+   public NamespaceHierarchyTree getNamespaceHierarchyTree()
    {
-      return nameSpaceHierarchyTree;
+      return namespaceHierarchyTree;
    }
 
    @Override
@@ -374,9 +374,9 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
       @Override
       public void actionPerformed(ActionEvent e)
       {
-         if (nameSpaceHierarchyTree != null)
+         if (namespaceHierarchyTree != null)
          {
-            nameSpaceHierarchyTree.filterParameters(onlyParameters.isSelected());
+            namespaceHierarchyTree.filterParameters(onlyParameters.isSelected());
          }
 
          if (visibleVarPanelRegistry != null)

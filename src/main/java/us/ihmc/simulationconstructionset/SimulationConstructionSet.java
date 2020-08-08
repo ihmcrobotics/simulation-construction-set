@@ -629,7 +629,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
                if (myGUI != null)
                {
-                  myGUI.updateNameSpaceHierarchyTree();
+                  myGUI.updateNamespaceHierarchyTree();
                }
             }
          }
@@ -816,15 +816,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public YoVariable findVariable(String nameSpace, String varname)
+   public YoVariable findVariable(String namespace, String varname)
    {
-      return mySimulation.findVariable(nameSpace, varname);
+      return mySimulation.findVariable(namespace, varname);
    }
 
    @Override
-   public List<YoVariable> findVariables(String nameSpace, String varname)
+   public List<YoVariable> findVariables(String namespace, String varname)
    {
-      return mySimulation.findVariables(nameSpace, varname);
+      return mySimulation.findVariables(namespace, varname);
    }
 
    @Override
@@ -834,9 +834,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public List<YoVariable> findVariables(YoNamespace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace namespace)
    {
-      return mySimulation.findVariables(nameSpace);
+      return mySimulation.findVariables(namespace);
    }
 
    @Override
@@ -846,9 +846,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public boolean hasUniqueVariable(String nameSpace, String varname)
+   public boolean hasUniqueVariable(String namespace, String varname)
    {
-      return mySimulation.hasUniqueVariable(nameSpace, varname);
+      return mySimulation.hasUniqueVariable(namespace, varname);
    }
 
    /**
@@ -1088,16 +1088,16 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * camera tracks when tracking is enabled. By default the camera is set to track the Robot's x, y
     * and z position if it exists.
     *
-    * @param nameSpace the name space of the variables.
+    * @param namespace the name space of the variables.
     * @param xName     Name of the YoVariable to be referenced for x direction tracking.
     * @param yName     Name of the YoVariable to be referenced for y direction tracking.
     * @param zName     Name of the YoVariable to be referenced for z direction tracking.
     */
-   public void setCameraTrackingVars(String nameSpace, String xName, String yName, String zName)
+   public void setCameraTrackingVars(String namespace, String xName, String yName, String zName)
    {
       if (myGUI != null)
       {
-         myGUI.setCameraTrackingVars(nameSpace, xName, yName, zName);
+         myGUI.setCameraTrackingVars(namespace, xName, yName, zName);
       }
    }
 
@@ -1123,16 +1123,16 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * follows when dolly is enabled. By default the camera is set to follow the Robot's x, y and z
     * position if it exists.
     *
-    * @param nameSpace the name space of the variables.
+    * @param namespace the name space of the variables.
     * @param xName     Name of the YoVariable to be referenced for x direction following.
     * @param yName     Name of the YoVariable to be referenced for y direction following.
     * @param zName     Name of the YoVariable to be referenced for z direction following.
     */
-   public void setCameraDollyVars(String nameSpace, String xName, String yName, String zName)
+   public void setCameraDollyVars(String namespace, String xName, String yName, String zName)
    {
       if (myGUI != null)
       {
-         myGUI.setCameraDollyVars(nameSpace, xName, yName, zName);
+         myGUI.setCameraDollyVars(namespace, xName, yName, zName);
       }
    }
 
@@ -4818,7 +4818,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void setParameterRootPath(YoRegistry registry)
    {
-      parameterRootPath = registry.getNameSpace();
+      parameterRootPath = registry.getNamespace();
    }
 
    /**

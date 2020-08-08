@@ -284,7 +284,7 @@ public class DataFileWriter
             YoBufferVariableEntry entry = entries.get(i);
             YoVariable variable = entry.getVariable();
 
-            List<String> subNames = variable.getNameSpace().getSubNames();
+            List<String> subNames = variable.getNamespace().getSubNames();
             int subNameDepth = 0;
 
             if (vars.contains(variable))
@@ -599,10 +599,10 @@ public class DataFileWriter
 
          for (YoVariable variable : variables)
          {
-            String nameSpaceName = variable.getRegistry().getNameSpace().getName();
+            String namespaceName = variable.getRegistry().getNamespace().getName();
             String variableName = variable.getName();
             String variableValue = Double.toString(variable.getValueAsDouble());
-            out.write(nameSpaceName + "." + variableName + " = " + variableValue + ";\n");
+            out.write(namespaceName + "." + variableName + " = " + variableValue + ";\n");
          }
 
          out.close();

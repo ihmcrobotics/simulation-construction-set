@@ -1908,21 +1908,21 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    @Override
-   public YoVariable findVariable(String nameSpaceEnding, String name)
+   public YoVariable findVariable(String namespaceEnding, String name)
    {
-      return getRobotsYoRegistry().findVariable(nameSpaceEnding, name);
+      return getRobotsYoRegistry().findVariable(namespaceEnding, name);
    }
 
    @Override
-   public boolean hasUniqueVariable(String nameSpaceEnding, String name)
+   public boolean hasUniqueVariable(String namespaceEnding, String name)
    {
-      return getRobotsYoRegistry().hasUniqueVariable(nameSpaceEnding, name);
+      return getRobotsYoRegistry().hasUniqueVariable(namespaceEnding, name);
    }
 
    @Override
-   public List<YoVariable> findVariables(String nameSpaceEnding, String name)
+   public List<YoVariable> findVariables(String namespaceEnding, String name)
    {
-      return getRobotsYoRegistry().findVariables(nameSpaceEnding, name);
+      return getRobotsYoRegistry().findVariables(namespaceEnding, name);
    }
 
    @Override
@@ -1932,9 +1932,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    @Override
-   public List<YoVariable> findVariables(YoNamespace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace namespace)
    {
-      return getRobotsYoRegistry().findVariables(nameSpace);
+      return getRobotsYoRegistry().findVariables(namespace);
    }
 
    public List<Graphics3DObject> getStaticLinkGraphics()

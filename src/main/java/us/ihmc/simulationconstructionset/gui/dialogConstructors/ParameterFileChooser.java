@@ -88,11 +88,11 @@ public class ParameterFileChooser
          }
          else
          {
-            YoNamespace fullNameSpace;
+            YoNamespace fullNamespace;
 
             try
             {
-               fullNameSpace = new YoNamespace(rootPath.getText().trim());
+               fullNamespace = new YoNamespace(rootPath.getText().trim());
             }
             catch (RuntimeException e)
             {
@@ -102,7 +102,7 @@ public class ParameterFileChooser
 
             try
             {
-               YoRegistry root = registry.findRegistry(fullNameSpace);
+               YoRegistry root = registry.findRegistry(fullNamespace);
                registries = Collections.unmodifiableList(root.getChildren());
             }
             catch (RuntimeException e)

@@ -17,14 +17,14 @@ import javax.swing.tree.TreeCellRenderer;
 
 import us.ihmc.yoVariables.registry.YoRegistry;
 
-public class NameSpaceHierarchyNodeRenderer extends JPanel implements TreeCellRenderer
+public class NamespaceHierarchyNodeRenderer extends JPanel implements TreeCellRenderer
 {
    private static final long serialVersionUID = -6793795042915360102L;
 
    protected TreeLabel label;
    private final HashMap<DefaultMutableTreeNode, YoRegistry> treeNodeRegistryMap;
 
-   public NameSpaceHierarchyNodeRenderer(HashMap<DefaultMutableTreeNode, YoRegistry> treeNodeRegistryMap)
+   public NamespaceHierarchyNodeRenderer(HashMap<DefaultMutableTreeNode, YoRegistry> treeNodeRegistryMap)
    {
       setLayout(null);
       add(label = new TreeLabel());

@@ -377,10 +377,10 @@ public class DataFileReader
 
       if (newVariable == null)
       {
-         YoNamespace nameSpace = new YoNamespace(varName).getParent();
+         YoNamespace namespace = new YoNamespace(varName).getParent();
          String variableName = new YoNamespace(varName).getShortName();
 
-         YoRegistry registry = YoFactories.findOrCreateRegistry(rootRegistryToAddNewVariablesTo, nameSpace);
+         YoRegistry registry = YoFactories.findOrCreateRegistry(rootRegistryToAddNewVariablesTo, namespace);
 
          newVariable = new YoDouble(variableName, "Created Variable in DataFileReader", registry);
          newVars.add(newVariable);
@@ -680,14 +680,14 @@ public class DataFileReader
 
          String varName = line.substring(0, equalsIndex).trim();
          String varVal = line.substring(equalsIndex + 1, semiIndex).trim();
-         YoNamespace nameSpace = new YoNamespace(varName).getParent();
+         YoNamespace namespace = new YoNamespace(varName).getParent();
 
-         if (nameSpace != null && registry != null)
+         if (namespace != null && registry != null)
          {
             varName = new YoNamespace(varName).getShortName();
 
-            if (!nameSpace.startsWith(registry.getNameSpace()))
-               nameSpace.prepend(registry.getNameSpace());
+            if (!namespace.startsWith(registry.getNamespace()))
+               namespace.prepend(registry.getNamespace());
          }
 
          YoVariable variable = varList.findVariable(varName);
@@ -697,9 +697,9 @@ public class DataFileReader
          {
             if (createMissingVariables)
             {
-               if (nameSpace != null)
+               if (namespace != null)
                {
-                  YoRegistry registryToUse = YoFactories.findOrCreateRegistry(registry, nameSpace);
+                  YoRegistry registryToUse = YoFactories.findOrCreateRegistry(registry, namespace);
                   if (registryToUse == null)
                   {
                      if (printErrorForMissingVariables)

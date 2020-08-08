@@ -129,11 +129,11 @@ public class VariablesThatShouldMatchListTest
 
    }
 
-   private YoDouble[] createAndAddVariable(String name, String fullNameSpace, YoRegistry rootRegistryOne, YoRegistry rootRegistryTwo)
+   private YoDouble[] createAndAddVariable(String name, String fullNamespace, YoRegistry rootRegistryOne, YoRegistry rootRegistryTwo)
    {
       YoDouble[] ret = new YoDouble[2];
-      ret[0] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryOne, new YoNamespace(fullNameSpace)));
-      ret[1] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryTwo, new YoNamespace(fullNameSpace)));
+      ret[0] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryOne, new YoNamespace(fullNamespace)));
+      ret[1] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryTwo, new YoNamespace(fullNamespace)));
 
       return ret;
    }

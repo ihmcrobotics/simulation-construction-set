@@ -89,7 +89,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private static Object sourceOfDrag = null;
    private static Object recipientOfDrag = null;
    boolean hadFocus = false;
-   private boolean showNameSpace = false, showBaseLines = false;
+   private boolean showNamespace = false, showBaseLines = false;
    private int focussedBaseLine = 0;
 
    public YoGraph(GraphIndicesHolder graphIndicesHolder, YoGraphRemover yoGraphRemover, SelectedVariableHolder holder, YoBufferVariableEntryHolder dataEntryHolder,
@@ -151,7 +151,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       popupMenu.addFocusListener(this);
       addFocusListener(this);
       setTransferHandler(new YoGraphTransferHandler());
-      showNameSpace = false;
+      showNamespace = false;
    }
 
    public GraphConfiguration getGraphConfiguration()
@@ -1170,10 +1170,10 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          getVariableNameAndValueAtIndex(entry, stringBuffer, graphIndicesHolder.getIndex());
       }
 
-      if (showNameSpace)
+      if (showNamespace)
       {
-         YoNamespace nameSpace = entry.getVariable().getNameSpace();
-         stringBuffer.insert(0, nameSpace);
+         YoNamespace namespace = entry.getVariable().getNamespace();
+         stringBuffer.insert(0, namespace);
       }
 
       int length = Math.min(stringBuffer.length(), charArray.length);
@@ -1216,7 +1216,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
             graphIndicesHolder.tickLater(1);
             break;
          case KeyEvent.VK_ALT:
-            showNameSpace = true;
+            showNamespace = true;
             calculateRequiredEntryPaintWidthsAndRows();
             repaint();
             break;
@@ -1244,7 +1244,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       switch (code)
       {
          case KeyEvent.VK_ALT:
-            showNameSpace = false;
+            showNamespace = false;
             calculateRequiredEntryPaintWidthsAndRows();
             repaint();
             break;
