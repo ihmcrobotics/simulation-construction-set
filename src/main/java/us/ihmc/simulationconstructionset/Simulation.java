@@ -15,7 +15,7 @@ import us.ihmc.simulationconstructionset.scripts.Script;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.yoVariables.buffer.YoBuffer;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.registry.YoVariableHolder;
 import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
@@ -143,7 +143,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    }
 
    @Override
-   public List<YoVariable> findVariables(NameSpace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace nameSpace)
    {
       return myDataBuffer.findVariables(nameSpace);
    }

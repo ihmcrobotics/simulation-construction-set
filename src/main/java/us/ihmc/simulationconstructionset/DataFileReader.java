@@ -15,7 +15,7 @@ import java.util.zip.GZIPInputStream;
 import us.ihmc.simulationconstructionset.robotdefinition.RobotDefinitionFixedFrame;
 import us.ihmc.yoVariables.buffer.YoBuffer;
 import us.ihmc.yoVariables.buffer.YoBufferVariableEntry;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.tools.YoFactories;
@@ -377,8 +377,8 @@ public class DataFileReader
 
       if (newVariable == null)
       {
-         NameSpace nameSpace = new NameSpace(varName).getParent();
-         String variableName = new NameSpace(varName).getShortName();
+         YoNamespace nameSpace = new YoNamespace(varName).getParent();
+         String variableName = new YoNamespace(varName).getShortName();
 
          YoRegistry registry = YoFactories.findOrCreateRegistry(rootRegistryToAddNewVariablesTo, nameSpace);
 
@@ -680,11 +680,11 @@ public class DataFileReader
 
          String varName = line.substring(0, equalsIndex).trim();
          String varVal = line.substring(equalsIndex + 1, semiIndex).trim();
-         NameSpace nameSpace = new NameSpace(varName).getParent();
+         YoNamespace nameSpace = new YoNamespace(varName).getParent();
 
          if (nameSpace != null && registry != null)
          {
-            varName = new NameSpace(varName).getShortName();
+            varName = new YoNamespace(varName).getShortName();
 
             if (!nameSpace.startsWith(registry.getNameSpace()))
                nameSpace.prepend(registry.getNameSpace());

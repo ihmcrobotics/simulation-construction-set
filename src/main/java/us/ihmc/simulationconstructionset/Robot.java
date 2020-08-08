@@ -26,7 +26,7 @@ import us.ihmc.simulationconstructionset.robotdefinition.RobotDefinitionFixedFra
 import us.ihmc.simulationconstructionset.simulatedSensors.LidarMount;
 import us.ihmc.simulationconstructionset.simulatedSensors.WrenchCalculatorInterface;
 import us.ihmc.simulationconstructionset.util.RobotController;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableHolder;
 import us.ihmc.yoVariables.registry.YoVariableList;
@@ -1932,7 +1932,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    @Override
-   public List<YoVariable> findVariables(NameSpace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace nameSpace)
    {
       return getRobotsYoRegistry().findVariables(nameSpace);
    }

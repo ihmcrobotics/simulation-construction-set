@@ -98,7 +98,7 @@ import us.ihmc.yoVariables.buffer.interfaces.KeyPointsHolder;
 import us.ihmc.yoVariables.buffer.interfaces.YoBufferProcessor;
 import us.ihmc.yoVariables.buffer.interfaces.YoBufferReader;
 import us.ihmc.yoVariables.listener.YoRegistryChangedListener;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableHolder;
 import us.ihmc.yoVariables.registry.YoVariableList;
@@ -381,7 +381,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    private final YoGraphicMenuManager yoGraphicMenuManager;
 
-   private NameSpace parameterRootPath = null;
+   private YoNamespace parameterRootPath = null;
    private File defaultParameterFile = null;
 
    public static SimulationConstructionSet generateSimulationFromDataFile(File chosenFile)
@@ -834,7 +834,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public List<YoVariable> findVariables(NameSpace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace nameSpace)
    {
       return mySimulation.findVariables(nameSpace);
    }
@@ -4805,7 +4805,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public NameSpace getParameterRootPath()
+   public YoNamespace getParameterRootPath()
    {
       return parameterRootPath;
    }

@@ -40,7 +40,7 @@ import us.ihmc.yoVariables.buffer.YoBufferBounds;
 import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryHolder;
 import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 import us.ihmc.yoVariables.buffer.interfaces.YoTimeBufferHolder;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 @SuppressWarnings("serial")
@@ -1172,7 +1172,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       if (showNameSpace)
       {
-         NameSpace nameSpace = entry.getVariable().getNameSpace();
+         YoNamespace nameSpace = entry.getVariable().getNameSpace();
          stringBuffer.insert(0, nameSpace);
       }
 

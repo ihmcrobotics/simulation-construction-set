@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import us.ihmc.tools.gui.MyFileFilter;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class ParameterFileChooser
@@ -25,7 +25,7 @@ public class ParameterFileChooser
    private List<YoRegistry> registries;
    private File parameterFile;
 
-   private NameSpace defaultRoot = null;
+   private YoNamespace defaultRoot = null;
    private File parameterFilePath = null;
 
    public ParameterFileChooser()
@@ -47,7 +47,7 @@ public class ParameterFileChooser
       fileChooser.setAccessory(extraPanel);
    }
 
-   public boolean showDialog(Component parent, YoRegistry registry, NameSpace newDefaultRoot, File file, boolean save)
+   public boolean showDialog(Component parent, YoRegistry registry, YoNamespace newDefaultRoot, File file, boolean save)
    {
       if (file != null && file != parameterFilePath) // Default path changed. Browse to this file
       {
@@ -88,11 +88,11 @@ public class ParameterFileChooser
          }
          else
          {
-            NameSpace fullNameSpace;
+            YoNamespace fullNameSpace;
 
             try
             {
-               fullNameSpace = new NameSpace(rootPath.getText().trim());
+               fullNameSpace = new YoNamespace(rootPath.getText().trim());
             }
             catch (RuntimeException e)
             {

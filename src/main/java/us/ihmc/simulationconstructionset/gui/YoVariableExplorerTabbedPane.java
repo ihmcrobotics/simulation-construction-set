@@ -28,7 +28,7 @@ import us.ihmc.simulationconstructionset.gui.hierarchyTree.RegistrySelectedListe
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableSearchPanel;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableList;
 
@@ -166,7 +166,7 @@ public class YoVariableExplorerTabbedPane extends JPanel implements RegistrySele
 
    public void setVisibleVarPanel(String nameSpaceName)
    {
-      NameSpace fullNameSpace = new NameSpace(nameSpaceName);
+      YoNamespace fullNameSpace = new YoNamespace(nameSpaceName);
 
       YoRegistry registry = rootRegistry.findRegistry(fullNameSpace);
 

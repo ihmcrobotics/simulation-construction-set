@@ -67,7 +67,7 @@ import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisua
 import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingCollisionArbiter;
 import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener;
 import us.ihmc.yoVariables.buffer.interfaces.YoBufferProcessor;
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.tools.YoSearchTools;
@@ -168,7 +168,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    private final String[] regularExpressions = new String[] {"gc.*.fs"};
    private final Dimension dimension = new Dimension(250, 350);
 
-   private NameSpace simpleRegistryNameSpace;
+   private YoNamespace simpleRegistryNameSpace;
    private YoRegistry simpleRegistry;
    private YoRegistry dummyRegistry;
    private Link staticLink;
@@ -206,7 +206,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(60), () ->
       {
-         simpleRegistryNameSpace = new NameSpace(rootRegistryName + "." + simpleRegistryName);
+         simpleRegistryNameSpace = new YoNamespace(rootRegistryName + "." + simpleRegistryName);
          simpleRegistry = new YoRegistry(simpleRegistryName);
          dummyRegistry = new YoRegistry("dummyRegistry");
          staticLink = new Link("simpleLink");
