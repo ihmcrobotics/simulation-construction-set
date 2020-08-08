@@ -47,17 +47,17 @@ mainDependencies {
    }
 
    api("us.ihmc.thirdparty.jinput:jinput:200128")
-   api("us.ihmc:ihmc-yovariables:0.9.0-alpha-0")
+   api("us.ihmc:ihmc-yovariables:0.9.0-alpha-1")
    api("us.ihmc:ihmc-video-codecs:2.1.5")
    api("us.ihmc:euclid:0.15.0")
    api("us.ihmc:euclid-frame:0.15.0")
    api("us.ihmc:euclid-shape:0.15.0")
    api("us.ihmc:euclid-geometry:0.15.0")
    api("us.ihmc:ihmc-commons:0.30.0")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.18.0-yovariables-0.9.0-alpha-0")
-   api("us.ihmc:ihmc-robot-description:0.19.0-yovariables-0.9.0-alpha-0")
-   api("us.ihmc:ihmc-graphics-description:0.18.0-yovariables-0.9.0-alpha-0")
-   api("us.ihmc:ihmc-swing-plotting:0.18.0-yovariables-0.9.0-alpha-0")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.18.0-yovariables-0.9.0-alpha-1")
+   api("us.ihmc:ihmc-robot-description:0.19.0-yovariables-0.9.0-alpha-1")
+   api("us.ihmc:ihmc-graphics-description:0.18.0-yovariables-0.9.0-alpha-1")
+   api("us.ihmc:ihmc-swing-plotting:0.18.0-yovariables-0.9.0-alpha-1")
    api(ihmc.sourceSetProject("utilities"))
 }
 
@@ -67,5 +67,5 @@ testDependencies {
 
 utilitiesDependencies {
    api("us.ihmc:euclid:0.15.0")
-   api("us.ihmc:ihmc-yovariables:0.9.0-alpha-0")
+   api("us.ihmc:ihmc-yovariables:0.9.0-alpha-1")
 }
