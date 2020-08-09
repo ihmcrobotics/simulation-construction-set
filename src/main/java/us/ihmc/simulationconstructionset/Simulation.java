@@ -241,8 +241,8 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    private void addVariablesFromARobot(Robot robot)
    {
-      myDataBuffer.addVariables(robot.getRobotsYoRegistry().subtreeVariables());
-      myCombinedVarList.addAll(robot.getRobotsYoRegistry().subtreeVariables());
+      myDataBuffer.addVariables(robot.getRobotsYoRegistry().collectSubtreeVariables());
+      myCombinedVarList.addAll(robot.getRobotsYoRegistry().collectSubtreeVariables());
    }
 
    public YoBuffer getDataBuffer()

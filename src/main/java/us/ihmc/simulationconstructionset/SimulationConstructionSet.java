@@ -515,7 +515,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       myDataBuffer.addListener(rewoundListenerHandler);
       simulationSynchronizer = mySimulation.getSimulationSynchronizer();
 
-      List<YoVariable> originalRootVariables = rootRegistry.subtreeVariables();
+      List<YoVariable> originalRootVariables = rootRegistry.collectSubtreeVariables();
 
       for (YoVariable yoVariable : originalRootVariables)
       {
@@ -625,7 +625,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
                // System.err.println("Adding a child YoRegistry to the SCS root Registry after the SCS has been started! YoRegistryWasAdded: "
                // + addedRegistry);
 
-               myDataBuffer.addVariables(change.getTargetRegistry().subtreeVariables());
+               myDataBuffer.addVariables(change.getTargetRegistry().collectSubtreeVariables());
 
                if (myGUI != null)
                {

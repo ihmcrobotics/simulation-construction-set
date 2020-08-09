@@ -19,7 +19,7 @@ public class VariablesThatShouldMatchList
 
    public VariablesThatShouldMatchList(YoRegistry registryOne, YoRegistry registryTwo, List<String> exceptions)
    {
-      this(registryOne.subtreeVariables(), registryTwo.subtreeVariables(), exceptions);
+      this(registryOne.collectSubtreeVariables(), registryTwo.collectSubtreeVariables(), exceptions);
    }
 
    public VariablesThatShouldMatchList(YoVariableList varListOne, YoVariableList varListTwo, List<String> exceptions)

@@ -18,7 +18,7 @@ public class YoVariableRegistryParameterPanel extends YoVariablePanel
    {
       super(registry.getName(), holder, varPanelJPopupMenu);
 
-      List<YoVariable> registryVariables = registry.subtreeVariables();
+      List<YoVariable> registryVariables = registry.collectSubtreeVariables();
       for (YoVariable var : registryVariables)
       {
          if (var.isParameter())

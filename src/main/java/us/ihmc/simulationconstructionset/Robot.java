@@ -1904,7 +1904,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    @Override
    public List<YoVariable> getVariables()
    {
-      return getRobotsYoRegistry().subtreeVariables();
+      return getRobotsYoRegistry().collectSubtreeVariables();
    }
 
    @Override

@@ -406,7 +406,7 @@ public class NamespaceHierarchyTree extends JScrollPane implements MouseListener
          TreeNode parentNode = (TreeNode) path.getLastPathComponent();
 
          YoRegistry parentRegistry = treeNodeRegistryMap.get(parentNode);
-         allVariables.addAll(parentRegistry.subtreeVariables());
+         allVariables.addAll(parentRegistry.collectSubtreeVariables());
       }
 
       FileFilter filterFilter = new FileFilter()
@@ -508,7 +508,7 @@ public class NamespaceHierarchyTree extends JScrollPane implements MouseListener
       {
          if (selectedFile.exists())
          {
-            List<YoRegistry> treeNodes = root.subtreeRegistries();
+            List<YoRegistry> treeNodes = root.collectSubtreeRegistries();
 
             // getAllRegistrys(rootRegistry, treeNodes);
 
@@ -549,7 +549,7 @@ public class NamespaceHierarchyTree extends JScrollPane implements MouseListener
       if (selectedFile != null)
       {
          SimpleFileWriter writer = new SimpleFileWriter(selectedFile);
-         List<YoRegistry> treeNodes = root.subtreeRegistries();
+         List<YoRegistry> treeNodes = root.collectSubtreeRegistries();
 
          String outString = "";
          for (YoRegistry node : treeNodes)

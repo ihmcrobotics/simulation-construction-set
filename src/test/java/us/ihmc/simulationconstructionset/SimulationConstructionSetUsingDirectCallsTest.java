@@ -740,7 +740,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
    @Test // timeout = 30000
    public void testGetVariableMethods() throws AWTException
    {
-      List<YoVariable> allVariablesFromRobot = simpleRobot.getRobotsYoRegistry().subtreeVariables();
+      List<YoVariable> allVariablesFromRobot = simpleRobot.getRobotsYoRegistry().collectSubtreeVariables();
       List<YoVariable> allVariablesFromSCS = scs.getVariables();
       assertEquals(allVariablesFromRobot, allVariablesFromSCS);
 

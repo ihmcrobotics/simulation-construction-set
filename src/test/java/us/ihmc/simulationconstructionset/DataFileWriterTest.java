@@ -78,7 +78,7 @@ public class DataFileWriterTest
 
       Robot robot = new Robot("testRobot");
 
-      List<YoVariable> allVariables = rootRegistry.subtreeVariables();
+      List<YoVariable> allVariables = rootRegistry.collectSubtreeVariables();
 
       boolean binary = false;
       boolean compress = false;
@@ -381,7 +381,7 @@ public class DataFileWriterTest
          variable.set(Math.random());
       }
 
-      return rootRegistry.subtreeVariables();
+      return rootRegistry.collectSubtreeVariables();
    }
 
 }
