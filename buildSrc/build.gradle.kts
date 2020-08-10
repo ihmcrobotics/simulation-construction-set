@@ -3,7 +3,7 @@ import com.gradle.publish.MavenCoordinates
 plugins {
    `java-gradle-plugin`
    kotlin("jvm") version "1.3.41"
-   id("com.gradle.plugin-publish") version "0.10.0"
+   id("com.gradle.plugin-publish") version "0.12.0"
 }
 
 group = "us.ihmc"
