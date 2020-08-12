@@ -163,7 +163,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 
                changeLock = false;
             }
-         });
+         }, "JSliderYoVariableControl");
          timer.start();
       }
    }

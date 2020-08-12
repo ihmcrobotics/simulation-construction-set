@@ -4515,7 +4515,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          File file = fileChooser.getSelectedFile();
          SimulationConstructionSet scs = generateSimulationFromDataFile(file);
 
-         Thread thread = new Thread(scs);
+         Thread thread = new Thread(scs, "SimulationConstructionSet");
          thread.start();
       }
       else
