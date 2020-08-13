@@ -172,7 +172,7 @@ public class DynamicGraphicObjectEvaluation
 
       };
 
-      Thread thread = new Thread(runnable);
+      Thread thread = new Thread(runnable, "DynamicGraphicObjectGeneration");
       thread.setDaemon(true);
       thread.start();
    }

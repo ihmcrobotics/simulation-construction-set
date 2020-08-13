@@ -389,18 +389,18 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public static SimulationConstructionSet generateSimulationFromDataFile(File chosenFile)
    {
       // / get file stuff
-      System.out.println("Reading in Robot Configuration");
+      LogTools.info("Reading in Robot Configuration");
       RobotDefinitionFixedFrame robotConfig = new RobotDefinitionFixedFrame();
       robotConfig.createRobotDefinitionFromRobotConfigurationFile(chosenFile);
 
       // make a robot
-      System.out.println("Creating a robot from the configuration.");
+      LogTools.info("Creating a robot from the configuration.");
       Robot robot = new Robot(robotConfig, robotConfig.getRobotName());
 
-      System.out.println("Creating a Simulation Construction Set.");
+      LogTools.info("Creating a Simulation Construction Set.");
       SimulationConstructionSet sim = new SimulationConstructionSet(robot);
 
-      System.out.println("Reading in the data.");
+      LogTools.info("Reading in the data.");
 
       if (chosenFile.canRead()
             && (chosenFile.getName().endsWith(".data") || chosenFile.getName().endsWith(".data.gz") || chosenFile.getName().endsWith(".data.csv")))
@@ -520,7 +520,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       for (YoVariable<?> yoVariable : originalRootVariables)
       {
-         System.out.println("Original Variable: " + yoVariable);
+         LogTools.info("Original Variable: " + yoVariable);
       }
 
       myDataBuffer.addVariables(originalRootVariables);
@@ -607,7 +607,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          @Override
          public void yoVariableWasRegistered(YoVariableRegistry registry, YoVariable<?> registeredYoVariable)
          {
-            // System.err.println("Registering YoVariable to the SCS root Registry after the SCS has been started! yoVariableWasRegistered: "
+            // LogTools.error("Registering YoVariable to the SCS root Registry after the SCS has been started! yoVariableWasRegistered: "
             // + registeredYoVariable);
 
             // Make sure RCS still works with all of this!
@@ -623,7 +623,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          @Override
          public void yoVariableRegistryWasAdded(YoVariableRegistry addedRegistry)
          {
-            // System.err.println("Adding a child YoVariableRegistry to the SCS root Registry after the SCS has been started! yoVariableRegistryWasAdded: "
+            // LogTools.error("Adding a child YoVariableRegistry to the SCS root Registry after the SCS has been started! yoVariableRegistryWasAdded: "
             // + addedRegistry);
 
             myDataBuffer.addVariables(addedRegistry.getAllVariablesIncludingDescendants());
@@ -1359,9 +1359,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private void closeAndDisposeLocal()
    {
       if (DEBUG_CLOSE_AND_DISPOSE)
-         System.out.println("Stopping Simulation Thread");
+         LogTools.info("Stopping Simulation Thread");
 
-      System.out.flush();
       stop();
 
       if (jFrame != null)
@@ -1371,9 +1370,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       if (DEBUG_CLOSE_AND_DISPOSE)
-         System.out.println("Notifying Exit Action Listeners");
+         LogTools.info("Notifying Exit Action Listeners");
 
-      System.out.flush();
       notifyExitActionListeners();
 
       if (rootRegistry != null)
@@ -1387,22 +1385,18 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       if (DEBUG_CLOSE_AND_DISPOSE)
-         System.out.println("Disposing StandardSimulationGUI");
-
-      System.out.flush();
+         LogTools.info("Disposing StandardSimulationGUI");
 
       if (myGUI != null)
       {
          if (DEBUG_CLOSE_AND_DISPOSE)
-            System.out.println("Disposing StandardSimulationGUI and myGUI != null ");
+            LogTools.info("Disposing StandardSimulationGUI and myGUI != null ");
 
          myGUI.closeAndDispose();
       }
 
       if (DEBUG_CLOSE_AND_DISPOSE)
-         System.out.println("Disposing Simulation");//Doesn't reach this in some cases if I add a graph and add t to it!
-
-      System.out.flush();
+         LogTools.info("Disposing Simulation");//Doesn't reach this in some cases if I add a graph and add t to it!
 
       if (mySimulation != null)
       {
@@ -1410,14 +1404,10 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       if (DEBUG_CLOSE_AND_DISPOSE)
-         System.out.println("Disposing of JFrame");
-
-      System.out.flush();
+         LogTools.info("Disposing of JFrame");
 
       if (DEBUG_CLOSE_AND_DISPOSE)
-         System.out.println("Done Closing and Disposing SCS.");
-
-      System.out.flush();
+         LogTools.info("Done Closing and Disposing SCS.");
 
       rootRegistry = null;
       standardAllCommandsExecutor = null;
@@ -1427,7 +1417,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       mySimulation = null;
       jFrame = null;
 
-      //      System.out.println("closeAndDisposeLocal in SCSGUI");
+      //      LogTools.info("closeAndDisposeLocal in SCSGUI");
 
       // Destroy the LWJGL Threads. Not sure if need to do Display.destroy() or not.
       //      Display.destroy();
@@ -2569,16 +2559,16 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
             }
             catch (UnreasonableAccelerationException ex)
             {
-               System.err.println("\nSimulation Stopped due to unreasonable acceleration.");
-               System.err.println("   Simulation either went unstable or is too stiff.");
-               System.err.println("   Try reducing gains, ground stiffness and damping, or DT");
+               LogTools.error("Simulation Stopped due to unreasonable acceleration.");
+               LogTools.error("Simulation either went unstable or is too stiff.");
+               LogTools.error("Try reducing gains, ground stiffness and damping, or DT");
 
                List<Joint> unreasonableAccelerationJoints = ex.getUnreasonableAccelerationJoints();
-               System.err.println("   Joints with an unreasonable acceleration:");
+               LogTools.error("Joints with an unreasonable acceleration:");
 
                for (Joint joint : unreasonableAccelerationJoints)
                {
-                  System.err.println("     " + joint.getName());
+                  LogTools.error("     " + joint.getName());
                }
 
                //               ex.printStackTrace();
@@ -2590,7 +2580,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
             }
             catch (Exception ex)
             {
-               System.err.println("\nException while running simulation! Stack Trace:");
+               LogTools.error("Exception while running simulation! Stack trace:");
                ex.printStackTrace();
                stop();
 
@@ -2599,7 +2589,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
             }
             catch (AssertionError ae)
             {
-               System.err.println("\nAssertionError while running simulation:");
+               LogTools.error("AssertionError while running simulation:");
                ae.printStackTrace();
                stop();
 
@@ -2630,7 +2620,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          }
 
          // foo++;
-         // System.out.println("Tick" + foo);
+         // LogTools.info("Tick" + foo);
       }
 
       isSimulationThreadRunning = false;
@@ -2846,7 +2836,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       long numTicks = (currentTime - nextWakeMillis) / PLAY_CYCLE_TIME_MS + 1;
 
-      // System.out.println("tick number  = "+(Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1)));
+      // LogTools.info("tick number  = "+(Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1)));
       nextWakeMillis = nextWakeMillis + PLAY_CYCLE_TIME_MS * numTicks;
 
       // myDataBuffer.tick(Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1));
@@ -2882,10 +2872,10 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       // if(last> myDataBuffer.ordinal())
       // {
-      ////            System.out.println("times around = "+count);
+      ////            LogTools.info("times around = "+count);
       // last = myDataBuffer.ordinal();
       // }
-      // System.out.println("play Cycle");
+      // LogTools.info("play Cycle");
    }
 
    public Vector<File> saveSimulationAsSequenceOfImages(String path, String NameNoExtension, CaptureDevice captureDevice)
@@ -3938,7 +3928,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public void writeState(String varGroupName, boolean binary, boolean compress, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
-      System.out.println("Writing State File " + chosenFile.getName()); // filename);
+      LogTools.info("Writing State File " + chosenFile.getName()); // filename);
 
       // List vars = myGUI.getVarsFromGroup(varGroup);
       List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
@@ -4074,9 +4064,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          // catch (RepeatDataBufferEntryException ex)
          // {
          // ex.printStackTrace();
-         // System.err.println("Exception in SimulationConstructionSet.addVarList(). VarList has one or more YoVariable repeats including " + ex + ".");
-         // System.err.println("This could be due to having YoVariables with the same name, or due to trying to add a VarList that has been already added,");
-         // System.err.println("or from having a YoVariable in multiple VarLists. Therefore the VarList was not added. VarList name = " + varList.getName()
+         // LogTools.error("Exception in SimulationConstructionSet.addVarList(). VarList has one or more YoVariable repeats including " + ex + ".");
+         // LogTools.error("This could be due to having YoVariables with the same name, or due to trying to add a VarList that has been already added,");
+         // LogTools.error("or from having a YoVariable in multiple VarLists. Therefore the VarList was not added. VarList name = " + varList.getName()
          // + "\nVarList = \n" + varList + "\n");
          // }
       }
@@ -4498,7 +4488,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       catch (Exception e)
       {
-         System.err.println("Error While Saving Robot Configuration File");
+         LogTools.error("Error While Saving Robot Configuration File");
          e.printStackTrace();
       }
 
@@ -4525,12 +4515,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          File file = fileChooser.getSelectedFile();
          SimulationConstructionSet scs = generateSimulationFromDataFile(file);
 
-         Thread thread = new Thread(scs);
+         Thread thread = new Thread(scs, "SimulationConstructionSet");
          thread.start();
       }
       else
       {
-         System.err.println("Open command cancelled by user.");
+         LogTools.error("Open command cancelled by user.");
       }
 
    }
@@ -4679,7 +4669,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
             {
                if (yoGraphicsList == null)
                {
-                  System.out.println("graphics list is null");
+                  LogTools.info("graphics list is null");
                   continue;
                }
 

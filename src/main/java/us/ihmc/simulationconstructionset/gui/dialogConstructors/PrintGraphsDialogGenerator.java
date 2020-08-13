@@ -54,7 +54,7 @@ public class PrintGraphsDialogGenerator implements PrintGraphsDialogConstructor
                }
             }
          }
-      });
+      }, "PrintGraphs");
       t.start();
    }
 

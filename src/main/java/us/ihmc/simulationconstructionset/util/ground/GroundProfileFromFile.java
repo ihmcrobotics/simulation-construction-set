@@ -307,7 +307,7 @@ public class GroundProfileFromFile extends GroundProfileFromHeightMap
       link.setLinkGraphics(linkGraphics);
       scs.addStaticLink(link);
 
-      Thread thread = new Thread(scs);
+      Thread thread = new Thread(scs, "SimulationConstructionSet");
       thread.start();
 
       // 608.799561 21.673950 38.070194
