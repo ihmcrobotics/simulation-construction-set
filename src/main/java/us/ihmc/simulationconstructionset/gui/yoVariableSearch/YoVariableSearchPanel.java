@@ -14,7 +14,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,8 +40,8 @@ import us.ihmc.simulationconstructionset.gui.YoEntryBox;
 import us.ihmc.simulationconstructionset.gui.YoVariableExplorerTabbedPane;
 import us.ihmc.simulationconstructionset.util.AdditionalPanelTools.FrameMap;
 import us.ihmc.simulationconstructionset.util.RegularExpression;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.YoBufferVariableEntry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -53,8 +52,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
    private static final boolean USE_BOOKMARKS_PANEL = false;
 
    private VariableSearchBox variableSearchBox;
-   private final DataBuffer dataBuffer;
-   private final JCheckBox showInitCheckBox;
+   private final YoBuffer dataBuffer;
    private YoVariableListPanel yoVariableSearchResultsPanel;
    private final JTextArea entryBoxDescriptionArea;
    private final YoEntryBox entryBox;
@@ -63,12 +61,12 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
 
    private GridBagConstraints frameLabelConstraint;
    private FrameMap frameMap;
-   private Predicate<YoVariable<?>> filter;
+   private Predicate<YoVariable> filter;
    private final JLabel frameLabel = new JLabel();
 
    private boolean showOnlyParameters = false;
 
-   public YoVariableSearchPanel(SelectedVariableHolder holder, DataBuffer dataBuffer, GraphArrayPanel graphArrayPanel,
+   public YoVariableSearchPanel(SelectedVariableHolder holder, YoBuffer dataBuffer, GraphArrayPanel graphArrayPanel,
                                 EntryBoxArrayTabbedPanel entryBoxArrayPanel, BookmarkedVariablesHolder bookmarkedVariablesHolder,
                                 YoVariableExplorerTabbedPane combinedVarPanel)
    {
@@ -165,8 +163,6 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       c.gridy = 0;
       c.gridheight = 1;
       c.gridwidth = 1;
-      showInitCheckBox = new JCheckBox("Show Variable Init Stacktrace", false);
-      this.add(showInitCheckBox, c);
 
       variableSearchBox = new VariableSearchBox();
       c.gridy++;
@@ -214,7 +210,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          return;
       }
 
-      YoVariable<?> yoVariable = holder.getSelectedVariable();
+      YoVariable yoVariable = holder.getSelectedVariable();
       if (filter.test(yoVariable))
       {
          ReferenceFrame frame = frameMap.getReferenceFrame(yoVariable.getValueAsLongBits());
@@ -234,7 +230,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       }
    }
 
-   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable<?>> filter)
+   public void setFrameMap(FrameMap frameMap, Predicate<YoVariable> filter)
    {
       this.frameMap = frameMap;
       this.filter = filter;
@@ -243,11 +239,6 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
    public void setDoubleClickListener(DoubleClickListener listener)
    {
       yoVariableSearchResultsPanel.setDoubleClickListener(listener);
-   }
-
-   public boolean showInitStackTrace()
-   {
-      return showInitCheckBox.isSelected();
    }
 
    @Override
@@ -281,7 +272,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          @Override
          public void run()
          {
-            YoVariable<?> selectedVariable = holder.getSelectedVariable();
+            YoVariable selectedVariable = holder.getSelectedVariable();
             if (selectedVariable != null)
             {
                entryBox.addVariable(selectedVariable);
@@ -373,8 +364,8 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
       {
          private String searchText;
          private boolean stopSearch = false;
-         private ArrayList<YoVariable<?>> startsWithSearchTextList = new ArrayList<>();
-         private ArrayList<YoVariable<?>> doesNotStartWithSearchTextList = new ArrayList<>();
+         private ArrayList<YoVariable> startsWithSearchTextList = new ArrayList<>();
+         private ArrayList<YoVariable> doesNotStartWithSearchTextList = new ArrayList<>();
 
          public Searcher(String searchText)
          {
@@ -384,14 +375,14 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          @Override
          public void run()
          {
-            final List<YoVariable<?>> matchedVariables = search(searchText);
+            final List<YoVariable> matchedVariables = search(searchText);
 
             if (!stopSearch)
                yoVariableSearchResultsPanel.removeAllVariables();
 
             if (matchedVariables != null)
             {
-               for (YoVariable<?> variable : matchedVariables)
+               for (YoVariable variable : matchedVariables)
                {
                   if (stopSearch)
                      break;
@@ -400,10 +391,10 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
             }
          }
 
-         public List<YoVariable<?>> search(String searchText)
+         public List<YoVariable> search(String searchText)
          {
-            List<YoVariable<?>> ret = new ArrayList<>();
-            List<DataBufferEntry> entries = dataBuffer.getEntries();
+            List<YoVariable> ret = new ArrayList<>();
+            List<YoBufferVariableEntry> entries = dataBuffer.getEntries();
             for (int i = 0; i < entries.size(); i++)
             {
                if (stopSearch)
@@ -411,7 +402,7 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
                   return null;
                }
 
-               DataBufferEntry entry = entries.get(i);
+               YoBufferVariableEntry entry = entries.get(i);
                boolean match = RegularExpression.check(entry.getVariable().getName(), searchText);
 
                if (match && showOnlyParameters)
@@ -431,9 +422,9 @@ public class YoVariableSearchPanel extends JPanel implements ChangeListener
          }
 
          // display matches in the order: exact, starts with, rest
-         private void sortList(List<YoVariable<?>> list)
+         private void sortList(List<YoVariable> list)
          {
-            YoVariable<?> temporaryYoVariable;
+            YoVariable temporaryYoVariable;
             String searchTextLowerCase = searchText.toLowerCase();
 
             for (int i = 0; i < list.size(); i++)

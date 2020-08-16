@@ -12,7 +12,7 @@ import us.ihmc.simulationconstructionset.ExternalForcePoint;
 import us.ihmc.simulationconstructionset.ExternalTorque;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.physics.CollisionShape;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class DefaultCollisionVisualizer implements CollisionHandlerListener
@@ -26,7 +26,7 @@ public class DefaultCollisionVisualizer implements CollisionHandlerListener
    private BagOfBalls collisionPositionsVizOne, collisionPositionsVizTwo;
    private int total;
 
-   private YoVariableRegistry registry;
+   private YoRegistry registry;
 
    private double impulseScale = 0.1;
    private double forceScale = 0.005;
@@ -45,8 +45,8 @@ public class DefaultCollisionVisualizer implements CollisionHandlerListener
    {
       this.scs = scs;
 
-      YoVariableRegistry rootRegistry = scs.getRootRegistry();
-      registry = new YoVariableRegistry(getClass().getSimpleName());
+      YoRegistry rootRegistry = scs.getRootRegistry();
+      registry = new YoRegistry(getClass().getSimpleName());
       rootRegistry.addChild(registry);
 
       collisionPositionsVizOne = new BagOfBalls(50, collisionBallRadius, "CollisionOne", YoAppearance.Red(), registry, yoGraphicsListRegistry);

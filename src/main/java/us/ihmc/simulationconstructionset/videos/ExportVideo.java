@@ -15,6 +15,8 @@ import us.ihmc.jMonkeyEngineToolkit.camera.CameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.ViewportAdapter;
 import us.ihmc.log.LogTools;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.TimeHolder;
 import us.ihmc.simulationconstructionset.commands.ExportVideoCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.RunCommandsExecutor;
@@ -23,7 +25,7 @@ import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.GUIEnablerAndDisabler;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.XMLReaderUtility;
-import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferReader;
 
 public class ExportVideo implements ExportVideoCommandExecutor
 {
@@ -34,15 +36,21 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
    private final SimulationSynchronizer simulationSynchronizer;
 
-   private final DataBufferCommandsExecutor dataBufferCommandsExecutor;
+   private final YoBufferReader dataBufferCommandsExecutor;
    private final GUIEnablerAndDisabler guiEnablerAndDisabler;
    private final RunCommandsExecutor runCommandsExecutor;
 
-   public ExportVideo(TimeHolder timeHolder, StandardSimulationGUI standardSimulationGUI, DataBufferCommandsExecutor dataBufferCommandsExecutor,
+   private final GotoInPointCommandExecutor gotoInPointCommandExecutor;
+   private final GotoOutPointCommandExecutor gotoOutPointCommandExecutor;
+
+   public ExportVideo(TimeHolder timeHolder, StandardSimulationGUI standardSimulationGUI, YoBufferReader dataBufferCommandsExecutor,
+                      GotoInPointCommandExecutor gotoInPointCommandExecutor, GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
                       RunCommandsExecutor runCommandsExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler, ActiveCanvas3DHolder activeCanvas3DHolder,
                       SimulationSynchronizer simulationSynchronizer)
    {
       this.timeHolder = timeHolder;
+      this.gotoInPointCommandExecutor = gotoInPointCommandExecutor;
+      this.gotoOutPointCommandExecutor = gotoOutPointCommandExecutor;
       this.simulationSynchronizer = simulationSynchronizer;
       this.standardSimulationGUI = standardSimulationGUI;
 
@@ -113,10 +121,10 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
       // stop the simulation
       runCommandsExecutor.stop();
-      dataBufferCommandsExecutor.gotoOutPoint();
+      gotoOutPointCommandExecutor.gotoOutPoint();
 
       // go to the start
-      dataBufferCommandsExecutor.gotoInPoint();
+      gotoInPointCommandExecutor.gotoInPoint();
 
       // sleep for a little
       try
@@ -134,7 +142,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
       // TICKS_PER_PLAY_CYCLE = sim.getTicksPerPlayCycle();
 
       String fileNameNoExtension = fileName.substring(0, XMLReaderUtility.getEndIndexOfSubString(0, fileName, ".") - 1);
-      dataBufferCommandsExecutor.setIndex(currentTick);
+      dataBufferCommandsExecutor.setCurrentIndex(currentTick);
 
       try
       {
@@ -196,7 +204,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
       {
       }
 
-      dataBufferCommandsExecutor.gotoInPoint();
+      gotoInPointCommandExecutor.gotoInPoint();
       BufferedImage bufferedImage = captureDevice.exportSnapshotAsBufferedImage();
 
       MP4H264MovieBuilder movieBuilder = null;
@@ -227,7 +235,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
                double currentTime = timeHolder.getTime();
                while (timeHolder.getTime() < currentTime + playBackRate / frameRate && !reachedEndPoint)
                {
-                  reachedEndPoint = dataBufferCommandsExecutor.tick(1);
+                  reachedEndPoint = dataBufferCommandsExecutor.tickAndReadFromBuffer(1);
                }
                standardSimulationGUI.updateRobots();
                standardSimulationGUI.updateGraphs();
@@ -275,11 +283,11 @@ public class ExportVideo implements ExportVideoCommandExecutor
       if (standardSimulationGUI == null)
          return null; // Only works with a GUI
 
-      dataBufferCommandsExecutor.gotoInPoint();
+      gotoInPointCommandExecutor.gotoInPoint();
 
       while (last < dataBufferCommandsExecutor.getOutPoint())
       {
-         last = dataBufferCommandsExecutor.getIndex();
+         last = dataBufferCommandsExecutor.getCurrentIndex();
 
          File file = new File(path, NameNoExtension + "_" + last + ".jpeg");
 
@@ -292,7 +300,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
          {
             printIfDebug("Done Waiting For simulationSynchronizer 2");
 
-            dataBufferCommandsExecutor.tick(1);
+            dataBufferCommandsExecutor.tickAndReadFromBuffer(1);
             standardSimulationGUI.updateRobots();
             standardSimulationGUI.allowTickUpdatesNow();
          }

@@ -5,8 +5,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.gui.actions.dialogActions.AbstractActionTools;
-import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
 
 public class GotoOutPointAction extends AbstractAction
 {

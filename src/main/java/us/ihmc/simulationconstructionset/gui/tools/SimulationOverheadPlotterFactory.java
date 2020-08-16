@@ -123,18 +123,18 @@ public class SimulationOverheadPlotterFactory
 
          if (variableNameToTrack != null && !variableNameToTrack.isEmpty())
          {
-            YoVariable<?> trackingVariable;
-            if ((trackingVariable = simulationConstructionSet.getVariable(variableNameToTrack + "X")) != null && trackingVariable instanceof YoDouble)
+            YoVariable trackingVariable;
+            if ((trackingVariable = simulationConstructionSet.findVariable(variableNameToTrack + "X")) != null && trackingVariable instanceof YoDouble)
             {
                simulationOverheadPlotter.setXVariableToTrack((YoDouble) trackingVariable);
             }
-            if ((trackingVariable = simulationConstructionSet.getVariable(variableNameToTrack + "Y")) != null && trackingVariable instanceof YoDouble)
+            if ((trackingVariable = simulationConstructionSet.findVariable(variableNameToTrack + "Y")) != null && trackingVariable instanceof YoDouble)
             {
                simulationOverheadPlotter.setYVariableToTrack((YoDouble) trackingVariable);
             }
             if (TRACK_YAW)
             {
-               if ((trackingVariable = simulationConstructionSet.getVariable(variableNameToTrack + "Yaw")) != null && trackingVariable instanceof YoDouble)
+               if ((trackingVariable = simulationConstructionSet.findVariable(variableNameToTrack + "Yaw")) != null && trackingVariable instanceof YoDouble)
                {
                   simulationOverheadPlotter.setYawVariableToTrack((YoDouble) trackingVariable);
                }

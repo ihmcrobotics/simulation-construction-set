@@ -2,11 +2,11 @@ package us.ihmc.simulationconstructionset;
 
 import java.io.File;
 
-import us.ihmc.yoVariables.registry.NameSpace;
+import us.ihmc.yoVariables.registry.YoNamespace;
 
 public interface ParameterRootNamespaceHolder
 {
-   public NameSpace getParameterRootPath();
+   public YoNamespace getParameterRootPath();
 
    public File getDefaultParameterFile();
 }

@@ -8,9 +8,9 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.log.LogTools;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.YoVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoVector3D;
 
 /**
  * This class implements a constraint for enforcing the closure of a kinematic loop.
@@ -99,7 +99,7 @@ public class LoopClosureSoftConstraint
     *                                  of the associated link. Note that the link's parent joint is
     *                                  expected to be different from this constraint's parent joint.
     * @param robot                     the robot is used for getting access to its
-    *                                  {@code YoVariableRegistry}.
+    *                                  {@code YoRegistry}.
     * @param constraintForceSubSpace   defines the linear part of the sub-space in which the constraint
     *                                  is to be enforced.
     * @param constraintMomentSubSpace  defines the angular part of the sub-space in which the
@@ -114,7 +114,7 @@ public class LoopClosureSoftConstraint
       this.constraintForceSubSpace.set(constraintForceSubSpace);
       this.constraintMomentSubSpace.set(constraintMomentSubSpace);
 
-      YoVariableRegistry registry = robot.getRobotsYoVariableRegistry();
+      YoRegistry registry = robot.getRobotsYoRegistry();
       proportionalGains = new YoVector3D(name + "ProportionalGain", registry);
       derivativeGains = new YoVector3D(name + "DerivativeGain", registry);
       constraintA = new ExternalForcePoint(name + "A", offsetFromParentJoint, robot);

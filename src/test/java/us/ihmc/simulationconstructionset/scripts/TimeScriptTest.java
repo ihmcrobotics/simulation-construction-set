@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
@@ -18,7 +18,7 @@ import us.ihmc.yoVariables.variable.YoInteger;
 
 public class TimeScriptTest
 {
-   private YoVariableRegistry rootRegistry, registryOne, registryTwo;
+   private YoRegistry rootRegistry, registryOne, registryTwo;
    private YoDouble doubleVariable;
    private YoBoolean booleanVariable;
    private YoInteger integerVariable;
@@ -27,9 +27,9 @@ public class TimeScriptTest
    @BeforeEach
    public void setUp() throws Exception
    {
-      rootRegistry = new YoVariableRegistry("root");
-      registryOne = new YoVariableRegistry("registryOne");
-      registryTwo = new YoVariableRegistry("registryTwo");
+      rootRegistry = new YoRegistry("root");
+      registryOne = new YoRegistry("registryOne");
+      registryTwo = new YoRegistry("registryTwo");
 
       rootRegistry.addChild(registryOne);
       registryOne.addChild(registryTwo);
@@ -61,7 +61,7 @@ public class TimeScriptTest
    @Test // timeout=300000
    public void testEmptyTimeScript()
    {
-      YoVariableRegistry registry = new YoVariableRegistry("Test");
+      YoRegistry registry = new YoRegistry("Test");
 
       TimeScript timeScript = new TimeScript(registry);
 

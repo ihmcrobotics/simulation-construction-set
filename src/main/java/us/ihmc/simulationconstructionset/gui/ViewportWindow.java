@@ -27,6 +27,8 @@ import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.TrackingDollyCameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.ViewportAdapter;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.TimeHolder;
@@ -53,10 +55,10 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDi
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDialogGenerator;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.videos.ExportVideo;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.variable.YoVariableList;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferReader;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
 
 public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCanvas3DHolder, ExtraPanelSelector
 {
@@ -79,7 +81,7 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
    public ViewportWindow(AllCommandsExecutor allCommandsExecutor, YoVariableHolder yoVariableHolder, TimeHolder timeHolder, String selectedViewportName,
                          ViewportConfigurationList viewportConfigurationList, CameraConfigurationList cameraConfigurationList, CameraMountList cameraMountList,
                          Robot[] robots, VarGroupList varGroupList, GraphArrayPanel myGraphArrayPanel, StandardSimulationGUI myGUI,
-                         Graphics3DAdapter graphics3DAdapter, DataBuffer dataBuffer, StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow,
+                         Graphics3DAdapter graphics3DAdapter, YoBuffer dataBuffer, StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow,
                          SimulationSynchronizer simulationSynchronizer)
    {
       this.viewportConfigurationList = viewportConfigurationList;
@@ -124,7 +126,9 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
 
       GUIEnablerAndDisabler guiEnablerAndDisabler = allCommandsExecutor;
       RunCommandsExecutor runCommandsExecutor = allCommandsExecutor;
-      DataBufferCommandsExecutor dataBufferCommandsExecutor = allCommandsExecutor;
+      GotoInPointCommandExecutor gotoInPointCommandExecutor = allCommandsExecutor;
+      GotoOutPointCommandExecutor gotoOutPointCommandExecutor = allCommandsExecutor;
+      YoBufferReader dataBufferCommandsExecutor = allCommandsExecutor;
       final ActiveCanvas3DHolder activeCanvas3DHolder = this;
       ViewportSelectorCommandExecutor viewportSelector = myGUI;
 
@@ -147,6 +151,8 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder,
                                                                               myGUI,
                                                                               dataBufferCommandsExecutor,
+                                                                              gotoInPointCommandExecutor,
+                                                                              gotoOutPointCommandExecutor,
                                                                               runCommandsExecutor,
                                                                               guiEnablerAndDisabler,
                                                                               activeCanvas3DHolder,
@@ -242,10 +248,11 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
    // For Robot Camera Vision:
    public ViewportWindow(AllCommandsExecutor allCommandsExecutor, AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim,
                          Robot[] robots, TimeHolder timeHolder, YoVariableHolder yoVariableHolder, RunCommandsExecutor runCommandsExecutor,
+                         GotoInPointCommandExecutor gotoInPointCommandExecutor, GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
                          GUIEnablerAndDisabler guiEnablerAndDisabler, String selectedViewportName, ViewportConfigurationList viewportConfigurationList,
                          CameraConfigurationList cameraConfigurationList, YoVariableList varList, CameraMountList cameraMountList, VarGroupList varGroupList,
                          GraphArrayPanel myGraphArrayPanel, AboutDialogGenerator aboutEditorPane, StandardSimulationGUI myGUI,
-                         Graphics3DAdapter graphicsAdapter, DataBuffer dataBuffer, StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow,
+                         Graphics3DAdapter graphicsAdapter, YoBuffer dataBuffer, StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow,
                          SimulationSynchronizer simulationSynchronizer)
    {
       this.viewportConfigurationList = viewportConfigurationList;
@@ -289,7 +296,7 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
 
       viewportPanel.setupViews(frame.getGraphicsConfiguration().getDevice(), viewportConfig);
 
-      DataBufferCommandsExecutor dataBufferCommandsExecutor = allCommandsExecutor;
+      YoBufferReader dataBufferCommandsExecutor = allCommandsExecutor;
       final ActiveCanvas3DHolder activeCanvas3DHolder = this;
       ViewportSelectorCommandExecutor viewportSelector = myGUI;
 
@@ -311,6 +318,8 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder,
                                                                               myGUI,
                                                                               dataBufferCommandsExecutor,
+                                                                              gotoInPointCommandExecutor,
+                                                                              gotoOutPointCommandExecutor,
                                                                               runCommandsExecutor,
                                                                               guiEnablerAndDisabler,
                                                                               activeCanvas3DHolder,

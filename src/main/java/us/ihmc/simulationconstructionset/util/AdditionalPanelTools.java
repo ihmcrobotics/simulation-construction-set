@@ -22,7 +22,7 @@ public class AdditionalPanelTools
     * @param frameIndexMap  provides a map from frame index to reference frame.
     * @param variableFilter indicates which variables should be representing a frame.
     */
-   public static void setupFrameView(SimulationConstructionSet scs, FrameMap frameIndexMap, Predicate<YoVariable<?>> variableFilter)
+   public static void setupFrameView(SimulationConstructionSet scs, FrameMap frameIndexMap, Predicate<YoVariable> variableFilter)
    {
       JLabel frameNameLabel = new JLabel();
       scs.addExtraJpanel(frameNameLabel, "Frame Information", false);
@@ -32,7 +32,7 @@ public class AdditionalPanelTools
       gui.setFrameMap(frameIndexMap, variableFilter);
    }
 
-   private static void updateFrameLabel(FrameMap frameIndexMap, Predicate<YoVariable<?>> variableFilter, JLabel frameNameLabel, YoVariable<?> variable)
+   private static void updateFrameLabel(FrameMap frameIndexMap, Predicate<YoVariable> variableFilter, JLabel frameNameLabel, YoVariable variable)
    {
       if (variable == null)
       {

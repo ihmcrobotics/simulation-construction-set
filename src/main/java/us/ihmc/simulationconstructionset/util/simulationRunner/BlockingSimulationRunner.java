@@ -7,7 +7,7 @@ import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.log.LogTools;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -248,22 +248,22 @@ public class BlockingSimulationRunner
 
    public void createValidDesiredICPListener()
    {
-      YoDouble desiredICPX = (YoDouble) scs.getVariable("desiredICPX");
-      YoDouble desiredICPY = (YoDouble) scs.getVariable("desiredICPY");
+      YoDouble desiredICPX = (YoDouble) scs.findVariable("desiredICPX");
+      YoDouble desiredICPY = (YoDouble) scs.findVariable("desiredICPY");
 
-      desiredICPX.addVariableChangedListener(new VariableChangedListener()
+      desiredICPX.addListener(new YoVariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> v)
+         public void changed(YoVariable v)
          {
             if (!Double.isFinite(v.getValueAsDouble()))
                hasICPBeenInvalid.set(true);
          }
       });
-      desiredICPY.addVariableChangedListener(new VariableChangedListener()
+      desiredICPY.addListener(new YoVariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> v)
+         public void changed(YoVariable v)
          {
             if (!Double.isFinite(v.getValueAsDouble()))
                hasICPBeenInvalid.set(true);

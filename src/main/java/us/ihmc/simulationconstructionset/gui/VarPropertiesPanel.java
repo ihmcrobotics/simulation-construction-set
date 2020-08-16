@@ -16,7 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
+import us.ihmc.yoVariables.buffer.YoBufferBounds;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 
 @SuppressWarnings("serial")
 public class VarPropertiesPanel extends JPanel implements ActionListener
@@ -27,19 +28,19 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
    private JRadioButton autoButton, manualButton;
    private JCheckBox invertCheckBox;
 
-   private final DataEntry entry;
+   private final YoBufferVariableEntryReader entry;
 
    private double newMinVal, newMaxVal;
 
-   public VarPropertiesPanel(DataEntry entry)
+   public VarPropertiesPanel(YoBufferVariableEntryReader entry)
    {
       super();
 
       this.entry = entry;
 
       //    entry.reCalcMinMax();
-      newMinVal = entry.getManualMinScaling();
-      newMaxVal = entry.getManualMaxScaling();
+      newMinVal = entry.getCustomLowerBound();
+      newMaxVal = entry.getCustomUpperBound();
       GridBagLayout gridbag = new GridBagLayout();
 
       setLayout(gridbag);
@@ -60,7 +61,7 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       gridbag.setConstraints(scalingLabel, constraints);
       this.add(scalingLabel);
 
-      autoButton = new JRadioButton("Auto", entry.isAutoScaleEnabled());
+      autoButton = new JRadioButton("Auto", !entry.isUsingCustomBounds());
       autoButton.addActionListener(this);
       constraints.gridx = 1;
       constraints.gridy = 0;
@@ -68,7 +69,7 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       gridbag.setConstraints(autoButton, constraints);
       this.add(autoButton);
 
-      manualButton = new JRadioButton("Manual", !entry.isAutoScaleEnabled());
+      manualButton = new JRadioButton("Manual", entry.isUsingCustomBounds());
       manualButton.addActionListener(this);
       constraints.gridx = 3;
       constraints.gridy = 0;
@@ -100,7 +101,7 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       String minValString = numFormat.format(newMinVal);
       minTextField = new JTextField(minValString);
       minTextField.addActionListener(this);
-      if (entry.isAutoScaleEnabled())
+      if (entry.isUsingCustomBounds())
          minTextField.setEnabled(false);
       constraints.gridx = 2;
       constraints.gridy = 1;
@@ -119,7 +120,7 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       String maxValString = numFormat.format(newMaxVal);
       maxTextField = new JTextField(maxValString);
       maxTextField.addActionListener(this);
-      if (entry.isAutoScaleEnabled())
+      if (entry.isUsingCustomBounds())
          maxTextField.setEnabled(false);
       constraints.gridx = 5;
       constraints.gridy = 1;
@@ -144,7 +145,8 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       gridbag.setConstraints(minRangeLabel, constraints);
       this.add(minRangeLabel);
 
-      minValString = numFormat.format(entry.getMin());
+      YoBufferBounds bounds = entry.getBounds();
+      minValString = numFormat.format(bounds.getLowerBound());
       JLabel minTextLabel = new JLabel(minValString);
       constraints.gridx = 2;
       constraints.gridy = 2;
@@ -160,7 +162,7 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       gridbag.setConstraints(maxRangeLabel, constraints);
       this.add(maxRangeLabel);
 
-      maxValString = numFormat.format(entry.getMax());
+      maxValString = numFormat.format(bounds.getUpperBound());
       JLabel maxTextLabel = new JLabel(maxValString);
 
       // jTextField.addActionListener(this);
@@ -187,13 +189,8 @@ public class VarPropertiesPanel extends JPanel implements ActionListener
       updateMinTextField();
       updateMaxTextField();
 
-      entry.setManualScaling(newMinVal, newMaxVal);
-
-      if (autoButton.isSelected())
-         entry.enableAutoScale(true);
-      else
-         entry.enableAutoScale(false);
-
+      entry.setCustomBounds(newMinVal, newMaxVal);
+      entry.useCustomBounds(!autoButton.isSelected());
       entry.setInverted(invertCheckBox.isSelected());
    }
 

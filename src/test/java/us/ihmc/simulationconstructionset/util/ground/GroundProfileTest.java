@@ -28,8 +28,8 @@ import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.util.LinearStickSlipGroundContactModel;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
 
 public abstract class GroundProfileTest
 {
@@ -66,15 +66,15 @@ public abstract class GroundProfileTest
       if (VISUALIZE)
       {
          Robot robot = new Robot("Test");
-         LinearStickSlipGroundContactModel groundModel = new LinearStickSlipGroundContactModel(robot, robot.getRobotsYoVariableRegistry());
+         LinearStickSlipGroundContactModel groundModel = new LinearStickSlipGroundContactModel(robot, robot.getRobotsYoRegistry());
          groundModel.setGroundProfile3D(groundProfile);
 
          robot.setGroundContactModel(groundModel);
 
          YoGraphicsListRegistry yoGraphicsListRegistry = new YoGraphicsListRegistry();
-         bagOfBalls = new BagOfBalls(robot.getRobotsYoVariableRegistry(), yoGraphicsListRegistry);
-         surfaceNormalPointForViz = new YoFramePoint3D("surfaceNormalPointForViz", ReferenceFrame.getWorldFrame(), robot.getRobotsYoVariableRegistry());
-         surfaceNormalViz = new YoFrameVector3D("surfaceNormalVector", ReferenceFrame.getWorldFrame(), robot.getRobotsYoVariableRegistry());
+         bagOfBalls = new BagOfBalls(robot.getRobotsYoRegistry(), yoGraphicsListRegistry);
+         surfaceNormalPointForViz = new YoFramePoint3D("surfaceNormalPointForViz", ReferenceFrame.getWorldFrame(), robot.getRobotsYoRegistry());
+         surfaceNormalViz = new YoFrameVector3D("surfaceNormalVector", ReferenceFrame.getWorldFrame(), robot.getRobotsYoRegistry());
          YoGraphicVector surfaceNormalGraphicVector = new YoGraphicVector("surfaceNormalViz",
                                                                           surfaceNormalPointForViz,
                                                                           surfaceNormalViz,

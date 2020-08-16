@@ -17,7 +17,7 @@ import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.OneDegreeOfFreedomJoint;
 import us.ihmc.simulationconstructionset.PinJoint;
 import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class GroundContactPointBasedWrenchCalculatorTest
 {
@@ -30,8 +30,8 @@ public class GroundContactPointBasedWrenchCalculatorTest
       double epsilon = 1e-7;
       Robot robot = new Robot("testRobot");
 
-      GroundContactPoint point0 = new GroundContactPoint("point0", new Vector3D(), robot.getRobotsYoVariableRegistry());
-      GroundContactPoint point1 = new GroundContactPoint("point1", new Vector3D(), robot.getRobotsYoVariableRegistry());
+      GroundContactPoint point0 = new GroundContactPoint("point0", new Vector3D(), robot.getRobotsYoRegistry());
+      GroundContactPoint point1 = new GroundContactPoint("point1", new Vector3D(), robot.getRobotsYoRegistry());
 
       List<GroundContactPoint> contactPoints = new ArrayList<>();
       contactPoints.add(point0);
@@ -45,7 +45,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
                                                                contactPoints,
                                                                joint,
                                                                new RigidBodyTransform(),
-                                                               new YoVariableRegistry("dummy1"));
+                                                               new YoRegistry("dummy1"));
 
       point0.setForce(new Vector3D(0.0, 0.0, 1.0));
       point1.setForce(new Vector3D(0.0, 0.0, 0.0));
@@ -68,7 +68,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
                                                                contactPoints,
                                                                joint2,
                                                                new RigidBodyTransform(),
-                                                               new YoVariableRegistry("dummy2"));
+                                                               new YoRegistry("dummy2"));
       point0.setForce(new Vector3D(-1.0, 1.0, 0.0));
       point1.setForce(new Vector3D(-1.0, 1.0, 0.0));
 
@@ -94,7 +94,7 @@ public class GroundContactPointBasedWrenchCalculatorTest
       RigidBodyTransform transformToJoint = new RigidBodyTransform();
       transformToJoint.getTranslation().set(new Vector3D(-1.0, -1.0, 0.0));
 
-      calculator = new GroundContactPointBasedWrenchCalculator(joint.getName(), contactPoints, joint3, transformToJoint, new YoVariableRegistry("dummy3"));
+      calculator = new GroundContactPointBasedWrenchCalculator(joint.getName(), contactPoints, joint3, transformToJoint, new YoRegistry("dummy3"));
 
       calculator.calculate();
       wholeWrench = calculator.getWrench();

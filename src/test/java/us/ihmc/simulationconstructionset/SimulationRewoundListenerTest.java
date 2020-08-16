@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.yoVariables.listener.RewoundListener;
 
 public class SimulationRewoundListenerTest
 {
@@ -37,32 +36,32 @@ public class SimulationRewoundListenerTest
          ThreadTools.sleep(10);
       }
       assertEquals(1, simulationRewoundListener.getCount());
-      assertEquals(100, scs.getIndex());
+      assertEquals(100, scs.getCurrentIndex());
 
       scs.gotoInPointNow();
       assertEquals(2, simulationRewoundListener.getCount());
-      assertEquals(0, scs.getIndex());
+      assertEquals(0, scs.getCurrentIndex());
 
       ThreadTools.sleep(100);
-      scs.tick(1);
+      scs.tickAndReadFromBuffer(1);
       assertEquals(3, simulationRewoundListener.getCount());
-      assertEquals(1, scs.getIndex());
+      assertEquals(1, scs.getCurrentIndex());
 
-      scs.tick(5);
+      scs.tickAndReadFromBuffer(5);
       assertEquals(4, simulationRewoundListener.getCount());
-      assertEquals(6, scs.getIndex());
+      assertEquals(6, scs.getCurrentIndex());
 
-      scs.tick(-1);
+      scs.tickAndReadFromBuffer(-1);
       assertEquals(5, simulationRewoundListener.getCount());
-      assertEquals(5, scs.getIndex());
+      assertEquals(5, scs.getCurrentIndex());
 
       scs.tickAndUpdate();
       assertEquals(5, simulationRewoundListener.getCount());
-      assertEquals(6, scs.getIndex());
+      assertEquals(6, scs.getCurrentIndex());
 
       scs.gotoOutPointNow();
       assertEquals(6, simulationRewoundListener.getCount());
-      assertEquals(6, scs.getIndex());
+      assertEquals(6, scs.getCurrentIndex());
 
       scs.play();
       ThreadTools.sleep(1000);

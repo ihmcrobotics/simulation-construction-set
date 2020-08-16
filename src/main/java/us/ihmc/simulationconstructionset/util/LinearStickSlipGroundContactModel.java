@@ -8,13 +8,13 @@ import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.simulationconstructionset.GroundContactModel;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.GroundContactPointsHolder;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class LinearStickSlipGroundContactModel implements GroundContactModel
 {
-   private YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
+   private YoRegistry registry = new YoRegistry(getClass().getSimpleName());
    private static final long serialVersionUID = -2481515446904072547L;
 
    private static final double DEFAULT_K_XY = 1422, DEFAULT_B_XY = 15.6, DEFAULT_K_Z = 125, DEFAULT_B_Z = 300;
@@ -41,33 +41,33 @@ public class LinearStickSlipGroundContactModel implements GroundContactModel
    private List<GroundContactPoint> groundContactPoints;
    private GroundProfile3D groundProfile3D;
 
-   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoVariableRegistry parentRegistry)
+   public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, DEFAULT_K_XY, DEFAULT_B_XY, DEFAULT_K_Z, DEFAULT_B_Z, DEFAULT_ALPHA_SLIP, DEFAULT_ALPHA_STICK, parentRegistry);
    }
 
    public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double alphaSlip, double alphaStick,
-                                            YoVariableRegistry parentRegistry)
+                                            YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, DEFAULT_K_XY, DEFAULT_B_XY, DEFAULT_K_Z, DEFAULT_B_Z, alphaSlip, alphaStick, parentRegistry);
    }
 
    public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy,
-                                            double groundBxy, double groundKz, double groundBz, YoVariableRegistry parentRegistry)
+                                            double groundBxy, double groundKz, double groundBz, YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, groundContactGroupIdentifier, groundKxy, groundBxy, groundKz, groundBz, DEFAULT_ALPHA_SLIP, DEFAULT_ALPHA_STICK,
            parentRegistry);
    }
 
    public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double groundKxy, double groundBxy, double groundKz,
-                                            double groundBz, double groundAlphaSlip, double groundAlphaStick, YoVariableRegistry parentRegistry)
+                                            double groundBz, double groundAlphaSlip, double groundAlphaStick, YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, 0, groundKxy, groundBxy, groundKz, groundBz, groundAlphaSlip, groundAlphaStick, parentRegistry);
    }
 
    public LinearStickSlipGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy,
                                             double groundBxy, double groundKz, double groundBz, double groundAlphaSlip, double groundAlphaStick,
-                                            YoVariableRegistry parentRegistry)
+                                            YoRegistry parentRegistry)
    {
       groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
 

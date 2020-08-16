@@ -22,7 +22,7 @@ import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
 import us.ihmc.simulationconstructionset.util.ground.SlopedPlaneGroundProfile;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class LinearStickSlipGroundContactModelTest
 {
@@ -34,7 +34,7 @@ public class LinearStickSlipGroundContactModelTest
       boolean visualize = false;
 
       SimulationConstructionSet scs = null;
-      YoVariableRegistry registry;
+      YoRegistry registry;
 
       if (visualize)
       {
@@ -43,7 +43,7 @@ public class LinearStickSlipGroundContactModelTest
       }
       else
       {
-         registry = new YoVariableRegistry("TestRegistry");
+         registry = new YoRegistry("TestRegistry");
       }
 
       GroundContactPoint groundContactPoint = new GroundContactPoint("testPoint", registry);
@@ -86,7 +86,7 @@ public class LinearStickSlipGroundContactModelTest
    @Test // timeout=300000
    public void testOnFlatGroundNoSlipCompareWithAndWithoutNormals()
    {
-      YoVariableRegistry registry = new YoVariableRegistry("TestRegistry");
+      YoRegistry registry = new YoRegistry("TestRegistry");
 
       GroundContactPoint groundContactPoint = new GroundContactPoint("testPoint", registry);
       GroundContactPointsHolder pointsHolder = createGroundContactPointsHolder(groundContactPoint);
@@ -183,8 +183,8 @@ public class LinearStickSlipGroundContactModelTest
    @Test // timeout=300000
    public void testOnSlantedGroundCompareWithAndWithoutNormals()
    {
-      YoVariableRegistry registryOnFlat = new YoVariableRegistry("TestRegistryOnFlat");
-      YoVariableRegistry registryOnSlope = new YoVariableRegistry("TestRegistryOnFlat");
+      YoRegistry registryOnFlat = new YoRegistry("TestRegistryOnFlat");
+      YoRegistry registryOnSlope = new YoRegistry("TestRegistryOnFlat");
 
       GroundContactPoint groundContactPointOnFlat = new GroundContactPoint("testPointOnFlat", registryOnFlat);
       GroundContactPointsHolder pointsHolderOnFlat = createGroundContactPointsHolder(groundContactPointOnFlat);

@@ -28,6 +28,8 @@ import com.google.common.base.Defaults;
 
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.AddCameraKeyCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.AddKeyPointCommandExecutor;
 import us.ihmc.simulationconstructionset.commands.CreateNewGraphWindowCommandExecutor;
@@ -101,10 +103,9 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDi
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveRobotConfigurationDialogConstructor;
-import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsHolder;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener.Change;
 
 public class ActionsTest
 {
@@ -277,55 +278,99 @@ public class ActionsTest
    {
       final ToggleKeyPointModeAction[] actionHolder = new ToggleKeyPointModeAction[1];
 
-      final ToggleKeyPointModeCommandExecutor dummyExecutor = new ToggleKeyPointModeCommandExecutor()
+      final KeyPointsHolder dummyExecutor = new KeyPointsHolder()
       {
          boolean toggled = false;
 
          @Override
-         public boolean isKeyPointModeToggled()
+         public boolean areKeyPointsEnabled()
          {
             return toggled;
          }
 
          @Override
-         public void toggleKeyPointMode()
+         public void toggleKeyPoints()
          {
             toggled = !toggled;
          }
 
          @Override
-         public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener commandListener)
-         {
-         }
-
-         @Override
-         public void closeAndDispose()
+         public void addListener(KeyPointsChangedListener listener)
          {
          }
       };
 
-      createMethodTesterForInterface(ToggleKeyPointModeCommandExecutor.class, dummyExecutor).testWithMock(new TestWithMock<ToggleKeyPointModeCommandExecutor>()
+      createMethodTesterForInterface(KeyPointsHolder.class, dummyExecutor).testWithMock(new TestWithMock<KeyPointsHolder>()
       {
          @Override
-         public void test(ToggleKeyPointModeCommandExecutor executor)
+         public void test(KeyPointsHolder executor)
          {
             ToggleKeyPointModeAction action = new ToggleKeyPointModeAction(executor);
-            assertFalse(dummyExecutor.isKeyPointModeToggled());
+            assertFalse(dummyExecutor.areKeyPointsEnabled());
             action.actionPerformed(null);
-            action.updateKeyPointModeStatus();
-            assertTrue(dummyExecutor.isKeyPointModeToggled());
+            action.changed(new Change()
+            {
+               @Override
+               public boolean wasToggled()
+               {
+                  return true;
+               }
+
+               @Override
+               public boolean areKeyPointsEnabled()
+               {
+                  return false;
+               }
+
+               @Override
+               public List<Integer> getRemovedKeyPoints()
+               {
+                  return null;
+               }
+
+               @Override
+               public List<Integer> getAddedKeyPoints()
+               {
+                  return null;
+               }
+            });
+            assertTrue(dummyExecutor.areKeyPointsEnabled());
 
             action.actionPerformed(null);
-            action.updateKeyPointModeStatus();
-            assertFalse(dummyExecutor.isKeyPointModeToggled());
+            action.changed(new Change()
+            {
+               @Override
+               public boolean wasToggled()
+               {
+                  return true;
+               }
+
+               @Override
+               public boolean areKeyPointsEnabled()
+               {
+                  return false;
+               }
+
+               @Override
+               public List<Integer> getRemovedKeyPoints()
+               {
+                  return null;
+               }
+
+               @Override
+               public List<Integer> getAddedKeyPoints()
+               {
+                  return null;
+               }
+            });
+            assertFalse(dummyExecutor.areKeyPointsEnabled());
 
             action.closeAndDispose();
             actionHolder[0] = action;
          }
-      }).assertMethodsCalledInOrder(new MethodInvocation("registerToggleKeyPointModeCommandListener", actionHolder[0]),
-                                    new MethodInvocation("toggleKeyPointMode"),
-                                    new MethodInvocation("toggleKeyPointMode"),
-                                    new MethodInvocation("closeAndDispose"));
+      }).assertMethodsCalledInOrder(new MethodInvocation("addListener", actionHolder[0]),
+                                    new MethodInvocation("toggleKeyPoints"),
+                                    new MethodInvocation("toggleKeyPoints"));
    }
 
    @Test // timeout=300000

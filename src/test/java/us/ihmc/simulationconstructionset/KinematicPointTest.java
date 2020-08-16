@@ -10,8 +10,8 @@ import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
 
 public class KinematicPointTest
 {
@@ -24,7 +24,7 @@ public class KinematicPointTest
    {
       offset = new Vector3D(1.0, 2.0, 3.0);
       robot = new Robot("testRobot");
-      kinematicPoint = new KinematicPoint("testPoint", offset, robot.getRobotsYoVariableRegistry());
+      kinematicPoint = new KinematicPoint("testPoint", offset, robot.getRobotsYoRegistry());
    }
 
    @Test // timeout=300000
@@ -46,7 +46,7 @@ public class KinematicPointTest
    public void testSetOffsetJointWithBothVectorAndXYAndZValuesAsParameters()
    {
       Robot robot = new Robot("testRobot");
-      KinematicPoint kinematicPoint = new KinematicPoint("testPoint", robot.getRobotsYoVariableRegistry());
+      KinematicPoint kinematicPoint = new KinematicPoint("testPoint", robot.getRobotsYoRegistry());
 
       assertTrue(0.0 == kinematicPoint.getOffsetCopy().getX());
       assertTrue(0.0 == kinematicPoint.getOffsetCopy().getY());
@@ -171,7 +171,7 @@ public class KinematicPointTest
    {
       Robot robot = new Robot("testRobot");
 
-      KinematicPoint kinematicPoint = new KinematicPoint("kp_test", robot.getRobotsYoVariableRegistry());
+      KinematicPoint kinematicPoint = new KinematicPoint("kp_test", robot.getRobotsYoRegistry());
 
       Vector3D offset = new Vector3D(0.1, 0.2, 0.3);
       kinematicPoint.setOffsetJoint(offset);

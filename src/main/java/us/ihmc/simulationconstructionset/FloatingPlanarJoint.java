@@ -13,9 +13,9 @@ import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.euclid.yawPitchRoll.YawPitchRoll;
 import us.ihmc.robotics.robotDescription.Plane;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.FloatingPlanarJointPhysics;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
 {
@@ -124,7 +124,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
          rot_name = "roll";
       }
 
-      YoVariableRegistry registry = rob.getRobotsYoVariableRegistry();
+      YoRegistry registry = rob.getRobotsYoRegistry();
 
       q_t1 = new YoDouble("q_" + t1_name, "PlanarFloatingJoint " + t1_name + " position", registry);
       q_t2 = new YoDouble("q_" + t2_name, "PlanarFloatingJoint " + t2_name + " position", registry);
@@ -180,7 +180,7 @@ public class FloatingPlanarJoint extends Joint implements FloatingSCSJoint
          rot_name = varName + "roll";
       }
 
-      YoVariableRegistry registry = rob.getRobotsYoVariableRegistry();
+      YoRegistry registry = rob.getRobotsYoRegistry();
 
       q_t1 = new YoDouble("q_" + t1_name, "PlanarFloatingJoint " + t1_name + " position", registry);
       q_t2 = new YoDouble("q_" + t2_name, "PlanarFloatingJoint " + t2_name + " position", registry);

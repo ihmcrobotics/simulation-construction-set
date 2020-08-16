@@ -14,11 +14,11 @@ public interface YoVariableEntryContainer
 
    public void shutdown(YoEntryBox yoEntryBox);
 
-   public YoVariable<?> getVariable();
+   public YoVariable getVariable();
 
    public void actionPerformed(YoEntryBox yoEntryBox, ActionEvent evt);
 
-   public void bindToVariable(YoEntryBox yoEntryBox, YoVariable<?> variable);
+   public void bindToVariable(YoEntryBox yoEntryBox, YoVariable variable);
 
    public boolean isEventSource(YoEntryBox yoEntryBox, FocusEvent evt);
 
@@ -26,6 +26,6 @@ public interface YoVariableEntryContainer
 
    public void focusLost(YoEntryBox yoEntryBox);
 
-   public void removeVariable(YoVariable<?> variable);
+   public void removeVariable(YoVariable variable);
 
 }

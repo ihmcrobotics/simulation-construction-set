@@ -5,19 +5,19 @@ import static us.ihmc.robotics.Assert.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class VarGroupTest
 {
 
    String variable1, variable2, variable3, variable4;
-   YoVariableRegistry registry;
+   YoRegistry registry;
    VarGroup varGroup;
 
    @BeforeEach
    public void setUp()
    {
-      registry = new YoVariableRegistry("regsitry");
+      registry = new YoRegistry("regsitry");
       variable1 = "doubleYoVariable1";
       variable2 = "doubleYoVariable2";
       variable3 = "doubleYoVariable3";

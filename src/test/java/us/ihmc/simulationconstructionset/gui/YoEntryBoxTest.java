@@ -14,7 +14,7 @@ import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
 
@@ -41,7 +41,7 @@ public class YoEntryBoxTest
 
    private class SimpleController implements RobotControllerWithAttachRobot
    {
-      private YoVariableRegistry registry;
+      private YoRegistry registry;
       private YoEnum<BadGreekEnum> badGreekVariable;
       private YoEnum<LargeEnum> largeEnumVariable;
       private YoEnum<SmallEnum> smallEnumVariable;
@@ -56,7 +56,7 @@ public class YoEntryBoxTest
       @Override
       public void attachRobot(Robot robot)
       {
-         registry = new YoVariableRegistry("controllerRegistry");
+         registry = new YoRegistry("controllerRegistry");
          badGreekVariable = new YoEnum<>("badGreekVariable", registry, BadGreekEnum.class);
          badGreekVariable.set(BadGreekEnum.ALPHA);
          largeEnumVariable = new YoEnum<>("largeEnumVariable", registry, LargeEnum.class);
@@ -74,7 +74,7 @@ public class YoEntryBoxTest
       }
 
       @Override
-      public YoVariableRegistry getYoVariableRegistry()
+      public YoRegistry getYoRegistry()
       {
          return registry;
       }
@@ -170,7 +170,7 @@ public class YoEntryBoxTest
       badGreekVariable.set(BadGreekEnum.BETA);
       Thread.sleep(DELAY_TIME_FOR_HUMAN_CONVENIENT_VIEWING);
       assertEquals(timeVariable, entryBoxes.get(0).getVariableInThisBox());
-      assertEquals(scs.getVariable("q_x"), entryBoxes.get(1).getVariableInThisBox());
+      assertEquals(scs.findVariable("q_x"), entryBoxes.get(1).getVariableInThisBox());
       assertEquals(badGreekVariable, entryBoxes.get(2).getVariableInThisBox());
       assertEquals(YoTextEntryContainer.class, entryBoxes.get(1).getActiveYoVariableEntryContainer().getClass());
       assertEquals(YoEnumEntryContainer.class, entryBoxes.get(2).getActiveYoVariableEntryContainer().getClass());
@@ -201,7 +201,7 @@ public class YoEntryBoxTest
       boolean showGUI = true;
       FallingBrickRobot robot = new FallingBrickRobot();
       controller.attachRobot(robot);
-      assertFalse(controller.getYoVariableRegistry() == null);
+      assertFalse(controller.getYoRegistry() == null);
       robot.setController(controller);
 
       SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();

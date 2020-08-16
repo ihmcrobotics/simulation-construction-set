@@ -28,7 +28,7 @@ public class YoVariablePanelJPopupMenu extends ForcedRepaintPopupMenu
    private final BookmarkedVariablesHolder bookmarkedVariablesHolder;
 
    private JMenuItem bookmarkVariable;
-   //   private JMenuItem showNameSpaces;
+   //   private JMenuItem showNamespaces;
 
    private JMenuItem addToSliderBoard;
 
@@ -128,7 +128,7 @@ public class YoVariablePanelJPopupMenu extends ForcedRepaintPopupMenu
          {
             if (selectedVariableHolder.getSelectedVariable() != null)
             {
-               StringSelection stringSelection = new StringSelection(selectedVariableHolder.getSelectedVariable().getFullNameWithNameSpace());
+               StringSelection stringSelection = new StringSelection(selectedVariableHolder.getSelectedVariable().getFullNameString());
                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                clipboard.setContents(stringSelection, null);
             }
@@ -138,8 +138,8 @@ public class YoVariablePanelJPopupMenu extends ForcedRepaintPopupMenu
       });
 
       this.add(copyFullNameToClipBoard);
-      JMenuItem showNameSpace = new JMenuItem("Open Name Space");
-      showNameSpace.addActionListener(new ActionListener()
+      JMenuItem showNamespace = new JMenuItem("Open Namespace");
+      showNamespace.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent e)
@@ -147,31 +147,31 @@ public class YoVariablePanelJPopupMenu extends ForcedRepaintPopupMenu
             if (combinedVarPanel != null)
             {
 
-               combinedVarPanel.setVisibleVarPanel(selectedVariableHolder.getSelectedVariable().getYoVariableRegistry());
+               combinedVarPanel.setVisibleVarPanel(selectedVariableHolder.getSelectedVariable().getRegistry());
             }
 
             setVisible(false);
          }
       });
 
-      this.add(showNameSpace);
+      this.add(showNamespace);
 
-      JMenuItem displayNameSpaces = new JMenuItem("Display Name Spaces");
-      displayNameSpaces.addActionListener(new ActionListener()
+      JMenuItem displayNamespaces = new JMenuItem("Display Namespaces");
+      displayNamespaces.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent e)
          {
             if (combinedVarPanel != null)
             {
-               YoVariablePanel.addNameSpaceToVarNames();
+               YoVariablePanel.addNamespaceToVarNames();
             }
 
             setVisible(false);
          }
       });
 
-      this.add(displayNameSpaces);
+      this.add(displayNamespaces);
 
       bookmarkVariable = new JMenuItem("Bookmark Variable");
       bookmarkVariable.addActionListener(new ActionListener()

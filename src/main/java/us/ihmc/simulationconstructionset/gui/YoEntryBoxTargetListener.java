@@ -57,7 +57,7 @@ public class YoEntryBoxTargetListener implements DropTargetListener
 
       if ((YoGraph.getSourceOfDrag() == null) || (!YoGraph.getSourceOfDrag().equals(yoEntryBox) && !(YoGraph.getSourceOfDrag() instanceof YoEntryBox)))
       {
-         YoVariable<?> v = yoEntryBox.getSelectedVariableHolder().getSelectedVariable();
+         YoVariable v = yoEntryBox.getSelectedVariableHolder().getSelectedVariable();
          if (v != null)
             yoEntryBox.addVariable(v);
       }

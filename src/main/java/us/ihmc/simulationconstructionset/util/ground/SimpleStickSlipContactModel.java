@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.simulationconstructionset.ExternalForcePoint;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoInteger;
 
@@ -24,11 +24,11 @@ public class SimpleStickSlipContactModel
 
    private final StickSlipContactCalculator stickSlipContactCalculator;
 
-   private final YoVariableRegistry registry;
+   private final YoRegistry registry;
 
-   public SimpleStickSlipContactModel(String namePrefix, YoVariableRegistry parentRegistry)
+   public SimpleStickSlipContactModel(String namePrefix, YoRegistry parentRegistry)
    {
-      registry = new YoVariableRegistry(namePrefix + getClass().getSimpleName());
+      registry = new YoRegistry(namePrefix + getClass().getSimpleName());
       kContact = new YoDouble(namePrefix + "KContact", registry);
       bContact = new YoDouble(namePrefix + "BContact", registry);
 

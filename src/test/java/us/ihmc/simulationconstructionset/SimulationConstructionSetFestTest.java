@@ -11,7 +11,7 @@ import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.gui.SimulationGUITestFixture;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
@@ -39,12 +39,12 @@ public class SimulationConstructionSetFestTest
       FallingBrickRobot robot = new FallingBrickRobot();
 
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
-      YoVariableRegistry registryOne = new YoVariableRegistry("RegistryOne");
+      YoRegistry registryOne = new YoRegistry("RegistryOne");
       YoEnum<Axis3D> enumForTests = new YoEnum<>("enumForTests", registryOne, Axis3D.class);
-      YoVariableRegistry registryTwo = new YoVariableRegistry("RegistryTwo");
+      YoRegistry registryTwo = new YoRegistry("RegistryTwo");
       YoBoolean booleanForTests = new YoBoolean("booleanForTests", registryTwo);
       registryOne.addChild(registryTwo);
-      scs.addYoVariableRegistry(registryOne);
+      scs.addYoRegistry(registryOne);
 
       scs.setFrameMaximized();
       scs.startOnAThread();
@@ -56,13 +56,13 @@ public class SimulationConstructionSetFestTest
       testFixture.removeAllGraphs();
       testFixture.removeAllEntryBoxes();
 
-      testFixture.selectNameSpaceTab();
-      testFixture.selectNameSpace("root/RegistryOne");
+      testFixture.selectNamespaceTab();
+      testFixture.selectNamespace("root/RegistryOne");
       testFixture.selectVariableInOpenTab("enumForTests");
       ThreadTools.sleep(500);
 
-      testFixture.selectNameSpaceTab();
-      testFixture.selectNameSpace("root/RegistryOne/RegistryTwo");
+      testFixture.selectNamespaceTab();
+      testFixture.selectNamespace("root/RegistryOne/RegistryTwo");
       testFixture.selectVariableInOpenTab("booleanForTests");
       ThreadTools.sleep(500);
 
@@ -102,7 +102,7 @@ public class SimulationConstructionSetFestTest
       assertTrue(enumForTests.getEnumValue() == Axis3D.Z);
 
       // Search for variables, change their values, and plot them:
-      //    testFixture.selectNameSpaceTab();
+      //    testFixture.selectNamespaceTab();
       //    ThreadTools.sleep(1000);
 
       testFixture.selectSearchTab();
@@ -124,7 +124,7 @@ public class SimulationConstructionSetFestTest
       testFixture.middleClickInNthGraph(2);
 
       testFixture.selectVariableAndSetValueInSearchTab("q_z", 1.31);
-      YoDouble q_z = (YoDouble) scs.getVariable("q_z");
+      YoDouble q_z = (YoDouble) scs.findVariable("q_z");
       assertEquals(1.31, q_z.getDoubleValue(), 1e-9);
 
       // Simulate and replay
@@ -147,7 +147,7 @@ public class SimulationConstructionSetFestTest
 
       ThreadTools.sleep(100);
 
-      int index = scs.getIndex();
+      int index = scs.getCurrentIndex();
       int inPoint = scs.getInPoint();
       assertEquals(index, inPoint);
 
@@ -159,7 +159,7 @@ public class SimulationConstructionSetFestTest
       }
 
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(stepsForward, index);
       testFixture.clickAddKeyPointButton();
 
@@ -169,7 +169,7 @@ public class SimulationConstructionSetFestTest
       }
 
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(2 * stepsForward, index);
       testFixture.clickAddKeyPointButton();
 
@@ -179,7 +179,7 @@ public class SimulationConstructionSetFestTest
       }
 
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(3 * stepsForward, index);
       testFixture.clickAddKeyPointButton();
 
@@ -195,12 +195,12 @@ public class SimulationConstructionSetFestTest
 
       testFixture.clickStepForwardButton();
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(stepsForward, index);
 
       testFixture.clickStepForwardButton();
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(2 * stepsForward, index);
 
       // Toggle a keypoint off:
@@ -208,7 +208,7 @@ public class SimulationConstructionSetFestTest
 
       testFixture.clickStepBackwardButton();
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(stepsForward, index);
 
       testFixture.clickSetInPointButton();
@@ -217,19 +217,19 @@ public class SimulationConstructionSetFestTest
 
       testFixture.clickGotoInPointButton();
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(stepsForward, index);
 
       testFixture.clickGotoOutPointButton();
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(3 * stepsForward, index);
       testFixture.clickGotoInPointButton();
 
       testFixture.clickToggleKeyModeButton();
       testFixture.clickStepForwardButton();
       ThreadTools.sleep(100);
-      index = scs.getIndex();
+      index = scs.getCurrentIndex();
       assertEquals(stepsForward + 1, index);
 
       testFixture.closeAndDispose();

@@ -8,14 +8,14 @@ import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.robotics.Assert;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.util.ground.RollingGroundProfile;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class CollisionGroundContactModelTest
 {
    @Test // timeout = 30000
    public void testDoGroundContact()
    {
-      YoVariableRegistry registry = new YoVariableRegistry("CollisionGroundContactModelTest");
+      YoRegistry registry = new YoRegistry("CollisionGroundContactModelTest");
 
       ArrayList<GroundContactPoint> gcPoints = new ArrayList<>();
 

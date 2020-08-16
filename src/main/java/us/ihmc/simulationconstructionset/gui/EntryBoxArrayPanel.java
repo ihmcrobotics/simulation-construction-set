@@ -32,7 +32,7 @@ public class EntryBoxArrayPanel extends JPanel
    private TimerTask alertChangeListenersTask;
    private final long OBSERVER_NOTIFICATION_PERIOD = 250;
 
-   public EntryBoxArrayPanel(Container frame, SelectedVariableHolder holder, List<? extends YoVariable<?>> varsToEnter)
+   public EntryBoxArrayPanel(Container frame, SelectedVariableHolder holder, List<? extends YoVariable> varsToEnter)
    {
       setName("EntryBoxArrayPanel");
 
@@ -127,7 +127,7 @@ public class EntryBoxArrayPanel extends JPanel
          System.out.println(string);
    }
 
-   public boolean isHoldingVariable(YoVariable<?> v)
+   public boolean isHoldingVariable(YoVariable v)
    {
       boolean ret = false;
 
@@ -174,7 +174,7 @@ public class EntryBoxArrayPanel extends JPanel
       checkStatus();
    }
 
-   public void addEntryBox(final YoVariable<?> v)
+   public void addEntryBox(final YoVariable v)
    {
       EventDispatchThreadHelper.invokeAndWait(new Runnable()
       {
@@ -305,7 +305,7 @@ public class EntryBoxArrayPanel extends JPanel
          YoEntryBox yo = entryBoxesOnThisPanel.get(i);
          if (yo.getVariableInThisBox() != null)
          {
-            returnString += yo.getVariableInThisBox().getFullNameWithNameSpace();
+            returnString += yo.getVariableInThisBox().getFullNameString();
             currentBox++;
             if (currentBox < numOfFullBoxes)
                returnString += ",";

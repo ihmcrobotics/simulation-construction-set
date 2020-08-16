@@ -9,8 +9,8 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.JointPhysics;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class ExternalForcePoint extends KinematicPoint
 {
@@ -31,10 +31,10 @@ public class ExternalForcePoint extends KinematicPoint
 
    public ExternalForcePoint(String name, Robot robot)
    {
-      this(name, null, robot.getRobotsYoVariableRegistry());
+      this(name, null, robot.getRobotsYoRegistry());
    }
 
-   public ExternalForcePoint(String name, YoVariableRegistry registry)
+   public ExternalForcePoint(String name, YoRegistry registry)
    {
       this(name, null, registry);
    }
@@ -46,7 +46,7 @@ public class ExternalForcePoint extends KinematicPoint
     */
    public ExternalForcePoint(String name, Tuple3DReadOnly offset, Robot robot)
    {
-      this(name, offset, robot.getRobotsYoVariableRegistry());
+      this(name, offset, robot.getRobotsYoRegistry());
    }
 
    /**
@@ -54,7 +54,7 @@ public class ExternalForcePoint extends KinematicPoint
     * @param offset   in world when all of the robot's joints are at zero
     * @param registry
     */
-   public ExternalForcePoint(String name, Tuple3DReadOnly offset, YoVariableRegistry registry)
+   public ExternalForcePoint(String name, Tuple3DReadOnly offset, YoRegistry registry)
    {
       super(name, offset, registry);
 
