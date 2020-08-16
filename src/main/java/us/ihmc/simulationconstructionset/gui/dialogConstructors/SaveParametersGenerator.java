@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.yoVariables.parameters.XmlParameterWriter;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class SaveParametersGenerator implements SaveParametersConstructor
 {
@@ -27,9 +27,9 @@ public class SaveParametersGenerator implements SaveParametersConstructor
       if (fileChooser.showDialog(scs.getJFrame(), scs.getRootRegistry(), scs.getParameterRootPath(), scs.getDefaultParameterFile(), true))
       {
          XmlParameterWriter writer = new XmlParameterWriter();
-         for (YoVariableRegistry child : fileChooser.getRegistries())
+         for (YoRegistry child : fileChooser.getRegistries())
          {
-            writer.writeParametersInRegistry(child);
+            writer.addParameters(child);
          }
          try
          {

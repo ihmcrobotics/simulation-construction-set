@@ -109,7 +109,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
          {
             try
             {
-               if (index == sim.getIndex() / 30)
+               if (index == sim.getCurrentIndex() / 30)
                {
                   fileWriter.append("\tat time " + index + "\n\t(\n");
                }
@@ -132,7 +132,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
                   {
                      Vector3D translation = new Vector3D();
                      joint.getTranslationToWorld(translation);
-                     fileWriter.append(getJointPositionsAndTranslations(joint, (index != sim.getIndex() / 30))); // , translation));
+                     fileWriter.append(getJointPositionsAndTranslations(joint, (index != sim.getCurrentIndex() / 30))); // , translation));
                   }
                   catch (IOException e)
                   {
@@ -150,7 +150,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
                e.printStackTrace();
             }
 
-            if (index == sim.getIndex() / 30)
+            if (index == sim.getCurrentIndex() / 30)
             {
                done = sim.tick();
             }

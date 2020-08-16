@@ -1,9 +1,9 @@
 package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
 /**
  * Used to apply a torque to the point
@@ -21,7 +21,7 @@ public class ExternalTorque implements java.io.Serializable
 
    public boolean active;
 
-   public ExternalTorque(String name, YoVariableRegistry registry)
+   public ExternalTorque(String name, YoRegistry registry)
    {
       this.name = name;
       torque = new YoFrameVector3D(name + "_t", "", ReferenceFrame.getWorldFrame(), registry);

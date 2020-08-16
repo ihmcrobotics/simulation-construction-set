@@ -39,7 +39,6 @@ import us.ihmc.graphicsDescription.Graphics3DSpotLight;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 import us.ihmc.graphicsDescription.HeightMap;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.color.MutableColor;
 import us.ihmc.graphicsDescription.image.DepthImageCallback;
 import us.ihmc.graphicsDescription.image.ImageCallback;
@@ -93,20 +92,18 @@ import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.RealTimeRateEnforcer;
 import us.ihmc.simulationconstructionset.util.TickAndUpdatable;
 import us.ihmc.tools.TimestampProvider;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
-import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
-import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.listener.RewoundListener;
-import us.ihmc.yoVariables.listener.YoVariableRegistryChangedListener;
-import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsHolder;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferProcessor;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferReader;
+import us.ihmc.yoVariables.listener.YoRegistryChangedListener;
+import us.ihmc.yoVariables.registry.YoNamespace;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
+import us.ihmc.yoVariables.tools.YoTools;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 /**
  * <p>
@@ -315,8 +312,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       CreateNewGraphWindowCommandExecutor, CreateNewViewportWindowCommandExecutor, CropBufferCommandExecutor, CutBufferCommandExecutor,
       ExportSnapshotCommandExecutor, GotoInPointCommandExecutor, GotoOutPointCommandExecutor, NextCameraKeyCommandExecutor, PackBufferCommandExecutor,
       PreviousCameraKeyCommandExecutor, RemoveCameraKeyCommandExecutor, SetInPointCommandExecutor, SetOutPointCommandExecutor, StepBackwardCommandExecutor,
-      StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor, ToggleKeyPointModeCommandExecutor, GUIEnablerAndDisabler, WriteDataCommandExecutor,
-      TimeHolder, ParameterRootNamespaceHolder, DataBufferCommandsExecutor, TickAndUpdatable
+      StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor, KeyPointsHolder, GUIEnablerAndDisabler, WriteDataCommandExecutor,
+      TimeHolder, ParameterRootNamespaceHolder, YoBufferReader, TickAndUpdatable
 {
    private static final boolean TESTING_LOAD_STUFF = false;
 
@@ -346,7 +343,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private StandardAllCommandsExecutor standardAllCommandsExecutor;
 
    private VarGroupList varGroupList = new VarGroupList();
-   private YoVariableRegistry rootRegistry;
+   private YoRegistry rootRegistry;
 
    private JFrame jFrame;
    private JApplet jApplet;
@@ -371,7 +368,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    private final SimulationSynchronizer simulationSynchronizer;
 
    private List<YoGraphicsListRegistry> yoGraphicListRegistries = new ArrayList<>();
-   private DataBuffer myDataBuffer;
+   private RewoundListenerHandler rewoundListenerHandler = new RewoundListenerHandler();
+   private YoBuffer myDataBuffer;
    private boolean defaultLoaded = false;
    private int lastIndexPlayed = 0;
 
@@ -383,7 +381,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    private final YoGraphicMenuManager yoGraphicMenuManager;
 
-   private NameSpace parameterRootPath = null;
+   private YoNamespace parameterRootPath = null;
    private File defaultParameterFile = null;
 
    public static SimulationConstructionSet generateSimulationFromDataFile(File chosenFile)
@@ -493,7 +491,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       standardAllCommandsExecutor = new StandardAllCommandsExecutor();
 
       final boolean showGUI = graphicsAdapter != null && parameters.getCreateGUI();
-      rootRegistry = new YoVariableRegistry(rootRegistryName);
+      rootRegistry = new YoRegistry(rootRegistryName);
 
       if (showGUI)
       {
@@ -514,11 +512,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       mySimulation = simulation;
       myDataBuffer = mySimulation.getDataBuffer();
+      myDataBuffer.addListener(rewoundListenerHandler);
       simulationSynchronizer = mySimulation.getSimulationSynchronizer();
 
-      List<YoVariable<?>> originalRootVariables = rootRegistry.getAllVariablesIncludingDescendants();
+      List<YoVariable> originalRootVariables = rootRegistry.collectSubtreeVariables();
 
-      for (YoVariable<?> yoVariable : originalRootVariables)
+      for (YoVariable yoVariable : originalRootVariables)
       {
          LogTools.info("Original Variable: " + yoVariable);
       }
@@ -534,7 +533,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       {
          for (Robot robot : robots)
          {
-            rootRegistry.addChild(robot.getRobotsYoVariableRegistry());
+            rootRegistry.addChild(robot.getRobotsYoRegistry());
          }
       }
 
@@ -552,12 +551,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          });
       }
 
-      mySimulation.getDataBuffer().copyValuesThrough(); // Copy the values through so that anything the user changed during initialization will be YoVariablized, and the default on all graphs.
+      mySimulation.getDataBuffer().fillBuffer(); // Copy the values through so that anything the user changed during initialization will be YoVariablized, and the default on all graphs.
 
       attachPlaybackListener(new PlaybackListener()
       {
          @Override
-         public void notifyOfIndexChange(int newIndex)
+         public void indexChanged(int newIndex)
          {
 
          }
@@ -600,42 +599,43 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       standardAllCommandsExecutor.setup(this, myGUI, myDataBuffer);
    }
 
+   private YoRegistryChangedListener rootRegistryListener;
+
    private void createAndAttachAChangedListenerToTheRootRegistry()
    {
-      YoVariableRegistryChangedListener listener = new YoVariableRegistryChangedListener()
+      rootRegistryListener = new YoRegistryChangedListener()
       {
          @Override
-         public void yoVariableWasRegistered(YoVariableRegistry registry, YoVariable<?> registeredYoVariable)
+         public void changed(Change change)
          {
-            // LogTools.error("Registering YoVariable to the SCS root Registry after the SCS has been started! yoVariableWasRegistered: "
-            // + registeredYoVariable);
-
-            // Make sure RCS still works with all of this!
-            myDataBuffer.addVariable(registeredYoVariable);
-         }
-
-         @Override
-         public void yoVariableRegistryWasCleared(YoVariableRegistry clearedYoVariableRegistry)
-         {
-            throw new RuntimeException("Clearing the SCS root Registry after the SCS has been started! Probably shouldn't do that...");
-         }
-
-         @Override
-         public void yoVariableRegistryWasAdded(YoVariableRegistry addedRegistry)
-         {
-            // LogTools.error("Adding a child YoVariableRegistry to the SCS root Registry after the SCS has been started! yoVariableRegistryWasAdded: "
-            // + addedRegistry);
-
-            myDataBuffer.addVariables(addedRegistry.getAllVariablesIncludingDescendants());
-
-            if (myGUI != null)
+            if (change.wasVariableAdded())
             {
-               myGUI.updateNameSpaceHierarchyTree();
+               // LogTools.error("Registering YoVariable to the SCS root Registry after the SCS has been started! yoVariableWasRegistered: "
+               // + registeredYoVariable);
+
+               // Make sure RCS still works with all of this!
+               myDataBuffer.addVariable(change.getTargetVariable());
+            }
+            if (change.wasCleared())
+            {
+               throw new RuntimeException("Clearing the SCS root Registry after the SCS has been started! Probably shouldn't do that...");
+            }
+            if (change.wasRegistryAdded())
+            {
+               // LogTools.error("Adding a child YoRegistry to the SCS root Registry after the SCS has been started! YoRegistryWasAdded: "
+               // + addedRegistry);
+
+               myDataBuffer.addVariables(change.getTargetRegistry().collectSubtreeVariables());
+
+               if (myGUI != null)
+               {
+                  myGUI.updateNamespaceHierarchyTree();
+               }
             }
          }
       };
 
-      rootRegistry.attachYoVariableRegistryChangedListener(listener);
+      rootRegistry.addListener(rootRegistryListener);
    }
 
    public SimulationConstructionSet(Robot robot, JApplet jApplet, SimulationConstructionSetParameters parameters)
@@ -686,15 +686,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @return Simulation index
     */
    @Override
-   public int getIndex()
+   public int getCurrentIndex()
    {
-      return myDataBuffer.getIndex();
+      return myDataBuffer.getCurrentIndex();
    }
 
    @Override
-   public boolean isIndexBetweenInAndOutPoint(int indexToCheck)
+   public boolean isIndexBetweenBounds(int indexToCheck)
    {
-      return myDataBuffer.isIndexBetweenInAndOutPoint(indexToCheck);
+      return myDataBuffer.isIndexBetweenBounds(indexToCheck);
    }
 
    /**
@@ -785,12 +785,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       jFrame.setAlwaysOnTop(alwaysOnTop);
    }
 
-   public YoVariableRegistry getRootRegistry()
+   public YoRegistry getRootRegistry()
    {
       return rootRegistry;
    }
 
-   public void addYoVariableRegistry(YoVariableRegistry registry)
+   public void addYoRegistry(YoRegistry registry)
    {
       if (registry == null)
       {
@@ -801,48 +801,42 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public List<YoVariable<?>> getAllVariables()
+   public List<YoVariable> getVariables()
    {
-      return mySimulation.getAllVariables();
-   }
-
-   @Override
-   public YoVariable<?>[] getAllVariablesArray()
-   {
-      return mySimulation.getAllVariablesArray();
+      return mySimulation.getVariables();
    }
 
    // Every time you call this in a control system, an angel loses its wings. Only call this for reflection and testing type purposes, such as
    // trying to compare if two simulations ran the same way.
    // For control systems, write a method to get the specific variable you need. Saves tons of work when refactoring later
    @Override
-   public YoVariable<?> getVariable(String varname)
+   public YoVariable findVariable(String varname)
    {
-      return mySimulation.getVariable(varname);
+      return mySimulation.findVariable(varname);
    }
 
    @Override
-   public YoVariable<?> getVariable(String nameSpace, String varname)
+   public YoVariable findVariable(String namespace, String varname)
    {
-      return mySimulation.getVariable(nameSpace, varname);
+      return mySimulation.findVariable(namespace, varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String nameSpace, String varname)
+   public List<YoVariable> findVariables(String namespace, String varname)
    {
-      return mySimulation.getVariables(nameSpace, varname);
+      return mySimulation.findVariables(namespace, varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String varname)
+   public List<YoVariable> findVariables(String varname)
    {
-      return mySimulation.getVariables(varname);
+      return mySimulation.findVariables(varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(NameSpace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace namespace)
    {
-      return mySimulation.getVariables(nameSpace);
+      return mySimulation.findVariables(namespace);
    }
 
    @Override
@@ -852,61 +846,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public boolean hasUniqueVariable(String nameSpace, String varname)
+   public boolean hasUniqueVariable(String namespace, String varname)
    {
-      return mySimulation.hasUniqueVariable(nameSpace, varname);
-   }
-
-   /**
-    * Retrieves an List containing the YoVariables whos names contain the search string. If none
-    * exist, it returns null.
-    *
-    * @param searchString  String for which YoVariable names are checked.
-    * @param caseSensitive Indicates if the search is to be case sensitive.
-    * @return List of the YoVariables whos names contained searchString.
-    */
-   public List<YoVariable<?>> getVariablesThatContain(String searchString, boolean caseSensitive)
-   {
-      return mySimulation.getVariablesThatContain(searchString, caseSensitive);
-   }
-
-   /**
-    * Retrieves an List containing the YoVariables with names that contain searchString. If none
-    * exist, it returns null. This method assumes the string is case insensitive.
-    *
-    * @param searchString String for which YoVariable names are checked.
-    * @return List of the YoVariables whos names contained searchString.
-    */
-   public List<YoVariable<?>> getVariablesThatContain(String searchString)
-   {
-      return mySimulation.getVariablesThatContain(searchString, false);
-   }
-
-   /**
-    * Retrieves an List containing the YoVariables with names that start with the searchString. If
-    * none exist, it returns null.
-    *
-    * @param searchString String for which YoVariable names are checked.
-    * @return List of the YoVariables whos names begin with searchString.
-    */
-   public List<YoVariable<?>> getVariablesThatStartWith(String searchString)
-   {
-      return mySimulation.getVariablesThatStartWith(searchString);
-   }
-
-   /**
-    * Given an array of YoVariable names and an array of regular expressions this function returns an
-    * List of the YoVariables whos name's fit the regular expression. If a given variable fits
-    * multiple expressions it will be added multiple times.
-    *
-    * @param varNames           String array of the name of YoVariables to be checked.
-    * @param regularExpressions String array of regular expressions to use.
-    * @return List of the YoVariables which have names that match the provided regular
-    *         expressions.
-    */
-   public List<YoVariable<?>> getVars(String[] varNames, String[] regularExpressions)
-   {
-      return mySimulation.getVars(varNames, regularExpressions);
+      return mySimulation.hasUniqueVariable(namespace, varname);
    }
 
    /**
@@ -1146,16 +1088,16 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * camera tracks when tracking is enabled. By default the camera is set to track the Robot's x, y
     * and z position if it exists.
     *
-    * @param nameSpace the name space of the variables.
+    * @param namespace the name space of the variables.
     * @param xName     Name of the YoVariable to be referenced for x direction tracking.
     * @param yName     Name of the YoVariable to be referenced for y direction tracking.
     * @param zName     Name of the YoVariable to be referenced for z direction tracking.
     */
-   public void setCameraTrackingVars(String nameSpace, String xName, String yName, String zName)
+   public void setCameraTrackingVars(String namespace, String xName, String yName, String zName)
    {
       if (myGUI != null)
       {
-         myGUI.setCameraTrackingVars(nameSpace, xName, yName, zName);
+         myGUI.setCameraTrackingVars(namespace, xName, yName, zName);
       }
    }
 
@@ -1181,16 +1123,16 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * follows when dolly is enabled. By default the camera is set to follow the Robot's x, y and z
     * position if it exists.
     *
-    * @param nameSpace the name space of the variables.
+    * @param namespace the name space of the variables.
     * @param xName     Name of the YoVariable to be referenced for x direction following.
     * @param yName     Name of the YoVariable to be referenced for y direction following.
     * @param zName     Name of the YoVariable to be referenced for z direction following.
     */
-   public void setCameraDollyVars(String nameSpace, String xName, String yName, String zName)
+   public void setCameraDollyVars(String namespace, String xName, String yName, String zName)
    {
       if (myGUI != null)
       {
-         myGUI.setCameraDollyVars(nameSpace, xName, yName, zName);
+         myGUI.setCameraDollyVars(namespace, xName, yName, zName);
       }
    }
 
@@ -1325,7 +1267,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       ThreadTools.startAThread(this, "Simulation Contruction Set");
 
       if (SHOW_REGISTRY_SIZES_ON_STARTUP)
-         YoVariableRegistry.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
+         YoTools.printStatistics(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
 
       while (!hasSimulationThreadStarted())
       {
@@ -1335,7 +1277,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    private boolean isCloseAndDispose = false;
 
-   @Override
    public void closeAndDispose()
    {
       isCloseAndDispose = true;
@@ -1376,7 +1317,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (rootRegistry != null)
       {
-         rootRegistry.closeAndDispose();
+         rootRegistry.removeListener(rootRegistryListener);
+         rootRegistry.clear();
       }
 
       if (standardAllCommandsExecutor != null)
@@ -1522,7 +1464,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    @Override
    public void tickAndUpdate()
    {
+      rewoundListenerHandler.setEnable(false);
       mySimulation.tickAndUpdate();
+      rewoundListenerHandler.setEnable(true);
 
       if (myGUI != null)
       {
@@ -1557,7 +1501,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void tickAndUpdateLeisurely(int leisureRate)
    {
+      rewoundListenerHandler.setEnable(false);
       mySimulation.tickAndUpdate();
+      rewoundListenerHandler.setEnable(true);
 
       if (myGUI != null)
       {
@@ -1574,14 +1520,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public boolean updateAndTick()
    {
-      boolean ret = myDataBuffer.updateAndTick();
+      myDataBuffer.writeIntoBuffer();
+      boolean indexRolledOver = myDataBuffer.tickAndReadFromBuffer(1);
       if (myGUI != null)
       {
          myGUI.updateGraphs();
          myGUI.updateSimulationGraphics();
       }
 
-      return ret;
+      return indexRolledOver;
    }
 
    /**
@@ -1594,7 +1541,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public boolean tick()
    {
-      boolean ret = myDataBuffer.tick((int) TICKS_PER_PLAY_CYCLE);
+      boolean ret = myDataBuffer.tickAndReadFromBuffer((int) TICKS_PER_PLAY_CYCLE);
 
       for (Robot robot : robots)
       {
@@ -1615,7 +1562,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    public boolean unTick()
    {
-      boolean ret = myDataBuffer.tick((int) -TICKS_PER_PLAY_CYCLE);
+      boolean ret = myDataBuffer.tickAndReadFromBuffer((int) -TICKS_PER_PLAY_CYCLE);
 
       for (Robot robot : robots)
       {
@@ -1634,14 +1581,13 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       return ret;
    }
 
-   @Override
    public boolean tickButDoNotNotifySimulationRewoundListeners(int ticks)
    {
       return tick(ticks, false);
    }
 
    @Override
-   public boolean tick(int ticks)
+   public boolean tickAndReadFromBuffer(int ticks)
    {
       return tick(ticks, true);
    }
@@ -1660,9 +1606,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       boolean ret;
 
       if (notifySimulationRewoundListeners)
-         ret = myDataBuffer.tick(ticks);
+      {
+         ret = myDataBuffer.tickAndReadFromBuffer(ticks);
+      }
       else
-         ret = myDataBuffer.tickButDoNotNotifySimulationRewoundListeners(ticks);
+      {
+         rewoundListenerHandler.setEnable(false);
+         ret = myDataBuffer.tickAndReadFromBuffer(ticks);
+         rewoundListenerHandler.setEnable(true);
+      }
 
       for (Robot robot : robots)
       {
@@ -1680,7 +1632,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
    public boolean setTick(int tick)
    {
-      boolean ret = myDataBuffer.tick((int) ((double) tick * TICKS_PER_PLAY_CYCLE));
+      boolean ret = myDataBuffer.tickAndReadFromBuffer((int) ((double) tick * TICKS_PER_PLAY_CYCLE));
       for (Robot robot : robots)
       {
          robot.updateForPlayback();
@@ -2153,8 +2105,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    {
       //TODO: Clean this up and clean up setRobot too.
 
-      YoVariableRegistry robotsYoVariableRegistry = robot.getRobotsYoVariableRegistry();
-      YoVariableRegistry parentRegistry = robotsYoVariableRegistry.getParent();
+      YoRegistry robotsYoRegistry = robot.getRobotsYoRegistry();
+      YoRegistry parentRegistry = robotsYoRegistry.getParent();
       if (parentRegistry != null)
       {
          throw new RuntimeException("SimulationConstructionSet.addRobot(). Trying to add robot registry as child to root registry, but it already has a parent registry: "
@@ -2162,7 +2114,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       boolean notifyListeners = false; // TODO: This is very hackish. If listeners are on, then the variables will be added to the data buffer. But mySimulation.setRobots() in a few lines does that...
-      rootRegistry.addChild(robotsYoVariableRegistry, notifyListeners);
+      rootRegistry.addChild(robotsYoRegistry, notifyListeners);
 
       mySimulation.addRobot(robot);
 
@@ -2173,11 +2125,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       {
          myGUI.addRobot(robot);
 
-         List<RewoundListener> simulationRewoundListeners = robot.getSimulationRewoundListeners();
-         for (RewoundListener simulationRewoundListener : simulationRewoundListeners)
-         {
-            myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
-         }
          // *** JJC a add variable search panel was removed from here.
       }
    }
@@ -2189,8 +2136,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void setRobot(Robot robot)
    {
-      YoVariableRegistry robotsYoVariableRegistry = robot.getRobotsYoVariableRegistry();
-      YoVariableRegistry parentRegistry = robotsYoVariableRegistry.getParent();
+      YoRegistry robotsYoRegistry = robot.getRobotsYoRegistry();
+      YoRegistry parentRegistry = robotsYoRegistry.getParent();
       if (parentRegistry != null)
       {
          throw new RuntimeException("SimulationConstructionSet.setRobot(). Trying to add robot registry as child to root registry, but it already has a parent registry: "
@@ -2198,7 +2145,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
 
       boolean notifyListeners = false; // TODO: This is very hackish. If listeners are on, then the variables will be added to the data buffer. But mySimulation.setRobots() in a few lines does that...
-      rootRegistry.addChild(robotsYoVariableRegistry, notifyListeners);
+      rootRegistry.addChild(robotsYoRegistry, notifyListeners);
 
       mySimulation.setRobots(new Robot[] {robot});
 
@@ -2208,20 +2155,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       if (myGUI != null)
       {
          myGUI.setRobots(robots);
-
-         if (robots != null)
-         {
-            for (Robot robotToAddToGUI : robots)
-            {
-               List<RewoundListener> simulationRewoundListeners = robotToAddToGUI.getSimulationRewoundListeners();
-               for (RewoundListener simulationRewoundListener : simulationRewoundListeners)
-               {
-                  myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
-               }
-            }
-
-            // *** JJC a add variable search panel was removed from here.
-         }
       }
    }
 
@@ -2541,7 +2474,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       // t = rob.getVariable("t");
 
       if (SHOW_REGISTRY_SIZES_ON_STARTUP)
-         YoVariableRegistry.printSizeRecursively(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
+         YoTools.printStatistics(MIN_VARIABLES_FOR_HOTSPOT, MIN_CHILDREN_FOR_HOTSPOT, rootRegistry);
 
       // Three state loop, simulation is either playing, running, or waiting
       while (true)
@@ -2726,7 +2659,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
          ticksSimulated -= recordFreq; // This prevents the following stuff from happening continuosly after one record cycle
 
-         myDataBuffer.tickAndUpdate(); // Update the data buffer and the min max values of each point it contains
+         myDataBuffer.tickAndWriteIntoBuffer(); // Update the data buffer and the min max values of each point it contains
 
          if (myGUI != null)
          {
@@ -2815,7 +2748,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
          return; // Only works with a GUI
       }
 
-      lastIndexPlayed = myDataBuffer.getIndex();
+      lastIndexPlayed = myDataBuffer.getCurrentIndex();
 
       //    count++;
 
@@ -2846,7 +2779,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       synchronized (myGUI.getGraphicsConch()) // Synched so we don't update during a graphics redraw...
       {
          int tick = Math.max((int) (TICKS_PER_PLAY_CYCLE * numTicks), 1);
-         myDataBuffer.tickButDoNotNotifySimulationRewoundListeners(tick);
+         rewoundListenerHandler.setEnable(false);
+         myDataBuffer.tickAndReadFromBuffer(tick);
+         rewoundListenerHandler.setEnable(true);
          myGUI.updateRobots();
          myGUI.allowTickUpdatesNow();
          if (playCycleListeners != null)
@@ -2902,7 +2837,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       while (lastIndexPlayed < myDataBuffer.getOutPoint())
       {
-         lastIndexPlayed = myDataBuffer.getIndex();
+         lastIndexPlayed = myDataBuffer.getCurrentIndex();
 
          File file = new File(path, NameNoExtension + "_" + lastIndexPlayed + ".jpeg");
 
@@ -2911,7 +2846,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
          synchronized (simulationSynchronizer) // Synched so we don't update during a graphics redraw...
          {
-            myDataBuffer.tick(1);
+            myDataBuffer.tickAndReadFromBuffer(1);
             myGUI.updateRobots();
             myGUI.updateSimulationGraphics();
             myGUI.allowTickUpdatesNow();
@@ -2997,7 +2932,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       if (myDataBuffer != null)
       {
-         myDataBuffer.notifyRewindListeners();
+         rewoundListenerHandler.notifyListeners();
       }
    }
 
@@ -3167,7 +3102,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
          mySimulation.notifySimulateDoneListeners();
 
-         myDataBuffer.tickAndUpdate();
+         myDataBuffer.tickAndWriteIntoBuffer();
 
          if (myGUI != null)
          {
@@ -3234,12 +3169,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    public void setScrollGraphsEnabled(boolean enable)
    {
       if (myDataBuffer != null)
-         myDataBuffer.setSafeToChangeIndex(enable);
+         myDataBuffer.setLockIndex(!enable);
    }
 
    public boolean isSafeToScroll()
    {
-      return myDataBuffer.isSafeToChangeIndex();
+      return !myDataBuffer.isIndexLocked();
    }
 
    public void setSimulateDuration(double simulateDurationInSeconds)
@@ -3479,7 +3414,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(-steps);
+         myDataBuffer.tickAndReadFromBuffer(-steps);
       }
    }
 
@@ -3495,7 +3430,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(-1);
+         myDataBuffer.tickAndReadFromBuffer(-1);
       }
    }
 
@@ -3524,7 +3459,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(steps);
+         myDataBuffer.tickAndReadFromBuffer(steps);
       }
    }
 
@@ -3542,7 +3477,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
       else
       {
-         myDataBuffer.tick(steps);
+         myDataBuffer.tickAndReadFromBuffer(steps);
       }
    }
 
@@ -3585,17 +3520,6 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Specify whether or not the buffer should wrap once the end is reached. By default the buffer
-    * expands until it reaches the predefined max size. If enabled the buffer will not expand.
-    *
-    * @param wrap Should the buffer wrap to the beginning instead of expanding?
-    */
-   public void setWrapBuffer(boolean wrap)
-   {
-      myDataBuffer.setWrapBuffer(wrap);
-   }
-
-   /**
     * Either increase or decrease the data buffer's size in units of ticks. The new buffer will begin
     * with the current inPoint and end at one of two points. If the buffer size is increased all of the
     * original data persists otherwise the data is cropped between the inPoint and the new buffer size.
@@ -3606,24 +3530,12 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void changeBufferSize(int bufferSize)
    {
-      myDataBuffer.changeBufferSize(bufferSize);
+      myDataBuffer.resizeBuffer(bufferSize);
 
       if (myGUI != null)
       {
          myGUI.zoomFullView();
       }
-   }
-
-   /**
-    * Sets the maximum size, in ticks, to which the buffer will expand. While nonsense values are not
-    * explicitly checked for, they will not cause the buffer to shrink or behave abnormally.
-    *
-    * @param maxBufferSize New max buffer size.
-    */
-
-   public void setMaxBufferSize(int maxBufferSize)
-   {
-      myDataBuffer.setMaxBufferSize(maxBufferSize);
    }
 
    /**
@@ -3753,7 +3665,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
       // List vars = myGUI.getVarsFromGroup(varGroup);
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
 
       // dataWriter.writeSpreadsheetFormattedData(myDataBuffer, (mySimulation.getDT() * mySimulation.getRecordFreq()), vars);
       dataWriter.writeSpreadsheetFormattedData(myDataBuffer, vars);
@@ -3775,7 +3687,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void writeData(String varGroupName, boolean binary, boolean compress, File chosenFile)
    {
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
       writeData(vars, binary, compress, chosenFile);
    }
 
@@ -3793,7 +3705,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @param chosenFile File to which data will be saved
     */
    @Override
-   public void writeData(List<YoVariable<?>> vars, boolean binary, boolean compress, File chosenFile)
+   public void writeData(List<YoVariable> vars, boolean binary, boolean compress, File chosenFile)
    {
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
@@ -3806,7 +3718,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroup, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroup, varGroupList);
       dataWriter.writeMatlabBinaryData(mySimulation.getDT() * mySimulation.getRecordFreq(), myDataBuffer, vars);
    }
 
@@ -3837,7 +3749,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     *
     * @return The internal dataBuffer.
     */
-   public DataBuffer getDataBuffer()
+   public YoBuffer getDataBuffer()
    {
       return myDataBuffer;
    }
@@ -3931,7 +3843,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       LogTools.info("Writing State File " + chosenFile.getName()); // filename);
 
       // List vars = myGUI.getVarsFromGroup(varGroup);
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
       dataWriter.writeState(robots[0].getName(), mySimulation.getDT() * mySimulation.getRecordFreq(), vars, binary, compress);
    }
 
@@ -3949,7 +3861,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       DataFileWriter dataWriter = new DataFileWriter(chosenFile);
       LogTools.info("Writing Data File " + chosenFile.getAbsolutePath());
 
-      List<YoVariable<?>> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
+      List<YoVariable> vars = DataBufferTools.getVarsFromGroup(myDataBuffer, varGroupName, varGroupList);
 
       dataWriter.writeSpreadsheetFormattedState(myDataBuffer, vars);
    }
@@ -4072,7 +3984,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       }
    }
 
-   // private void addVariablesToSimulationAndGUI(YoVariableRegistry registry)
+   // private void addVariablesToSimulationAndGUI(YoRegistry registry)
    // {
    //    addVariablesToSimulationAndGUI(registry.createVarListsIncludingChildren());
    // }
@@ -4134,7 +4046,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
       try
       {
          dataReader.readState(mySimulation.getCombinedVarList(), printErrorForMissingVariables);
-         myDataBuffer.tickAndUpdate();
+         myDataBuffer.tickAndWriteIntoBuffer();
          myDataBuffer.setInPoint();
          myDataBuffer.setOutPoint();
 
@@ -4278,8 +4190,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    /**
-    * Adds all of the YoVariables contained in the provided List of VarLists to the simulation. If
-    * any of the variables are already present an exception will occur and that particular VarList will
+    * Adds all of the YoVariables contained in the provided List of VarLists to the simulation. If any
+    * of the variables are already present an exception will occur and that particular VarList will
     * fail. Each varlist will have its own tab in the var panel.
     *
     * @param newVarLists List
@@ -4295,7 +4207,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
        * This makes sure that the initial values of all YoVariables that are added to the scs (i.e. at
        * index 0 of the data buffer) are properly stored in the data buffer
        */
-      getDataBuffer().copyValuesThrough();
+      getDataBuffer().fillBuffer();
    }
 
    // /**
@@ -4357,7 +4269,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
 
       playbackListeners.add(playbackListener);
 
-      myDataBuffer.attachIndexChangedListener(playbackListener);
+      myDataBuffer.addListener(playbackListener);
    }
 
    /**
@@ -4382,20 +4294,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @param dataProcessingFunction DataProcessingFunction to be applied to the data.
     * @see DataProcessingFunction
     */
-   public void applyDataProcessingFunction(DataProcessingFunction dataProcessingFunction)
+   public void applyDataProcessingFunction(YoBufferProcessor dataProcessingFunction)
    {
-      myDataBuffer.applyDataProcessingFunction(dataProcessingFunction);
-   }
-
-   /**
-    * Applies a function to the recorded data starting from the out point to the in point.
-    *
-    * @param dataProcessingFunction DataProcessingFunction to be applied to the data.
-    * @see DataProcessingFunction
-    */
-   public void applyDataProcessingFunctionBackward(DataProcessingFunction dataProcessingFunction)
-   {
-      myDataBuffer.applyDataProcessingFunctionBackward(dataProcessingFunction);
+      myDataBuffer.applyProcessor(dataProcessingFunction);
    }
 
    /**
@@ -4423,7 +4324,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     */
    public void attachSimulationRewoundListener(RewoundListener simulationRewoundListener)
    {
-      myDataBuffer.attachSimulationRewoundListener(simulationRewoundListener);
+      rewoundListenerHandler.addListener(simulationRewoundListener);
    }
 
    /**
@@ -4433,9 +4334,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * @return Are key points in use?
     */
    @Override
-   public boolean isKeyPointModeToggled()
+   public boolean areKeyPointsEnabled()
    {
-      return standardAllCommandsExecutor.isKeyPointModeToggled();
+      return standardAllCommandsExecutor.areKeyPointsEnabled();
    }
 
    /**
@@ -4443,15 +4344,15 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     * when KeyPoints are in use steps during playback will only move between KeyPoints.
     */
    @Override
-   public void toggleKeyPointMode()
+   public void toggleKeyPoints()
    {
-      standardAllCommandsExecutor.toggleKeyPointMode();
+      standardAllCommandsExecutor.toggleKeyPoints();
    }
 
    @Override
-   public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener listener)
+   public void addListener(KeyPointsChangedListener listener)
    {
-      standardAllCommandsExecutor.registerToggleKeyPointModeCommandListener(listener);
+      standardAllCommandsExecutor.addListener(listener);
    }
 
    /**
@@ -4566,21 +4467,28 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public void setIndex(int index)
+   public void setCurrentIndex(int index)
    {
-      myDataBuffer.setIndex(index);
+      myDataBuffer.setCurrentIndex(index);
    }
 
-   @Override
    public void setIndexButDoNotNotifySimulationRewoundListeners(int index)
    {
-      myDataBuffer.setIndexButDoNotNotifySimulationRewoundListeners(index);
+      rewoundListenerHandler.setEnable(false);
+      myDataBuffer.setCurrentIndex(index);
+      rewoundListenerHandler.setEnable(true);
    }
 
    @Override
    public int getOutPoint()
    {
       return myDataBuffer.getOutPoint();
+   }
+
+   @Override
+   public int getBufferSize()
+   {
+      return myDataBuffer.getBufferSize();
    }
 
    public GraphicsDynamicGraphicsObject addYoGraphic(YoGraphic yoGraphicObject)
@@ -4887,7 +4795,7 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    }
 
    @Override
-   public NameSpace getParameterRootPath()
+   public YoNamespace getParameterRootPath()
    {
       return parameterRootPath;
    }
@@ -4898,9 +4806,9 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
     *
     * @param registry
     */
-   public void setParameterRootPath(YoVariableRegistry registry)
+   public void setParameterRootPath(YoRegistry registry)
    {
-      parameterRootPath = registry.getNameSpace();
+      parameterRootPath = registry.getNamespace();
    }
 
    /**

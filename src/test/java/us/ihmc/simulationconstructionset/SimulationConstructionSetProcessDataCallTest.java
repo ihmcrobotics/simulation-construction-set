@@ -4,14 +4,14 @@ import static us.ihmc.robotics.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferProcessor;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class SimulationConstructionSetProcessDataCallTest
 {
    private static final boolean DEBUG = false;
-   private YoVariableRegistry registry;
+   private YoRegistry registry;
 
    @Test // timeout=1000
    public void testForwardCount()
@@ -22,9 +22,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -37,12 +37,12 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction counterProcessingFunction = new CounterProcessingFunction(registry);
+      YoBufferProcessor counterProcessingFunction = new CounterProcessingFunction(registry, true);
       scs.applyDataProcessingFunction(counterProcessingFunction);
 
       //Exact data from Data Processing Class
@@ -53,7 +53,7 @@ public class SimulationConstructionSetProcessDataCallTest
          System.out.println("===testForwardCount===");
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + counterVariable.getDoubleValue());
          }
       }
@@ -62,12 +62,13 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = counterVariable.getDoubleValue();
 
          assertEquals(testNum1 - testNum2, startValue, 0);
       }
+      scs.closeAndDispose();
    }
 
    @Test // timeout=1000
@@ -79,9 +80,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -94,13 +95,13 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction counterProcessingFunction = new CounterProcessingFunction(registry);
-      scs.applyDataProcessingFunctionBackward(counterProcessingFunction);
+      YoBufferProcessor counterProcessingFunction = new CounterProcessingFunction(registry, false);
+      scs.applyDataProcessingFunction(counterProcessingFunction);
 
       //Exact data from Data Processing Class
       YoDouble counterVariable = ((CounterProcessingFunction) counterProcessingFunction).getCountVariable();
@@ -111,7 +112,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + counterVariable.getDoubleValue());
          }
       }
@@ -120,12 +121,13 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = counterVariable.getDoubleValue();
 
          assertEquals(testNum1 + testNum2, maxValue - 1, 0);
       }
+      scs.closeAndDispose();
    }
 
    @Test // timeout=1000
@@ -137,9 +139,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -152,12 +154,12 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction copierProcessingFunction = new CopierProcessingFunction(dataSet, registry);
+      YoBufferProcessor copierProcessingFunction = new CopierProcessingFunction(dataSet, registry, true);
       scs.applyDataProcessingFunction(copierProcessingFunction);
 
       //Exact data from Data Processing Class
@@ -168,7 +170,7 @@ public class SimulationConstructionSetProcessDataCallTest
          System.out.println("===testForwardCopy===");
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + copierVariable.getDoubleValue());
          }
       }
@@ -177,12 +179,13 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = copierVariable.getDoubleValue();
 
          assertEquals(testNum1 - testNum2, 0, 0);
       }
+      scs.closeAndDispose();
    }
 
    @Test // timeout=1000
@@ -194,9 +197,9 @@ public class SimulationConstructionSetProcessDataCallTest
       parameters.setDataBufferSize(8192);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
 
-      registry = new YoVariableRegistry("testRegustry");
+      registry = new YoRegistry("testRegustry");
       YoDouble dataSet = new YoDouble("dataSet", registry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       int startValue = 5;
       int maxValue = 15;
@@ -209,13 +212,13 @@ public class SimulationConstructionSetProcessDataCallTest
 
       //Crop data to get rid of the first data point
       scs.setOutPoint();
-      scs.setIndex(1);
+      scs.setCurrentIndex(1);
       scs.setInPoint();
       scs.cropBuffer();
 
       //Apply the Data Processing Class
-      DataProcessingFunction copierProcessingFunction = new CopierProcessingFunction(dataSet, registry);
-      scs.applyDataProcessingFunctionBackward(copierProcessingFunction);
+      YoBufferProcessor copierProcessingFunction = new CopierProcessingFunction(dataSet, registry, false);
+      scs.applyDataProcessingFunction(copierProcessingFunction);
 
       //Exact data from Data Processing Class
       YoDouble copierVariable = ((CopierProcessingFunction) copierProcessingFunction).getCopyVariable();
@@ -226,7 +229,7 @@ public class SimulationConstructionSetProcessDataCallTest
 
          for (int i = 0; i < maxValue - startValue; i++)
          {
-            scs.setIndex(i);
+            scs.setCurrentIndex(i);
             System.out.println(dataSet.getDoubleValue() + "\t" + copierVariable.getDoubleValue());
          }
       }
@@ -235,28 +238,36 @@ public class SimulationConstructionSetProcessDataCallTest
       double testNum1, testNum2;
       for (int i = 0; i < maxValue - startValue; i++)
       {
-         scs.setIndex(i);
+         scs.setCurrentIndex(i);
          testNum1 = dataSet.getDoubleValue();
          testNum2 = copierVariable.getDoubleValue();
 
          assertEquals(testNum1 - testNum2, 0, 0);
       }
-
+      scs.closeAndDispose();
    }
 
-   public static class CopierProcessingFunction implements DataProcessingFunction
+   public static class CopierProcessingFunction implements YoBufferProcessor
    {
+      private final boolean forward;
       private final YoDouble copyVariable;
       private final YoDouble testVariable;
 
-      public CopierProcessingFunction(YoDouble inputData, YoVariableRegistry registry)
+      public CopierProcessingFunction(YoDouble inputData, YoRegistry registry, boolean forward)
       {
+         this.forward = forward;
          testVariable = inputData;
          copyVariable = new YoDouble("copyVariable", registry);
       }
 
       @Override
-      public void processData()
+      public boolean goForward()
+      {
+         return forward;
+      }
+
+      @Override
+      public void process(int startIndex, int endIndex, int currentIndex)
       {
          double holderDouble;
 
@@ -268,26 +279,28 @@ public class SimulationConstructionSetProcessDataCallTest
       {
          return copyVariable;
       }
-
-      @Override
-      public void initializeProcessing()
-      {
-
-      }
    }
 
-   public static class CounterProcessingFunction implements DataProcessingFunction
+   public static class CounterProcessingFunction implements YoBufferProcessor
    {
+      private final boolean forward;
       private final YoDouble countVariable;
       private int count = 0;
 
-      public CounterProcessingFunction(YoVariableRegistry registry)
+      public CounterProcessingFunction(YoRegistry registry, boolean forward)
       {
+         this.forward = forward;
          countVariable = new YoDouble("countVariable", registry);
       }
 
       @Override
-      public void processData()
+      public boolean goForward()
+      {
+         return forward;
+      }
+
+      @Override
+      public void process(int startIndex, int endIndex, int currentIndex)
       {
          countVariable.set(count);
          count++;
@@ -296,12 +309,6 @@ public class SimulationConstructionSetProcessDataCallTest
       public YoDouble getCountVariable()
       {
          return countVariable;
-      }
-
-      @Override
-      public void initializeProcessing()
-      {
-
       }
    }
 }

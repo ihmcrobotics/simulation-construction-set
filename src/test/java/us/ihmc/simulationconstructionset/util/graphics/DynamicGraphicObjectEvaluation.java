@@ -18,12 +18,12 @@ import us.ihmc.jMonkeyEngineToolkit.jme.JMEGraphics3DAdapter;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameConvexPolygon2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class DynamicGraphicObjectEvaluation
 {
@@ -43,7 +43,7 @@ public class DynamicGraphicObjectEvaluation
       final SimulationConstructionSet scs = new SimulationConstructionSet(robot, graphicsAdapter, parameters);
       scs.setDT(0.1, 1);
 
-      YoVariableRegistry registry = new YoVariableRegistry("Polygon");
+      YoRegistry registry = new YoRegistry("Polygon");
       YoGraphicsListRegistry yoGraphicsListRegistry = new YoGraphicsListRegistry();
 
       // Polygon:
@@ -60,8 +60,8 @@ public class DynamicGraphicObjectEvaluation
       yoPolygon.set(polygon);
       YoFramePoseUsingYawPitchRoll yoPolyOrigin = new YoFramePoseUsingYawPitchRoll("PolyOrigin", worldFrame, registry);
       YoGraphicPolygon yoGraphicPolygon = new YoGraphicPolygon("Polygon", yoPolygon, yoPolyOrigin, 3.0, appearance);
-      yoPolyOrigin.setXYZ(0.1, 0.2, 1.0);
-      yoPolyOrigin.setYawPitchRoll(-0.1, -0.4, -0.3);
+      yoPolyOrigin.setPosition(0.1, 0.2, 1.0);
+      yoPolyOrigin.setOrientationYawPitchRoll(-0.1, -0.4, -0.3);
 
       // 3D Text:
       final YoGraphicText3D yoGraphicText = new YoGraphicText3D("Text", "Hello", "text", "", registry, 0.2, YoAppearance.Blue());
@@ -116,7 +116,7 @@ public class DynamicGraphicObjectEvaluation
       yoGraphicsListRegistry.registerGraphicsUpdatableToUpdateInAPlaybackListener(yoGraphicYoFramePolygon);
 
       scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       Graphics3DObject coordinateSystem = new Graphics3DObject();
       coordinateSystem.addCoordinateSystem(1.0);

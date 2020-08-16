@@ -12,7 +12,7 @@ import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationTesting.SimulationTestingParameters;
 import us.ihmc.tools.MemoryTools;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 /**
  * Tests simulation against closed-form dynamics
@@ -84,18 +84,19 @@ public class FeatherstoneAlgorithmTest
       {
          fail();
       }
+      scs.closeAndDispose();
    }
 
    private class DynamicsChecker implements RobotController
    {
-      private final YoVariableRegistry registry;
+      private final YoRegistry registry;
       private final RobotWithClosedFormDynamics robotWithClosedFormDynamics;
       private final double epsilon;
       private int numberOfTicksToWait = 2;
 
       public DynamicsChecker(RobotWithClosedFormDynamics robotWithClosedFormDynamics, double epsilon)
       {
-         registry = new YoVariableRegistry(robotWithClosedFormDynamics.getName() + "Registry");
+         registry = new YoRegistry(robotWithClosedFormDynamics.getName() + "Registry");
          this.robotWithClosedFormDynamics = robotWithClosedFormDynamics;
          this.epsilon = epsilon;
       }
@@ -107,7 +108,7 @@ public class FeatherstoneAlgorithmTest
       }
 
       @Override
-      public YoVariableRegistry getYoVariableRegistry()
+      public YoRegistry getYoRegistry()
       {
          return registry;
       }

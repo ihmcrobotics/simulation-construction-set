@@ -9,8 +9,8 @@ import javax.swing.JMenuItem;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableListPanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class BookmarkedVariablesPanel extends YoVariableListPanel
 {
@@ -55,7 +55,7 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
       bookmarkedVariablesHolder.addBookmarkedVariableAddedListener(new BookmarkedVariableAddedListener()
       {
          @Override
-         public void bookmarkAdded(YoVariable<?> variable)
+         public void bookmarkAdded(YoVariable variable)
          {
             addVariable(variable);
          }
@@ -63,7 +63,7 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
       bookmarkedVariablesHolder.addBookmarkedVariableRemovedListener(new BookmarkedVariableRemovedListener()
       {
          @Override
-         public void bookmarkRemoved(YoVariable<?> variable)
+         public void bookmarkRemoved(YoVariable variable)
          {
             removeVariable(variable);
          }
@@ -103,7 +103,7 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
       return selectedVariableHolder;
    }
 
-   public void bookmarkVariable(YoVariable<?> variable)
+   public void bookmarkVariable(YoVariable variable)
    {
       bookmarkedVariablesHolder.addBookmark(variable);
    }

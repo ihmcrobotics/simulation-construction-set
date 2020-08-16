@@ -1468,7 +1468,11 @@ public class StandardGUIActions implements GUIEnablerAndDisabler
       stepBackwardAction = null;
       stepForwardAction = null;
       stopAction = null;
-      toggleKeyPointModeAction = null;
+      if (toggleKeyPointModeAction != null)
+      {
+         toggleKeyPointModeAction.closeAndDispose();
+         toggleKeyPointModeAction = null;
+      }
       toggleCameraKeyModeAction = null;
       trackCheckBox = null;
 

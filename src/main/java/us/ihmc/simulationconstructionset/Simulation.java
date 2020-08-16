@@ -14,13 +14,11 @@ import us.ihmc.simulationconstructionset.physics.collision.simple.DoNothingColli
 import us.ihmc.simulationconstructionset.scripts.Script;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.listener.RewoundListener;
-import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.registry.YoNamespace;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class Simulation implements YoVariableHolder, Serializable // Runnable,
 {
@@ -43,7 +41,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    // private final YoVariable time;
    private Simulator mySimulator;
-   private DataBuffer myDataBuffer;
+   private YoBuffer myDataBuffer;
 
    private YoVariableList myCombinedVarList = new YoVariableList("Combined");
 
@@ -103,21 +101,15 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    }
 
    @Override
-   public List<YoVariable<?>> getAllVariables()
+   public List<YoVariable> getVariables()
    {
-      return myDataBuffer.getAllVariables();
+      return myDataBuffer.getVariables();
    }
 
    @Override
-   public YoVariable<?>[] getAllVariablesArray()
+   public YoVariable findVariable(String varname)
    {
-      return myDataBuffer.getAllVariablesArray();
-   }
-
-   @Override
-   public YoVariable<?> getVariable(String varname)
-   {
-      return myDataBuffer.getVariable(varname);
+      return myDataBuffer.findVariable(varname);
    }
 
    @Override
@@ -127,59 +119,34 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
    }
 
    @Override
-   public YoVariable<?> getVariable(String nameSpace, String varname)
+   public YoVariable findVariable(String namespace, String varname)
    {
-      return myDataBuffer.getVariable(nameSpace, varname);
+      return myDataBuffer.findVariable(namespace, varname);
    }
 
    @Override
-   public boolean hasUniqueVariable(String nameSpace, String varname)
+   public boolean hasUniqueVariable(String namespace, String varname)
    {
-      return myDataBuffer.hasUniqueVariable(nameSpace, varname);
+      return myDataBuffer.hasUniqueVariable(namespace, varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String nameSpace, String varname)
+   public List<YoVariable> findVariables(String namespace, String varname)
    {
-      return myDataBuffer.getVariables(nameSpace, varname);
+      return myDataBuffer.findVariables(namespace, varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(String varname)
+   public List<YoVariable> findVariables(String varname)
    {
-      return myDataBuffer.getVariables(varname);
+      return myDataBuffer.findVariables(varname);
    }
 
    @Override
-   public List<YoVariable<?>> getVariables(NameSpace nameSpace)
+   public List<YoVariable> findVariables(YoNamespace namespace)
    {
-      return myDataBuffer.getVariables(nameSpace);
+      return myDataBuffer.findVariables(namespace);
    }
-
-   public void registerVariable(YoVariable<?> variable)
-   {
-      throw new RuntimeException("Do not register variables with a Simulation.java!");
-   }
-
-   public List<YoVariable<?>> getVariablesThatContain(String searchString, boolean caseSensitive)
-   {
-      return myDataBuffer.getVariablesThatContain(searchString, caseSensitive, getAllVariables());
-   }
-
-   public List<YoVariable<?>> getVariablesThatStartWith(String searchString)
-   {
-      return myDataBuffer.getVariablesThatStartWith(searchString);
-   }
-
-   public List<YoVariable<?>> getVars(String[] varNames, String[] regularExpressions)
-   {
-      return myDataBuffer.getVars(varNames, regularExpressions);
-   }
-
-   // public Simulation(int dataBufferSize)
-   // {
-   //   this(((Robot) null), dataBufferSize);
-   // }
 
    public Simulation(Robot robot, int dataBufferSize)
    {
@@ -195,27 +162,14 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          robots = null;
 
       // Create a data buffer:
-      myDataBuffer = new DataBuffer(dataBufferSize);
-      myDataBuffer.setWrapBuffer(true);
-
-      if (robots != null)
-      {
-         for (Robot robot : robots)
-         {
-            YoVariableRegistry registry = robot.getRobotsYoVariableRegistry();
-            List<RewoundListener> simulationRewoundListners = registry.getAllSimulationRewoundListeners();
-
-            myDataBuffer.attachSimulationRewoundListeners(simulationRewoundListners);
-         }
-      }
+      myDataBuffer = new YoBuffer(dataBufferSize);
 
       setRobots(robots);
    }
 
    public void closeAndDispose()
    {
-      myDataBuffer.closeAndDispose();
-
+      myDataBuffer.clear();
       myDataBuffer = null;
       mySimulator = null;
    }
@@ -234,7 +188,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
          }
       }
 
-      myDataBuffer.copyValuesThrough();
+      myDataBuffer.fillBuffer();
       updateRobots(robots);
    }
 
@@ -270,7 +224,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
       setDT(SIMULATION_DT, RECORD_FREQ);
       addVariablesFromARobot(robot);
 
-      myDataBuffer.copyValuesThrough();
+      myDataBuffer.fillBuffer();
       updateRobots(robots);
    }
 
@@ -287,11 +241,11 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    private void addVariablesFromARobot(Robot robot)
    {
-      myDataBuffer.addVariables(robot.getAllVariables());
-      myCombinedVarList.addVariables(robot.getAllVariables());
+      myDataBuffer.addVariables(robot.getRobotsYoRegistry().collectSubtreeVariables());
+      myCombinedVarList.addAll(robot.getRobotsYoRegistry().collectSubtreeVariables());
    }
 
-   public DataBuffer getDataBuffer()
+   public YoBuffer getDataBuffer()
    {
       return myDataBuffer;
    }
@@ -377,7 +331,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
             }
          }
 
-         myDataBuffer.tickAndUpdate();
+         myDataBuffer.tickAndWriteIntoBuffer();
          numTicks -= RECORD_FREQ;
       }
 
@@ -405,7 +359,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public void tickAndUpdate()
    {
-      myDataBuffer.tickAndUpdate();
+      myDataBuffer.tickAndWriteIntoBuffer();
    }
 
    public synchronized void simulate(double simulationTime) throws UnreasonableAccelerationException
@@ -451,7 +405,7 @@ public class Simulation implements YoVariableHolder, Serializable // Runnable,
 
    public void addVarList(YoVariableList newVarList)
    {
-      myCombinedVarList.addVariables(newVarList);
+      myCombinedVarList.addAll(newVarList);
       myDataBuffer.addVariables(newVarList.getVariables());
    }
 

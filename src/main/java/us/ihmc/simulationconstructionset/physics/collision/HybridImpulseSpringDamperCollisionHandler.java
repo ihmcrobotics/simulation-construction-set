@@ -18,7 +18,7 @@ import us.ihmc.simulationconstructionset.physics.CollisionHandler;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeDescription;
 import us.ihmc.simulationconstructionset.physics.CollisionShapeWithLink;
 import us.ihmc.simulationconstructionset.physics.Contacts;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoInteger;
 
@@ -26,7 +26,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
 {
    private boolean visualize = true;
 
-   private final YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
+   private final YoRegistry registry = new YoRegistry(getClass().getSimpleName());
    private final BagOfBalls externalForcePointBalls;
    private final BagOfBalls newCollisionBalls;
    private final ContactingExternalForcePointsVisualizer contactingExternalForcePointsVisualizer;
@@ -78,7 +78,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
 
    private final YoInteger numberOfContacts = new YoInteger("numberOfContacts", registry);
 
-   public HybridImpulseSpringDamperCollisionHandler(double epsilon, double mu, YoVariableRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
+   public HybridImpulseSpringDamperCollisionHandler(double epsilon, double mu, YoRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(new Random(), epsilon, mu, parentRegistry, yoGraphicsListRegistry);
    }
@@ -88,7 +88,7 @@ public class HybridImpulseSpringDamperCollisionHandler implements CollisionHandl
     * @param mu      coefficient of friction
     * @param robot   Robot model
     */
-   public HybridImpulseSpringDamperCollisionHandler(Random random, double epsilon, double mu, YoVariableRegistry parentRegistry,
+   public HybridImpulseSpringDamperCollisionHandler(Random random, double epsilon, double mu, YoRegistry parentRegistry,
                                                     YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this.random = random;

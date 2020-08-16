@@ -4,11 +4,11 @@ import javax.swing.JFrame;
 
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
-import us.ihmc.yoVariables.dataBuffer.DataEntryHolder;
-import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.buffer.YoBufferVariableEntry;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryHolder;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
+import us.ihmc.yoVariables.buffer.interfaces.YoTimeBufferHolder;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -28,26 +28,26 @@ public class YoGraphTester
          }
       };
 
-      DataEntryHolder dataEntryHolder = new DataEntryHolder()
+      YoBufferVariableEntryHolder dataEntryHolder = new YoBufferVariableEntryHolder()
       {
          @Override
-         public DataEntry getEntry(YoVariable<?> yoVariable)
+         public YoBufferVariableEntryReader getEntry(YoVariable yoVariable)
          {
             return null;
          }
       };
 
-      TimeDataHolder timeDataHolder = new MinimalTimeDataHolder(200);
+      YoTimeBufferHolder timeDataHolder = new MinimalTimeDataHolder(200);
 
       GraphIndicesHolder graphIndicesHolder = new MinimalGraphIndicesHolder();
 
       YoGraph yoGraph = new YoGraph(graphIndicesHolder, yoGraphRemover, selectedVariableHolder, dataEntryHolder, timeDataHolder, jFrame);
 
       int nPoints = 200;
-      YoVariableRegistry registry = new YoVariableRegistry("registry");
+      YoRegistry registry = new YoRegistry("registry");
       YoDouble yoVariable = new YoDouble("variableOne", registry);
 
-      DataBufferEntry dataEntry = new DataBufferEntry(yoVariable, nPoints);
+      YoBufferVariableEntry dataEntry = new YoBufferVariableEntry(yoVariable, nPoints);
 
       double value = 0.0;
 
@@ -55,7 +55,7 @@ public class YoGraphTester
       {
          yoVariable.set(value);
          value = value + 0.001;
-         dataEntry.setDataAtIndexToYoVariableValue(i);
+         dataEntry.writeIntoBufferAt(i);
       }
 
       yoGraph.addVariable(dataEntry);

@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
-import us.ihmc.yoVariables.dataBuffer.DataProcessingFunction;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferProcessor;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
-public class DataProcessingFunctionTest
+public class YoBufferProcessorTest
 {
    private static final boolean SHOW_GUI = false;
 
@@ -20,13 +20,13 @@ public class DataProcessingFunctionTest
    {
       final Robot robot = new Robot("DataProcessingFunctionTestRobot");
 
-      YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
+      YoRegistry registry = new YoRegistry(getClass().getSimpleName());
 
       final YoDouble variableOne = new YoDouble("variableOne", registry);
       final YoDouble variableTwo = new YoDouble("variableTwo", registry);
       final YoDouble variableThree = new YoDouble("variableThree", registry);
 
-      robot.addYoVariableRegistry(registry);
+      robot.addYoRegistry(registry);
 
       SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(SHOW_GUI);
@@ -38,15 +38,10 @@ public class DataProcessingFunctionTest
       BlockingSimulationRunner runner = new BlockingSimulationRunner(scs, 100.0);
       runner.simulateAndBlock(2.0);
 
-      DataProcessingFunction dataProcessingFunction = new DataProcessingFunction()
+      YoBufferProcessor dataProcessingFunction = new YoBufferProcessor()
       {
          @Override
-         public void initializeProcessing()
-         {
-         }
-
-         @Override
-         public void processData()
+         public void process(int startIndex, int endIndex, int currentIndex)
          {
             double time = robot.getTime();
 
@@ -56,7 +51,7 @@ public class DataProcessingFunctionTest
          }
       };
 
-      scs.tick(50);
+      scs.tickAndReadFromBuffer(50);
       assertEquals(variableOne.getDoubleValue(), 0.0, 1e-7);
       assertEquals(variableTwo.getDoubleValue(), 0.0, 1e-7);
       assertEquals(variableThree.getDoubleValue(), 0.0, 1e-7);
@@ -64,12 +59,14 @@ public class DataProcessingFunctionTest
       scs.applyDataProcessingFunction(dataProcessingFunction);
 
       scs.gotoInPointNow();
-      scs.tick(500);
+      scs.tickAndReadFromBuffer(500);
 
       assertEquals(variableOne.getDoubleValue(), 0.5, 1e-7);
       assertEquals(variableOne.getDoubleValue(), robot.getTime(), 1e-7);
       assertEquals(variableTwo.getDoubleValue(), 1.1, 1e-7);
       assertEquals(variableThree.getDoubleValue(), 9.23, 1e-7);
+
+      scs.closeAndDispose();
    }
 
 }

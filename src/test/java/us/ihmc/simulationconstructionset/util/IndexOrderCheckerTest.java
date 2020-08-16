@@ -5,7 +5,7 @@ import static us.ihmc.robotics.Assert.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class IndexOrderCheckerTest
 {
@@ -14,7 +14,7 @@ public class IndexOrderCheckerTest
    @BeforeEach
    public void setUp()
    {
-      YoVariableRegistry registry = new YoVariableRegistry("testRegistry");
+      YoRegistry registry = new YoRegistry("testRegistry");
       indexOrderChecker = new IndexOrderChecker("test", registry, 1);
    }
 

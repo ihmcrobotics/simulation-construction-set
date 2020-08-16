@@ -5,7 +5,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
 
 public class JointWrenchSensor
 {
@@ -18,8 +18,8 @@ public class JointWrenchSensor
    {
       this.name = name;
 
-      jointWrenchForce = new YoFrameVector3D(name + "_f", null, robot.getRobotsYoVariableRegistry());
-      jointWrenchTorque = new YoFrameVector3D(name + "_t", null, robot.getRobotsYoVariableRegistry());
+      jointWrenchForce = new YoFrameVector3D(name + "_f", null, robot.getRobotsYoRegistry());
+      jointWrenchTorque = new YoFrameVector3D(name + "_t", null, robot.getRobotsYoRegistry());
 
       this.offsetFromJoint.set(offsetFromJoint);
    }

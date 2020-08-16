@@ -171,7 +171,7 @@ public class SimulationOverheadPlotter implements PlaybackListener
    }
 
    @Override
-   public void notifyOfIndexChange(int newIndex)
+   public void indexChanged(int newIndex)
    {
       update();
    }

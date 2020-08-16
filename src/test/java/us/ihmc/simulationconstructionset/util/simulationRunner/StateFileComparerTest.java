@@ -13,7 +13,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 
@@ -99,36 +100,44 @@ public class StateFileComparerTest
    @Test // timeout=300000
    public void testCompareVarLists()
    {
-      YoVariableRegistry registry1 = createRegistryAndFillWithVariables();
-      YoVariableRegistry registry2 = createRegistryAndFillWithVariables();
+      YoRegistry registry1 = createRegistryAndFillWithVariables();
+      YoRegistry registry2 = createRegistryAndFillWithVariables();
 
       ArrayList<String> exceptions = new ArrayList<>();
       exceptions.add(new String("exceptional"));
 
-      ArrayList<VariableDifference> variableDifferences = StateFileComparer.compareVarLists(registry1.createVarList(),
-                                                                                            registry2.createVarList(),
+      ArrayList<VariableDifference> variableDifferences = StateFileComparer.compareVarLists(new YoVariableList(registry1.getName(), registry1.getVariables()),
+                                                                                            new YoVariableList(registry2.getName(), registry2.getVariables()),
                                                                                             1e-7,
                                                                                             false,
                                                                                             exceptions);
       assertEquals(0, variableDifferences.size());
 
-      ((YoDouble) registry1.getVariable("exceptionalVariable")).set(5678.0);
+      ((YoDouble) registry1.findVariable("exceptionalVariable")).set(5678.0);
 
-      variableDifferences = StateFileComparer.compareVarLists(registry1.createVarList(), registry2.createVarList(), 1e-7, false, exceptions);
+      variableDifferences = StateFileComparer.compareVarLists(new YoVariableList(registry1.getName(), registry1.getVariables()),
+                                                              new YoVariableList(registry2.getName(), registry2.getVariables()),
+                                                              1e-7,
+                                                              false,
+                                                              exceptions);
       assertEquals(0, variableDifferences.size());
 
-      ((YoDouble) registry1.getVariable("variable1")).set(3.5);
+      ((YoDouble) registry1.findVariable("variable1")).set(3.5);
 
-      variableDifferences = StateFileComparer.compareVarLists(registry1.createVarList(), registry2.createVarList(), 1e-7, false, exceptions);
+      variableDifferences = StateFileComparer.compareVarLists(new YoVariableList(registry1.getName(), registry1.getVariables()),
+                                                              new YoVariableList(registry2.getName(), registry2.getVariables()),
+                                                              1e-7,
+                                                              false,
+                                                              exceptions);
       assertEquals(1, variableDifferences.size());
    }
 
-   private YoVariableRegistry createRegistryAndFillWithVariables()
+   private YoRegistry createRegistryAndFillWithVariables()
    {
-      YoVariableRegistry root = new YoVariableRegistry("root");
-      YoVariableRegistry registry0 = new YoVariableRegistry("registry0");
-      YoVariableRegistry registry00 = new YoVariableRegistry("registry00");
-      YoVariableRegistry registry01 = new YoVariableRegistry("registry01");
+      YoRegistry root = new YoRegistry("root");
+      YoRegistry registry0 = new YoRegistry("registry0");
+      YoRegistry registry00 = new YoRegistry("registry00");
+      YoRegistry registry01 = new YoRegistry("registry01");
 
       root.addChild(registry0);
       registry0.addChild(registry00);

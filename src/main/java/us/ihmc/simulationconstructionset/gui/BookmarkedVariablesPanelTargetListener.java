@@ -56,7 +56,7 @@ public class BookmarkedVariablesPanelTargetListener implements DropTargetListene
 
       if ((YoGraph.getSourceOfDrag() == null) || !YoGraph.getSourceOfDrag().equals(bookmarkedVariablesPanel))
       {
-         YoVariable<?> v = bookmarkedVariablesPanel.getSelectedVariableHolder().getSelectedVariable();
+         YoVariable v = bookmarkedVariablesPanel.getSelectedVariableHolder().getSelectedVariable();
          if (v != null)
             bookmarkedVariablesPanel.bookmarkVariable(v);
       }

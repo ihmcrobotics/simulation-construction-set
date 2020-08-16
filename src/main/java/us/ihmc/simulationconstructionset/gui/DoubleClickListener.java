@@ -9,6 +9,6 @@ import us.ihmc.yoVariables.variable.YoVariable;
 
 public interface DoubleClickListener
 {
-   public void doubleClicked(YoVariable<?> variable);
+   public void doubleClicked(YoVariable variable);
 
 }

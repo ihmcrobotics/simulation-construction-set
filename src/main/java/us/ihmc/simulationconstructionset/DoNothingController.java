@@ -1,14 +1,14 @@
 package us.ihmc.simulationconstructionset;
 
 import us.ihmc.simulationconstructionset.util.RobotController;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public final class DoNothingController implements RobotController
 {
-   private final YoVariableRegistry registry = new YoVariableRegistry("DoNothingController");
+   private final YoRegistry registry = new YoRegistry("DoNothingController");
 
    @Override
-   public YoVariableRegistry getYoVariableRegistry()
+   public YoRegistry getYoRegistry()
    {
       return registry;
    }

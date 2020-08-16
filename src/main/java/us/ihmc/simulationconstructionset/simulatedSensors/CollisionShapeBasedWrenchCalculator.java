@@ -10,7 +10,7 @@ import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.ExternalForcePoint;
 import us.ihmc.simulationconstructionset.Joint;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInterface
 {
@@ -35,7 +35,7 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    private final Vector3D tau = new Vector3D();
 
    public CollisionShapeBasedWrenchCalculator(String forceSensorName, List<ExternalForcePoint> contactPoints, Joint forceTorqueSensorJoint,
-                                              RigidBodyTransform transformToParentJoint, YoVariableRegistry registry)
+                                              RigidBodyTransform transformToParentJoint, YoRegistry registry)
    {
       this.forceSensorName = forceSensorName;
       this.contactPoints = contactPoints;

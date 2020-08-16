@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.UnreasonableAccelerationException;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class SimulationRewindabilityVerifier
 {
@@ -35,8 +35,8 @@ public class SimulationRewindabilityVerifier
    {
       double time = simulations[0].getTime();
 
-      YoVariableRegistry registry0 = simulations[0].getRootRegistry();
-      YoVariableRegistry registry1 = simulations[1].getRootRegistry();
+      YoRegistry registry0 = simulations[0].getRootRegistry();
+      YoRegistry registry1 = simulations[1].getRootRegistry();
 
       VariablesThatShouldMatchList variablesThatShouldMatchList = new VariablesThatShouldMatchList(registry0, registry1, exceptions);
 
@@ -107,8 +107,8 @@ public class SimulationRewindabilityVerifier
                                                    ArrayList<VariableDifference> variableDifferencesToPack)
          throws UnreasonableAccelerationException
    {
-      YoVariableRegistry registry0 = simulations[0].getRootRegistry();
-      YoVariableRegistry registry1 = simulations[1].getRootRegistry();
+      YoRegistry registry0 = simulations[0].getRootRegistry();
+      YoRegistry registry1 = simulations[1].getRootRegistry();
 
       variableDifferencesToPack.clear();
       VariablesThatShouldMatchList variablesThatShouldMatchList = new VariablesThatShouldMatchList(registry0, registry1, exceptions);

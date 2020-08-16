@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import us.ihmc.simulationconstructionset.gui.VarPropertiesPanel;
-import us.ihmc.yoVariables.dataBuffer.DataBufferEntry;
+import us.ihmc.yoVariables.buffer.YoBufferVariableEntry;
 
 @SuppressWarnings("serial")
 public class VarPropertiesDialog extends JDialog implements ActionListener
@@ -24,7 +24,7 @@ public class VarPropertiesDialog extends JDialog implements ActionListener
    private VarPropertiesPanel[] varPropertiesPanels;
    private JFrame parentFrame;
 
-   public VarPropertiesDialog(JFrame frame, ArrayList<DataBufferEntry> entries)
+   public VarPropertiesDialog(JFrame frame, ArrayList<YoBufferVariableEntry> entries)
    {
       super(frame, "Variable Properties", false);
       parentFrame = frame;

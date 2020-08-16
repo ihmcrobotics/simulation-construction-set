@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoNamespace;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.tools.YoFactories;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public class VariablesThatShouldMatchListTest
@@ -18,11 +19,11 @@ public class VariablesThatShouldMatchListTest
    @Test // timeout=300000
    public void testOne()
    {
-      YoVariableRegistry registryOne = new YoVariableRegistry("root");
-      YoVariableRegistry registryTwo = new YoVariableRegistry("root");
+      YoRegistry registryOne = new YoRegistry("root");
+      YoRegistry registryTwo = new YoRegistry("root");
 
-      registryOne.getOrCreateAndAddRegistry(new NameSpace("root.one.two.three.four"));
-      registryTwo.getOrCreateAndAddRegistry(new NameSpace("root.one.two.three.four"));
+      YoFactories.findOrCreateRegistry(registryOne, new YoNamespace("root.one.two.three.four"));
+      YoFactories.findOrCreateRegistry(registryTwo, new YoNamespace("root.one.two.three.four"));
 
       ArrayList<YoDouble[]> theseShouldMatch = new ArrayList<>();
 
@@ -52,27 +53,27 @@ public class VariablesThatShouldMatchListTest
 
       assertTrue(doValuesMatch);
 
-      registryOne.getVariable("var1").setValueFromDouble(0.123);
+      registryOne.findVariable("var1").setValueFromDouble(0.123);
       doValuesMatch = variablesThatShouldMatchList.doVariableValuesMatch(variableDifferences, 0.0, maxDifferenceAllowed, checkForPercentDifference);
       assertEquals(1, variableDifferences.size());
       assertEquals(variableDifferences.get(0).getVariableOne().getName(), "var1");
       assertFalse(doValuesMatch);
 
       variableDifferences.clear();
-      registryTwo.getVariable("var1").setValueFromDouble(0.123);
+      registryTwo.findVariable("var1").setValueFromDouble(0.123);
       doValuesMatch = variablesThatShouldMatchList.doVariableValuesMatch(variableDifferences, 0.0, maxDifferenceAllowed, checkForPercentDifference);
       assertTrue(doValuesMatch);
 
-      registryTwo.getVariable("var1_exception1").setValueFromDouble(0.123);
-      registryTwo.getVariable("var2_exception2").setValueFromDouble(0.456);
-      registryTwo.getVariable("exception3").setValueFromDouble(0.789);
+      registryTwo.findVariable("var1_exception1").setValueFromDouble(0.123);
+      registryTwo.findVariable("var2_exception2").setValueFromDouble(0.456);
+      registryTwo.findVariable("exception3").setValueFromDouble(0.789);
 
       doValuesMatch = variablesThatShouldMatchList.doVariableValuesMatch(variableDifferences, 0.0, maxDifferenceAllowed, checkForPercentDifference);
       assertTrue(doValuesMatch);
 
-      registryOne.getVariable("var2").setValueFromDouble(11.23);
-      registryTwo.getVariable("var4").setValueFromDouble(14.5);
-      registryTwo.getVariable("var6").setValueFromDouble(16.7);
+      registryOne.findVariable("var2").setValueFromDouble(11.23);
+      registryTwo.findVariable("var4").setValueFromDouble(14.5);
+      registryTwo.findVariable("var6").setValueFromDouble(16.7);
       doValuesMatch = variablesThatShouldMatchList.doVariableValuesMatch(variableDifferences, 0.0, maxDifferenceAllowed, checkForPercentDifference);
       assertEquals(3, variableDifferences.size());
       assertEquals(variableDifferences.get(0).getVariableOne().getName(), "var6");
@@ -81,9 +82,9 @@ public class VariablesThatShouldMatchListTest
       assertFalse(doValuesMatch);
 
       variableDifferences.clear();
-      registryTwo.getVariable("var2").setValueFromDouble(11.23);
-      registryOne.getVariable("var4").setValueFromDouble(14.5);
-      registryOne.getVariable("var6").setValueFromDouble(16.7);
+      registryTwo.findVariable("var2").setValueFromDouble(11.23);
+      registryOne.findVariable("var4").setValueFromDouble(14.5);
+      registryOne.findVariable("var6").setValueFromDouble(16.7);
       doValuesMatch = variablesThatShouldMatchList.doVariableValuesMatch(variableDifferences, 0.0, maxDifferenceAllowed, checkForPercentDifference);
       assertEquals(0, variableDifferences.size());
       assertTrue(doValuesMatch);
@@ -91,8 +92,8 @@ public class VariablesThatShouldMatchListTest
       variableDifferences.clear();
       maxDifferenceAllowed = 0.11;
       checkForPercentDifference = false;
-      registryOne.getVariable("var1").setValueFromDouble(111.0);
-      registryTwo.getVariable("var1").setValueFromDouble(110.9);
+      registryOne.findVariable("var1").setValueFromDouble(111.0);
+      registryTwo.findVariable("var1").setValueFromDouble(110.9);
       doValuesMatch = variablesThatShouldMatchList.doVariableValuesMatch(variableDifferences, 0.0, maxDifferenceAllowed, checkForPercentDifference);
       assertTrue(doValuesMatch);
       maxDifferenceAllowed = 0.099;
@@ -102,8 +103,8 @@ public class VariablesThatShouldMatchListTest
       variableDifferences.clear();
       maxDifferenceAllowed = 0.0099;
       checkForPercentDifference = true;
-      registryOne.getVariable("var1").setValueFromDouble(10.0);
-      registryTwo.getVariable("var1").setValueFromDouble(10.1);
+      registryOne.findVariable("var1").setValueFromDouble(10.0);
+      registryTwo.findVariable("var1").setValueFromDouble(10.1);
       doValuesMatch = variablesThatShouldMatchList.doVariableValuesMatch(variableDifferences, 0.0, maxDifferenceAllowed, checkForPercentDifference);
       assertFalse(doValuesMatch);
       variableDifferences.clear();
@@ -128,11 +129,11 @@ public class VariablesThatShouldMatchListTest
 
    }
 
-   private YoDouble[] createAndAddVariable(String name, String fullNameSpace, YoVariableRegistry rootRegistryOne, YoVariableRegistry rootRegistryTwo)
+   private YoDouble[] createAndAddVariable(String name, String fullNamespace, YoRegistry rootRegistryOne, YoRegistry rootRegistryTwo)
    {
       YoDouble[] ret = new YoDouble[2];
-      ret[0] = new YoDouble(name, rootRegistryOne.getOrCreateAndAddRegistry(new NameSpace(fullNameSpace)));
-      ret[1] = new YoDouble(name, rootRegistryTwo.getOrCreateAndAddRegistry(new NameSpace(fullNameSpace)));
+      ret[0] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryOne, new YoNamespace(fullNamespace)));
+      ret[1] = new YoDouble(name, YoFactories.findOrCreateRegistry(rootRegistryTwo, new YoNamespace(fullNamespace)));
 
       return ret;
    }

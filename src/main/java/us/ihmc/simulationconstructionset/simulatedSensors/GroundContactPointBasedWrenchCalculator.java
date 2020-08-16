@@ -12,8 +12,8 @@ import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.Joint;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class GroundContactPointBasedWrenchCalculator implements WrenchCalculatorInterface
 {
@@ -32,7 +32,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
    private final ReferenceFrame sensorFrame;
 
    public GroundContactPointBasedWrenchCalculator(String forceSensorName, List<GroundContactPoint> contactPoints, Joint forceTorqueSensorJoint,
-                                                  RigidBodyTransform transformToParentJoint, YoVariableRegistry registry)
+                                                  RigidBodyTransform transformToParentJoint, YoRegistry registry)
    {
       this.forceSensorName = forceSensorName;
       this.contactPoints = contactPoints;
@@ -54,7 +54,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
             String contactPointName = contactPoints.get(i).getName();
             String namePrefix = contactPointName + "_ForceInSensorFrame";
             // Checking if that variable does already exist for some reason.
-            if (registry.getVariable(namePrefix + "X") == null)
+            if (registry.findVariable(namePrefix + "X") == null)
                yoContactForceInSensorFrame.put(contactPointName, new YoFrameVector3D(namePrefix, sensorFrame, registry));
          }
       }

@@ -24,8 +24,8 @@ import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
 import us.ihmc.tools.gui.MyFileFilter;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructor
@@ -44,7 +44,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
    private JPanel accessory;
    private JCheckBox saveAllGraphs;
 
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
 
    public ExportGraphsToFileGenerator(SimulationConstructionSet scs, JFrame frame, GraphArrayPanel graphArrayPanel, StandardSimulationGUI myGUI)
    {
@@ -75,7 +75,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       if (dataFileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION)
       {
 
-         ArrayList<DataEntry> entriesToExport = new ArrayList<>();
+         ArrayList<YoBufferVariableEntryReader> entriesToExport = new ArrayList<>();
 
          if (saveAllGraphs.isSelected())
          {
@@ -117,7 +117,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       guiEnablerAndDisabler.enableGUIComponents();
    }
 
-   private void exportToCSV(File chosenFile, ArrayList<DataEntry> entriesToExport)
+   private void exportToCSV(File chosenFile, ArrayList<YoBufferVariableEntryReader> entriesToExport)
    {
       String filename = chosenFile.getName();
 
@@ -128,7 +128,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
 
       PrintWriter writer = FileTools.newPrintWriter(chosenFile.toPath(), WriteOption.TRUNCATE, DefaultExceptionHandler.PRINT_STACKTRACE);
 
-      for (DataEntry dataEntry : entriesToExport)
+      for (YoBufferVariableEntryReader dataEntry : entriesToExport)
       {
          writer.print(dataEntry.getVariableName() + ",");
       }
@@ -137,9 +137,9 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
 
       for (int i = dataBuffer.getInPoint(); i < dataBuffer.getOutPoint(); i++)
       {
-         for (DataEntry dataEntry : entriesToExport)
+         for (YoBufferVariableEntryReader dataEntry : entriesToExport)
          {
-            writer.print(dataEntry.getData()[i] + ",");
+            writer.print(dataEntry.getBuffer()[i] + ",");
          }
 
          writer.println();
@@ -148,7 +148,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       writer.close();
    }
 
-   private void exportToMAT(File chosenFile, ArrayList<DataEntry> entriesToExport)
+   private void exportToMAT(File chosenFile, ArrayList<YoBufferVariableEntryReader> entriesToExport)
    {
       String filename = chosenFile.getName();
 
@@ -159,7 +159,7 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
 
       ArrayList<MLArray> matlabData = new ArrayList<>();
 
-      for (DataEntry entry : entriesToExport)
+      for (YoBufferVariableEntryReader entry : entriesToExport)
       {
          matlabData.add(convertToMatlabArray(entry, dataBuffer.getInPoint(), dataBuffer.getOutPoint()));
       }
@@ -187,11 +187,11 @@ public class ExportGraphsToFileGenerator implements ExportGraphsToFileConstructo
       saveAllGraphs = null;
    }
 
-   public static MLDouble convertToMatlabArray(DataEntry entry, int inPoint, int outPoint)
+   public static MLDouble convertToMatlabArray(YoBufferVariableEntryReader entry, int inPoint, int outPoint)
    {
-      YoVariable<?> variable = entry.getVariable();
+      YoVariable variable = entry.getVariable();
 
-      double[] inData = entry.getData();
+      double[] inData = entry.getBuffer();
       double[] data;
 
       if (inPoint == outPoint)

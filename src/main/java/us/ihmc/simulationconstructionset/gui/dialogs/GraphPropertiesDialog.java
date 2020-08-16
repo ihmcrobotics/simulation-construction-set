@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import us.ihmc.simulationconstructionset.gui.GraphPropertiesPanel;
 import us.ihmc.simulationconstructionset.gui.VarPropertiesPanel;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 
 @SuppressWarnings("serial")
 public class GraphPropertiesDialog extends JDialog implements ActionListener
@@ -38,7 +38,7 @@ public class GraphPropertiesDialog extends JDialog implements ActionListener
 
       Container contentPane = getContentPane();
 
-      List<DataEntry> entries = graph.getEntriesOnThisGraph();
+      List<YoBufferVariableEntryReader> entries = graph.getEntriesOnThisGraph();
 
       JPanel panels = new JPanel(new GridLayout(entries.size() + 1, 1));
       graphPropertiesPanel = new GraphPropertiesPanel(graph);

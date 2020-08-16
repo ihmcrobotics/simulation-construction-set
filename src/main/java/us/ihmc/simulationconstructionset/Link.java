@@ -20,7 +20,7 @@ import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
 import us.ihmc.robotics.robotDescription.InertiaTools;
 import us.ihmc.simulationconstructionset.physics.CollisionHandler;
 import us.ihmc.simulationconstructionset.robotdefinition.LinkDefinitionFixedFrame;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 /**
  * Describes physical properties of a rigid body. Can attach graphics to it.
@@ -423,7 +423,7 @@ public class Link implements java.io.Serializable
     *                    detection performance.
     * @param polyTree    PolyTree defining collision geometry.
     */
-   public void enableCollisions(int maximumNumberOfPotentialContacts, CollisionHandler collisionHandler, YoVariableRegistry registry)
+   public void enableCollisions(int maximumNumberOfPotentialContacts, CollisionHandler collisionHandler, YoRegistry registry)
    {
       if (parentJoint == null)
       {
@@ -442,7 +442,7 @@ public class Link implements java.io.Serializable
       collisionHandler.addContactingExternalForcePoints(this, contactingExternalForcePoints);
    }
 
-   public void enableContactingExternalForcePoints(int maximumNumberOfPotentialContacts, YoVariableRegistry registry)
+   public void enableContactingExternalForcePoints(int maximumNumberOfPotentialContacts, YoRegistry registry)
    {
       if (parentJoint == null)
       {

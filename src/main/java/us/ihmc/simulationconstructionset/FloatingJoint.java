@@ -15,12 +15,12 @@ import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionBasics;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.FloatingJointPhysics;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.YoPoint3D;
+import us.ihmc.yoVariables.euclid.YoQuaternion;
+import us.ihmc.yoVariables.euclid.YoVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoPoint3D;
-import us.ihmc.yoVariables.variable.YoQuaternion;
-import us.ihmc.yoVariables.variable.YoVector3D;
 
 public class FloatingJoint extends Joint implements FloatingSCSJoint
 {
@@ -73,7 +73,7 @@ public class FloatingJoint extends Joint implements FloatingSCSJoint
 
       physics = new FloatingJointPhysics(this);
 
-      YoVariableRegistry registry = rob.getRobotsYoVariableRegistry();
+      YoRegistry registry = rob.getRobotsYoRegistry();
 
       this.createYawPitchRollYoVariable = createYawPitchRollYoVariable;
 

@@ -12,7 +12,7 @@ import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.MovingGroundContactModel;
 import us.ihmc.simulationconstructionset.MovingGroundProfile;
 import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.yoVariables.variable.YoDouble;
 
@@ -23,7 +23,7 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
    private static final double defaultCoefficientOfRestitution = 0.5;
    private static final double defaultCoefficientOfFriction = 0.7;
 
-   private final YoVariableRegistry registry = new YoVariableRegistry("CollisionGroundContactModel");
+   private final YoRegistry registry = new YoRegistry("CollisionGroundContactModel");
    private YoDouble groundRestitution, groundFriction;
 
    private List<GroundContactPoint> gcPoints;
@@ -40,27 +40,27 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
    private Map<GroundContactPoint, YoDouble> closestIntersectionSpies = new HashMap<>();
    private Map<GroundContactPoint, YoBoolean> contactIsCloseToGround = new HashMap<>();
 
-   public CollisionGroundContactModel(Robot rob, YoVariableRegistry parentRegistry)
+   public CollisionGroundContactModel(Robot rob, YoRegistry parentRegistry)
    {
       this(rob, defaultCoefficientOfRestitution, defaultCoefficientOfFriction, parentRegistry);
    }
 
-   public CollisionGroundContactModel(Robot rob, double epsilon, double mu, YoVariableRegistry parentRegistry)
+   public CollisionGroundContactModel(Robot rob, double epsilon, double mu, YoRegistry parentRegistry)
    {
       this(rob, 0, epsilon, mu, parentRegistry);
    }
 
-   public CollisionGroundContactModel(Robot robot, int groundContactGroupIdentifier, double epsilon, double mu, YoVariableRegistry parentRegistry)
+   public CollisionGroundContactModel(Robot robot, int groundContactGroupIdentifier, double epsilon, double mu, YoRegistry parentRegistry)
    {
       this(robot.getGroundContactPoints(groundContactGroupIdentifier), epsilon, mu, parentRegistry);
    }
 
-   public CollisionGroundContactModel(List<GroundContactPoint> gcPoints, YoVariableRegistry parentRegistry)
+   public CollisionGroundContactModel(List<GroundContactPoint> gcPoints, YoRegistry parentRegistry)
    {
       this(gcPoints, defaultCoefficientOfRestitution, defaultCoefficientOfFriction, parentRegistry);
    }
 
-   public CollisionGroundContactModel(List<GroundContactPoint> gcPoints, double epsilon, double mu, YoVariableRegistry parentRegistry)
+   public CollisionGroundContactModel(List<GroundContactPoint> gcPoints, double epsilon, double mu, YoRegistry parentRegistry)
    {
       this.gcPoints = gcPoints;
 
@@ -282,7 +282,7 @@ public class CollisionGroundContactModel implements GroundContactModel, MovingGr
       }
    }
 
-   private void addRegistryToParent(YoVariableRegistry parentRegistry)
+   private void addRegistryToParent(YoRegistry parentRegistry)
    {
       if (parentRegistry != null)
       {
