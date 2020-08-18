@@ -308,12 +308,12 @@ import us.ihmc.yoVariables.variable.YoVariable;
  * @author Jerry Pratt
  * @version 1.0
  */
-public class SimulationConstructionSet implements Runnable, YoVariableHolder, RunCommandsExecutor, AddKeyPointCommandExecutor, AddCameraKeyCommandExecutor,
-      CreateNewGraphWindowCommandExecutor, CreateNewViewportWindowCommandExecutor, CropBufferCommandExecutor, CutBufferCommandExecutor,
-      ExportSnapshotCommandExecutor, GotoInPointCommandExecutor, GotoOutPointCommandExecutor, NextCameraKeyCommandExecutor, PackBufferCommandExecutor,
-      PreviousCameraKeyCommandExecutor, RemoveCameraKeyCommandExecutor, SetInPointCommandExecutor, SetOutPointCommandExecutor, StepBackwardCommandExecutor,
-      StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor, KeyPointsHolder, GUIEnablerAndDisabler, WriteDataCommandExecutor,
-      TimeHolder, ParameterRootNamespaceHolder, YoBufferReader, TickAndUpdatable
+public class SimulationConstructionSet
+      implements Runnable, YoVariableHolder, RunCommandsExecutor, AddKeyPointCommandExecutor, AddCameraKeyCommandExecutor, CreateNewGraphWindowCommandExecutor,
+      CreateNewViewportWindowCommandExecutor, CropBufferCommandExecutor, CutBufferCommandExecutor, ExportSnapshotCommandExecutor, GotoInPointCommandExecutor,
+      GotoOutPointCommandExecutor, NextCameraKeyCommandExecutor, PackBufferCommandExecutor, PreviousCameraKeyCommandExecutor, RemoveCameraKeyCommandExecutor,
+      SetInPointCommandExecutor, SetOutPointCommandExecutor, StepBackwardCommandExecutor, StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor,
+      KeyPointsHolder, GUIEnablerAndDisabler, WriteDataCommandExecutor, TimeHolder, ParameterRootNamespaceHolder, YoBufferReader, TickAndUpdatable
 {
    private static final boolean TESTING_LOAD_STUFF = false;
 
@@ -3156,7 +3156,8 @@ public class SimulationConstructionSet implements Runnable, YoVariableHolder, Ru
    @Override
    public void simulate()
    {
-      setScrollGraphsEnabled(false);
+      // 20200818 (Sylvain) This was probably an old quickfix to prevent scrolling while simulating. Seems unneeded and actually locks the buffer index so I commented it out.
+      //      setScrollGraphsEnabled(false);
 
       if (isSimulating)
       {
