@@ -1844,7 +1844,8 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       if (varNames != null)
          Stream.of(varNames).map(varName -> rootRegistry.findVariable(varName)).filter(var -> var != null).forEach(matchedVariables::add);
       if (regularExpressions != null)
-         Stream.of(regularExpressions).map(regex -> YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), rootRegistry)).forEach(matchedVariables::addAll);
+         Stream.of(regularExpressions).map(regex -> YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), rootRegistry))
+               .forEach(matchedVariables::addAll);
       YoVariableList varList = new YoVariableList(name);
       varList.addAll(matchedVariables);
 
@@ -1938,7 +1939,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
             }
          }
       }
-      //
+
       if (myEntryBoxArrayPanel == null)
       {
          return;
@@ -1955,9 +1956,11 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       String[] entryBoxRegularExpressions = group.getEntryBoxRegularExpressions();
       List<YoVariable> matchingVariables = new ArrayList<>();
       if (entryBoxVars != null)
-         Stream.of(entryBoxVars).map(varName -> rootRegistry.findVariable(varName)).filter(var -> var != null).forEach(matchingVariables::add);
+         Stream.of(entryBoxVars).filter(varName -> varName != null).map(varName -> rootRegistry.findVariable(varName)).filter(var -> var != null)
+               .forEach(matchingVariables::add);
       if (entryBoxRegularExpressions != null)
-         Stream.of(entryBoxRegularExpressions).map(regex -> YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), rootRegistry)).forEach(matchingVariables::addAll);
+         Stream.of(entryBoxRegularExpressions).filter(regex -> regex != null)
+               .map(regex -> YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), rootRegistry)).forEach(matchingVariables::addAll);
 
       EntryBoxArrayPanel tmpEntryBoxArrayPanel = new EntryBoxArrayPanel(parentContainer, selectedVariableHolder, matchingVariables);
       tmpEntryBoxArrayPanel.setName(name);
@@ -1988,7 +1991,8 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
       if (entryBoxVars != null)
          Stream.of(entryBoxVars).map(varName -> rootRegistry.findVariable(varName)).filter(var -> var != null).forEach(matchingVariables::add);
       if (entryBoxRegularExpressions != null)
-         Stream.of(entryBoxRegularExpressions).map(regex -> YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), rootRegistry)).forEach(matchingVariables::addAll);
+         Stream.of(entryBoxRegularExpressions).map(regex -> YoSearchTools.filterVariables(YoSearchTools.regularExpressionFilter(regex), rootRegistry))
+               .forEach(matchingVariables::addAll);
 
       setupEntryBox(matchingVariables);
 
