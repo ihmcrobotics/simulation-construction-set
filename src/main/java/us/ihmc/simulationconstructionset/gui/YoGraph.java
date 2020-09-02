@@ -76,6 +76,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private final List<YoBufferVariableEntryReader> entriesOnThisGraph;
    private final SelectedVariableHolder selectedVariableHolder;
 
+   private boolean hasMinMaxChanged = true;
    private double min = 0.0, max = 1.1;
 
    private int[] xData, yData;
@@ -92,8 +93,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private boolean showNamespace = false, showBaseLines = false;
    private int focussedBaseLine = 0;
 
-   public YoGraph(GraphIndicesHolder graphIndicesHolder, YoGraphRemover yoGraphRemover, SelectedVariableHolder holder, YoBufferVariableEntryHolder dataEntryHolder,
-                  YoTimeBufferHolder timeDataHolder, JFrame jFrame)
+   public YoGraph(GraphIndicesHolder graphIndicesHolder, YoGraphRemover yoGraphRemover, SelectedVariableHolder holder,
+                  YoBufferVariableEntryHolder dataEntryHolder, YoTimeBufferHolder timeDataHolder, JFrame jFrame)
    {
       setName("YoGraph");
 
@@ -407,26 +408,11 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       updateUI();
    }
 
-   private boolean minMaxChanged()
-   {
-      // Returns true if the min,max changed on any data in this graph.
-      boolean ret = false;
-
-      int numVars = entriesOnThisGraph.size();
-      if (numVars < 1)
-         return ret;
-
-      for (int i = 0; i < numVars; i++)
-      {
-         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
-         ret = (ret || entry.haveBoundsChanged());
-      }
-
-      return ret;
-   }
-
    private void reCalcMinMax()
    {
+      if (graphConfiguration.getScalingMethod() != AUTO_SCALING)
+         return;
+
       int numVars = entriesOnThisGraph.size();
       if (numVars < 1)
          return;
@@ -455,25 +441,13 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
             newMin = entryMin;
       }
 
+      hasMinMaxChanged = min != newMin || max != newMax;
       min = newMin;
       max = newMax;
    }
 
-   private void resetMinMax()
-   {
-      int numVars = entriesOnThisGraph.size();
-      if (numVars < 1)
-         return;
-
-      for (int i = 0; i < numVars; i++)
-      {
-         YoBufferVariableEntryReader entry = entriesOnThisGraph.get(i);
-         entry.resetBoundsChangedFlag();
-      }
-   }
-
-   private void calcXYData(YoBufferVariableEntryReader entry, int nPoints, int[] xData, int[] yData, double min, double max, int width, int height, int offsetFromLeft,
-                           int offsetFromTop, int leftPlotIndex, int rightPlotIndex)
+   private void calcXYData(YoBufferVariableEntryReader entry, int nPoints, int[] xData, int[] yData, double min, double max, int width, int height,
+                           int offsetFromLeft, int offsetFromTop, int leftPlotIndex, int rightPlotIndex)
    {
       double[] data = entry.getBuffer();
 
@@ -501,8 +475,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       }
    }
 
-   private void calcScatterData(YoBufferVariableEntryReader entryX, YoBufferVariableEntryReader entryY, int nPoints, int[] xData, int[] yData, double minX, double maxX, double minY, double maxY,
-                                int width, int height, int offsetFromLeft, int offsetFromTop)
+   private void calcScatterData(YoBufferVariableEntryReader entryX, YoBufferVariableEntryReader entryY, int nPoints, int[] xData, int[] yData, double minX,
+                                double maxX, double minY, double maxY, int width, int height, int offsetFromLeft, int offsetFromTop)
    {
       double[] dataX = entryX.getBuffer();
       double[] dataY = entryY.getBuffer();
@@ -591,13 +565,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
    public void repaintAllGraph()
    {
-      // if((scaling == AUTO_SCALING) && this.minMaxChanged())
-      if (minMaxChanged())
-      {
-         if (graphConfiguration.getScalingMethod() == AUTO_SCALING)
-            reCalcMinMax();
-      }
-
+      reCalcMinMax();
       repaint();
    }
 
@@ -606,17 +574,11 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       if (leftPlotIndex == rightPlotIndex)
          return;
 
-      if (minMaxChanged())
-      {
-         if (graphConfiguration.getScalingMethod() == AUTO_SCALING)
-         {
-            reCalcMinMax();
-         }
-         else
-         {
-            resetMinMax();
-         }
+      reCalcMinMax();
 
+      if (hasMinMaxChanged)
+      {
+         hasMinMaxChanged = false;
          repaint();
 
          return;
