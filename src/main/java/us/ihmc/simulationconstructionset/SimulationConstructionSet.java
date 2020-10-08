@@ -1693,7 +1693,7 @@ public class SimulationConstructionSet
     *
     * @param varnames Array of variable names for which to create graphs.
     */
-   public void setupGraph(String[] varnames)
+   public void setupGraph(String... varnames)
    {
       if (myGUI != null)
       {
