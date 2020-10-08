@@ -2659,7 +2659,9 @@ public class SimulationConstructionSet
 
          ticksSimulated -= recordFreq; // This prevents the following stuff from happening continuosly after one record cycle
 
+         rewoundListenerHandler.setEnable(false);
          myDataBuffer.tickAndWriteIntoBuffer(); // Update the data buffer and the min max values of each point it contains
+         rewoundListenerHandler.setEnable(true);
 
          if (myGUI != null)
          {
@@ -3102,7 +3104,9 @@ public class SimulationConstructionSet
 
          mySimulation.notifySimulateDoneListeners();
 
+         rewoundListenerHandler.setEnable(false);
          myDataBuffer.tickAndWriteIntoBuffer();
+         rewoundListenerHandler.setEnable(true);
 
          if (myGUI != null)
          {
