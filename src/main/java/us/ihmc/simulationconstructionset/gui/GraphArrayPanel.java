@@ -380,16 +380,11 @@ public class GraphArrayPanel extends JPanel implements GraphIndicesHolder, YoGra
 
       if (entry != null)
       {
-         EventDispatchThreadHelper.invokeAndWait(new Runnable()
+         EventDispatchThreadHelper.invokeAndWait(() ->
          {
-            @Override
-            public void run()
-            {
-               YoGraph g = new YoGraph(getGraphArrayPanel(), getGraphArrayPanel(), selectedVariableHolder, dataBuffer, dataBuffer, parentFrame);
-               g.addVariable(entry);
-               addGraph(g);
-            }
-
+            YoGraph g = new YoGraph(getGraphArrayPanel(), getGraphArrayPanel(), selectedVariableHolder, dataBuffer, dataBuffer, parentFrame);
+            g.addVariable(entry);
+            addGraph(g);
          });
       }
    }
