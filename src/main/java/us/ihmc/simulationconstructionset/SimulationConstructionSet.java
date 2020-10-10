@@ -1943,6 +1943,14 @@ public class SimulationConstructionSet
    }
 
    /**
+    * Avoid loading or saving default configuration.
+    */
+   public void skipLoadingDefaultConfiguration()
+   {
+      defaultLoaded = true;
+   }
+
+   /**
     * <p>
     * Adds the specified camera configuration to the simulation. Once added the camera configuration
     * may be selected in the viewport menu. It may also be added to a predefined viewport.
