@@ -91,7 +91,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
    private static Object recipientOfDrag = null;
    boolean hadFocus = false;
    private boolean showNamespace = false, showBaseLines = false;
-   private int focussedBaseLine = 0;
+   private int focusedBaseLine = 0;
 
    public YoGraph(GraphIndicesHolder graphIndicesHolder, YoGraphRemover yoGraphRemover, SelectedVariableHolder holder,
                   YoBufferVariableEntryHolder dataEntryHolder, YoTimeBufferHolder timeDataHolder, JFrame jFrame)
@@ -1188,11 +1188,11 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
             repaint();
             break;
          case KeyEvent.VK_UP:
-            incrementBaseLine(focussedBaseLine, 1.0);
+            incrementBaseLine(focusedBaseLine, 1.0);
             repaint();
             break;
          case KeyEvent.VK_DOWN:
-            incrementBaseLine(focussedBaseLine, -1.0);
+            incrementBaseLine(focusedBaseLine, -1.0);
             repaint();
             break;
       }
@@ -1227,35 +1227,35 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       switch (character)
       {
          case '1':
-            focussedBaseLine = 0;
+            focusedBaseLine = 0;
             repaint();
             break;
          case '2':
-            focussedBaseLine = 1;
+            focusedBaseLine = 1;
             repaint();
             break;
          case '3':
-            focussedBaseLine = 2;
+            focusedBaseLine = 2;
             repaint();
             break;
          case '4':
-            focussedBaseLine = 3;
+            focusedBaseLine = 3;
             repaint();
             break;
          case '5':
-            focussedBaseLine = 4;
+            focusedBaseLine = 4;
             repaint();
             break;
          case '6':
-            focussedBaseLine = 5;
+            focusedBaseLine = 5;
             repaint();
             break;
          case 'z':
-            zeroBaseLine(focussedBaseLine);
+            zeroBaseLine(focusedBaseLine);
             repaint();
             break;
          case 'c':
-            centerBaseLine(focussedBaseLine);
+            centerBaseLine(focusedBaseLine);
             repaint();
             break;
       }
