@@ -495,14 +495,7 @@ public class SimulationConstructionSet
 
       if (showGUI)
       {
-         EventDispatchThreadHelper.invokeAndWait(new Runnable()
-         {
-            @Override
-            public void run()
-            {
-               createFrame(showGUI);
-            }
-         });
+         EventDispatchThreadHelper.invokeAndWait(() -> createFrame(showGUI));
          yoGraphicMenuManager = new YoGraphicMenuManager();
       }
       else
@@ -541,14 +534,7 @@ public class SimulationConstructionSet
 
       if (showGUI)
       {
-         EventDispatchThreadHelper.invokeAndWait(new Runnable()
-         {
-            @Override
-            public void run()
-            {
-               createGUI(graphicsAdapter);
-            }
-         });
+         EventDispatchThreadHelper.invokeAndWait(() -> createGUI(graphicsAdapter));
       }
 
       mySimulation.getDataBuffer().fillBuffer(); // Copy the values through so that anything the user changed during initialization will be YoVariablized, and the default on all graphs.
