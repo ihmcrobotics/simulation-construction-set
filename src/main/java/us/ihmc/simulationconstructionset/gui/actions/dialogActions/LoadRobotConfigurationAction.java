@@ -19,8 +19,8 @@ public class LoadRobotConfigurationAction extends AbstractAction
       super("Load Robot Configuration...");
       this.constructor = constructor;
 
-      this.putValue(Action.LONG_DESCRIPTION, "Load Robot Configuration");
-      this.putValue(Action.SHORT_DESCRIPTION, "load robot config");
+      putValue(Action.LONG_DESCRIPTION, "Load Robot Configuration");
+      putValue(Action.SHORT_DESCRIPTION, "load robot config");
    }
 
    public void setCurrentDirectory(File directory)

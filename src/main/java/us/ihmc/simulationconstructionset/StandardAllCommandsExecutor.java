@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,23 +16,23 @@ import us.ihmc.simulationconstructionset.gui.GraphArrayWindow;
 import us.ihmc.simulationconstructionset.gui.StandardSimulationGUI;
 import us.ihmc.simulationconstructionset.gui.ViewportWindow;
 import us.ihmc.simulationconstructionset.gui.YoVariableSliderWindow;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener;
 
 public class StandardAllCommandsExecutor implements AllCommandsExecutor
 {
    private StandardSimulationGUI standardSimulationGUI;
    private SimulationConstructionSet simulationConstructionSet;
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
 
-   private ArrayList<ViewportSelectorCommandListener> viewportSelectorCommandListenersToRegister = new ArrayList<ViewportSelectorCommandListener>();
-   private ArrayList<ToggleKeyPointModeCommandListener> toggleKeyPointModeCommandListenersToRegister = new ArrayList<ToggleKeyPointModeCommandListener>();
+   private ArrayList<ViewportSelectorCommandListener> viewportSelectorCommandListenersToRegister = new ArrayList<>();
+   private ArrayList<KeyPointsChangedListener> keyPointsChangedListenersToRegister = new ArrayList<>();
 
    public StandardAllCommandsExecutor()
    {
    }
 
-   public void setup(SimulationConstructionSet simulationConstructionSet, StandardSimulationGUI standardSimulationGUI, DataBuffer dataBuffer)
+   public void setup(SimulationConstructionSet simulationConstructionSet, StandardSimulationGUI standardSimulationGUI, YoBuffer dataBuffer)
    {
       if (this.simulationConstructionSet != null)
          throw new RuntimeException("this.simulationConstructionSet != null");
@@ -49,9 +50,9 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.registerViewportSelectorCommandListener(listener);
       }
 
-      for (ToggleKeyPointModeCommandListener listener : toggleKeyPointModeCommandListenersToRegister)
+      for (KeyPointsChangedListener listener : keyPointsChangedListenersToRegister)
       {
-         dataBuffer.registerToggleKeyPointModeCommandListener(listener);
+         dataBuffer.getKeyPointsHandler().addListener(listener);
       }
    }
 
@@ -62,7 +63,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.addCameraKey();
    }
 
-   public ArrayList<Integer> getCameraKeyPoints()
+   public List<Integer> getCameraKeyPoints()
    {
       return standardSimulationGUI.getCameraKeyPoints();
    }
@@ -76,10 +77,10 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
 
    /**
     * Gets the KeyPoints in the cropped data
-    * 
+    *
     * @return The current KeyPoints as an ArrayList of Integer
     */
-   public ArrayList<Integer> getKeyPoints()
+   public List<Integer> getKeyPoints()
    {
       return standardSimulationGUI.getKeyPoints();
    }
@@ -158,7 +159,6 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
       return null;
    }
 
-
    @Override
    public YoVariableSliderWindow createNewYoVariableSliderWindow()
    {
@@ -197,27 +197,27 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    @Override
    public void cropBuffer()
    {
-      dataBuffer.cropData();
+      dataBuffer.cropBuffer();
       if (standardSimulationGUI != null)
          standardSimulationGUI.zoomFullView();
    }
-   
+
    @Override
    public void packBuffer()
    {
-      dataBuffer.packData();
+      dataBuffer.shiftBuffer();
       if (standardSimulationGUI != null)
          standardSimulationGUI.updateGraphs();
    }
-   
+
    @Override
    public void cutBuffer()
    {
-      dataBuffer.cutData();
+      dataBuffer.cutBuffer();
       if (standardSimulationGUI != null)
          standardSimulationGUI.zoomFullView();
    }
-   
+
    @Override
    public void thinBuffer(int keepEveryNthPoint)
    {
@@ -284,7 +284,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
       else
          dataBuffer.setOutPoint();
    }
-   
+
    public void setInOutPointFullBuffer()
    {
       if (standardSimulationGUI != null)
@@ -312,7 +312,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.stepBackward();
       else
       {
-         dataBuffer.tick(-1);
+         dataBuffer.tickAndReadFromBuffer(-1);
       }
    }
 
@@ -323,7 +323,7 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          standardSimulationGUI.stepForward();
       else
       {
-         dataBuffer.tick(1);
+         dataBuffer.tickAndReadFromBuffer(1);
       }
    }
 
@@ -341,25 +341,25 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    @Override
-   public boolean isKeyPointModeToggled()
+   public boolean areKeyPointsEnabled()
    {
-      return dataBuffer.isKeyPointModeToggled();
+      return dataBuffer.getKeyPointsHandler().areKeyPointsEnabled();
    }
 
    @Override
-   public void toggleKeyPointMode()
+   public void toggleKeyPoints()
    {
-      dataBuffer.toggleKeyPointMode();
+      dataBuffer.getKeyPointsHandler().toggleKeyPoints();
    }
 
    @Override
-   public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener commandListener)
+   public void addListener(KeyPointsChangedListener listener)
    {
       if (dataBuffer != null)
-         dataBuffer.registerToggleKeyPointModeCommandListener(commandListener);
+         dataBuffer.getKeyPointsHandler().addListener(listener);
       else
       {
-         toggleKeyPointModeCommandListenersToRegister.add(commandListener);
+         keyPointsChangedListenersToRegister.add(listener);
       }
    }
 
@@ -457,45 +457,44 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    @Override
-   public void setIndex(int index)
+   public void setCurrentIndex(int index)
    {
-      simulationConstructionSet.setIndex(index);
+      simulationConstructionSet.setCurrentIndex(index);
    }
 
    @Override
-   public void setIndexButDoNotNotifySimulationRewoundListeners(int index)
+   public boolean tickAndReadFromBuffer(int ticks)
    {
-      simulationConstructionSet.setIndexButDoNotNotifySimulationRewoundListeners(index);
+      return simulationConstructionSet.tickAndReadFromBuffer(ticks);
    }
 
-   @Override
-   public boolean tick(int ticks)
-   {
-      return simulationConstructionSet.tick(ticks);
-   }
-
-   @Override
    public boolean tickButDoNotNotifySimulationRewoundListeners(int ticks)
    {
       return simulationConstructionSet.tickButDoNotNotifySimulationRewoundListeners(ticks);
    }
 
    @Override
-   public int getIndex()
+   public int getCurrentIndex()
    {
-      return simulationConstructionSet.getIndex();
+      return simulationConstructionSet.getCurrentIndex();
    }
 
    @Override
-   public boolean isIndexBetweenInAndOutPoint(int indexToCheck)
+   public boolean isIndexBetweenBounds(int indexToCheck)
    {
-      return simulationConstructionSet.isIndexBetweenInAndOutPoint(indexToCheck);
+      return simulationConstructionSet.isIndexBetweenBounds(indexToCheck);
    }
 
    @Override
    public int getOutPoint()
    {
       return simulationConstructionSet.getOutPoint();
+   }
+
+   @Override
+   public int getBufferSize()
+   {
+      return simulationConstructionSet.getBufferSize();
    }
 
    @Override
@@ -517,17 +516,18 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
    }
 
    private boolean alreadyStartedClosing = false;
-   
+
    @Override
    public void closeAndDispose()
    {
-      if (alreadyStartedClosing) return;
-      
+      if (alreadyStartedClosing)
+         return;
+
       alreadyStartedClosing = true;
-      
-      this.standardSimulationGUI = null;
-      this.simulationConstructionSet = null;
-      this.dataBuffer = null;
+
+      standardSimulationGUI = null;
+      simulationConstructionSet = null;
+      dataBuffer = null;
 
       if (viewportSelectorCommandListenersToRegister != null)
       {
@@ -538,16 +538,12 @@ public class StandardAllCommandsExecutor implements AllCommandsExecutor
          viewportSelectorCommandListenersToRegister.clear();
       }
 
-      if (toggleKeyPointModeCommandListenersToRegister != null)
+      if (keyPointsChangedListenersToRegister != null)
       {
-         for (ToggleKeyPointModeCommandListener toggleKeyPointModeCommandListener : toggleKeyPointModeCommandListenersToRegister)
-         {
-            toggleKeyPointModeCommandListener.closeAndDispose();
-         }
-         toggleKeyPointModeCommandListenersToRegister.clear();
+         keyPointsChangedListenersToRegister.clear();
       }
 
       viewportSelectorCommandListenersToRegister = null;
-      toggleKeyPointModeCommandListenersToRegister = null;
+      keyPointsChangedListenersToRegister = null;
    }
 }

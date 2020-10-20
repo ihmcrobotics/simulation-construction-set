@@ -13,8 +13,8 @@ import us.ihmc.yoVariables.variable.YoVariable;
 public class YoEntryBoxTargetListener implements DropTargetListener
 {
    private YoEntryBox yoEntryBox;
-   private static final Cursor
-      droppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR), notDroppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+   private static final Cursor droppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR),
+         notDroppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 
    public YoEntryBoxTargetListener(YoEntryBox yoEntryBox)
    {
@@ -29,7 +29,7 @@ public class YoEntryBoxTargetListener implements DropTargetListener
    @Override
    public void dragExit(DropTargetEvent dte)
    {
-      this.yoEntryBox.setCursor(notDroppableCursor);
+      yoEntryBox.setCursor(notDroppableCursor);
    }
 
    @Override
@@ -37,11 +37,11 @@ public class YoEntryBoxTargetListener implements DropTargetListener
    {
       YoGraph.setRecipientOfDrag(yoEntryBox);
 
-      if ((YoGraph.getSourceOfDrag() == null) || (!YoGraph.getSourceOfDrag().equals(yoEntryBox) &&!(YoGraph.getSourceOfDrag() instanceof YoEntryBox)))
+      if ((YoGraph.getSourceOfDrag() == null) || (!YoGraph.getSourceOfDrag().equals(yoEntryBox) && !(YoGraph.getSourceOfDrag() instanceof YoEntryBox)))
       {
-         if (!this.yoEntryBox.getCursor().equals(droppableCursor))
+         if (!yoEntryBox.getCursor().equals(droppableCursor))
          {
-            this.yoEntryBox.setCursor(droppableCursor);
+            yoEntryBox.setCursor(droppableCursor);
          }
       }
       else
@@ -55,9 +55,9 @@ public class YoEntryBoxTargetListener implements DropTargetListener
    {
       YoGraph.setRecipientOfDrag(yoEntryBox);
 
-      if ((YoGraph.getSourceOfDrag() == null) || (!YoGraph.getSourceOfDrag().equals(yoEntryBox) &&!(YoGraph.getSourceOfDrag() instanceof YoEntryBox)))
+      if ((YoGraph.getSourceOfDrag() == null) || (!YoGraph.getSourceOfDrag().equals(yoEntryBox) && !(YoGraph.getSourceOfDrag() instanceof YoEntryBox)))
       {
-         YoVariable<?> v = yoEntryBox.getSelectedVariableHolder().getSelectedVariable();
+         YoVariable v = yoEntryBox.getSelectedVariableHolder().getSelectedVariable();
          if (v != null)
             yoEntryBox.addVariable(v);
       }

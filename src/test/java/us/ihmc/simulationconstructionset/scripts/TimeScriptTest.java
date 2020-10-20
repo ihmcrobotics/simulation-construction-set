@@ -1,34 +1,35 @@
 package us.ihmc.simulationconstructionset.scripts;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoBoolean;
-import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoEnum;
-import us.ihmc.yoVariables.variable.YoInteger;
+import static us.ihmc.robotics.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.Random;
 
-import static us.ihmc.robotics.Assert.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.variable.YoBoolean;
+import us.ihmc.yoVariables.variable.YoDouble;
+import us.ihmc.yoVariables.variable.YoEnum;
+import us.ihmc.yoVariables.variable.YoInteger;
 
 public class TimeScriptTest
 {
-   private YoVariableRegistry rootRegistry, registryOne, registryTwo;
+   private YoRegistry rootRegistry, registryOne, registryTwo;
    private YoDouble doubleVariable;
    private YoBoolean booleanVariable;
    private YoInteger integerVariable;
    private YoEnum<TimeScriptTestEnums> enumVariable;
-   
+
    @BeforeEach
    public void setUp() throws Exception
    {
-      rootRegistry = new YoVariableRegistry("root");
-      registryOne = new YoVariableRegistry("registryOne");
-      registryTwo = new YoVariableRegistry("registryTwo");
+      rootRegistry = new YoRegistry("root");
+      registryOne = new YoRegistry("registryOne");
+      registryTwo = new YoRegistry("registryTwo");
 
       rootRegistry.addChild(registryOne);
       registryOne.addChild(registryTwo);
@@ -36,9 +37,9 @@ public class TimeScriptTest
       doubleVariable = new YoDouble("doubleVariable", rootRegistry);
       booleanVariable = new YoBoolean("booleanVariable", registryOne);
       integerVariable = new YoInteger("integerVariable", registryTwo);
-      enumVariable = new YoEnum<TimeScriptTestEnums>("enumVariable", registryTwo, TimeScriptTestEnums.class);
+      enumVariable = new YoEnum<>("enumVariable", registryTwo, TimeScriptTestEnums.class);
    }
-   
+
    private enum TimeScriptTestEnums
    {
       V0, V1, V2;
@@ -50,64 +51,64 @@ public class TimeScriptTest
       rootRegistry = null;
       registryOne = null;
       registryTwo = null;
-      
+
       doubleVariable = null;
       booleanVariable = null;
       integerVariable = null;
       enumVariable = null;
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testEmptyTimeScript()
    {
-      YoVariableRegistry registry = new YoVariableRegistry("Test");
-      
+      YoRegistry registry = new YoRegistry("Test");
+
       TimeScript timeScript = new TimeScript(registry);
-      
+
       double time = 1.0;
       timeScript.doScript(time);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testAddEntryAndDoScript()
    {
       TimeScript timeScript = new TimeScript(rootRegistry);
-      
+
       double timeOne = 1.0;
       double valueOne = 1.11;
-      
+
       double timeTwo = 1.9;
       double valueTwo = 3.55;
-      
+
       double timeThree = 5.5;
       double valueThree = -72.4;
 
       double epsilon = 1e-7;
-      
+
       double initialValue = 99.9;
       doubleVariable.set(initialValue);
-      
+
       TimeScriptEntry timeScriptEntryOne = new TimeScriptEntry(timeOne);
       timeScriptEntryOne.addVarValue(doubleVariable, valueOne);
       timeScript.addEntry(timeScriptEntryOne);
-      
+
       TimeScriptEntry timeScriptEntryThree = new TimeScriptEntry(timeThree);
       timeScriptEntryThree.addVarValue(doubleVariable, valueThree);
       timeScript.addEntry(timeScriptEntryThree);
-      
+
       TimeScriptEntry timeScriptEntryTwo = new TimeScriptEntry(timeTwo);
       timeScriptEntryTwo.addVarValue(doubleVariable, valueTwo);
       timeScript.addEntry(timeScriptEntryTwo);
-      
+
       double time = 0.0;
       timeScript.doScript(time);
-      
+
       assertEquals(initialValue, doubleVariable.getDoubleValue(), epsilon);
-      
-      for (time=0.0; time<10.0; time=time+0.001)
+
+      for (time = 0.0; time < 10.0; time = time + 0.001)
       {
          timeScript.doScript(time);
-         
+
          if (time < timeOne)
          {
             assertEquals(initialValue, doubleVariable.getDoubleValue(), epsilon);
@@ -127,7 +128,7 @@ public class TimeScriptTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testTimeScriptCommand()
    {
       TimeScript timeScript = new TimeScript(rootRegistry);
@@ -140,62 +141,61 @@ public class TimeScriptTest
       final double valueOne = 3.7;
       final double valueTwo = 5.6;
       final double valueThree = 9.9;
-      
+
       doubleVariable.set(initialValue);
-      
+
       TimeScriptEntry timeScriptEntryOne = new TimeScriptEntry(timeOne);
 
       TimeScriptCommand timeScriptCommandOne = new TimeScriptCommand()
       {
          @Override
          public void doCommand()
-         {  
+         {
             doubleVariable.set(valueOne);
          }
       };
-      
+
       timeScriptEntryOne.addTimeScriptCommand(timeScriptCommandOne);
       timeScript.addEntry(timeScriptEntryOne);
-      
-      
+
       TimeScriptEntry timeScriptEntryTwo = new TimeScriptEntry(timeTwo);
 
       TimeScriptCommand timeScriptCommandTwo = new TimeScriptCommand()
       {
          @Override
          public void doCommand()
-         {  
+         {
             doubleVariable.set(valueTwo);
          }
       };
-      
+
       timeScriptEntryTwo.addTimeScriptCommand(timeScriptCommandTwo);
       timeScript.addEntry(timeScriptEntryTwo);
-      
+
       TimeScriptEntry timeScriptEntryThree = new TimeScriptEntry(timeThree);
 
       TimeScriptCommand timeScriptCommandThree = new TimeScriptCommand()
       {
          @Override
          public void doCommand()
-         {  
+         {
             doubleVariable.set(valueThree);
          }
       };
-      
+
       timeScriptEntryThree.addTimeScriptCommand(timeScriptCommandThree);
       timeScript.addEntry(timeScriptEntryThree);
-      
+
       double epsilon = 1e-10;
       double time = 0.0;
       timeScript.doScript(time);
-      
+
       assertEquals(initialValue, doubleVariable.getDoubleValue(), epsilon);
-      
-      for (time=0.0; time<10.0; time=time+0.001)
+
+      for (time = 0.0; time < 10.0; time = time + 0.001)
       {
          timeScript.doScript(time);
-         
+
          if (time < timeOne)
          {
             assertEquals(initialValue, doubleVariable.getDoubleValue(), epsilon);
@@ -215,35 +215,35 @@ public class TimeScriptTest
       }
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testSaveAndLoad()
    {
       Random random = new Random(1776L);
-      
+
       String doubleVariableName = "doubleVariable";
       String booleanVariableName = "booleanVariable";
       String integerVariableName = "integerVariable";
       String enumVariableName = "enumVariable";
-      
-      double[] times = new double[]{1.0, 2.1, 5.77, 12.44, 17.90993};
+
+      double[] times = new double[] {1.0, 2.1, 5.77, 12.44, 17.90993};
       double[] doubleValues = new double[times.length];
       boolean[] booleanValues = new boolean[times.length];
       int[] integerValues = new int[times.length];
       TimeScriptTestEnums[] enumValues = new TimeScriptTestEnums[times.length];
-      
-      for (int i=0; i<times.length; i++)
+
+      for (int i = 0; i < times.length; i++)
       {
-            doubleValues[i] = 100.0 * random.nextDouble() - 50.0;
-            booleanValues[i] = random.nextBoolean();
-            integerValues[i] = random.nextInt();
-            enumValues[i] = TimeScriptTestEnums.values()[random.nextInt(TimeScriptTestEnums.values().length)];
+         doubleValues[i] = 100.0 * random.nextDouble() - 50.0;
+         booleanValues[i] = random.nextBoolean();
+         integerValues[i] = random.nextInt();
+         enumValues[i] = TimeScriptTestEnums.values()[random.nextInt(TimeScriptTestEnums.values().length)];
       }
-      
+
       TimeScript timeScript = new TimeScript(rootRegistry);
-    
+
       String pseudoFile = "";
-      
-      for (int i=0; i<times.length; i++)
+
+      for (int i = 0; i < times.length; i++)
       {
          pseudoFile = pseudoFile + "t = " + times[i] + ":\n";
          pseudoFile = pseudoFile + "/* This is a comment!! */\n";
@@ -256,35 +256,34 @@ public class TimeScriptTest
          pseudoFile = pseudoFile + "// This is a comment!! \n";
          pseudoFile = pseudoFile + enumVariableName + " = " + enumValues[i] + ";\n";
       }
-      
-//      System.out.println(pseudoFile);
-      
+
+      //      System.out.println(pseudoFile);
+
       StringReader reader = new StringReader(pseudoFile);
       BufferedReader in = new BufferedReader(reader);
-      
+
       timeScript.readTimeScript(rootRegistry, in);
-      
+
       int timeIndex = -1;
-      
-      for (double time=0.0; time<times[times.length-1] + 1.0; time=time+0.01)
+
+      for (double time = 0.0; time < times[times.length - 1] + 1.0; time = time + 0.01)
       {
          timeScript.doScript(time);
-         
-         if ((timeIndex < times.length-1) && (time >= times[timeIndex+1]))
+
+         if ((timeIndex < times.length - 1) && (time >= times[timeIndex + 1]))
          {
             timeIndex++;
          }
-         
+
          if (timeIndex >= 0)
          {
             assertEquals(doubleValues[timeIndex], doubleVariable.getDoubleValue(), 1e-7);
             assertEquals(booleanValues[timeIndex], booleanVariable.getBooleanValue());
             assertEquals(integerValues[timeIndex], integerVariable.getIntegerValue());
-            assertEquals(enumValues[timeIndex], enumVariable.getEnumValue());   
+            assertEquals(enumValues[timeIndex], enumVariable.getEnumValue());
          }
       }
-      
+
    }
-   
 
 }

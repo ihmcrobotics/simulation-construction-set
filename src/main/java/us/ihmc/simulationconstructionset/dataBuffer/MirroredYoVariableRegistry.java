@@ -1,58 +1,60 @@
 package us.ihmc.simulationconstructionset.dataBuffer;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import us.ihmc.yoVariables.listener.VariableChangedListener;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
-public class MirroredYoVariableRegistry extends YoVariableRegistry
+public class MirroredYoVariableRegistry extends YoRegistry
 {
-   private final BiMap<YoVariable<?>, YoVariable<?>> variableMap = HashBiMap.create();
-   private final ConcurrentLinkedQueue<YoVariable<?>> changedVariablesInMirror = new ConcurrentLinkedQueue<>();
-   private final ConcurrentLinkedQueue<YoVariable<?>> changedVariablesInOriginal = new ConcurrentLinkedQueue<>();
+   private final BiMap<YoVariable, YoVariable> variableMap = HashBiMap.create();
+   private final ConcurrentLinkedQueue<YoVariable> changedVariablesInMirror = new ConcurrentLinkedQueue<>();
+   private final ConcurrentLinkedQueue<YoVariable> changedVariablesInOriginal = new ConcurrentLinkedQueue<>();
 
-   private final YoVariableRegistryChangedListener mirroredChangeListener = new YoVariableRegistryChangedListener(changedVariablesInMirror);
-   private final YoVariableRegistryChangedListener originalChangeListener = new YoVariableRegistryChangedListener(changedVariablesInOriginal);
+   private boolean enableChangedListener = true;
+   private final YoRegistryChangedListener mirroredChangeListener = new YoRegistryChangedListener(changedVariablesInMirror);
+   private final YoRegistryChangedListener originalChangeListener = new YoRegistryChangedListener(changedVariablesInOriginal);
 
-   public MirroredYoVariableRegistry(YoVariableRegistry original)
+   public MirroredYoVariableRegistry(YoRegistry original)
    {
       super(original.getName());
 
       copyRegistry(original, this);
    }
 
-   private void copyRegistry(YoVariableRegistry original, YoVariableRegistry target)
+   private void copyRegistry(YoRegistry original, YoRegistry target)
    {
-      ArrayList<YoVariable<?>> vars = original.getAllVariablesInThisListOnly();
+      List<YoVariable> vars = original.getVariables();
 
-      for (YoVariable<?> var : vars)
+      for (YoVariable var : vars)
       {
-         YoVariable<?> newVar = var.duplicate(target);
+         YoVariable newVar = var.duplicate(target);
          variableMap.put(var, newVar);
          addVariableListener(newVar, var);
       }
 
-      for (YoVariableRegistry child : original.getChildren())
+      for (YoRegistry child : original.getChildren())
       {
-         YoVariableRegistry newRegistry = new YoVariableRegistry(child.getName(), child.isLogged(), child.isSent());
+         YoRegistry newRegistry = new YoRegistry(child.getName());
          target.addChild(newRegistry);
          copyRegistry(child, newRegistry);
       }
    }
 
-   private void addVariableListener(YoVariable<?> newVar, YoVariable<?> var)
+   private void addVariableListener(YoVariable newVar, YoVariable var)
    {
-      newVar.addVariableChangedListener(mirroredChangeListener);
-      var.addVariableChangedListener(originalChangeListener);
+      newVar.addListener(mirroredChangeListener);
+      var.addListener(originalChangeListener);
    }
 
    /**
-    * Updates changes from the mirror to the original registry and then from the original to the mirror registry
+    * Updates changes from the mirror to the original registry and then from the original to the mirror
+    * registry
     */
    public void updateMirror()
    {
@@ -63,7 +65,6 @@ public class MirroredYoVariableRegistry extends YoVariableRegistry
    /**
     * Mirrors changes from the mirror registry to the original registry
     */
-   @SuppressWarnings({"unchecked", "rawtypes"})
    public void updateChangedValues()
    {
       for (YoVariable changed = changedVariablesInMirror.poll(); changed != null; changed = changedVariablesInMirror.poll())
@@ -77,7 +78,6 @@ public class MirroredYoVariableRegistry extends YoVariableRegistry
    /**
     * Mirrors changes from the original registry to the mirror registry
     */
-   @SuppressWarnings({"unchecked", "rawtypes"})
    public void updateValuesFromOriginal()
    {
       for (YoVariable changed = changedVariablesInOriginal.poll(); changed != null; changed = changedVariablesInOriginal.poll())
@@ -88,32 +88,27 @@ public class MirroredYoVariableRegistry extends YoVariableRegistry
       }
    }
 
-   private void callListenersForVariable(YoVariable<?> variable) {
-      ArrayList<VariableChangedListener> variableChangedListeners = variable.getVariableChangedListeners();
-      //noinspection ForLoopReplaceableByForEach (runs in tight loop, foreach allocates memory)
-      for (int i = 0; i < variableChangedListeners.size(); i++)
-      {
-         VariableChangedListener variableChangedListener = variableChangedListeners.get(i);
-         if (variableChangedListener.getClass() != YoVariableRegistryChangedListener.class)
-         {
-            variableChangedListener.notifyOfVariableChange(variable);
-         }
-      }
+   private void callListenersForVariable(YoVariable variable)
+   {
+      enableChangedListener = false;
+      variable.notifyListeners();
+      enableChangedListener = true;
    }
 
-   private static class YoVariableRegistryChangedListener implements VariableChangedListener
+   private class YoRegistryChangedListener implements YoVariableChangedListener
    {
-      final ConcurrentLinkedQueue<YoVariable<?>> queue;
+      final ConcurrentLinkedQueue<YoVariable> queue;
 
-      private YoVariableRegistryChangedListener(ConcurrentLinkedQueue<YoVariable<?>> queue)
+      private YoRegistryChangedListener(ConcurrentLinkedQueue<YoVariable> queue)
       {
          this.queue = queue;
       }
 
       @Override
-      public void notifyOfVariableChange(YoVariable<?> v)
+      public void changed(YoVariable v)
       {
-         queue.add(v);
+         if (enableChangedListener)
+            queue.add(v);
       }
    }
 }

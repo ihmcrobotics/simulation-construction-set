@@ -4,18 +4,18 @@ import java.awt.Container;
 
 import javax.swing.JFrame;
 
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.simulationconstructionset.gui.DataBufferChangeListener;
 import us.ihmc.simulationconstructionset.gui.dialogs.DataBufferPropertiesDialog;
+import us.ihmc.yoVariables.buffer.YoBuffer;
 
 public class DataBufferPropertiesDialogGenerator implements DataBufferPropertiesDialogConstructor
 {
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
    private Container parentContainer;
    private JFrame frame;
    private DataBufferChangeListener listener;
 
-   public DataBufferPropertiesDialogGenerator(DataBuffer dataBuffer, Container parentContainer, JFrame frame, DataBufferChangeListener listener)
+   public DataBufferPropertiesDialogGenerator(YoBuffer dataBuffer, Container parentContainer, JFrame frame, DataBufferChangeListener listener)
    {
       this.dataBuffer = dataBuffer;
       this.parentContainer = parentContainer;

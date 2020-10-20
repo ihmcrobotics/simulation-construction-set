@@ -3,11 +3,12 @@ package us.ihmc.simulationconstructionset;
 import us.ihmc.euclid.axisAngle.AxisAngle;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoVariableList;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.DummyOneDegreeOfFreedomJointPhysics;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
+import us.ihmc.yoVariables.variable.YoDouble;
 
 public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
 {
@@ -34,7 +35,7 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
 
    private YoVariableList jointVars;
 
-   public DummyOneDegreeOfFreedomJoint(String jname, Vector3DReadOnly offset, Robot rob, Vector3DReadOnly u_hat)
+   public DummyOneDegreeOfFreedomJoint(String jname, Tuple3DReadOnly offset, Robot rob, Vector3DReadOnly u_hat)
    {
       super(jname, offset, rob);
       physics = new DummyOneDegreeOfFreedomJointPhysics(this);
@@ -43,24 +44,24 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
       physics.u_i.set(u_hat);
       physics.u_i.normalize();
 
-      YoVariableRegistry registry = rob.getRobotsYoVariableRegistry();
+      YoRegistry registry = rob.getRobotsYoRegistry();
       q = new YoDouble("q_" + jname, "PinJoint angle", registry);
       qd = new YoDouble("qd_" + jname, "PinJoint anglular velocity", registry);
       qdd = new YoDouble("qdd_" + jname, "PinJoint angular acceleration", registry);
       tau = new YoDouble("tau_" + jname, "PinJoint torque", registry);
 
-      this.setPinTransform3D(this.jointTransform3D, physics.u_i); // jaxis);
+      this.setPinTransform3D(jointTransform3D, physics.u_i); // jaxis);
    }
 
    protected YoVariableList getJointVars()
    {
-      return this.jointVars;
+      return jointVars;
    }
 
    @Override
    protected void update()
    {
-      this.setPinTransform3D(this.jointTransform3D, physics.u_i, q.getDoubleValue());
+      this.setPinTransform3D(jointTransform3D, physics.u_i, q.getDoubleValue());
    }
 
    protected void setPinTransform3D(RigidBodyTransform t1, Vector3D u_i) // int rotAxis)
@@ -155,13 +156,13 @@ public class DummyOneDegreeOfFreedomJoint extends OneDegreeOfFreedomJoint
    {
       return Double.POSITIVE_INFINITY;
    }
-   
+
    @Override
    public double getJointLowerLimit()
    {
       return Double.NEGATIVE_INFINITY;
    }
-   
+
    @Override
    public double getJointStiction()
    {

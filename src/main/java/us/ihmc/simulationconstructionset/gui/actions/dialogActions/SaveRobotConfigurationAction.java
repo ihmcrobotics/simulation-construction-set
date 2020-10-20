@@ -13,13 +13,13 @@ public class SaveRobotConfigurationAction extends AbstractAction
    private static final long serialVersionUID = 5813345490164040993L;
    private SaveRobotConfigurationDialogConstructor constructor;
 
-   public SaveRobotConfigurationAction(SaveRobotConfigurationDialogConstructor constructor) 
+   public SaveRobotConfigurationAction(SaveRobotConfigurationDialogConstructor constructor)
    {
       super("Save Robot Configuration");
       this.constructor = constructor;
 
-      this.putValue(Action.LONG_DESCRIPTION, "Save Robot Configuration");
-      this.putValue(Action.SHORT_DESCRIPTION, "save robot config");
+      putValue(Action.LONG_DESCRIPTION, "Save Robot Configuration");
+      putValue(Action.SHORT_DESCRIPTION, "save robot config");
    }
 
    public void setCurrentDirectory(File directory)

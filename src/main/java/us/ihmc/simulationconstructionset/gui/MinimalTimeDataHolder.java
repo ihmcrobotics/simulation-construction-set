@@ -1,27 +1,27 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import us.ihmc.yoVariables.dataBuffer.TimeDataHolder;
+import us.ihmc.yoVariables.buffer.interfaces.YoTimeBufferHolder;
 
-public class MinimalTimeDataHolder implements TimeDataHolder
+public class MinimalTimeDataHolder implements YoTimeBufferHolder
 {
    private double[] timeData;
-   
+
    MinimalTimeDataHolder(int nPoints)
    {
       timeData = new double[nPoints];
       double time = 1.0;
-      
-      for (int i=0; i<nPoints; i++)
+
+      for (int i = 0; i < nPoints; i++)
       {
          timeData[i] = time;
          time = time + 0.01;
       }
    }
-   
+
    @Override
-   public double[] getTimeData()
+   public double[] getTimeBuffer()
    {
       return timeData;
    }
-   
+
 }

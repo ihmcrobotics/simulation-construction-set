@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset.scripts;
 
 import java.util.ArrayList;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
 public abstract class ConditionalScriptEntry
@@ -22,20 +22,19 @@ public abstract class ConditionalScriptEntry
 
    public static int eventNumber = 0;
 
-   public static final int
-      DISARMED = 0, ARMED = 1, ACTIVE = 2, FINISHED = 3;
+   public static final int DISARMED = 0, ARMED = 1, ACTIVE = 2, FINISHED = 3;
    protected YoDouble event_state;
    private ArrayList<ConditionalScriptEntry> parentEntries;
    private ArrayList<ConditionalScriptEntry> childEntries;
 
-   public ConditionalScriptEntry(String name, YoVariableRegistry registry, ConditionalScriptEntry[] parents)
+   public ConditionalScriptEntry(String name, YoRegistry registry, ConditionalScriptEntry[] parents)
    {
       if (name == null)
          name = "event";
       this.name = name;
 
       event_state = new YoDouble(name + "_" + eventNumber + "_state", registry);
-      event_state.set(ARMED);    // Default to armed until given a parent or two.
+      event_state.set(ARMED); // Default to armed until given a parent or two.
       eventNumber++;
 
       if (parents != null)
@@ -47,24 +46,22 @@ public abstract class ConditionalScriptEntry
       }
    }
 
-   public ConditionalScriptEntry(YoVariableRegistry registry)
+   public ConditionalScriptEntry(YoRegistry registry)
    {
       this("event", registry, (ConditionalScriptEntry[]) null);
    }
 
-   public ConditionalScriptEntry(String name, YoVariableRegistry registry)
+   public ConditionalScriptEntry(String name, YoRegistry registry)
    {
       this(name, registry, (ConditionalScriptEntry[]) null);
    }
 
-   public ConditionalScriptEntry(String name, YoVariableRegistry registry, ConditionalScriptEntry parent)
+   public ConditionalScriptEntry(String name, YoRegistry registry, ConditionalScriptEntry parent)
    {
       this(name, registry, new ConditionalScriptEntry[] {parent});
    }
 
-
-
-   public ConditionalScriptEntry(YoVariableRegistry registry, ConditionalScriptEntry[] parents)
+   public ConditionalScriptEntry(YoRegistry registry, ConditionalScriptEntry[] parents)
    {
       this("event", registry, parents);
    }
@@ -74,14 +71,14 @@ public abstract class ConditionalScriptEntry
       if (parentEntry == null)
          return;
 
-      event_state.set(DISARMED);    // Disarmed until parents are finished;
+      event_state.set(DISARMED); // Disarmed until parents are finished;
 
       if (parentEntries == null)
-         parentEntries = new ArrayList<ConditionalScriptEntry>();
+         parentEntries = new ArrayList<>();
       parentEntries.add(parentEntry);
 
       if (parentEntry.childEntries == null)
-         parentEntry.childEntries = new ArrayList<ConditionalScriptEntry>();
+         parentEntry.childEntries = new ArrayList<>();
       parentEntry.childEntries.add(this);
    }
 
@@ -147,10 +144,9 @@ public abstract class ConditionalScriptEntry
    {
       parentEntries.remove(parentEntry);
       parentEntry.childEntries.remove(this);
-      if (parentEntries.isEmpty() && this.isDisarmed())
+      if (parentEntries.isEmpty() && isDisarmed())
          event_state.set(ARMED);
    }
-
 
    public boolean isDisarmed()
    {
@@ -174,10 +170,10 @@ public abstract class ConditionalScriptEntry
 
    public void reset()
    {
-//    if (event_state.val != FINISHED)
-//    {
-//       System.out.println("ConditionalScriptEntry " + name + " is not finished, yet you are resetting it!");
-//    }
+      //    if (event_state.val != FINISHED)
+      //    {
+      //       System.out.println("ConditionalScriptEntry " + name + " is not finished, yet you are resetting it!");
+      //    }
 
       if ((parentEntries == null) || parentEntries.isEmpty())
       {

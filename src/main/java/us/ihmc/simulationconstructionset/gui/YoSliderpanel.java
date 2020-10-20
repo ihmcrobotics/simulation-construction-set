@@ -10,16 +10,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 @SuppressWarnings("serial")
-public class YoSliderpanel extends JPanel implements MouseListener, VariableChangedListener
+public class YoSliderpanel extends JPanel implements MouseListener, YoVariableChangedListener
 {
-   private YoVariable<?> var;
+   private static final int SHORT_NAME_LENGTH = 20;
+   private YoVariable var;
    private double min = 0.0;
    private double max = 0.0;
    private JTextField maxField;
@@ -31,12 +33,12 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
 
    double precision = 1000;
 
-   public YoSliderpanel(YoVariable<?> var)
+   public YoSliderpanel(YoVariable var)
    {
       this.var = var;
-      this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       setup();
-      var.addVariableChangedListener(this);
+      var.addListener(this);
    }
 
    private int convertDoubleToPrecisionInt(double value)
@@ -53,7 +55,6 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
          newVal = newVal.substring(0, decimalLocal);
       }
 
-
       System.out.println("newVal" + newVal);
 
       return new Integer(newVal);
@@ -61,11 +62,13 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
 
    private void setup()
    {
-      name = new JLabel(var.getShortName());
+      name = new JLabel(shortenString(var.getName(), SHORT_NAME_LENGTH));
       min = var.getValueAsDouble() - defaultMinMaxOffset;
       max = var.getValueAsDouble() + defaultMinMaxOffset;
 
-      slider = new JSlider(JSlider.VERTICAL, convertDoubleToPrecisionInt(min), convertDoubleToPrecisionInt(max),
+      slider = new JSlider(SwingConstants.VERTICAL,
+                           convertDoubleToPrecisionInt(min),
+                           convertDoubleToPrecisionInt(max),
                            convertDoubleToPrecisionInt(var.getValueAsDouble()));
       setUpMax();
       setUpMin();
@@ -87,6 +90,16 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
       this.add(slider);
       this.add(minField);
       this.add(value);
+   }
+
+   public static String shortenString(String inputString, int maxLength)
+   {
+      int length = inputString.length();
+
+      if (length <= maxLength)
+         return inputString;
+      else
+         return inputString.substring(0, maxLength / 2 - 2) + "..." + inputString.substring(length - maxLength / 2 + 1, length);
    }
 
    private void setUpMax()
@@ -136,7 +149,6 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
          }
       });
    }
-
 
    @Override
    public void mouseClicked(MouseEvent e)
@@ -189,12 +201,11 @@ public class YoSliderpanel extends JPanel implements MouseListener, VariableChan
    }
 
    @Override
-   public void notifyOfVariableChange(YoVariable<?> v)
+   public void changed(YoVariable v)
    {
       value.setText(v.getValueAsDouble() + "");
       setSliderValueOnVariableChange();
 
    }
-
 
 }

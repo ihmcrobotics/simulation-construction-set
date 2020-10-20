@@ -14,11 +14,11 @@ public class GraphicsUpdatablePlaybackListener implements PlaybackListener
    }
 
    @Override
-   public void notifyOfIndexChange(int newIndex)
+   public void indexChanged(int newIndex)
    {
       if (graphicsUpdatableList != null)
       {
-         for (int i=0; i<graphicsUpdatableList.size(); i++)
+         for (int i = 0; i < graphicsUpdatableList.size(); i++)
          {
             GraphicsUpdatable graphicsUpdatable = graphicsUpdatableList.get(i);
             graphicsUpdatable.update();

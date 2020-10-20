@@ -18,9 +18,9 @@ public class ThinBufferAction extends AbstractAction
       super("Thin Buffer, Removing Every Other Tick");
       this.executor = executor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_T));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_T));
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
    }
 
    @Override

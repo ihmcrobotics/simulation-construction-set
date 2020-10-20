@@ -1,9 +1,13 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class HumanAssistedTestFrame extends JFrame
 {
@@ -30,7 +34,6 @@ public class HumanAssistedTestFrame extends JFrame
       frame.setVisible(true);
    }
 
-
    public boolean hasGoodButtonBeenPressed()
    {
       return goodButton.hasBeenPressed();
@@ -43,7 +46,7 @@ public class HumanAssistedTestFrame extends JFrame
 
    public void waitForButtonPush()
    {
-      while (!hasGoodButtonBeenPressed() &&!hasBadButtonBeenPressed())
+      while (!hasGoodButtonBeenPressed() && !hasBadButtonBeenPressed())
       {
          try
          {
@@ -70,7 +73,7 @@ public class HumanAssistedTestFrame extends JFrame
       {
          super("Good");
 
-         this.addActionListener(this);
+         addActionListener(this);
       }
 
       @Override
@@ -85,7 +88,6 @@ public class HumanAssistedTestFrame extends JFrame
       }
    }
 
-
    private class BadButton extends JButton implements ActionListener
    {
       /**
@@ -98,7 +100,7 @@ public class HumanAssistedTestFrame extends JFrame
       {
          super("Bad");
 
-         this.addActionListener(this);
+         addActionListener(this);
       }
 
       @Override

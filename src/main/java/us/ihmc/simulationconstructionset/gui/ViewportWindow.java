@@ -27,10 +27,8 @@ import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.TrackingDollyCameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.ViewportAdapter;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.dataBuffer.DataBufferCommandsExecutor;
-import us.ihmc.yoVariables.variable.YoVariableList;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.TimeHolder;
@@ -57,6 +55,10 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDi
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDialogGenerator;
 import us.ihmc.simulationconstructionset.synchronization.SimulationSynchronizer;
 import us.ihmc.simulationconstructionset.videos.ExportVideo;
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferReader;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
 
 public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCanvas3DHolder, ExtraPanelSelector
 {
@@ -71,32 +73,32 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
    private ViewportConfigurationList viewportConfigurationList;
    private ViewportPanel viewportPanel;
    private JPanel buttonPanel;
-   private ArrayList<Component> tempPanelsHolder = new ArrayList<Component>();
+   private ArrayList<Component> tempPanelsHolder = new ArrayList<>();
    private boolean isViewportHidden = false;
 
    private final String name;
-   
+
    public ViewportWindow(AllCommandsExecutor allCommandsExecutor, YoVariableHolder yoVariableHolder, TimeHolder timeHolder, String selectedViewportName,
                          ViewportConfigurationList viewportConfigurationList, CameraConfigurationList cameraConfigurationList, CameraMountList cameraMountList,
                          Robot[] robots, VarGroupList varGroupList, GraphArrayPanel myGraphArrayPanel, StandardSimulationGUI myGUI,
-                         Graphics3DAdapter graphics3DAdapter, DataBuffer dataBuffer,
-                         StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow, SimulationSynchronizer simulationSynchronizer)
+                         Graphics3DAdapter graphics3DAdapter, YoBuffer dataBuffer, StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow,
+                         SimulationSynchronizer simulationSynchronizer)
    {
       this.viewportConfigurationList = viewportConfigurationList;
       this.myGUI = myGUI;
-      this.windowGUIActions = mainGUIActions;
+      windowGUIActions = mainGUIActions;
 
       if (selectedViewportName != null)
-         this.name = selectedViewportName;
-      else this.name = "Unnamed";
+         name = selectedViewportName;
+      else
+         name = "Unnamed";
       // this.varList = varList;
       // this.cameraMountList = cameraMountList;
-
 
       // GraphicsConfigTemplate3D graphicsConfigTemplate3D = new GraphicsConfigTemplate3D();
       // graphicsConfigTemplate3D.getBestConfiguration()
 
-      GraphicsConfiguration configurationToUse = null;    // SimpleUniverse.getPreferredConfiguration(); //null;
+      GraphicsConfiguration configurationToUse = null; // SimpleUniverse.getPreferredConfiguration(); //null;
 
       GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
       GraphicsDevice[] devices = graphicsEnvironment.getScreenDevices();
@@ -113,7 +115,7 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       frame.setName("Viewport Window");
       contentPane = frame.getContentPane();
 
-//    AllDialogConstructorsHolder allDialogConstructorsHolder = new StandardAllDialogConstructorsGenerator(sim, robots, dataBuffer, myGUI, varGroupList, myGraphArrayPanel, myGUI, frame, frame);
+      //    AllDialogConstructorsHolder allDialogConstructorsHolder = new StandardAllDialogConstructorsGenerator(sim, robots, dataBuffer, myGUI, varGroupList, myGraphArrayPanel, myGUI, frame, frame);
       windowGUIActions = new StandardGUIActions();
 
       viewportPanel = new ViewportPanel(yoVariableHolder, allCommandsExecutor, windowGUIActions, cameraConfigurationList, cameraMountList, graphics3DAdapter);
@@ -122,10 +124,11 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
 
       viewportPanel.setupViews(frame.getGraphicsConfiguration().getDevice(), viewportConfig);
 
-
       GUIEnablerAndDisabler guiEnablerAndDisabler = allCommandsExecutor;
       RunCommandsExecutor runCommandsExecutor = allCommandsExecutor;
-      DataBufferCommandsExecutor dataBufferCommandsExecutor = allCommandsExecutor;
+      GotoInPointCommandExecutor gotoInPointCommandExecutor = allCommandsExecutor;
+      GotoOutPointCommandExecutor gotoOutPointCommandExecutor = allCommandsExecutor;
+      YoBufferReader dataBufferCommandsExecutor = allCommandsExecutor;
       final ActiveCanvas3DHolder activeCanvas3DHolder = this;
       ViewportSelectorCommandExecutor viewportSelector = myGUI;
 
@@ -139,21 +142,41 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
          }
       };
 
-      ExportSnapshotDialogConstructor exportSnapshotDialogConstructor = new ExportSnapshotDialogGenerator(exportSnapshotCommandExecutor, guiEnablerAndDisabler,
-                                                                           robots, activeCanvas3DHolder, frame);
+      ExportSnapshotDialogConstructor exportSnapshotDialogConstructor = new ExportSnapshotDialogGenerator(exportSnapshotCommandExecutor,
+                                                                                                          guiEnablerAndDisabler,
+                                                                                                          robots,
+                                                                                                          activeCanvas3DHolder,
+                                                                                                          frame);
 
-      ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder, myGUI, dataBufferCommandsExecutor, runCommandsExecutor,
-                                                                 guiEnablerAndDisabler, activeCanvas3DHolder, simulationSynchronizer);
+      ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder,
+                                                                              myGUI,
+                                                                              dataBufferCommandsExecutor,
+                                                                              gotoInPointCommandExecutor,
+                                                                              gotoOutPointCommandExecutor,
+                                                                              runCommandsExecutor,
+                                                                              guiEnablerAndDisabler,
+                                                                              activeCanvas3DHolder,
+                                                                              simulationSynchronizer);
       StopCommandExecutor stopCommandExecutor = allCommandsExecutor;
 
-      MediaCaptureDialogConstructor mediaCaptureDialogConstructor = new MediaCaptureDialogGenerator(exportVideoCommandExecutor, guiEnablerAndDisabler,
-                                                                       stopCommandExecutor, viewportSelector, myGUI, mainGUIActions, activeCanvas3DHolder);
+      MediaCaptureDialogConstructor mediaCaptureDialogConstructor = new MediaCaptureDialogGenerator(exportVideoCommandExecutor,
+                                                                                                    guiEnablerAndDisabler,
+                                                                                                    stopCommandExecutor,
+                                                                                                    viewportSelector,
+                                                                                                    myGUI,
+                                                                                                    mainGUIActions,
+                                                                                                    activeCanvas3DHolder);
 
       CameraPropertiesDialogGenerator cameraPropertiesDialogGenerator = new CameraPropertiesDialogGenerator(viewportPanel, frame, frame);
       ResizeViewportDialogConstructor resizeViewportDialogConstructor = new ResizeViewportDialogGenerator(frame, myGUI);
 
-      windowGUIActions.createViewportWindowActions(mainGUIActions, exportSnapshotDialogConstructor, mediaCaptureDialogConstructor,
-              cameraPropertiesDialogGenerator, resizeViewportDialogConstructor, viewportPanel, this);
+      windowGUIActions.createViewportWindowActions(mainGUIActions,
+                                                   exportSnapshotDialogConstructor,
+                                                   mediaCaptureDialogConstructor,
+                                                   cameraPropertiesDialogGenerator,
+                                                   resizeViewportDialogConstructor,
+                                                   viewportPanel,
+                                                   this);
       buttonPanel = windowGUIActions.createViewportWindowButtons();
       JMenuBar menuBar = windowGUIActions.createViewportWindowMenus();
 
@@ -161,7 +184,6 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       windowGUIActions.setupExtraPanelsMenu(myGUI.getExtraPanelConfigurationList(), this);
 
       // windowGUIActions.setupViewportMenu(viewportConfigurationList);
-
 
       // contentPane.add(buttonPanel, "South");
       contentPane.setLayout(new BorderLayout());
@@ -174,10 +196,8 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
 
       /*
        * viewportAndButtonPanel = new JPanel(new java.awt.BorderLayout());
-       *    viewportAndButtonPanel.add("Center", viewportPanel);
-       *    viewportAndButtonPanel.add("South", buttonPanel);
-       *
-       *    contentPane.add(viewportAndButtonPanel);
+       * viewportAndButtonPanel.add("Center", viewportPanel); viewportAndButtonPanel.add("South",
+       * buttonPanel); contentPane.add(viewportAndButtonPanel);
        */
 
       // contentPane.add(buttonPanel);
@@ -225,42 +245,44 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       myGUI.makeCheckMarksConsistentWithMainPanel(this);
    }
 
-// For Robot Camera Vision:
+   // For Robot Camera Vision:
    public ViewportWindow(AllCommandsExecutor allCommandsExecutor, AllDialogConstructorsHolder allDialogConstructorsHolder, SimulationConstructionSet sim,
                          Robot[] robots, TimeHolder timeHolder, YoVariableHolder yoVariableHolder, RunCommandsExecutor runCommandsExecutor,
+                         GotoInPointCommandExecutor gotoInPointCommandExecutor, GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
                          GUIEnablerAndDisabler guiEnablerAndDisabler, String selectedViewportName, ViewportConfigurationList viewportConfigurationList,
                          CameraConfigurationList cameraConfigurationList, YoVariableList varList, CameraMountList cameraMountList, VarGroupList varGroupList,
                          GraphArrayPanel myGraphArrayPanel, AboutDialogGenerator aboutEditorPane, StandardSimulationGUI myGUI,
-                         Graphics3DAdapter graphicsAdapter, DataBuffer dataBuffer,
-                         StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow, SimulationSynchronizer simulationSynchronizer)
+                         Graphics3DAdapter graphicsAdapter, YoBuffer dataBuffer, StandardGUIActions mainGUIActions, int screenID, boolean maximizeWindow,
+                         SimulationSynchronizer simulationSynchronizer)
    {
       this.viewportConfigurationList = viewportConfigurationList;
       this.myGUI = myGUI;
-      this.windowGUIActions = mainGUIActions;
+      windowGUIActions = mainGUIActions;
 
       if (selectedViewportName != null)
-         this.name = selectedViewportName;
-      else this.name = "Unnamed";
-      
-//    this.varList = varList;
-//    this.cameraMountList = cameraMountList;
+         name = selectedViewportName;
+      else
+         name = "Unnamed";
 
-//    GraphicsConfigTemplate3D graphicsConfigTemplate3D = new GraphicsConfigTemplate3D();
-//    graphicsConfigTemplate3D.getBestConfiguration()
+      //    this.varList = varList;
+      //    this.cameraMountList = cameraMountList;
 
-//G   raphicsConfiguration configurationToUse = null;    // SimpleUniverse.getPreferredConfiguration(); //null;
-//
+      //    GraphicsConfigTemplate3D graphicsConfigTemplate3D = new GraphicsConfigTemplate3D();
+      //    graphicsConfigTemplate3D.getBestConfiguration()
 
-//G   raphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//G   raphicsDevice[] devices = graphicsEnvironment.getScreenDevices();
-//f   or (int j = 0; j < devices.length; j++)
-//{
-///   / GraphicsDevice graphicsDevice = devices[j];
-//i   f (devices[j].toString().indexOf("screen=" + screenID) >= 0)
-//{
-//c   onfigurationToUse = devices[j].getDefaultConfiguration();
-//}
-//}
+      //G   raphicsConfiguration configurationToUse = null;    // SimpleUniverse.getPreferredConfiguration(); //null;
+      //
+
+      //G   raphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      //G   raphicsDevice[] devices = graphicsEnvironment.getScreenDevices();
+      //f   or (int j = 0; j < devices.length; j++)
+      //{
+      ///   / GraphicsDevice graphicsDevice = devices[j];
+      //i   f (devices[j].toString().indexOf("screen=" + screenID) >= 0)
+      //{
+      //c   onfigurationToUse = devices[j].getDefaultConfiguration();
+      //}
+      //}
 
       frame = new JFrame("Viewport Window");
       frame.setName("Viewport Window");
@@ -274,8 +296,7 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
 
       viewportPanel.setupViews(frame.getGraphicsConfiguration().getDevice(), viewportConfig);
 
-
-      DataBufferCommandsExecutor dataBufferCommandsExecutor = allCommandsExecutor;
+      YoBufferReader dataBufferCommandsExecutor = allCommandsExecutor;
       final ActiveCanvas3DHolder activeCanvas3DHolder = this;
       ViewportSelectorCommandExecutor viewportSelector = myGUI;
 
@@ -288,48 +309,65 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
             capturableCanvas.exportSnapshot(snapshotFile);
          }
       };
-      ExportSnapshotDialogConstructor exportSnapshotDialogConstructor = new ExportSnapshotDialogGenerator(exportSnapshotCommandExecutor, guiEnablerAndDisabler,
-                                                                           robots, activeCanvas3DHolder, frame);
+      ExportSnapshotDialogConstructor exportSnapshotDialogConstructor = new ExportSnapshotDialogGenerator(exportSnapshotCommandExecutor,
+                                                                                                          guiEnablerAndDisabler,
+                                                                                                          robots,
+                                                                                                          activeCanvas3DHolder,
+                                                                                                          frame);
 
-      ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder, myGUI, dataBufferCommandsExecutor, runCommandsExecutor,
-                                                                 guiEnablerAndDisabler, activeCanvas3DHolder, simulationSynchronizer);
+      ExportVideoCommandExecutor exportVideoCommandExecutor = new ExportVideo(timeHolder,
+                                                                              myGUI,
+                                                                              dataBufferCommandsExecutor,
+                                                                              gotoInPointCommandExecutor,
+                                                                              gotoOutPointCommandExecutor,
+                                                                              runCommandsExecutor,
+                                                                              guiEnablerAndDisabler,
+                                                                              activeCanvas3DHolder,
+                                                                              simulationSynchronizer);
       StopCommandExecutor stopCommandExecutor = sim;
 
-      MediaCaptureDialogConstructor mediaCaptureDialogConstructor = new MediaCaptureDialogGenerator(exportVideoCommandExecutor, guiEnablerAndDisabler,
-                                                                       stopCommandExecutor, viewportSelector, myGUI, mainGUIActions, activeCanvas3DHolder);
+      MediaCaptureDialogConstructor mediaCaptureDialogConstructor = new MediaCaptureDialogGenerator(exportVideoCommandExecutor,
+                                                                                                    guiEnablerAndDisabler,
+                                                                                                    stopCommandExecutor,
+                                                                                                    viewportSelector,
+                                                                                                    myGUI,
+                                                                                                    mainGUIActions,
+                                                                                                    activeCanvas3DHolder);
       CameraPropertiesDialogGenerator cameraPropertiesDialogGenerator = new CameraPropertiesDialogGenerator(viewportPanel, frame, frame);
       ResizeViewportDialogConstructor resizeViewportDialogConstructor = new ResizeViewportDialogGenerator(frame, myGUI);
 
-      windowGUIActions.createViewportWindowActions(mainGUIActions, exportSnapshotDialogConstructor, mediaCaptureDialogConstructor,
-              cameraPropertiesDialogGenerator, resizeViewportDialogConstructor, viewportPanel, this);
+      windowGUIActions.createViewportWindowActions(mainGUIActions,
+                                                   exportSnapshotDialogConstructor,
+                                                   mediaCaptureDialogConstructor,
+                                                   cameraPropertiesDialogGenerator,
+                                                   resizeViewportDialogConstructor,
+                                                   viewportPanel,
+                                                   this);
       buttonPanel = windowGUIActions.createViewportWindowButtons();
       JMenuBar menuBar = windowGUIActions.createViewportWindowMenus();
 
       windowGUIActions.extraPanelsMenu = new JMenu("Extra Panels");
       windowGUIActions.setupExtraPanelsMenu(myGUI.getExtraPanelConfigurationList(), this);
 
-//    windowGUIActions.setupViewportMenu(viewportConfigurationList);
+      //    windowGUIActions.setupViewportMenu(viewportConfigurationList);
 
-
-//    contentPane.add(buttonPanel, "South");
+      //    contentPane.add(buttonPanel, "South");
       contentPane.setLayout(new BorderLayout());
 
-//    contentPane.setLayout(new GridLayout(1,1));
-//    contentPane.setLayout(new FlowLayout());
-//    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-//    createActions();
-//    setupConfigurationMenu();
+      //    contentPane.setLayout(new GridLayout(1,1));
+      //    contentPane.setLayout(new FlowLayout());
+      //    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+      //    createActions();
+      //    setupConfigurationMenu();
 
-/*
-      * viewportAndButtonPanel = new JPanel(new java.awt.BorderLayout());
-      *    viewportAndButtonPanel.add("Center", viewportPanel);
-      *    viewportAndButtonPanel.add("South", buttonPanel);
-      *
-      *    contentPane.add(viewportAndButtonPanel);
-*/
+      /*
+       * viewportAndButtonPanel = new JPanel(new java.awt.BorderLayout());
+       * viewportAndButtonPanel.add("Center", viewportPanel); viewportAndButtonPanel.add("South",
+       * buttonPanel); contentPane.add(viewportAndButtonPanel);
+       */
 
-//    contentPane.add(buttonPanel);
-//    contentPane.add(myGraphArrayPanel);
+      //    contentPane.add(buttonPanel);
+      //    contentPane.add(myGraphArrayPanel);
       viewportJPanel = new JPanel(new BorderLayout());
 
       viewportJPanel.add(viewportPanel);
@@ -340,15 +378,15 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
 
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-//    GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-//    +++JEP: Add dual monitor support some day so a new frame can be born on the other monitor...
+      //    GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+      //    +++JEP: Add dual monitor support some day so a new frame can be born on the other monitor...
       frame.setSize(screenSize.width * 7 / 8, screenSize.height * 7 / 8);
 
-//    frame.setSize(screenSize.width*1/8, screenSize.height*1/8);
-//    frame.setLocation(screenSize.width/16, screenSize.height/16);
+      //    frame.setSize(screenSize.width*1/8, screenSize.height*1/8);
+      //    frame.setLocation(screenSize.width/16, screenSize.height/16);
       frame.validate();
 
-//    frame.pack();
+      //    frame.pack();
       if (maximizeWindow)
       {
          frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -368,9 +406,9 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
          }
       });
 
-//    +++JEP: Why this was here I don't know, but it made things not show up
-//    when you made a multi canvas viewport and showed it on a second window, only the first viewport would show up
-//    ... this.selectViewport(selectedViewportName);
+      //    +++JEP: Why this was here I don't know, but it made things not show up
+      //    when you made a multi canvas viewport and showed it on a second window, only the first viewport would show up
+      //    ... this.selectViewport(selectedViewportName);
       myGUI.makeCheckMarksConsistentWithMainPanel(this);
    }
 
@@ -404,13 +442,11 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       return isSelected;
    }
 
-
    public void removeExtraPanel(String panelName)
    {
       tempPanelsHolder.remove(myGUI.getExtraPanel(panelName));
       drawViewportWithExtraPanels();
    }
-
 
    public String savingExtraPanels()
    {
@@ -443,7 +479,7 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       }
       else
       {
-         ArrayList<JSplitPane> dividers = new ArrayList<JSplitPane>();
+         ArrayList<JSplitPane> dividers = new ArrayList<>();
          jsplitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, viewportPanel, tempPanelsHolder.get(0));
          dividers.add(jsplitpane);
 
@@ -506,12 +542,9 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
       }
    }
 
-
-
-
    public ViewportPanel getViewportPanel()
    {
-      return this.viewportPanel;
+      return viewportPanel;
    }
 
    public CameraPropertiesHolder getActiveCamera()
@@ -538,12 +571,12 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
    @Override
    public CaptureDevice getActiveCaptureDevice()
    {
-      return this.getActiveView().getCaptureDevice();
+      return getActiveView().getCaptureDevice();
    }
 
    public StandardGUIActions getGUIActions()
    {
-      return this.windowGUIActions;
+      return windowGUIActions;
    }
 
    public boolean isVisable()
@@ -623,7 +656,7 @@ public class ViewportWindow implements ViewportSelectorCommandExecutor, ActiveCa
    public void closeAndDispose()
    {
       viewportPanel.closeAndDispose();
-      
+
       if (windowGUIActions != null)
       {
          windowGUIActions.closeAndDispose();

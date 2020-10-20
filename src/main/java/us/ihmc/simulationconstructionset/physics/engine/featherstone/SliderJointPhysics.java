@@ -1,10 +1,10 @@
 package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.Joint;
 import us.ihmc.simulationconstructionset.SliderJoint;
-
 
 public class SliderJointPhysics extends JointPhysics<SliderJoint>
 {
@@ -18,7 +18,7 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * Updates the joint velocity.  This function is used when applying impluse forces
+    * Updates the joint velocity. This function is used when applying impluse forces
     *
     * @param delta_qd change in velocity
     */
@@ -29,21 +29,21 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * During the first featherstone pass the joint rotation matrix must be calculated.  As slider joints
+    * During the first featherstone pass the joint rotation matrix must be calculated. As slider joints
     * support no rotation this matrix is always the identity matrix
     *
     * @param Rh_i Matrix3d in which the rotation matrix is stored
     */
    @Override
-   protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
+   protected void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i)
    {
       Rh_i.setIdentity();
    }
 
    /**
-    * The first featherstone pass updates the velocities and positions of all joints.  Such updates are joint
-    * dependent and this method handles the velocity updates for slider joints.  If limit stops exist
-    * they are also applied here.
+    * The first featherstone pass updates the velocities and positions of all joints. Such updates are
+    * joint dependent and this method handles the velocity updates for slider joints. If limit stops
+    * exist they are also applied here.
     */
    @Override
    protected void jointDependentFeatherstonePassOne()
@@ -55,14 +55,18 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
       {
          if (owner.getQYoVariable().getDoubleValue() < owner.q_min)
          {
-            double limitTorque = owner.k_limit * (owner.q_min - owner.getQYoVariable().getDoubleValue()) - owner.b_limit * owner.getQDYoVariable().getDoubleValue();
-            if (limitTorque < 0.0) limitTorque = 0.0;
+            double limitTorque = owner.k_limit * (owner.q_min - owner.getQYoVariable().getDoubleValue())
+                  - owner.b_limit * owner.getQDYoVariable().getDoubleValue();
+            if (limitTorque < 0.0)
+               limitTorque = 0.0;
             owner.tauJointLimit.set(limitTorque);
          }
          else if (owner.getQYoVariable().getDoubleValue() > owner.q_max)
          {
-            double limitTorque = owner.k_limit * (owner.q_max - owner.getQYoVariable().getDoubleValue()) - owner.b_limit * owner.getQDYoVariable().getDoubleValue();
-            if (limitTorque > 0.0) limitTorque = 0.0;
+            double limitTorque = owner.k_limit * (owner.q_max - owner.getQYoVariable().getDoubleValue())
+                  - owner.b_limit * owner.getQDYoVariable().getDoubleValue();
+            if (limitTorque > 0.0)
+               limitTorque = 0.0;
             owner.tauJointLimit.set(limitTorque);
          }
          else
@@ -100,8 +104,8 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * Sets the distance betweent this joint and the center of mass belonging to the link
-    * which it is attached.  This function is called only once.
+    * Sets the distance betweent this joint and the center of mass belonging to the link which it is
+    * attached. This function is called only once.
     */
    @Override
    protected void jointDependentSet_d_i()
@@ -113,14 +117,13 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
 
    private Vector3D w_hXr_i = new Vector3D();
    private Vector3D temp1 = new Vector3D(), temp2 = new Vector3D();
-   private Vector3D vel_i = new Vector3D();    // vel_i is the vector velocity of joint i (vel_i = q_dot_i * u_i)
+   private Vector3D vel_i = new Vector3D(); // vel_i is the vector velocity of joint i (vel_i = q_dot_i * u_i)
 
    /**
-    *
     * @param w_h Vector3d
     */
    @Override
-   protected void jointDependentFeatherstonePassTwo(Vector3D w_h)
+   protected void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h)
    {
       // Coriolis Forces:
 
@@ -148,8 +151,7 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    *
-    * @param Q double
+    * @param Q          double
     * @param passNumber int
     */
    @Override
@@ -161,8 +163,9 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * If this joint is a child of a non-dynamic root only the first component of the featherstone algorithm is executed.
-    * As the k values for RK4 are saved during the fourth component this method saves the relevant information.
+    * If this joint is a child of a non-dynamic root only the first component of the featherstone
+    * algorithm is executed. As the k values for RK4 are saved during the fourth component this method
+    * saves the relevant information.
     *
     * @param passNumber int representing the current pass in the featherstone algorithm
     */
@@ -175,9 +178,9 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * In between each pass through the featherstone algorithm the relevant values must be
-    * updated so that the k's needed for RK4 may be generated.  These k's represent
-    * slope at several stages between the current and future points.
+    * In between each pass through the featherstone algorithm the relevant values must be updated so
+    * that the k's needed for RK4 may be generated. These k's represent slope at several stages between
+    * the current and future points.
     *
     * @param stepSize time in seconds between the current value and next value
     */
@@ -198,8 +201,8 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * Calculates the Runge-Kutta sum for the relevant values of this joint.  Slider joints
-    * calculate only position and velocity.
+    * Calculates the Runge-Kutta sum for the relevant values of this joint. Slider joints calculate
+    * only position and velocity.
     *
     * @param stepSize time in seconds between these values and the previous values
     */
@@ -218,9 +221,9 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * Recurse over each joint and save the relevant information.  Slider joints save only
-    * position and velocity.  This function is used to save the intial state of these values
-    * so that they may be restored prior to each euler integration.
+    * Recurse over each joint and save the relevant information. Slider joints save only position and
+    * velocity. This function is used to save the intial state of these values so that they may be
+    * restored prior to each euler integration.
     */
    @Override
    public void recursiveSaveTempState()
@@ -239,9 +242,9 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * Recurse over each joint and restore the relevant information.  Slider joints save only
-    * position and velocity.  This function is used to restore values to their original state
-    * prior to each euler integration.
+    * Recurse over each joint and restore the relevant information. Slider joints save only position
+    * and velocity. This function is used to restore values to their original state prior to each euler
+    * integration.
     */
    @Override
    public void recursiveRestoreTempState()
@@ -259,9 +262,8 @@ public class SliderJointPhysics extends JointPhysics<SliderJoint>
    }
 
    /**
-    * Checks to see if accelerations were reasonable.  If not the function
-    * returns false.  Generally a false result from this function is accompanied by
-    * an UnreasonableAccelerationException
+    * Checks to see if accelerations were reasonable. If not the function returns false. Generally a
+    * false result from this function is accompanied by an UnreasonableAccelerationException
     *
     * @return were the accelerations reasonable?
     */

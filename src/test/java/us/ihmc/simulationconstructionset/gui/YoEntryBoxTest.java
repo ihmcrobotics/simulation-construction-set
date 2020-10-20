@@ -1,28 +1,38 @@
 package us.ihmc.simulationconstructionset.gui;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.assertFalse;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner.SimulationExceededMaximumTimeException;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoEnum;
 
-import java.util.ArrayList;
-
-import static us.ihmc.robotics.Assert.*;
-
 public class YoEntryBoxTest
 {
-   public enum BadGreekEnum {ALPHA, BETA, GAMMA}
+   public enum BadGreekEnum
+   {
+      ALPHA, BETA, GAMMA
+   }
 
-   public enum LargeEnum {THIS_IS_LARGE, THIS_IS_LARGER, A_LARGER_STILL_ENUMERATION_STRING,
-           A_YET_LARGER_AND_STILL_MORE_VERBOSE_DESCRIPTION_OF_AN_ENUMERATION_STATE,
-           THE_FOLLOWING_IS_TAKEN_FROM_RAIBERT_1986_ONE_PART_OF_THE_CONTROL_SYSTEM_EXCITED_THE_CYCLIC_MOTION_THAT_UNDERLIES_RUNNING_WHILE_REGULATING_THE_HEIGHT_TO_WHICH_THE_MACHINE_HOPPED}
+   public enum LargeEnum
+   {
+      THIS_IS_LARGE,
+      THIS_IS_LARGER,
+      A_LARGER_STILL_ENUMERATION_STRING,
+      A_YET_LARGER_AND_STILL_MORE_VERBOSE_DESCRIPTION_OF_AN_ENUMERATION_STATE,
+      THE_FOLLOWING_IS_TAKEN_FROM_RAIBERT_1986_ONE_PART_OF_THE_CONTROL_SYSTEM_EXCITED_THE_CYCLIC_MOTION_THAT_UNDERLIES_RUNNING_WHILE_REGULATING_THE_HEIGHT_TO_WHICH_THE_MACHINE_HOPPED
+   }
 
    public enum SmallEnum
    {
@@ -31,7 +41,7 @@ public class YoEntryBoxTest
 
    private class SimpleController implements RobotControllerWithAttachRobot
    {
-      private YoVariableRegistry registry;
+      private YoRegistry registry;
       private YoEnum<BadGreekEnum> badGreekVariable;
       private YoEnum<LargeEnum> largeEnumVariable;
       private YoEnum<SmallEnum> smallEnumVariable;
@@ -46,14 +56,12 @@ public class YoEntryBoxTest
       @Override
       public void attachRobot(Robot robot)
       {
-         registry = new YoVariableRegistry("controllerRegistry");
-         badGreekVariable = new YoEnum<BadGreekEnum>("badGreekVariable", registry, BadGreekEnum.class);
+         registry = new YoRegistry("controllerRegistry");
+         badGreekVariable = new YoEnum<>("badGreekVariable", registry, BadGreekEnum.class);
          badGreekVariable.set(BadGreekEnum.ALPHA);
-         largeEnumVariable = new YoEnum<LargeEnum>("largeEnumVariable", registry, LargeEnum.class);
-         largeEnumVariable
-            .set(LargeEnum
-               .THE_FOLLOWING_IS_TAKEN_FROM_RAIBERT_1986_ONE_PART_OF_THE_CONTROL_SYSTEM_EXCITED_THE_CYCLIC_MOTION_THAT_UNDERLIES_RUNNING_WHILE_REGULATING_THE_HEIGHT_TO_WHICH_THE_MACHINE_HOPPED);
-         smallEnumVariable = new YoEnum<SmallEnum>("smallEnumVariable", registry, SmallEnum.class);
+         largeEnumVariable = new YoEnum<>("largeEnumVariable", registry, LargeEnum.class);
+         largeEnumVariable.set(LargeEnum.THE_FOLLOWING_IS_TAKEN_FROM_RAIBERT_1986_ONE_PART_OF_THE_CONTROL_SYSTEM_EXCITED_THE_CYCLIC_MOTION_THAT_UNDERLIES_RUNNING_WHILE_REGULATING_THE_HEIGHT_TO_WHICH_THE_MACHINE_HOPPED);
+         smallEnumVariable = new YoEnum<>("smallEnumVariable", registry, SmallEnum.class);
          smallEnumVariable.set(SmallEnum.IF);
          numberVariable = new YoDouble("numberVariable", registry);
          numberVariable.set(42.0);
@@ -66,7 +74,7 @@ public class YoEntryBoxTest
       }
 
       @Override
-      public YoVariableRegistry getYoVariableRegistry()
+      public YoRegistry getYoRegistry()
       {
          return registry;
       }
@@ -88,17 +96,17 @@ public class YoEntryBoxTest
       {
          switch (badGreekVariable.getEnumValue())
          {
-            case ALPHA :
+            case ALPHA:
 
                break;
 
-            case BETA :
+            case BETA:
                break;
 
-            case GAMMA :
+            case GAMMA:
                break;
 
-            default :
+            default:
                break;
          }
 
@@ -120,14 +128,13 @@ public class YoEntryBoxTest
       }
    }
 
-
-   public final static int DELAY_TIME_FOR_HUMAN_CONVENIENT_VIEWING = 360;    // 400 and you can see it change. lower than 100 and scs isn't fast enough for the asserts.
-   public final static int DELAY_TIME_FOR_TESTING_CONCURRENT_UPDATE = 1000;    // TODO: Find a way to avoid having this parameter matter. I worry about this one.
+   public final static int DELAY_TIME_FOR_HUMAN_CONVENIENT_VIEWING = 360; // 400 and you can see it change. lower than 100 and scs isn't fast enough for the asserts.
+   public final static int DELAY_TIME_FOR_TESTING_CONCURRENT_UPDATE = 1000; // TODO: Find a way to avoid having this parameter matter. I worry about this one.
 
    // GT - these values are twice the minimum working values for Trogdor.
    // This test is for humans to view
    @Disabled // Throws an EdtViolationException at Runtime.
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testEnumDisplay() throws SimulationExceededMaximumTimeException, InterruptedException
    {
       SimpleController controller = new SimpleController();
@@ -136,12 +143,12 @@ public class YoEntryBoxTest
       scs.setupEntryBox("badGreekVariable");
       scs.setupEntryBox("smallEnumVariable");
       Thread.sleep(10000);
-      
+
       scs.closeAndDispose();
    }
 
    @Disabled // Throws an EdtViolationException at Runtime
-	@Test// timeout = 37000
+   @Test // timeout = 37000
    public void testSwitchToEnumEntry() throws SimulationExceededMaximumTimeException, InterruptedException
    {
       SimpleController controller = new SimpleController();
@@ -155,7 +162,7 @@ public class YoEntryBoxTest
       scs.setupEntryBox("q_x");
       Thread.sleep(DELAY_TIME_FOR_HUMAN_CONVENIENT_VIEWING);
       scs.setupEntryBox("badGreekVariable");
-      ArrayList<YoEntryBox> entryBoxes = scsGUI.getEntryBoxArrayPanel().getEntryBoxesOnThisPanel();
+      List<YoEntryBox> entryBoxes = scsGUI.getEntryBoxArrayPanel().getEntryBoxesOnThisPanel();
 
       YoEnum<BadGreekEnum> badGreekVariable = controller.getBadGreekVariable();
       YoDouble numberVariable = controller.getNumberVariable();
@@ -163,7 +170,7 @@ public class YoEntryBoxTest
       badGreekVariable.set(BadGreekEnum.BETA);
       Thread.sleep(DELAY_TIME_FOR_HUMAN_CONVENIENT_VIEWING);
       assertEquals(timeVariable, entryBoxes.get(0).getVariableInThisBox());
-      assertEquals(scs.getVariable("q_x"), entryBoxes.get(1).getVariableInThisBox());
+      assertEquals(scs.findVariable("q_x"), entryBoxes.get(1).getVariableInThisBox());
       assertEquals(badGreekVariable, entryBoxes.get(2).getVariableInThisBox());
       assertEquals(YoTextEntryContainer.class, entryBoxes.get(1).getActiveYoVariableEntryContainer().getClass());
       assertEquals(YoEnumEntryContainer.class, entryBoxes.get(2).getActiveYoVariableEntryContainer().getClass());
@@ -194,10 +201,10 @@ public class YoEntryBoxTest
       boolean showGUI = true;
       FallingBrickRobot robot = new FallingBrickRobot();
       controller.attachRobot(robot);
-      assertFalse(controller.getYoVariableRegistry() == null);
+      assertFalse(controller.getYoRegistry() == null);
       robot.setController(controller);
-      
-      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
+
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setCreateGUI(showGUI);
       parameters.setDataBufferSize(2000);
       SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);

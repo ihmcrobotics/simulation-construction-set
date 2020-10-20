@@ -130,11 +130,10 @@ public class LoadRobotConfigurationDialogGenerator implements LoadRobotConfigura
                gcm = robots[0].getGroundContactModel();
             }
 
-
             RobotDefinitionFixedFrame robotDef = new RobotDefinitionFixedFrame();
             robotDef.createRobotDefinitionFromRobotConfigurationString(xmlRepresentation);
 
-//          System.out.println(robotDef.toString());
+            //          System.out.println(robotDef.toString());
             Robot r = new Robot(robotDef, "Loaded");
             r.setGroundContactModel(gcm);
             sim.setRobot(r);
@@ -155,7 +154,7 @@ public class LoadRobotConfigurationDialogGenerator implements LoadRobotConfigura
    {
       boolean visible = myGUI.setViewportFromXMLDescription(xmlRepresentation);
 
-      if (!visible)    // for main viewport
+      if (!visible) // for main viewport
       {
          myGUI.hideViewport();
       }
@@ -283,7 +282,7 @@ public class LoadRobotConfigurationDialogGenerator implements LoadRobotConfigura
       int currentNumberOfVariables = 0;
 
       while ((XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") <= XMLData.length())
-             && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
+            && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
       {
          currentNumberOfVariables++;
          index++;
@@ -297,7 +296,7 @@ public class LoadRobotConfigurationDialogGenerator implements LoadRobotConfigura
       index = 0;
 
       while ((XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") <= XMLData.length())
-             && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
+            && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",") > 0))
       {
          int endIndex = XMLReaderUtility.getEndIndexOfSubString(index, XMLData, ",");
 

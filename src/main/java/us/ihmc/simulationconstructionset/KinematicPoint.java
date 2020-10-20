@@ -3,6 +3,7 @@ package us.ihmc.simulationconstructionset;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
@@ -11,15 +12,16 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.euclid.tuple4D.Vector4D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
-
-
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 /**
- * Title:        Simulation Construction Set<p>
- * Description:  Package for Simulating Dynamic Robots and Mechanisms<p>
+ * Title: Simulation Construction Set
+ * <p>
+ * Description: Package for Simulating Dynamic Robots and Mechanisms
+ * <p>
+ * 
  * @author Jerry Pratt
  * @version Beta 1.0
  */
@@ -40,7 +42,7 @@ public class KinematicPoint implements java.io.Serializable
 
    private KinematicPointUpdater kinematicPointUpdater;
 
-   private final YoVariableRegistry registry;
+   private final YoRegistry registry;
 
    protected final Vector3D tempVectorForOffsetFromCOM = new Vector3D(), tempVectorForWXr = new Vector3D(), tempVectorForVelocity = new Vector3D();
 
@@ -51,20 +53,20 @@ public class KinematicPoint implements java.io.Serializable
 
    public KinematicPoint(String name, Robot robot)
    {
-      this(name, null, robot.getRobotsYoVariableRegistry());
+      this(name, null, robot.getRobotsYoRegistry());
    }
 
-   public KinematicPoint(String name, YoVariableRegistry registry)
+   public KinematicPoint(String name, YoRegistry registry)
    {
       this(name, null, registry);
    }
 
-   public KinematicPoint(String name, Vector3DReadOnly offset, Robot robot)
+   public KinematicPoint(String name, Tuple3DReadOnly offset, Robot robot)
    {
-      this(name, offset, robot.getRobotsYoVariableRegistry());
+      this(name, offset, robot.getRobotsYoRegistry());
    }
 
-   public KinematicPoint(String name, Vector3DReadOnly offset, YoVariableRegistry registry)
+   public KinematicPoint(String name, Tuple3DReadOnly offset, YoRegistry registry)
    {
       this.name = name;
       this.registry = registry;
@@ -73,7 +75,7 @@ public class KinematicPoint implements java.io.Serializable
       velocityInWorld = new YoFrameVector3D(name + "_d", "", ReferenceFrame.getWorldFrame(), registry);
       angularVelocityInWorld = new YoFrameVector3D(name + "_w", "", ReferenceFrame.getWorldFrame(), registry);
 
-      this.offsetYoFrameVector = new YoFrameVector3D(name + "off", "", ReferenceFrame.getWorldFrame(), registry);
+      offsetYoFrameVector = new YoFrameVector3D(name + "off", "", ReferenceFrame.getWorldFrame(), registry);
       if (offset != null)
          offsetYoFrameVector.set(offset);
    }
@@ -98,17 +100,17 @@ public class KinematicPoint implements java.io.Serializable
 
    public KinematicPointUpdater getKinematicPointUpdater()
    {
-      return this.kinematicPointUpdater;
+      return kinematicPointUpdater;
    }
 
    public void setKinematicPointUpdater(KinematicPointUpdater updater)
    {
-      this.kinematicPointUpdater = updater;
+      kinematicPointUpdater = updater;
    }
 
    public void setParentJoint(Joint parent)
    {
-      this.parentJoint = parent;
+      parentJoint = parent;
    }
 
    public Joint getParentJoint()
@@ -124,12 +126,12 @@ public class KinematicPoint implements java.io.Serializable
 
    public void setOffsetJoint(double x, double y, double z)
    {
-      this.offsetYoFrameVector.set(x, y, z);
+      offsetYoFrameVector.set(x, y, z);
    }
 
-   public void setOffsetJoint(Vector3DReadOnly newOffset)
+   public void setOffsetJoint(Tuple3DReadOnly newOffset)
    {
-      this.offsetYoFrameVector.set(newOffset);
+      offsetYoFrameVector.set(newOffset);
    }
 
    public void setOffsetWorld(Tuple3DReadOnly offsetInWorld)
@@ -139,22 +141,20 @@ public class KinematicPoint implements java.io.Serializable
 
    public void setOffsetWorld(double x, double y, double z)
    {
-//      System.out.println("Setting offset World: " + x + ", " + y + ", " + z);
       tempTransformFromWorldToJoint.set(parentJoint.transformToNext);
       tempTransformFromWorldToJoint.invert();
       offsetPlus.set(x, y, z, 1.0);
       tempTransformFromWorldToJoint.transform(offsetPlus);
 
       setOffsetJoint(offsetPlus.getX(), offsetPlus.getY(), offsetPlus.getZ());
-//      System.out.println("Setting offset Joint: " + offsetPlus.getX() + ", " + offsetPlus.getY() + ", " + offsetPlus.getZ());
- 
+
       //TODO: Make sure all methods update the various variables so that a set followed by a get is consistent...
-      this.positionInWorld.set(x, y, z);
+      positionInWorld.set(x, y, z);
    }
 
    public void updatePointVelocity(RotationMatrixReadOnly R0_i, Vector3DReadOnly comOffset, Vector3DReadOnly v_i, Vector3DReadOnly w_i)
    {
-      this.getOffset(tempVectorForOffsetFromCOM);
+      getOffset(tempVectorForOffsetFromCOM);
       tempVectorForOffsetFromCOM.sub(comOffset);
 
       tempVectorForWXr.cross(w_i, tempVectorForOffsetFromCOM);
@@ -168,7 +168,7 @@ public class KinematicPoint implements java.io.Serializable
       angularVelocityInWorld.set(tempVectorForVelocity);
    }
 
-   protected void updatePointPosition(RigidBodyTransform t1)
+   protected void updatePointPosition(RigidBodyTransformReadOnly t1)
    {
       if (kinematicPointUpdater != null)
       {
@@ -176,7 +176,7 @@ public class KinematicPoint implements java.io.Serializable
          kinematicPointUpdater.updateKinematicPoint(this);
       }
 
-      this.getOffset(tempPoint);
+      getOffset(tempPoint);
       t1.transform(tempPoint);
 
       positionInWorld.set(tempPoint);
@@ -187,6 +187,11 @@ public class KinematicPoint implements java.io.Serializable
       return name;
    }
 
+   public Vector3DReadOnly getOffset()
+   {
+      return offsetYoFrameVector;
+   }
+
    public void getOffset(Tuple3DBasics offsetToPack)
    {
       offsetToPack.set(offsetYoFrameVector);
@@ -194,10 +199,7 @@ public class KinematicPoint implements java.io.Serializable
 
    public Vector3D getOffsetCopy()
    {
-      Vector3D ret = new Vector3D();
-      getOffset(ret);
-
-      return ret;
+      return new Vector3D(getOffset());
    }
 
    public double getX()
@@ -235,12 +237,17 @@ public class KinematicPoint implements java.io.Serializable
       positionToPack.set(positionInWorld);
    }
 
+   /**
+    * @deprecated Use {@link #getPositionCopy()} instead
+    */
    public Point3D getPositionPoint()
    {
-      Point3D pointToReturn = new Point3D();
-      getPosition(pointToReturn);
+      return getPositionCopy();
+   }
 
-      return pointToReturn;
+   public Point3D getPositionCopy()
+   {
+      return new Point3D(positionInWorld);
    }
 
    public void getVelocity(Vector3DBasics velocityToPack)
@@ -248,19 +255,27 @@ public class KinematicPoint implements java.io.Serializable
       velocityToPack.set(velocityInWorld);
    }
 
+   /**
+    * @deprecated Use {@link #getVelocityCopy()} instead
+    */
    public Vector3D getVelocityVector()
+   {
+      return getVelocityCopy();
+   }
+
+   public Vector3D getVelocityCopy()
    {
       return new Vector3D(velocityInWorld);
    }
 
    public void setVelocity(Vector3DReadOnly velocity)
    {
-      this.velocityInWorld.set(velocity);
+      velocityInWorld.set(velocity);
    }
 
    public void getAngularVelocity(Vector3DBasics angularVelocityInWorldToPack)
    {
-      angularVelocityInWorldToPack.set(this.angularVelocityInWorld);
+      angularVelocityInWorldToPack.set(angularVelocityInWorld);
    }
 
    public void setAngularVelocity(Vector3DReadOnly angularVelocityInWorld)
@@ -270,7 +285,7 @@ public class KinematicPoint implements java.io.Serializable
 
    public void setPosition(Point3DReadOnly position)
    {
-      this.positionInWorld.set(position);
+      positionInWorld.set(position);
    }
 
    public YoFramePoint3D getYoPosition()
@@ -288,7 +303,7 @@ public class KinematicPoint implements java.io.Serializable
       return angularVelocityInWorld;
    }
 
-   public YoVariableRegistry getYoVariableRegistry()
+   public YoRegistry getYoRegistry()
    {
       return registry;
    }

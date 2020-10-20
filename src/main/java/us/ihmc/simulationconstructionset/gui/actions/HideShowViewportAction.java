@@ -19,9 +19,9 @@ public class HideShowViewportAction extends AbstractAction implements ViewportSe
       super("Hide Viewport");
       this.viewportSelector = viewportSelector;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_V));
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
 
       viewportSelector.registerViewportSelectorCommandListener(this);
    }
@@ -55,7 +55,8 @@ public class HideShowViewportAction extends AbstractAction implements ViewportSe
    @Override
    public void closeAndDispose()
    {
-      if (viewportSelector != null) viewportSelector.closeAndDispose();
+      if (viewportSelector != null)
+         viewportSelector.closeAndDispose();
       viewportSelector = null;
    }
 

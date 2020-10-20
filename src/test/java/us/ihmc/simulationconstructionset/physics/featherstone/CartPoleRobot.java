@@ -1,7 +1,8 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+
 import us.ihmc.commons.MathTools;
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -19,14 +20,15 @@ public class CartPoleRobot extends RobotWithClosedFormDynamics
    private final PinJoint pinJoint;
 
    /**
-    * Manipulator equation matrices, for matrix definitions see {@link #assertStateIsCloseToClosedFormCalculation}
+    * Manipulator equation matrices, for matrix definitions see
+    * {@link #assertStateIsCloseToClosedFormCalculation}
     */
-   private final DenseMatrix64F H = new DenseMatrix64F(2, 2);
-   private final DenseMatrix64F C = new DenseMatrix64F(2, 2);
-   private final DenseMatrix64F G = new DenseMatrix64F(2, 1);
-   private final DenseMatrix64F qd = new DenseMatrix64F(2, 1);
-   private final DenseMatrix64F qdd = new DenseMatrix64F(2, 1);
-   private final DenseMatrix64F rightHandSide = new DenseMatrix64F(2, 1);
+   private final DMatrixRMaj H = new DMatrixRMaj(2, 2);
+   private final DMatrixRMaj C = new DMatrixRMaj(2, 2);
+   private final DMatrixRMaj G = new DMatrixRMaj(2, 1);
+   private final DMatrixRMaj qd = new DMatrixRMaj(2, 1);
+   private final DMatrixRMaj qdd = new DMatrixRMaj(2, 1);
+   private final DMatrixRMaj rightHandSide = new DMatrixRMaj(2, 1);
 
    public CartPoleRobot(String name, double initialCartVelocity, double initialPoleAngle, double initialPoleAngularVelocity)
    {
@@ -44,7 +46,7 @@ public class CartPoleRobot extends RobotWithClosedFormDynamics
 
       Link poleLink = new Link(name + "PoleLink");
       poleLink.setMass(poleMass);
-      poleLink.setComOffset(0.0, 0.0, - poleLength);
+      poleLink.setComOffset(0.0, 0.0, -poleLength);
       pinJoint.setLink(poleLink);
 
       sliderJoint.setQd(initialCartVelocity);
@@ -57,7 +59,9 @@ public class CartPoleRobot extends RobotWithClosedFormDynamics
 
    /**
     * Solves the equations of motions outlined here:
-    * @see <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-832-underactuated-robotics-spring-2009/readings/MIT6_832s09_read_ch03.pdf</a>
+    * 
+    * @see <a
+    *      href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-832-underactuated-robotics-spring-2009/readings/MIT6_832s09_read_ch03.pdf</a>
     */
    @Override
    public void assertStateIsCloseToClosedFormCalculation(double epsilon)
@@ -77,15 +81,15 @@ public class CartPoleRobot extends RobotWithClosedFormDynamics
       double H11 = poleMass * MathTools.square(poleLength);
 
       double C00 = 0.0;
-      double C01 = - poleMass * poleLength * thetaD * Math.sin(theta);
+      double C01 = -poleMass * poleLength * thetaD * Math.sin(theta);
       double C10 = 0.0;
       double C11 = 0.0;
 
       double G00 = 0.0;
       double G10 = poleMass * g * poleLength * Math.sin(theta);
 
-      double cartForce = - cartDamping * xd;
-      double poleTorque = - poleDamping * thetaD;
+      double cartForce = -cartDamping * xd;
+      double poleTorque = -poleDamping * thetaD;
 
       H.set(0, 0, H00);
       H.set(0, 1, H01);
@@ -101,8 +105,8 @@ public class CartPoleRobot extends RobotWithClosedFormDynamics
       G.set(1, 0, G10);
 
       // negative sign since it's negated below
-      rightHandSide.set(0, 0, - cartForce);
-      rightHandSide.set(1, 0, - poleTorque);
+      rightHandSide.set(0, 0, -cartForce);
+      rightHandSide.set(1, 0, -poleTorque);
 
       qd.set(0, 0, xd);
       qd.set(1, 0, thetaD);
@@ -110,20 +114,19 @@ public class CartPoleRobot extends RobotWithClosedFormDynamics
       qdd.set(0, 0, xdd);
       qdd.set(1, 0, thetaDD);
 
-      CommonOps.add(rightHandSide, G, rightHandSide);
-      CommonOps.multAdd(C, qd, rightHandSide);
-      CommonOps.scale(-1.0, rightHandSide);
-      CommonOps.solve(H, rightHandSide, qdd);
+      CommonOps_DDRM.add(rightHandSide, G, rightHandSide);
+      CommonOps_DDRM.multAdd(C, qd, rightHandSide);
+      CommonOps_DDRM.scale(-1.0, rightHandSide);
+      CommonOps_DDRM.solve(H, rightHandSide, qdd);
 
-      double xddLagrangian = - qdd.get(0, 0);
+      double xddLagrangian = -qdd.get(0, 0);
       double thetaDDLagrangian = qdd.get(1, 0);
 
-      if(Math.abs(xdd - xddLagrangian) > epsilon || Math.abs(thetaDD - thetaDDLagrangian) > epsilon)
+      if (Math.abs(xdd - xddLagrangian) > epsilon || Math.abs(thetaDD - thetaDDLagrangian) > epsilon)
       {
-         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. "
-                                        + "\nAt t=" + getTime()
-                                        + "\nSimulated joint accelerations: (" + xdd + ", " + thetaDD + ")"
-                                        + "\nLagrangian accelerations: (" + xddLagrangian + ", " + thetaDDLagrangian + ")");
+         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. " + "\nAt t=" + getTime()
+               + "\nSimulated joint accelerations: (" + xdd + ", " + thetaDD + ")" + "\nLagrangian accelerations: (" + xddLagrangian + ", " + thetaDDLagrangian
+               + ")");
       }
    }
 }

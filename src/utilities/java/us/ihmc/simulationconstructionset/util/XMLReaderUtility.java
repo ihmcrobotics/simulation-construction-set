@@ -148,7 +148,7 @@ public class XMLReaderUtility
       try
       {
          return new us.ihmc.euclid.tuple3D.Vector3D(new double[] {Double.parseDouble(tokenizer.nextToken()), Double.parseDouble(tokenizer.nextToken()),
-                 Double.parseDouble(tokenizer.nextToken())});
+               Double.parseDouble(tokenizer.nextToken())});
       }
       catch (Exception e)
       {
@@ -171,10 +171,14 @@ public class XMLReaderUtility
       StringTokenizer tokenizer = new StringTokenizer(matrix3d, ",");
       try
       {
-         Matrix3D m = new Matrix3D(Double.parseDouble(tokenizer.nextToken()), Double.parseDouble(tokenizer.nextToken()),
-                                   Double.parseDouble(tokenizer.nextToken()), Double.parseDouble(tokenizer.nextToken()),
-                                   Double.parseDouble(tokenizer.nextToken()), Double.parseDouble(tokenizer.nextToken()),
-                                   Double.parseDouble(tokenizer.nextToken()), Double.parseDouble(tokenizer.nextToken()),
+         Matrix3D m = new Matrix3D(Double.parseDouble(tokenizer.nextToken()),
+                                   Double.parseDouble(tokenizer.nextToken()),
+                                   Double.parseDouble(tokenizer.nextToken()),
+                                   Double.parseDouble(tokenizer.nextToken()),
+                                   Double.parseDouble(tokenizer.nextToken()),
+                                   Double.parseDouble(tokenizer.nextToken()),
+                                   Double.parseDouble(tokenizer.nextToken()),
+                                   Double.parseDouble(tokenizer.nextToken()),
                                    Double.parseDouble(tokenizer.nextToken()));
 
          return m;

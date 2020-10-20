@@ -23,7 +23,7 @@ public class FloatingRootJointRobot extends RobotFromDescription
    {
       this(robotDescription, true, true);
    }
-   
+
    public FloatingRootJointRobot(RobotDescription robotDescription, boolean enableDamping, boolean enableJointTorqueAndVelocityLimits)
    {
       super(robotDescription, enableDamping, enableJointTorqueAndVelocityLimits);

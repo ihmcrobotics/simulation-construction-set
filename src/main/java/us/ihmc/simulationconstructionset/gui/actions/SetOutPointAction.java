@@ -23,7 +23,7 @@ public class SetOutPointAction extends AbstractAction
       int shortKey = KeyEvent.VK_U;
       String longDescription = "Set Out Point";
       String shortDescription = "Set Out Point";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

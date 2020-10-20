@@ -1,17 +1,18 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
+import static us.ihmc.robotics.Assert.fail;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.simulationconstructionset.util.simulationRunner.BlockingSimulationRunner;
 import us.ihmc.simulationconstructionset.util.simulationTesting.SimulationTestingParameters;
 import us.ihmc.tools.MemoryTools;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-
-import static us.ihmc.robotics.Assert.*;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 /**
  * Tests simulation against closed-form dynamics
@@ -32,7 +33,7 @@ public class FeatherstoneAlgorithmTest
 
    private final SimulationTestingParameters simulationTestingParameters = SimulationTestingParameters.createFromSystemProperties();
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testSinglePendulumAgainstLagrangianCalculation()
    {
       double epsilon = 1e-7;
@@ -40,7 +41,7 @@ public class FeatherstoneAlgorithmTest
       testAgainstLagrangianCalculation(pendulumRobot, epsilon);
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testDoublePendulumAgainstLagrangianCalculation()
    {
       double epsilon = 1e-6;
@@ -49,7 +50,7 @@ public class FeatherstoneAlgorithmTest
    }
 
    @Disabled
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testCartPoleAgainstLagrangianCalculation()
    {
       double epsilon = 1e-2;
@@ -58,7 +59,7 @@ public class FeatherstoneAlgorithmTest
    }
 
    @Disabled
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testUniversalJointAgainLagrangianCalculation()
    {
       double epsilon = 1e-4;
@@ -79,22 +80,23 @@ public class FeatherstoneAlgorithmTest
       {
          blockingSimulationRunner.simulateAndBlock(15.0);
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          fail();
       }
+      scs.closeAndDispose();
    }
 
    private class DynamicsChecker implements RobotController
    {
-      private final YoVariableRegistry registry;
+      private final YoRegistry registry;
       private final RobotWithClosedFormDynamics robotWithClosedFormDynamics;
       private final double epsilon;
       private int numberOfTicksToWait = 2;
 
       public DynamicsChecker(RobotWithClosedFormDynamics robotWithClosedFormDynamics, double epsilon)
       {
-         registry = new YoVariableRegistry(robotWithClosedFormDynamics.getName() + "Registry");
+         registry = new YoRegistry(robotWithClosedFormDynamics.getName() + "Registry");
          this.robotWithClosedFormDynamics = robotWithClosedFormDynamics;
          this.epsilon = epsilon;
       }
@@ -106,7 +108,7 @@ public class FeatherstoneAlgorithmTest
       }
 
       @Override
-      public YoVariableRegistry getYoVariableRegistry()
+      public YoRegistry getYoRegistry()
       {
          return registry;
       }
@@ -126,7 +128,7 @@ public class FeatherstoneAlgorithmTest
       @Override
       public void doControl()
       {
-         if(numberOfTicksToWait == 0)
+         if (numberOfTicksToWait == 0)
             robotWithClosedFormDynamics.assertStateIsCloseToClosedFormCalculation(epsilon);
          else
             numberOfTicksToWait--;

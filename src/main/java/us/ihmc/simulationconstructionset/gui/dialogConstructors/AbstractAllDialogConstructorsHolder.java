@@ -19,7 +19,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
       };
    }
 
-
    @Override
    public CameraPropertiesDialogConstructor getCameraPropertiesDialogConstructor()
    {
@@ -31,7 +30,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-
 
    @Override
    public DataBufferPropertiesDialogConstructor getDataBufferPropertiesDialogConstructor()
@@ -49,7 +47,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-
 
    @Override
    public ExportDataDialogConstructor getExportDataDialogConstructor()
@@ -78,7 +75,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
       };
    }
 
-
    @Override
    public ExportSnapshotDialogConstructor getExportSnapshotDialogConstructor()
    {
@@ -101,7 +97,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
       };
    }
 
-
    @Override
    public ImportDataDialogConstructor getImportDataDialogConstructor()
    {
@@ -112,18 +107,15 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void setCurrentDirectory(File directory)
          {
          }
 
-
          @Override
          public void constructDialog()
          {
          }
-
 
          @Override
          public void closeAndDispose()
@@ -131,7 +123,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-
 
    @Override
    public LoadConfigurationDialogConstructor getLoadConfigurationDialogConstructor()
@@ -143,18 +134,15 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void setCurrentDirectory(File directory)
          {
          }
 
-
          @Override
          public void loadGUIConfigurationFile(File file)
          {
          }
-
 
          @Override
          public void constructDialog()
@@ -162,7 +150,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-
 
    @Override
    public MediaCaptureDialogConstructor getMediaCaptureDialogConstructor()
@@ -174,14 +161,12 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void constructDialog()
          {
          }
       };
    }
-
 
    @Override
    public PlaybackPropertiesDialogConstructor getPlaybackPropertiesDialogConstructor()
@@ -217,34 +202,32 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void closeAndDispose()
          {
          }
       };
    }
-   
+
    @Override
    public ExportGraphsToFileConstructor getExportGraphsToFileConstructor()
    {
       return new ExportGraphsToFileConstructor()
       {
-         
+
          @Override
          public void constructDialog()
          {
-            
+
          }
-         
+
          @Override
          public void closeAndDispose()
          {
-            
+
          }
       };
    }
-
 
    @Override
    public ResizeViewportDialogConstructor getResizeViewportDialogConstructor()
@@ -258,7 +241,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
       };
    }
 
-
    @Override
    public SaveConfigurationDialogConstructor getSaveConfigurationDialogConstructor()
    {
@@ -269,12 +251,10 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void setCurrentDirectory(String directory)
          {
          }
-
 
          @Override
          public void constructDialog()
@@ -282,7 +262,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-
 
    @Override
    public SaveGraphConfigurationDialogConstructor getSaveGraphConfigurationDialogConstructor()
@@ -294,12 +273,10 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void setCurrentDirectory(String directory)
          {
          }
-
 
          @Override
          public void constructDialog()
@@ -307,7 +284,7 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-   
+
    @Override
    public LoadGraphGroupDialogConstructor getLoadGraphGroupDialogConstructor()
    {
@@ -318,22 +295,19 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void setCurrentDirectory(String directory)
          {
          }
-
 
          @Override
          public void constructDialog()
          {
          }
 
-
          @Override
          public void loadGraphGroupFile(File file)
-         {            
+         {
          }
 
          @Override
@@ -342,8 +316,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-
-
 
    @Override
    public SaveRobotConfigurationDialogConstructor getSaveRobotConfigurationDialogConstructor()
@@ -355,12 +327,10 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          {
          }
 
-
          @Override
          public void setCurrentDirectory(String directory)
          {
          }
-
 
          @Override
          public void constructDialog()
@@ -368,7 +338,6 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
          }
       };
    }
-
 
    @Override
    public ExportSimulationTo3DMaxDialogConstructor getExportSimulationTo3DMaxDialogConstructor()
@@ -382,50 +351,47 @@ public class AbstractAllDialogConstructorsHolder implements AllDialogConstructor
       };
    }
 
-
    @Override
    public void closeAndDispose()
-   {      
+   {
    }
-
 
    @Override
    public LoadParametersConstructor getLoadParametersConstructor()
    {
       return new LoadParametersConstructor()
       {
-         
+
          @Override
          public void constructDialog()
          {
-            
+
          }
-         
+
          @Override
          public void closeAndDispose()
          {
-            
+
          }
       };
    }
-
 
    @Override
    public SaveParametersConstructor getSaveParametersConstructor()
    {
       return new SaveParametersConstructor()
       {
-         
+
          @Override
          public void constructDialog()
          {
-            
+
          }
-         
+
          @Override
          public void closeAndDispose()
          {
-            
+
          }
       };
    }

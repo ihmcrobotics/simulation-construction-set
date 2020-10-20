@@ -14,13 +14,13 @@ public class SimpleCollisionShape implements CollisionShape
 
    private int groupMask = 0x00;
    private int collisionMask = 0x00;
-   
+
    private boolean isGround = false;
 
    public SimpleCollisionShape(CollisionShapeDescription collisionShapeDescription)
    {
       this.collisionShapeDescription = collisionShapeDescription;
-      this.transformedCollisionShapeDescription = collisionShapeDescription.copy();
+      transformedCollisionShapeDescription = collisionShapeDescription.copy();
    }
 
    @Override
@@ -28,7 +28,7 @@ public class SimpleCollisionShape implements CollisionShape
    {
       return isGround;
    }
-   
+
    @Override
    public void setIsGround(boolean isGround)
    {
@@ -52,11 +52,11 @@ public class SimpleCollisionShape implements CollisionShape
    {
       return collisionMask;
    }
-   
+
    @Override
    public void setCollisionGroup(int groupMask)
    {
-      this.groupMask = groupMask; 
+      this.groupMask = groupMask;
    }
 
    @Override
@@ -87,7 +87,7 @@ public class SimpleCollisionShape implements CollisionShape
    public void computeTransformedCollisionShape()
    {
       transformedCollisionShapeDescription.setFrom(collisionShapeDescription);
-      this.getTransformToWorld(transformToWorld);
+      getTransformToWorld(transformToWorld);
       transformedCollisionShapeDescription.applyTransform(transformToWorld);
    }
 

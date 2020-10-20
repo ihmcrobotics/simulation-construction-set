@@ -2,7 +2,6 @@ package us.ihmc.simulationconstructionset;
 
 import java.util.ArrayList;
 
-
 public class FunctionIntegrators
 {
    private FunctionIntegrator[] integrators;
@@ -20,7 +19,7 @@ public class FunctionIntegrators
          return;
       }
 
-      ArrayList<FunctionIntegrator> tempIntegrators = new ArrayList<FunctionIntegrator>();
+      ArrayList<FunctionIntegrator> tempIntegrators = new ArrayList<>();
 
       for (int i = 0; i < integrators.length; i++)
       {

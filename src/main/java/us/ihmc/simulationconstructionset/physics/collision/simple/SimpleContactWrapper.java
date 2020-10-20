@@ -25,8 +25,8 @@ public class SimpleContactWrapper implements Contacts
    {
       clear();
 
-      this.shapeA = collision.getShapeA();
-      this.shapeB = collision.getShapeB();
+      shapeA = collision.getShapeA();
+      shapeB = collision.getShapeB();
 
       addAll(collision);
    }
@@ -91,10 +91,9 @@ public class SimpleContactWrapper implements Contacts
       }
 
    }
-   
-   
+
    public void addAllReplaceNearby(Contacts contactsToAdd)
-   {  
+   {
       CollisionShape shapeA = contactsToAdd.getShapeA();
       CollisionShape shapeB = contactsToAdd.getShapeB();
 
@@ -122,13 +121,13 @@ public class SimpleContactWrapper implements Contacts
          // Find nearby one:
          SingleContact singleContact = null;
 
-         for (int j=0; j<contacts.size(); j++)
+         for (int j = 0; j < contacts.size(); j++)
          {
             SingleContact singleContactToCheck = contacts.get(j);
-            
+
             Point3D worldAToCheck = new Point3D();
             singleContactToCheck.getWorldA(worldAToCheck);
-            
+
             Point3D worldAPoint = new Point3D();
             if (switched)
             {
@@ -144,7 +143,7 @@ public class SimpleContactWrapper implements Contacts
                singleContact = singleContactToCheck;
             }
          }
-         
+
          if (singleContact == null)
          {
             singleContact = new SingleContact();
@@ -177,12 +176,11 @@ public class SimpleContactWrapper implements Contacts
 
    }
 
-
    public void addContact(Point3D pointA, Point3D pointB, Vector3D normalA, double distance)
    {
       SingleContact singleContact = new SingleContact();
       singleContact.set(pointA, pointB, normalA, distance);
-      this.contacts.add(singleContact);
+      contacts.add(singleContact);
    }
 
    @Override

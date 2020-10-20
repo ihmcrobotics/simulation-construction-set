@@ -19,11 +19,10 @@ public class ToggleCameraKeyModeAction extends AbstractAction
 
       this.executor = executor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_T));
-      this.putValue(Action.LONG_DESCRIPTION, "Turns Camera Keying on and on.");
-      this.putValue(Action.SHORT_DESCRIPTION, "turns on and off");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_T));
+      putValue(Action.LONG_DESCRIPTION, "Turns Camera Keying on and on.");
+      putValue(Action.SHORT_DESCRIPTION, "turns on and off");
    }
-
 
    @Override
    public void actionPerformed(ActionEvent actionEvent)

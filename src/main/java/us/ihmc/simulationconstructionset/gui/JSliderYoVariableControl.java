@@ -1,24 +1,29 @@
 package us.ihmc.simulationconstructionset.gui;
 
-import org.apache.commons.lang3.mutable.MutableDouble;
-import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.commons.MathTools;
-import us.ihmc.tools.thread.CloseableAndDisposable;
-import us.ihmc.tools.thread.CloseableAndDisposableRegistry;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
-import us.ihmc.yoVariables.variable.YoVariable;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import org.apache.commons.lang3.mutable.MutableDouble;
+
+import us.ihmc.commons.MathTools;
+import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
+import us.ihmc.tools.thread.CloseableAndDisposable;
+import us.ihmc.tools.thread.CloseableAndDisposableRegistry;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 /**
  * Created by Peter on 8/29/2017.
@@ -27,7 +32,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 {
    private static final int SLIDER_MIN_VALUE = 0;
    private static final int SLIDER_MAX_VALUE = 100;
-   private YoVariable<?> yoVariable;
+   private YoVariable yoVariable;
 
    private static final long serialVersionUID = 8570638563928914747L;
 
@@ -51,7 +56,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
    public JSliderYoVariableControl(SelectedVariableHolder selectedVariableHolder, CloseableAndDisposableRegistry closeableAndDisposableRegistry)
    {
       super(new BorderLayout());
-      this.setMinimumSize(new Dimension(200, 400));
+      setMinimumSize(new Dimension(200, 400));
       //TODO: how to handle the different types of Parameters and the possible min/max values?
 
       JPanel mainPanel = new JPanel(new BorderLayout());
@@ -111,6 +116,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
       sliderToBeSetWithoutNotifiers = value;
    }
 
+   @Override
    public String getName()
    {
       if (yoVariable != null)
@@ -131,7 +137,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 
    private void setTitle()
    {
-      this.setBorder(new TitledBorder(this.getName()));
+      setBorder(new TitledBorder(getName()));
       this.repaint();
    }
 
@@ -156,7 +162,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 
                changeLock = false;
             }
-         });
+         }, "JSliderYoVariableControl");
          timer.start();
       }
    }
@@ -185,7 +191,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
             if (this.yoVariable != null)
             {
                //clear this as a change listener
-               this.yoVariable.removeVariableChangedListener(yoVariableChangeListener);
+               this.yoVariable.removeListener(yoVariableChangeListener);
             }
 
             jSlider.setEnabled(true);
@@ -210,9 +216,9 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 
    private void setMinMaxValuesFromYoVariable()
    {
-      minTextEntryBox.setValue(this.yoVariable.getManualScalingMin());
-      maxTextEntryBox.setValue(this.yoVariable.getManualScalingMax());
-      setSliderPosition(convertParameterValueToSlider(this.yoVariable.getValueAsDouble()));
+      minTextEntryBox.setValue(yoVariable.getLowerBound());
+      maxTextEntryBox.setValue(yoVariable.getUpperBound());
+      setSliderPosition(convertParameterValueToSlider(yoVariable.getValueAsDouble()));
    }
 
    private boolean areMinMaxValid()
@@ -223,7 +229,7 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
    private void addListenersForYoVariable()
    {
       yoVariableChangeListener = new YoVariableChangeListener(this);
-      this.yoVariable.addVariableChangedListener(yoVariableChangeListener);
+      yoVariable.addListener(yoVariableChangeListener);
    }
 
    @Override
@@ -244,18 +250,9 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 
    private void setYoVariable(double value)
    {
-      this.yoVariable.setValueFromDouble(value, false);
-
-      //We do not want to notify ourself that the variable changed
-      ArrayList<VariableChangedListener> listOfListeners = this.yoVariable.getVariableChangedListeners();
-
-      for (VariableChangedListener variableChangedListener : listOfListeners)
-      {
-         if (variableChangedListener != yoVariableChangeListener)
-         {
-            variableChangedListener.notifyOfVariableChange(this.yoVariable);
-         }
-      }
+      yoVariableChangeListener.enabled = false;
+      yoVariable.setValueFromDouble(value);
+      yoVariableChangeListener.enabled = true;
    }
 
    private double convertSliderToParameterValue(int sliderValue)
@@ -288,12 +285,12 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
 
    private void setSliderPosition(int sliderValue)
    {
-      this.setSliderToBeSetWithoutNotifiers(true);
+      setSliderToBeSetWithoutNotifiers(true);
 
       sliderValue = MathTools.clamp(sliderValue, SLIDER_MIN_VALUE, SLIDER_MAX_VALUE);
       jSlider.setValue(sliderValue);
 
-      this.setSliderToBeSetWithoutNotifiers(false);
+      setSliderToBeSetWithoutNotifiers(false);
    }
 
    private class SliderChangeListener implements ChangeListener
@@ -331,9 +328,10 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
       jSlider.setEnabled(value);
    }
 
-   private class YoVariableChangeListener implements VariableChangedListener
+   private class YoVariableChangeListener implements YoVariableChangedListener
    {
       JSliderYoVariableControl jSliderYoVariableControl;
+      boolean enabled = true;
 
       public YoVariableChangeListener(JSliderYoVariableControl jSliderYoVariableControl)
       {
@@ -341,8 +339,10 @@ public class JSliderYoVariableControl extends JPanel implements CloseableAndDisp
       }
 
       @Override
-      public void notifyOfVariableChange(YoVariable<?> v)
+      public void changed(YoVariable v)
       {
+         if (!enabled)
+            return;
          //change slider
          jSliderYoVariableControl.setSliderPosition(convertParameterValueToSlider(v.getValueAsDouble()));
 

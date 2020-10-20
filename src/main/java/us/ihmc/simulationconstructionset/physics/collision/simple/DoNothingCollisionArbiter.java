@@ -10,7 +10,7 @@ public class DoNothingCollisionArbiter implements CollisionArbiter
    @Override
    public void processNewCollisions(CollisionDetectionResult newCollisions)
    {
-      this.results = newCollisions;
+      results = newCollisions;
    }
 
    @Override

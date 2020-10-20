@@ -23,7 +23,7 @@ public class StepForwardAction extends AbstractAction
       int shortKey = KeyEvent.VK_F;
       String longDescription = "Step Forward";
       String shortDescription = "Step Forward";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

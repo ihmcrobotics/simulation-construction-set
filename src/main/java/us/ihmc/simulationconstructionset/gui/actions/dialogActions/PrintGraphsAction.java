@@ -21,7 +21,7 @@ public class PrintGraphsAction extends AbstractAction
       int shortKey = KeyEvent.VK_P;
       String longDescription = "Print Graphs";
       String shortDescription = "Print Graphs";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 
@@ -36,5 +36,5 @@ public class PrintGraphsAction extends AbstractAction
    {
       constructor.constructDialog();
    }
-   
+
 }

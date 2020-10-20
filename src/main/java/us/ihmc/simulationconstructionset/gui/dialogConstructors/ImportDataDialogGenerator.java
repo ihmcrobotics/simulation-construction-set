@@ -18,13 +18,12 @@ public class ImportDataDialogGenerator implements ImportDataDialogConstructor
 
    private javax.swing.filechooser.FileFilter stateFileFilter = new MyFileFilter(new String[] {".state", ".state.gz"}, "State (.state, .state.gz)");
    private javax.swing.filechooser.FileFilter dataFileFilter = new MyFileFilter(new String[] {".data", ".data.gz", ".data.csv"},
-                                                                  "Data (.data, .data.gz, .data.csv)");
+                                                                                "Data (.data, .data.gz, .data.csv)");
    private javax.swing.filechooser.FileFilter stateOrDataFileFilter = new MyFileFilter(new String[] {".data", ".data.gz", ".data.csv", ".state", ".state.gz"},
-                                                                         "Data or State (.data, .data.gz, .data.csv, .state, .state.gz)");
+                                                                                       "Data or State (.data, .data.gz, .data.csv, .state, .state.gz)");
 
    // private javax.swing.filechooser.FileFilter jpegFileFilter = new MyFileFilter(new String[]{".jpg", ".jpeg"}, "JPEG (.jpg, .jpeg)");
    // private javax.swing.filechooser.FileFilter configFileFilter = new MyFileFilter(".config", "Configuration (.config)");
-
 
    private SimulationConstructionSet sim;
    private JFrame frame;
@@ -59,7 +58,7 @@ public class ImportDataDialogGenerator implements ImportDataDialogConstructor
          fileChooser.setAcceptAllFileFilterUsed(true);
          fileChooser.addChoosableFileFilter(stateFileFilter);
          fileChooser.addChoosableFileFilter(dataFileFilter);
-         fileChooser.addChoosableFileFilter(this.stateOrDataFileFilter);
+         fileChooser.addChoosableFileFilter(stateOrDataFileFilter);
       }
       catch (Exception e)
       {
@@ -78,7 +77,6 @@ public class ImportDataDialogGenerator implements ImportDataDialogConstructor
       fileChooser.setCurrentDirectory(new File(dir));
    }
 
-
    @Override
    public void constructDialog()
    {
@@ -89,7 +87,7 @@ public class ImportDataDialogGenerator implements ImportDataDialogConstructor
          chosenFile = fileChooser.getSelectedFile();
 
          if (chosenFile.canRead()
-                 && (chosenFile.getName().endsWith(".data") || chosenFile.getName().endsWith(".data.gz") || chosenFile.getName().endsWith(".data.csv")))
+               && (chosenFile.getName().endsWith(".data") || chosenFile.getName().endsWith(".data.gz") || chosenFile.getName().endsWith(".data.csv")))
          {
             sim.readData(chosenFile);
          }
@@ -115,11 +113,10 @@ public class ImportDataDialogGenerator implements ImportDataDialogConstructor
       chosenFile = null;
 
       stateFileFilter = null;
-      dataFileFilter  = null;
+      dataFileFilter = null;
       stateOrDataFileFilter = null;
 
       sim = null;
       frame = null;
    }
 }
-

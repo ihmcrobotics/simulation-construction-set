@@ -14,7 +14,6 @@ public class LinkDefinitionFixedFrame
    private Matrix3D momentOfInertia = new Matrix3D();
    private Graphics3DObject graphicsDefinition = new Graphics3DObject();
 
-
    public String getName()
    {
       return name;
@@ -83,7 +82,7 @@ public class LinkDefinitionFixedFrame
       //      returnString +="***************************** GRAPHICS START************************************\n";
       if (graphicsDefinition != null)
       {
-         for(Graphics3DPrimitiveInstruction instruction: graphicsDefinition.getGraphics3DInstructions())
+         for (Graphics3DPrimitiveInstruction instruction : graphicsDefinition.getGraphics3DInstructions())
          {
             returnString += instruction;
          }
@@ -95,6 +94,5 @@ public class LinkDefinitionFixedFrame
 
       return returnString;
    }
-
 
 }

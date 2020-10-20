@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.JFileChooser;
@@ -202,7 +202,7 @@ public class GUIConfigurationSaveAndLoad
 
    public void setupMultiViews(String xmlRepresentation)
    {
-      myGUI.addViewportPanelToMainPanel(); //TODO: Why is this here? 
+      myGUI.addViewportPanelToMainPanel(); //TODO: Why is this here?
       String currentView = XMLReaderUtility.getMiddleString(0, xmlRepresentation, "<Current View>", "</Current View>");
       myGUI.selectViewport(currentView);
       myGUI.setupMultiViews(xmlRepresentation, currentView);
@@ -256,7 +256,7 @@ public class GUIConfigurationSaveAndLoad
    {
       int numberOfViewports = Integer.parseInt(XMLReaderUtility.getMiddleString(0, xmlRepresentation, "<Number of ViewPorts>", "</Number of ViewPorts>"));
 
-      ArrayList<ViewportWindow> windows = myGUI.getViewportWindows();
+      List<ViewportWindow> windows = myGUI.getViewportWindows();
 
       for (int i = windows.size() - 1; i >= 0; i--)
       {
@@ -331,7 +331,7 @@ public class GUIConfigurationSaveAndLoad
 
             graphConfigurations[graphIndex] = tmpGraphConfiguration;
 
-            String[] graphConfigurationStringArray = { tmpGraphConfiguration.getName() };
+            String[] graphConfigurationStringArray = {tmpGraphConfiguration.getName()};
 
             var[graphIndex] = new String[2][numberOfTokens];
 
@@ -360,8 +360,10 @@ public class GUIConfigurationSaveAndLoad
 
    public static void setupGraphWindows(StandardSimulationGUI myGUI, String xmlRepresentation, String name)
    {
-      int graphArrayWindowSize = Integer.parseInt(XMLReaderUtility.getMiddleString(0, xmlRepresentation, "<Graph Array Window Size>",
-            "</Graph Array Window Size>"));
+      int graphArrayWindowSize = Integer.parseInt(XMLReaderUtility.getMiddleString(0,
+                                                                                   xmlRepresentation,
+                                                                                   "<Graph Array Window Size>",
+                                                                                   "</Graph Array Window Size>"));
       for (int windowNumber = 1; windowNumber <= graphArrayWindowSize; windowNumber++)
       {
          String first = "<Graph Array Window" + windowNumber + ">";
@@ -410,7 +412,7 @@ public class GUIConfigurationSaveAndLoad
 
    private void removeOldWindows()
    {
-      ArrayList<GraphArrayWindow> windows = myGUI.getGraphArrayWindows();
+      List<GraphArrayWindow> windows = myGUI.getGraphArrayWindows();
 
       for (int i = windows.size() - 1; i >= 0; i--)
       {
@@ -429,9 +431,9 @@ public class GUIConfigurationSaveAndLoad
    {
       String XMLData = XMLReaderUtility.getMiddleString(0, XMLStyleRepresentation, "<Entry Boxes Tab Pane>", "</Entry Boxes Tab Pane>");
 
-      if(XMLData == null)
-    	  return;
-      
+      if (XMLData == null)
+         return;
+
       int index = 0;
       while ((XMLReaderUtility.getEndIndexOfSubString(index, XMLData, "</EntryBoxTab>") <= XMLData.length())
             && (XMLReaderUtility.getEndIndexOfSubString(index, XMLData, "</EntryBoxTab>") > 0))
@@ -442,15 +444,14 @@ public class GUIConfigurationSaveAndLoad
 
          String name = XMLReaderUtility.getMiddleString(0, currentXMLEntryTab, "<Title>", "</Title>");
 
-         
          String currentXMLEntry = XMLReaderUtility.getMiddleString(0, currentXMLEntryTab, "<Entry Boxes>", "</Entry Boxes>");
 
-         
          loadEntryBoxArrayPanel(name, currentXMLEntry);
          index = endIndex;
       }
 
    }
+
    public void loadEntryBoxArrayPanel(String tabName, String XMLData)
    {
       int index = 0;

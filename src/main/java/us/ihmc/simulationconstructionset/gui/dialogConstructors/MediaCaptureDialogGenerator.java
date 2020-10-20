@@ -16,18 +16,18 @@ public class MediaCaptureDialogGenerator implements MediaCaptureDialogConstructo
    private StopCommandExecutor stopCommandExecutor;
    private ExportVideoCommandExecutor exportVideoCommandExecutor;
    private StandardSimulationGUI myGUI;
-   
+
    private StandardGUIActions standardGUIActions;
    private ActiveCanvas3DHolder activeCanvas3DHolder;
-   
-   
+
    public MediaCaptureDialogGenerator(ExportVideoCommandExecutor exportVideoCommandExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler,
-         StopCommandExecutor stopCommandExecutor, ViewportSelectorCommandExecutor viewportSelector, StandardSimulationGUI myGUI, StandardGUIActions standardGUIActions, ActiveCanvas3DHolder activeCanvas3DHolder)
+                                      StopCommandExecutor stopCommandExecutor, ViewportSelectorCommandExecutor viewportSelector, StandardSimulationGUI myGUI,
+                                      StandardGUIActions standardGUIActions, ActiveCanvas3DHolder activeCanvas3DHolder)
    {
       this.exportVideoCommandExecutor = exportVideoCommandExecutor;
       this.guiEnablerAndDisabler = guiEnablerAndDisabler;
       this.stopCommandExecutor = stopCommandExecutor;
-      
+
       this.myGUI = myGUI;
       this.standardGUIActions = standardGUIActions;
       this.activeCanvas3DHolder = activeCanvas3DHolder;
@@ -43,7 +43,7 @@ public class MediaCaptureDialogGenerator implements MediaCaptureDialogConstructo
    public void constructDialog()
    {
       stopCommandExecutor.stop();
-      new VideoSaveDialog(null, myGUI, standardGUIActions, activeCanvas3DHolder, exportVideoCommandExecutor, guiEnablerAndDisabler);    
+      new VideoSaveDialog(null, myGUI, standardGUIActions, activeCanvas3DHolder, exportVideoCommandExecutor, guiEnablerAndDisabler);
 
    }
 
@@ -58,4 +58,3 @@ public class MediaCaptureDialogGenerator implements MediaCaptureDialogConstructo
       activeCanvas3DHolder = null;
    }
 }
-

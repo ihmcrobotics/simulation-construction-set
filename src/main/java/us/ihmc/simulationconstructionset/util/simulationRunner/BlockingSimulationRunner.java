@@ -7,7 +7,7 @@ import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.log.LogTools;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.util.ControllerFailureException;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -34,7 +34,7 @@ public class BlockingSimulationRunner
       this.scs = scs;
 
       this.maximumClockRunTimeInSeconds = maximumClockRunTimeInSeconds;
-      this.destroySimulationIfOverrunMaxTime = destroySimulationaIfOverrunMaxTime;
+      destroySimulationIfOverrunMaxTime = destroySimulationaIfOverrunMaxTime;
    }
 
    public void setCheckDesiredICPPosition(boolean checkICPPosition)
@@ -45,15 +45,15 @@ public class BlockingSimulationRunner
    public void simulateNTicksAndBlock(int numberOfTicks) throws SimulationExceededMaximumTimeException, ControllerFailureException
    {
       // TODO: Sometimes you need to sleep before simulating and blocking. Need to fix up the threading stuff in SCS to make more reliable.
-//    if (!hasSleptOnce)
-//    {
-//       hasSleptOnce = true;
-//       sleep(3000);
-//    }
+      //    if (!hasSleptOnce)
+      //    {
+      //       hasSleptOnce = true;
+      //       sleep(3000);
+      //    }
 
       scs.simulate(numberOfTicks);
 
-//    waitForSimulationToStart();
+      //    waitForSimulationToStart();
       waitForSimulationToFinish(scs, maximumClockRunTimeInSeconds, destroySimulationIfOverrunMaxTime);
       checkIfControllerHasFailed();
       if (checkICPPosition)
@@ -76,20 +76,20 @@ public class BlockingSimulationRunner
 
    public void simulateAndBlock(double simulateTime) throws SimulationExceededMaximumTimeException, ControllerFailureException
    {
-//    System.out.println("Starting Simulation for " + simulateTime);
+      //    System.out.println("Starting Simulation for " + simulateTime);
 
       // TODO: Sometimes you need to sleep before simulating and blocking. Need to fix up the threading stuff in SCS to make more reliable.
 
-//    if (!hasSleptOnce)
-//    {
-//       hasSleptOnce = true;
-//       sleep(3000);
-//    }
+      //    if (!hasSleptOnce)
+      //    {
+      //       hasSleptOnce = true;
+      //       sleep(3000);
+      //    }
 
       double startTime = scs.getTime();
       scs.simulate(simulateTime);
 
-//    waitForSimulationToStart();
+      //    waitForSimulationToStart();
       waitForSimulationToFinish(scs, maximumClockRunTimeInSeconds, destroySimulationIfOverrunMaxTime);
       checkIfControllerHasFailed();
       if (checkICPPosition)
@@ -97,13 +97,13 @@ public class BlockingSimulationRunner
 
       double endTime = scs.getTime();
       double elapsedTime = endTime - startTime;
-      
+
       if (Math.abs(elapsedTime - simulateTime) > 0.01)
       {
          throw new SimulationExceededMaximumTimeException("Elapsed time didn't equal requested. Sim probably crashed");
       }
-      
-//    System.out.println("Done Simulation for " + simulateTime);
+
+      //    System.out.println("Done Simulation for " + simulateTime);
 
    }
 
@@ -204,7 +204,7 @@ public class BlockingSimulationRunner
    }
 
    public static void waitForSimulationToFinish(SimulationConstructionSet scs, double maximumClockRunTimeInSeconds, boolean destroySimulationaIfOverrunMaxTime)
-           throws SimulationExceededMaximumTimeException
+         throws SimulationExceededMaximumTimeException
    {
       long startTime = System.currentTimeMillis();
 
@@ -213,7 +213,7 @@ public class BlockingSimulationRunner
          sleep(100);
 
          long currentTime = System.currentTimeMillis();
-         double elapsedTime = ((double) (currentTime - startTime)) * 0.001;
+         double elapsedTime = (currentTime - startTime) * 0.001;
 
          if (elapsedTime > maximumClockRunTimeInSeconds)
          {
@@ -248,22 +248,22 @@ public class BlockingSimulationRunner
 
    public void createValidDesiredICPListener()
    {
-      YoDouble desiredICPX = (YoDouble) scs.getVariable("desiredICPX");
-      YoDouble desiredICPY = (YoDouble) scs.getVariable("desiredICPY");
+      YoDouble desiredICPX = (YoDouble) scs.findVariable("desiredICPX");
+      YoDouble desiredICPY = (YoDouble) scs.findVariable("desiredICPY");
 
-      desiredICPX.addVariableChangedListener(new VariableChangedListener()
+      desiredICPX.addListener(new YoVariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> v)
+         public void changed(YoVariable v)
          {
             if (!Double.isFinite(v.getValueAsDouble()))
                hasICPBeenInvalid.set(true);
          }
       });
-      desiredICPY.addVariableChangedListener(new VariableChangedListener()
+      desiredICPY.addListener(new YoVariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> v)
+         public void changed(YoVariable v)
          {
             if (!Double.isFinite(v.getValueAsDouble()))
                hasICPBeenInvalid.set(true);

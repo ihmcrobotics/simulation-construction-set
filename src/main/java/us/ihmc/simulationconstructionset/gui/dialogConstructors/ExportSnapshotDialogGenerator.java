@@ -16,7 +16,7 @@ public class ExportSnapshotDialogGenerator implements ExportSnapshotDialogConstr
 {
    private ExportSnapshotCommandExecutor exportSnapshotCommandExecutor;
    private GUIEnablerAndDisabler guiEnablerAndDisabler;
-   
+
    @SuppressWarnings("unused")
    private ActiveCanvas3DHolder activeCanvas3DHolder;
    private JFrame frame;
@@ -28,16 +28,17 @@ public class ExportSnapshotDialogGenerator implements ExportSnapshotDialogConstr
 
    // private javax.swing.filechooser.FileFilter configFileFilter = new MyFileFilter(".config", "Configuration (.config)");
 
-   public ExportSnapshotDialogGenerator(ExportSnapshotCommandExecutor exportSnapshotCommandExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler, Robot[] robots, ActiveCanvas3DHolder activeCanvas3DHolder, JFrame frame)
+   public ExportSnapshotDialogGenerator(ExportSnapshotCommandExecutor exportSnapshotCommandExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler,
+                                        Robot[] robots, ActiveCanvas3DHolder activeCanvas3DHolder, JFrame frame)
    {
       this.exportSnapshotCommandExecutor = exportSnapshotCommandExecutor;
       this.guiEnablerAndDisabler = guiEnablerAndDisabler;
-      
+
       // this.canvas3D = canvas3D;
       this.activeCanvas3DHolder = activeCanvas3DHolder;
       this.frame = frame;
 
-      try    // +++++++JEP: Applet Stuff
+      try // +++++++JEP: Applet Stuff
       {
          fileChooser = new JFileChooser();
 
@@ -77,7 +78,6 @@ public class ExportSnapshotDialogGenerator implements ExportSnapshotDialogConstr
       fileChooser.setCurrentDirectory(new File(dir));
    }
 
-
    @Override
    public void constructDialog()
    {
@@ -100,40 +100,40 @@ public class ExportSnapshotDialogGenerator implements ExportSnapshotDialogConstr
 
                   exportSnapshotCommandExecutor.exportSnapshot(chosenFile);
 
-//                //if (chosenFile.canWrite())
-//                {
-//                  YoCanvas3D canvas3D = activeCanvas3DHolder.getActiveCanvas3D();
-//
-//                  canvas3D.screenShot();
-//                  // Wait for the screen shot to finish:
-//                  while (!canvas3D.screenShotFinished())
-//                  {
-//                    try {Thread.sleep(10);}
-//                    catch(InterruptedException exp){}
-//                  }
-//
-//                  BufferedImage img = canvas3D.getBufferedImage();
-//                  //save out to a file
-//
-//                  try
-//                  {
-//
-//                    FileOutputStream out = new FileOutputStream(chosenFile);
-//                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-//                    JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
-//                    //this produces a JPEG with .1 lossy
-//
-//                    param.setQuality(0.9f,false);
-//                    encoder.setJPEGEncodeParam(param);
-//                    encoder.encode(img);
-//                    out.close();
-//                  }
-//                  catch ( IOException exp )
-//                  {
-//                    System.out.println("I/O exception!"+exp.toString());
-//                  }
-//
-//                }
+                  //                //if (chosenFile.canWrite())
+                  //                {
+                  //                  YoCanvas3D canvas3D = activeCanvas3DHolder.getActiveCanvas3D();
+                  //
+                  //                  canvas3D.screenShot();
+                  //                  // Wait for the screen shot to finish:
+                  //                  while (!canvas3D.screenShotFinished())
+                  //                  {
+                  //                    try {Thread.sleep(10);}
+                  //                    catch(InterruptedException exp){}
+                  //                  }
+                  //
+                  //                  BufferedImage img = canvas3D.getBufferedImage();
+                  //                  //save out to a file
+                  //
+                  //                  try
+                  //                  {
+                  //
+                  //                    FileOutputStream out = new FileOutputStream(chosenFile);
+                  //                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+                  //                    JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
+                  //                    //this produces a JPEG with .1 lossy
+                  //
+                  //                    param.setQuality(0.9f,false);
+                  //                    encoder.setJPEGEncodeParam(param);
+                  //                    encoder.encode(img);
+                  //                    out.close();
+                  //                  }
+                  //                  catch ( IOException exp )
+                  //                  {
+                  //                    System.out.println("I/O exception!"+exp.toString());
+                  //                  }
+                  //
+                  //                }
 
                }
 
@@ -173,4 +173,3 @@ public class ExportSnapshotDialogGenerator implements ExportSnapshotDialogConstr
    }
 
 }
-

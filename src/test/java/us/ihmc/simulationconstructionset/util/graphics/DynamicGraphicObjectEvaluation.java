@@ -18,12 +18,12 @@ import us.ihmc.jMonkeyEngineToolkit.jme.JMEGraphics3DAdapter;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.SimulationConstructionSetParameters;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameConvexPolygon2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class DynamicGraphicObjectEvaluation
 {
@@ -33,26 +33,21 @@ public class DynamicGraphicObjectEvaluation
       evaluate(jmeGraphics3dAdapter);
    }
 
-
-
    public static void evaluate(Graphics3DAdapter graphicsAdapter)
    {
       Robot robot = new Robot("null");
 
-      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();;
+      SimulationConstructionSetParameters parameters = SimulationConstructionSetParameters.createFromSystemProperties();
       parameters.setDataBufferSize(100);
 
       final SimulationConstructionSet scs = new SimulationConstructionSet(robot, graphicsAdapter, parameters);
       scs.setDT(0.1, 1);
 
-      YoVariableRegistry registry = new YoVariableRegistry("Polygon");
+      YoRegistry registry = new YoRegistry("Polygon");
       YoGraphicsListRegistry yoGraphicsListRegistry = new YoGraphicsListRegistry();
 
       // Polygon:
-      final double[][] pointList = new double[][]
-      {
-         {0.0, 0.0}, {0.0, 1.0}, {1.0, 1.0}, {1.0, 0.0}, {0.5, 1.2}, {0.5, -0.2}
-      };
+      final double[][] pointList = new double[][] {{0.0, 0.0}, {0.0, 1.0}, {1.0, 1.0}, {1.0, 0.0}, {0.5, 1.2}, {0.5, -0.2}};
 
       ConvexPolygon2D polygon = new ConvexPolygon2D(Vertex2DSupplier.asVertex2DSupplier(pointList));
 
@@ -65,8 +60,8 @@ public class DynamicGraphicObjectEvaluation
       yoPolygon.set(polygon);
       YoFramePoseUsingYawPitchRoll yoPolyOrigin = new YoFramePoseUsingYawPitchRoll("PolyOrigin", worldFrame, registry);
       YoGraphicPolygon yoGraphicPolygon = new YoGraphicPolygon("Polygon", yoPolygon, yoPolyOrigin, 3.0, appearance);
-      yoPolyOrigin.setXYZ(0.1, 0.2, 1.0);
-      yoPolyOrigin.setYawPitchRoll(-0.1, -0.4, -0.3);
+      yoPolyOrigin.setPosition(0.1, 0.2, 1.0);
+      yoPolyOrigin.setOrientationYawPitchRoll(-0.1, -0.4, -0.3);
 
       // 3D Text:
       final YoGraphicText3D yoGraphicText = new YoGraphicText3D("Text", "Hello", "text", "", registry, 0.2, YoAppearance.Blue());
@@ -88,8 +83,12 @@ public class DynamicGraphicObjectEvaluation
       yoFramePolygonPosition.set(2.0, 1.0, 0.3);
       final YoFrameYawPitchRoll yoFramePolygonOrientation = new YoFrameYawPitchRoll("yoPolygonOrientation", "", worldFrame, registry);
       yoFramePolygonOrientation.setYawPitchRoll(1.2, 0.1, 0.4);
-      final YoGraphicPolygon yoGraphicYoFramePolygon = new YoGraphicPolygon("YoFramePolygon", yoFramePolygon,
-                                                                           yoFramePolygonPosition, yoFramePolygonOrientation, 1.0, YoAppearance.DarkBlue());
+      final YoGraphicPolygon yoGraphicYoFramePolygon = new YoGraphicPolygon("YoFramePolygon",
+                                                                            yoFramePolygon,
+                                                                            yoFramePolygonPosition,
+                                                                            yoFramePolygonOrientation,
+                                                                            1.0,
+                                                                            YoAppearance.DarkBlue());
 
       // Box Ghost:
       Graphics3DObject boxGhostGraphics = new Graphics3DObject();
@@ -117,7 +116,7 @@ public class DynamicGraphicObjectEvaluation
       yoGraphicsListRegistry.registerGraphicsUpdatableToUpdateInAPlaybackListener(yoGraphicYoFramePolygon);
 
       scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
-      scs.addYoVariableRegistry(registry);
+      scs.addYoRegistry(registry);
 
       Graphics3DObject coordinateSystem = new Graphics3DObject();
       coordinateSystem.addCoordinateSystem(1.0);
@@ -125,11 +124,7 @@ public class DynamicGraphicObjectEvaluation
 
       scs.startOnAThread();
 
-      final double[][] secondPointList = new double[][]
-      {
-         {0.0, 0.0}, {2.0, 0.0}, {0.0, 2.0}
-      };
-
+      final double[][] secondPointList = new double[][] {{0.0, 0.0}, {2.0, 0.0}, {0.0, 2.0}};
 
       Runnable runnable = new Runnable()
       {
@@ -177,7 +172,7 @@ public class DynamicGraphicObjectEvaluation
 
       };
 
-      Thread thread = new Thread(runnable);
+      Thread thread = new Thread(runnable, "DynamicGraphicObjectGeneration");
       thread.setDaemon(true);
       thread.start();
    }

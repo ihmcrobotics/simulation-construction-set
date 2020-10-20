@@ -10,23 +10,23 @@ import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicVector;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class ContactingExternalForcePointsVisualizer
 {
    private final static ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
 
-   private final YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
-   private final List<YoFramePoint3D> contactPointsWorld = new ArrayList<YoFramePoint3D>();
-   private final List<YoGraphicPosition> contactPointsViz = new ArrayList<YoGraphicPosition>();
-   
-   private final List<YoFrameVector3D> contactNormals = new ArrayList<YoFrameVector3D>();
-   private final List<YoGraphicVector> contactNormalsViz = new ArrayList<YoGraphicVector>();
-   
-   private final List<YoFrameVector3D> forceVectors = new ArrayList<YoFrameVector3D>();
-   private final List<YoGraphicVector> forceVectorsViz = new ArrayList<YoGraphicVector>();
+   private final YoRegistry registry = new YoRegistry(getClass().getSimpleName());
+   private final List<YoFramePoint3D> contactPointsWorld = new ArrayList<>();
+   private final List<YoGraphicPosition> contactPointsViz = new ArrayList<>();
+
+   private final List<YoFrameVector3D> contactNormals = new ArrayList<>();
+   private final List<YoGraphicVector> contactNormalsViz = new ArrayList<>();
+
+   private final List<YoFrameVector3D> forceVectors = new ArrayList<>();
+   private final List<YoGraphicVector> forceVectorsViz = new ArrayList<>();
 
    private double normalVectorScale = 0.03;
    private double forceVectorScale = 0.01;
@@ -34,11 +34,11 @@ public class ContactingExternalForcePointsVisualizer
    private final ArrayList<ContactingExternalForcePoint> contactPoints = new ArrayList<>();
 
    public ContactingExternalForcePointsVisualizer(int maxNumberOfYoGraphicPositions, YoGraphicsListRegistry yoGraphicsListRegistry,
-                                                  YoVariableRegistry parentRegistry)
+                                                  YoRegistry parentRegistry)
    {
       for (int i = 0; i < maxNumberOfYoGraphicPositions; i++)
       {
-         YoFramePoint3D contactPointWorld = new YoFramePoint3D("contactPoint" + i, worldFrame, this.registry);
+         YoFramePoint3D contactPointWorld = new YoFramePoint3D("contactPoint" + i, worldFrame, registry);
          contactPointsWorld.add(contactPointWorld);
          YoGraphicPosition yoGraphicPosition = new YoGraphicPosition("contactViz" + i, contactPointWorld, 0.01, YoAppearance.Crimson());
          contactPointsViz.add(yoGraphicPosition);
@@ -72,9 +72,9 @@ public class ContactingExternalForcePointsVisualizer
       this.forceVectorScale = forceVectorScale;
    }
 
-   public void addPoints(ArrayList<ContactingExternalForcePoint> contactingExternalForcePoints)
+   public void addPoints(List<ContactingExternalForcePoint> contactingExternalForcePoints)
    {
-      this.contactPoints.addAll(contactingExternalForcePoints);
+      contactPoints.addAll(contactingExternalForcePoints);
    }
 
    private final Point3D tempPoint = new Point3D();
@@ -100,9 +100,9 @@ public class ContactingExternalForcePointsVisualizer
             tempVector.scale(forceVectorScale);
             forceVectors.get(yoGraphicIndex).set(tempVector);
 
-//            contactPointsViz.get(yoGraphicIndex).showGraphicObject();
-//            contactNormalsViz.get(yoGraphicIndex).showGraphicObject();
-//            forceVectorsViz.get(yoGraphicIndex).showGraphicObject();
+            //            contactPointsViz.get(yoGraphicIndex).showGraphicObject();
+            //            contactNormalsViz.get(yoGraphicIndex).showGraphicObject();
+            //            forceVectorsViz.get(yoGraphicIndex).showGraphicObject();
 
             contactPointsViz.get(yoGraphicIndex).update();
             contactNormalsViz.get(yoGraphicIndex).update();
@@ -116,8 +116,8 @@ public class ContactingExternalForcePointsVisualizer
       {
          contactPointsWorld.get(j).setToNaN();
          contactNormals.get(j).set(Double.NaN, Double.NaN, Double.NaN);
-//         contactPointsViz.get(j).hideGraphicObject();
-//         contactNormalsViz.get(j).hideGraphicObject();
+         //         contactPointsViz.get(j).hideGraphicObject();
+         //         contactNormalsViz.get(j).hideGraphicObject();
       }
 
    }

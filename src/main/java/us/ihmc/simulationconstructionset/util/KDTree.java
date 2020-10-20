@@ -12,9 +12,8 @@ import java.util.StringTokenizer;
 import us.ihmc.euclid.tuple3D.Point3D;
 
 /**
- * Use this class to efficiently search for closest points to various test
- * points of interest.  The dimensionality of the points is arbitrary (D > 0), and
- * the tree's splitting is binary (K = 2).
+ * Use this class to efficiently search for closest points to various test points of interest. The
+ * dimensionality of the points is arbitrary (D > 0), and the tree's splitting is binary (K = 2).
  */
 public class KDTree
 {
@@ -27,13 +26,12 @@ public class KDTree
    private static final boolean DEBUG = false;
 
    /**
-    * Creates a KDTree from an array of points and an equally sized array of
-    * objects.  The value MaxPointsInLeaves specifies the maximum number of
-    * points in a leaf Node.   Use a small value (5-20) unless building the
-    * tree takes too long.
+    * Creates a KDTree from an array of points and an equally sized array of objects. The value
+    * MaxPointsInLeaves specifies the maximum number of points in a leaf Node. Use a small value (5-20)
+    * unless building the tree takes too long.
     *
-    * @param points double[][]
-    * @param objects Object[]
+    * @param points            double[][]
+    * @param objects           Object[]
     * @param maxPointsInLeaves int
     */
    public KDTree(double[][] points, Object[] objects, int maxPointsInLeaves)
@@ -45,62 +43,59 @@ public class KDTree
 
       makeAllPointsNovel(points.length);
 
-      this.hasObjects = true;
+      hasObjects = true;
       this.objects = objects;
       this.maxPointsInLeaves = maxPointsInLeaves;
 
       if (points.length != objects.length)
       {
          System.err.println("KDTree::KDTree(): number of points and objects differ.  Creating empty KDTree.");
-         this.root = null;
+         root = null;
       }
       else
       {
-         this.root = new KDNode(points, 0, points.length - 1, maxPointsInLeaves);
+         root = new KDNode(points, 0, points.length - 1, maxPointsInLeaves);
       }
    }
 
    /**
-    * Creates a KDTree from an array of points and an equally sized array of
-    * objects.  The value MaxPointsInLeaves specifies the maximum number of
-    * points in a leaf Node.   Use a small value (5-20) unless building the
-    * tree takes too long.
+    * Creates a KDTree from an array of points and an equally sized array of objects. The value
+    * MaxPointsInLeaves specifies the maximum number of points in a leaf Node. Use a small value (5-20)
+    * unless building the tree takes too long.
     *
-    * @param points double[][]
+    * @param points            double[][]
     * @param maxPointsInLeaves int
     */
    public KDTree(double[][] points, int maxPointsInLeaves)
    {
-      this.hasObjects = false;
-      this.objects = null;
+      hasObjects = false;
+      objects = null;
       this.maxPointsInLeaves = maxPointsInLeaves;
       makeAllPointsNovel(points.length);
-      this.root = new KDNode(points, 0, points.length - 1, maxPointsInLeaves);
+      root = new KDNode(points, 0, points.length - 1, maxPointsInLeaves);
    }
 
-
    /**
-    * Creates a KDTree from an array of (X, Y) terrain points and an equally sized array of
-    * (Z) terrain heights.  The value MaxPointsInLeaves specifies the maximum number of
-    * points in a leaf Node.   Use a small value (5-20) unless building the
-    * tree takes too long.
+    * Creates a KDTree from an array of (X, Y) terrain points and an equally sized array of (Z) terrain
+    * heights. The value MaxPointsInLeaves specifies the maximum number of points in a leaf Node. Use a
+    * small value (5-20) unless building the tree takes too long.
     *
-    * @param points double[][]
+    * @param points            double[][]
     * @param maxPointsInLeaves int
     */
    public KDTree(String BDITerrainFilePath, int maxPointsInLeaves)
    {
-      this.hasObjects = false;
-      this.objects = null;
+      hasObjects = false;
+      objects = null;
       this.maxPointsInLeaves = maxPointsInLeaves;
       double[][] points = loadPoints3D(BDITerrainFilePath);
       makeAllPointsNovel(points.length);
-      this.root = new KDNode(points, 0, points.length - 1, maxPointsInLeaves);
+      root = new KDNode(points, 0, points.length - 1, maxPointsInLeaves);
    }
 
    private void makeAllPointsNovel(int numPoints)
    {
-      novelPointIndexes = new LinkedHashSet<Integer>();
+      novelPointIndexes = new LinkedHashSet<>();
 
       for (int i = 0; i < numPoints; i++)
       {
@@ -109,8 +104,8 @@ public class KDTree
    }
 
    /**
-    * Returns the list of points.  The user may not have this in advance if
-    * the points are loaded from a file.
+    * Returns the list of points. The user may not have this in advance if the points are loaded from a
+    * file.
     *
     * @return double[][]
     */
@@ -124,60 +119,60 @@ public class KDTree
       root.getExtents(min, max);
    }
 
-// // Delete points in the KDTree such that the remaining
-// // points are no closer than minDistanceBetweenPoints from each other.
-// // The deleted points cannot be restored once this call is made.
-// public void prunePoints(double minDistanceBetweenPoints)
-// {
-//     int numPoints = root.points.length;
-//     int numDimensions = root.points[0].length;
-//
-//     // Track which points are not in the covering set.
-//     // Start with all points in the cover and remove
-//     // points incrementally.
-//     HashSet<Integer> inCover = new LinkedHashSet<Integer>();
-//     for (int i=0; i<numPoints; i++)  inCover.add(i);
-//
-//     ArrayList<Integer> coverIndexes = new ArrayList<Integer>();
-//
-//     // Loop over all points.  For any point still in the
-//     // cover, find all other points nearby and remove them
-//     // from the cover.
-//     for (int i=0; i<numPoints; i++)
-//     {
-//        if (inCover.contains(i))
-//         {
-//             coverIndexes.add(i);
-//             ArrayList<Integer> coveredIndexes = closestPointIndexesInSubset(root.points[i], minDistanceBetweenPoints, inCover);
-//             inCover.removeAll(coveredIndexes);
-//         }
-//     }
-//
-//     // Collect points in the cover and rebuild the tree with these points only.
-//     // If Objects are associated with points, we collect the objects also.
-//     int numPointsInCover = coverIndexes.size();
-//     double[][] newPoints = new double[numPointsInCover][numDimensions];
-//     if (!hasObjects)
-//     {
-//         for (int i=0; i<numPointsInCover; i++)
-//         {
-//             newPoints[i] = root.points[coverIndexes.get(i)];
-//         }
-//         this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
-//     }
-//     else
-//     {
-//         Object [] newObjects = new Object[numPointsInCover];
-//         for (int i=0; i<numPointsInCover; i++)
-//         {
-//             newPoints[i] = root.points[coverIndexes.get(i)];
-//             newObjects[i] = objects[coverIndexes.get(i)];
-//         }
-//         this.objects = newObjects;
-//         this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
-//     }
-// }
-//
+   // // Delete points in the KDTree such that the remaining
+   // // points are no closer than minDistanceBetweenPoints from each other.
+   // // The deleted points cannot be restored once this call is made.
+   // public void prunePoints(double minDistanceBetweenPoints)
+   // {
+   //     int numPoints = root.points.length;
+   //     int numDimensions = root.points[0].length;
+   //
+   //     // Track which points are not in the covering set.
+   //     // Start with all points in the cover and remove
+   //     // points incrementally.
+   //     HashSet<Integer> inCover = new LinkedHashSet<Integer>();
+   //     for (int i=0; i<numPoints; i++)  inCover.add(i);
+   //
+   //     ArrayList<Integer> coverIndexes = new ArrayList<Integer>();
+   //
+   //     // Loop over all points.  For any point still in the
+   //     // cover, find all other points nearby and remove them
+   //     // from the cover.
+   //     for (int i=0; i<numPoints; i++)
+   //     {
+   //        if (inCover.contains(i))
+   //         {
+   //             coverIndexes.add(i);
+   //             ArrayList<Integer> coveredIndexes = closestPointIndexesInSubset(root.points[i], minDistanceBetweenPoints, inCover);
+   //             inCover.removeAll(coveredIndexes);
+   //         }
+   //     }
+   //
+   //     // Collect points in the cover and rebuild the tree with these points only.
+   //     // If Objects are associated with points, we collect the objects also.
+   //     int numPointsInCover = coverIndexes.size();
+   //     double[][] newPoints = new double[numPointsInCover][numDimensions];
+   //     if (!hasObjects)
+   //     {
+   //         for (int i=0; i<numPointsInCover; i++)
+   //         {
+   //             newPoints[i] = root.points[coverIndexes.get(i)];
+   //         }
+   //         this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
+   //     }
+   //     else
+   //     {
+   //         Object [] newObjects = new Object[numPointsInCover];
+   //         for (int i=0; i<numPointsInCover; i++)
+   //         {
+   //             newPoints[i] = root.points[coverIndexes.get(i)];
+   //             newObjects[i] = objects[coverIndexes.get(i)];
+   //         }
+   //         this.objects = newObjects;
+   //         this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
+   //     }
+   // }
+   //
 
    // Delete points in the KDTree such that the remaining
    // points are no closer than minDistanceBetweenPoints from each other.
@@ -193,7 +188,7 @@ public class KDTree
       // points incrementally.
       HashSet<Integer> inCover = novelPointIndexes;
 
-      ArrayList<Integer> coverIndexes = new ArrayList<Integer>();
+      ArrayList<Integer> coverIndexes = new ArrayList<>();
 
       // Loop over all points.  For any point still in the
       // cover, find all other points nearby and remove them
@@ -204,7 +199,7 @@ public class KDTree
          {
             coverIndexes.add(i);
             @SuppressWarnings("unused")
-            ArrayList<Integer> coveredIndexes = this.getClosestNovelPointIndexes(root.points[i], minDistanceBetweenPoints, false);
+            ArrayList<Integer> coveredIndexes = getClosestNovelPointIndexes(root.points[i], minDistanceBetweenPoints, false);
             if (DEBUG)
             {
                System.err.println("Found cover point; number of novel points remaining: " + inCover.size());
@@ -225,7 +220,7 @@ public class KDTree
             newPoints[i] = root.points[coverIndexes.get(i)];
          }
 
-//       this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
+         //       this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
 
          return new KDTree(newPoints, maxPointsInLeaves);
       }
@@ -240,12 +235,10 @@ public class KDTree
 
          return new KDTree(newPoints, newObjects, maxPointsInLeaves);
 
-//       this.objects = newObjects;
-//       this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
+         //       this.objects = newObjects;
+         //       this.root = new KDNode(newPoints, 0, newPoints.length - 1, maxPointsInLeaves);
       }
    }
-
-
 
    /**
     * closestPoint
@@ -262,7 +255,6 @@ public class KDTree
    {
       return root.closestPoint(testPoint, maxDistance * maxDistance);
    }
-
 
    public double[] closestPointBruteForceSearch(double[] testPoint)
    {
@@ -299,7 +291,6 @@ public class KDTree
       return objects[closestIndex];
    }
 
-
    public ArrayList<Object> closestObjects(double[] testPoint, int numObjects, double maxDistance)
    {
       if (!hasObjects)
@@ -309,8 +300,8 @@ public class KDTree
          return null;
       }
 
-      ArrayList<Integer> excludedIndexes = new ArrayList<Integer>();
-      ArrayList<Object> nearestObjects = new ArrayList<Object>();
+      ArrayList<Integer> excludedIndexes = new ArrayList<>();
+      ArrayList<Object> nearestObjects = new ArrayList<>();
 
       for (int i = 0; i < numObjects; i++)
       {
@@ -324,12 +315,10 @@ public class KDTree
       return nearestObjects;
    }
 
-
-
    public ArrayList<double[]> closestPoints(double[] testPoint, int numPoints, double maxDistance)
    {
-      ArrayList<Integer> excludedIndexes = new ArrayList<Integer>();
-      ArrayList<double[]> nearestPoints = new ArrayList<double[]>();
+      ArrayList<Integer> excludedIndexes = new ArrayList<>();
+      ArrayList<double[]> nearestPoints = new ArrayList<>();
 
       for (int i = 0; i < numPoints; i++)
       {
@@ -343,7 +332,6 @@ public class KDTree
       return nearestPoints;
    }
 
-
    public Object getClosestNovelObject(double[] testPoint, double maxDistance, boolean preserveAsNovel)
    {
       int closestNovelIndex = getClosestNovelPointIndex(testPoint, maxDistance, preserveAsNovel);
@@ -356,7 +344,7 @@ public class KDTree
    public ArrayList<Object> getClosestNovelObjects(double[] testPoint, double maxDistance, boolean preserveAsNovel)
    {
       ArrayList<Integer> closestNovelIndexes = getClosestNovelPointIndexes(testPoint, maxDistance, preserveAsNovel);
-      ArrayList<Object> closestObjects = new ArrayList<Object>();
+      ArrayList<Object> closestObjects = new ArrayList<>();
       for (int index : closestNovelIndexes)
       {
          closestObjects.add(objects[index]);
@@ -364,7 +352,6 @@ public class KDTree
 
       return closestObjects;
    }
-
 
    private void makeIndexesNovel(ArrayList<Integer> indexes)
    {
@@ -375,7 +362,7 @@ public class KDTree
    // not been found since all points were marked as novel.
    private ArrayList<Integer> getClosestNovelPointIndexes(double[] testPoint, double maxDistance, boolean preserveAsNovel)
    {
-      ArrayList<Integer> nearestIndexes = new ArrayList<Integer>();
+      ArrayList<Integer> nearestIndexes = new ArrayList<>();
       int closestIndex = getClosestNovelPointIndex(testPoint, maxDistance, false);
 
       while (closestIndex >= 0)
@@ -395,7 +382,7 @@ public class KDTree
    private int getClosestNovelPointIndex(double[] testPoint, double maxDistance, boolean preserveAsNovel)
    {
       int closestIndex = root.closestPointIndex(testPoint, maxDistance * maxDistance, null, novelPointIndexes);
-      if ((closestIndex >= 0) &&!preserveAsNovel)
+      if ((closestIndex >= 0) && !preserveAsNovel)
       {
          novelPointIndexes.remove(closestIndex);
       }
@@ -403,27 +390,24 @@ public class KDTree
       return closestIndex;
    }
 
-
-
    // Returns the indexes for all points within a given radius.
-// private ArrayList<Integer> closestPointIndexes(double[] testPoint, double maxDistance, ArrayList<Integer> excludeIndexes)
-// {
-//     ArrayList<Integer> nearestIndexes =  new ArrayList<Integer>();
-//
-//     int closestIndex = root.closestPointIndex(testPoint, maxDistance*maxDistance, excludeIndexes, null);
-//     while (closestIndex >= 0)
-//     {
-//         nearestIndexes.add(closestIndex);
-//         excludeIndexes.add(closestIndex);
-//         closestIndex = root.closestPointIndex(testPoint, maxDistance*maxDistance, excludeIndexes, null);
-//     }
-//     return nearestIndexes;
-// }
-
+   // private ArrayList<Integer> closestPointIndexes(double[] testPoint, double maxDistance, ArrayList<Integer> excludeIndexes)
+   // {
+   //     ArrayList<Integer> nearestIndexes =  new ArrayList<Integer>();
+   //
+   //     int closestIndex = root.closestPointIndex(testPoint, maxDistance*maxDistance, excludeIndexes, null);
+   //     while (closestIndex >= 0)
+   //     {
+   //         nearestIndexes.add(closestIndex);
+   //         excludeIndexes.add(closestIndex);
+   //         closestIndex = root.closestPointIndex(testPoint, maxDistance*maxDistance, excludeIndexes, null);
+   //     }
+   //     return nearestIndexes;
+   // }
 
    /**
-    * Loads an ASCII file of 3D points.  The first line must contain the
-    * number of points, and all subsequent lines must contain three scalar values.
+    * Loads an ASCII file of 3D points. The first line must contain the number of points, and all
+    * subsequent lines must contain three scalar values.
     *
     * @param filename String
     * @return OneDTerrainGrid
@@ -448,18 +432,16 @@ public class KDTree
       return null;
    }
 
-
    /**
-    * Loads terrain data from a BufferedReader and returns the Terrain object
-    * represented by the data. Returns null if the operation does not succeed.
-    * There must be 3 scalar values on each line.
+    * Loads terrain data from a BufferedReader and returns the Terrain object represented by the data.
+    * Returns null if the operation does not succeed. There must be 3 scalar values on each line.
     *
     * @param bufferedReader BufferedReader
     * @return BreadthFirstStateEnumerator
     */
    public static double[][] loadPoints3D(BufferedReader bufferedReader)
    {
-      ArrayList<Point3D> pointArray = new ArrayList<Point3D>();
+      ArrayList<Point3D> pointArray = new ArrayList<>();
       try
       {
          String lineIn;
@@ -532,12 +514,9 @@ public class KDTree
       return distanceSquared;
    }
 
-
-
    /**
-    * This class implements a Node in a KDTree.  Every point in points[][]
-    * belongs to exactly one leaf Node.  Internal nodes contain split
-    * information.
+    * This class implements a Node in a KDTree. Every point in points[][] belongs to exactly one leaf
+    * Node. Internal nodes contain split information.
     */
    private class KDNode
    {
@@ -556,10 +535,10 @@ public class KDTree
          this.points = points;
          this.startIndex = startIndex;
          this.endIndex = endIndex;
-         this.splitDimension = -1;
-         this.splitValue = Double.NaN;
-         this.leftChild = null;
-         this.rightChild = null;
+         splitDimension = -1;
+         splitValue = Double.NaN;
+         leftChild = null;
+         rightChild = null;
 
          int dimensions = points[0].length;
 
@@ -595,35 +574,29 @@ public class KDTree
 
       public void getExtents(double[] minExtent, double[] maxExtent)
       {
-         for (int i = 0; i < this.minExtents.length; i++)
+         for (int i = 0; i < minExtents.length; i++)
          {
-            minExtent[i] = this.minExtents[i];
-            maxExtent[i] = this.maxExtents[i];
+            minExtent[i] = minExtents[i];
+            maxExtent[i] = maxExtents[i];
          }
       }
 
       private double[] getMinExtents()
       {
-         return this.minExtents;
+         return minExtents;
       }
 
       private double[] getMaxExtents()
       {
-         return this.maxExtents;
+         return maxExtents;
       }
 
-
-
       /**
-       * Splits the current node into two child nodes.  Splitting happens
-       * along the point dimension with the greatest width, and the split
-       * value is the midpoint of the bounds along this dimension.  The
-       * points are swapped in place until they all belong to the correct
-       * child node.
-       *
-       * The parameter maxPointsInLeaves indicates at what point a Node
-       * stops splitting.  It must be passed in to allow proper recursive
-       * construcion of Nodes.
+       * Splits the current node into two child nodes. Splitting happens along the point dimension with
+       * the greatest width, and the split value is the midpoint of the bounds along this dimension. The
+       * points are swapped in place until they all belong to the correct child node. The parameter
+       * maxPointsInLeaves indicates at what point a Node stops splitting. It must be passed in to allow
+       * proper recursive construcion of Nodes.
        */
       private void split(int maxPointsInLeaves)
       {
@@ -637,13 +610,13 @@ public class KDTree
             // Advance left marker and test
             while (points[++leftMarker][splitDimension] < splitValue)
             {
-               
+
             }
 
             // Advance right marker and test
             while (points[--rightMarker][splitDimension] > splitValue)
             {
-               
+
             }
 
             // Swap points and objects
@@ -668,8 +641,8 @@ public class KDTree
             throw new RuntimeException("Must test for which marker is valid and use that!");
          }
 
-         this.leftChild = new KDNode(points, startIndex, leftMarker - 1, maxPointsInLeaves);
-         this.rightChild = new KDNode(points, leftMarker, endIndex, maxPointsInLeaves);
+         leftChild = new KDNode(points, startIndex, leftMarker - 1, maxPointsInLeaves);
+         rightChild = new KDNode(points, leftMarker, endIndex, maxPointsInLeaves);
 
          // Now find the extents for this node, by combining the extents of the children:
          double[] minExtentsLeft = leftChild.getMinExtents();
@@ -679,18 +652,15 @@ public class KDTree
 
          for (int i = 0; i < minExtentsLeft.length; i++)
          {
-            this.minExtents[i] = Math.min(minExtentsLeft[i], minExtentsRight[i]);
-            this.maxExtents[i] = Math.max(maxExtentsLeft[i], maxExtentsRight[i]);
+            minExtents[i] = Math.min(minExtentsLeft[i], minExtentsRight[i]);
+            maxExtents[i] = Math.max(maxExtentsLeft[i], maxExtentsRight[i]);
          }
       }
 
-
       /**
-       * Sets the splitting dimension and the value at which to split along
-       * this dimension.  Computes which dimension has the greatest distance between maximum and
-       * minimum values.  This becomes our splitting dimension.  The midpoint
-       * of the maximum and minimum values becomes our split value.
-       *
+       * Sets the splitting dimension and the value at which to split along this dimension. Computes which
+       * dimension has the greatest distance between maximum and minimum values. This becomes our
+       * splitting dimension. The midpoint of the maximum and minimum values becomes our split value.
        */
       private void setSplitParameters()
       {
@@ -719,10 +689,10 @@ public class KDTree
             if (widestWidth < maxValue - minValue)
             {
                widestWidth = maxValue - minValue;
-               this.splitDimension = i;
+               splitDimension = i;
 
                // This divides the space equally, but not the points.
-               this.splitValue = minValue + widestWidth / 2.0;
+               splitValue = minValue + widestWidth / 2.0;
 
                // This divides the points roughly in half unless there are big outlying values.
                // The better but more expensive choice would be to use the median value
@@ -752,7 +722,6 @@ public class KDTree
          return points[closestPointIndex(testPoint)];
       }
 
-
       private double[] closestPointBruteForceSearch(double[] testPoint)
       {
          double[] closestPoint = null;
@@ -771,7 +740,6 @@ public class KDTree
 
          return closestPoint;
       }
-
 
       /**
        * Returns the index of the closest point in points[][] to testPoint.
@@ -795,13 +763,13 @@ public class KDTree
          int closestIndex = -1;
 
          // If this Node is a leaf, do brute force search for the closest.
-         if (this.isLeaf)
+         if (isLeaf)
          {
             double bestDistanceSquared = Double.POSITIVE_INFINITY;
 
             for (int i = startIndex; i <= endIndex; i++)
             {
-               if ((subsetIndexes != null) &&!subsetIndexes.contains(i))
+               if ((subsetIndexes != null) && !subsetIndexes.contains(i))
                {
                   continue;
                }
@@ -821,18 +789,18 @@ public class KDTree
             }
          }
 
-         else    // Otherwise, search the children.   Start with the child containing the point.
+         else // Otherwise, search the children.   Start with the child containing the point.
          {
             KDNode firstNode, secondNode;
-            if (testPoint[this.splitDimension] < this.splitValue)
+            if (testPoint[splitDimension] < splitValue)
             {
-               firstNode = this.leftChild;
-               secondNode = this.rightChild;
+               firstNode = leftChild;
+               secondNode = rightChild;
             }
             else
             {
-               firstNode = this.rightChild;
-               secondNode = this.leftChild;
+               firstNode = rightChild;
+               secondNode = leftChild;
             }
 
             closestIndex = firstNode.closestPointIndex(testPoint, maxDistanceSquared, excludedIndexes, subsetIndexes);
@@ -844,7 +812,7 @@ public class KDTree
 
             // Only search the other child if testPoint is closer to splitValue than current
             // best distance.  Otherwise, the other child cannot have the closest point.
-            double distanceToSplitSquared = (this.splitValue - testPoint[this.splitDimension]) * (this.splitValue - testPoint[this.splitDimension]);
+            double distanceToSplitSquared = (splitValue - testPoint[splitDimension]) * (splitValue - testPoint[splitDimension]);
 
             // Only search the other side if you can potentially do better than the best and potentially do better than the max allowed distance.
             if ((distanceToSplitSquared < firstDistanceSquared) && (distanceToSplitSquared < maxDistanceSquared))
@@ -886,19 +854,18 @@ public class KDTree
       }
    }
 
-
    /**
-    * This method tests the KD Tree using a BDI terrain file containing an
-    * unordered collection of 3D points.
+    * This method tests the KD Tree using a BDI terrain file containing an unordered collection of 3D
+    * points.
     *
     * @param args String[]
     */
    public static void main(String[] args)
    {
-//    String fileName = "TerrainFiles/rocks1.asc";
+      //    String fileName = "TerrainFiles/rocks1.asc";
       String fileName = "TerrainFiles/terrainC.asc";
 
-//    String fileName = "TerrainFiles/terrainD.asc"; //"terrainD.asc"; //
+      //    String fileName = "TerrainFiles/terrainD.asc"; //"terrainD.asc"; //
 
       int maxPointsInLeaves = 10;
       Random random = new Random();
@@ -920,34 +887,34 @@ public class KDTree
       System.out.println("minExtents = " + minExtents3d);
       System.out.println("maxExtents = " + maxExtents3d);
 
-//    testLookupSamePointOnGrid(tree);
-//
-//    double maxDistance = 100.0;
-//    testLookupSamePointPlusDeltaOnGrid(tree, 0.0, 1, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 0.001, 1, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 1.0, 10, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 2.0, 10, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 4.0, 100, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 8.0, 100, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 16.0, 100, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 32.0, 100, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 64.0, 200, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 128.0, 400, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 256.0, 1000, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 512.0, 1000, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 1024.0, 1000, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 2048.0, 10000, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 4096.0, 10000, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 8192.0, 10000, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 16384.0, 10000, maxDistance);
-//    testLookupSamePointPlusDeltaOnGrid(tree, 1000000.0, 10000, maxDistance);
-//
-//    testLookupTimingOnGrid(tree, false);
-//    testLookupTimingOnGrid(tree, true);
+      //    testLookupSamePointOnGrid(tree);
+      //
+      //    double maxDistance = 100.0;
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 0.0, 1, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 0.001, 1, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 1.0, 10, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 2.0, 10, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 4.0, 100, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 8.0, 100, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 16.0, 100, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 32.0, 100, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 64.0, 200, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 128.0, 400, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 256.0, 1000, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 512.0, 1000, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 1024.0, 1000, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 2048.0, 10000, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 4096.0, 10000, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 8192.0, 10000, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 16384.0, 10000, maxDistance);
+      //    testLookupSamePointPlusDeltaOnGrid(tree, 1000000.0, 10000, maxDistance);
+      //
+      //    testLookupTimingOnGrid(tree, false);
+      //    testLookupTimingOnGrid(tree, true);
 
-//    if (1==1) return;
+      //    if (1==1) return;
 
-//    testTree(tree, 10);
+      //    testTree(tree, 10);
 
       // Prune and test a KDTree with fewer points.
       System.out.println("Pruning the Tree");
@@ -1016,17 +983,16 @@ public class KDTree
          double[] closestPoint = tree.closestPoint(testPoint);
          double distanceSquared = distanceSquared(testPoint, closestPoint);
 
-//         if ((i < maxDistancePrints) && DEBUG)
-//         {
-//            System.out.print("testPoint: (" + testPoint[0] + ", " + testPoint[1] + ", " + testPoint[2] + ")");
-//            System.out.print("closestPoint: (" + closestPoint[0] + ", " + closestPoint[1] + ", " + closestPoint[2] + ")");
-//            System.out.println("distance: " + Math.sqrt(distanceSquared));
-//         }
+         //         if ((i < maxDistancePrints) && DEBUG)
+         //         {
+         //            System.out.print("testPoint: (" + testPoint[0] + ", " + testPoint[1] + ", " + testPoint[2] + ")");
+         //            System.out.print("closestPoint: (" + closestPoint[0] + ", " + closestPoint[1] + ", " + closestPoint[2] + ")");
+         //            System.out.println("distance: " + Math.sqrt(distanceSquared));
+         //         }
 
          /*
-          * if (testPoint[0] != closestPoint[0] ||
-          *   testPoint[1] != closestPoint[1] ||
-          *   testPoint[2] != closestPoint[2])
+          * if (testPoint[0] != closestPoint[0] || testPoint[1] != closestPoint[1] || testPoint[2] !=
+          * closestPoint[2])
           */
          if (distanceSquared > 2.0 * DISTANCE_MOVE * DISTANCE_MOVE)
          {
@@ -1051,17 +1017,17 @@ public class KDTree
          testPoint[1] += Math.random() * DISTANCE_MOVE;
 
          int numPoints = 10;
-//         ArrayList<double[]> closestPoints = tree.closestPoints(testPoint, numPoints, Double.POSITIVE_INFINITY);
+         //         ArrayList<double[]> closestPoints = tree.closestPoints(testPoint, numPoints, Double.POSITIVE_INFINITY);
          for (int j = 0; j < numPoints; j++)
          {
-//            double[] closestPoint = closestPoints.get(j);
-//            double distanceSquared = distanceSquared(testPoint, closestPoint);
-//            if ((i < maxDistancePrints) && DEBUG)
-//            {
-//               System.out.print("testPoint: (" + testPoint[0] + ", " + testPoint[1] + ", " + testPoint[2] + ")");
-//               System.out.print("closestPoint: (" + closestPoint[0] + ", " + closestPoint[1] + ", " + closestPoint[2] + ")");
-//               System.out.println("distance: " + Math.sqrt(distanceSquared));
-//            }
+            //            double[] closestPoint = closestPoints.get(j);
+            //            double distanceSquared = distanceSquared(testPoint, closestPoint);
+            //            if ((i < maxDistancePrints) && DEBUG)
+            //            {
+            //               System.out.print("testPoint: (" + testPoint[0] + ", " + testPoint[1] + ", " + testPoint[2] + ")");
+            //               System.out.print("closestPoint: (" + closestPoint[0] + ", " + closestPoint[1] + ", " + closestPoint[2] + ")");
+            //               System.out.println("distance: " + Math.sqrt(distanceSquared));
+            //            }
          }
       }
 
@@ -1069,7 +1035,6 @@ public class KDTree
 
       System.out.println("For " + kdNumTests + " multiple-point queries, number of millis = " + (kdEnd - kdStart));
    }
-
 
    public static void testLookupTimingOnGrid(KDTree kdTree, boolean checkWithBruteForce)
    {
@@ -1108,7 +1073,7 @@ public class KDTree
                // System.out.println("closestPoint = (" + closestPoint[0] + ", " +
                // closestPoint[1] + ", " + closestPoint[2] + ")");
 
-//             closestPoint = kdTree.closestPoint(queryPoint);
+               //             closestPoint = kdTree.closestPoint(queryPoint);
             }
          }
 
@@ -1132,6 +1097,7 @@ public class KDTree
 
    /**
     * Test a KDTree to make sure it returns the same point if you query for each point
+    * 
     * @param kdTree KDTree
     */
    public static void testLookupSamePointOnGrid(KDTree kdTree)
@@ -1149,7 +1115,7 @@ public class KDTree
             Point3D closest = new Point3D(closestPoint);
             System.out.println("point " + i + " = " + point + " did not match closestPoint = " + closest);
 
-//          throw new RuntimeException("things are not working");
+            //          throw new RuntimeException("things are not working");
          }
 
          double[] closestPoint2 = kdTree.closestPoint(points[i]);
@@ -1172,11 +1138,10 @@ public class KDTree
       System.out.println("Average Time per query was " + averageTime * 1000.0 + " miliseconds.\n");
    }
 
-
-
    /**
-    * Test a KDTree to make sure it gives you back the same point or a closer point if you
-    * query for each point plus a small delta
+    * Test a KDTree to make sure it gives you back the same point or a closer point if you query for
+    * each point plus a small delta
+    * 
     * @param kdTree KDTree
     */
    public static void testLookupSamePointPlusDeltaOnGrid(KDTree kdTree, double maxDelta, int skipPoints, double maxDistance)
@@ -1197,7 +1162,7 @@ public class KDTree
             adjustedPoint[j] = point[j] + delta;
          }
 
-//       double[] closestPoint = kdTree.closestPoint(adjustedPoint, maxDistance);
+         //       double[] closestPoint = kdTree.closestPoint(adjustedPoint, maxDistance);
          double[] closestPoint = kdTree.closestPoint(adjustedPoint);
          if ((points[i] != closestPoint) && (closestPoint != null))
          {

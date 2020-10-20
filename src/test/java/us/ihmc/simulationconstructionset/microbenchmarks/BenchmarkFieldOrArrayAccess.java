@@ -1,10 +1,10 @@
 package us.ihmc.simulationconstructionset.microbenchmarks;
 
-import us.ihmc.commons.Conversions;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+
+import us.ihmc.commons.Conversions;
 
 public class BenchmarkFieldOrArrayAccess
 {
@@ -20,57 +20,58 @@ public class BenchmarkFieldOrArrayAccess
 
    private final long[] randomVariables = new long[ITERATIONS];
    private final Access[] testLongAccess = new Access[ITERATIONS];
-   
+
    private final int[] accessArray = new int[ITERATIONS];
 
    public BenchmarkFieldOrArrayAccess()
    {
-      Class<?>[] classes = { ArrayAccess.class, PrimitiveAccess.class };
+      Class<?>[] classes = {ArrayAccess.class, PrimitiveAccess.class};
 
-      
-      ArrayList<Integer> access = new ArrayList<Integer>();
-      for(int i = 0; i < ITERATIONS; i++)
+      ArrayList<Integer> access = new ArrayList<>();
+      for (int i = 0; i < ITERATIONS; i++)
       {
          access.add(i);
       }
       Collections.shuffle(access);
-      for(int i = 0; i < ITERATIONS; i++)
+      for (int i = 0; i < ITERATIONS; i++)
       {
          accessArray[i] = access.get(i);
       }
-      
+
       String res = new String();
-      for(Class<?> clazz : classes)
+      for (Class<?> clazz : classes)
       {
          long writeTime = 0;
          long readTime = 0;
          for (int i = 0; i < TESTS; i++)
          {
             generateData(clazz);
-            
+
             long start = System.nanoTime();
             testWriteAccess();
-            if(i >= TESTS/2)
+            if (i >= TESTS / 2)
             {
                writeTime += System.nanoTime() - start;
             }
-//            System.out.println("Writing " + ITERATIONS + " of " + clazz.getSimpleName() + " costs " + TimeTools.nanoSecondstoSeconds(System.nanoTime() - start) + "s");
-            
+            //            System.out.println("Writing " + ITERATIONS + " of " + clazz.getSimpleName() + " costs " + TimeTools.nanoSecondstoSeconds(System.nanoTime() - start) + "s");
+
             start = System.nanoTime();
             long testValue = testReadAccess();
-//            System.out.println("Reading " + ITERATIONS + " of " + clazz.getSimpleName() + " costs " + TimeTools.nanoSecondstoSeconds(System.nanoTime() - start) + "s");
-            if(i >= TESTS/2)
+            //            System.out.println("Reading " + ITERATIONS + " of " + clazz.getSimpleName() + " costs " + TimeTools.nanoSecondstoSeconds(System.nanoTime() - start) + "s");
+            if (i >= TESTS / 2)
             {
                readTime += System.nanoTime() - start;
             }
             System.out.println("Test " + i + " returned " + testValue);
          }
-         
-         res += "Writing " + ITERATIONS + " of " + clazz.getSimpleName() + " averaged " + Conversions.nanosecondsToSeconds(writeTime/(TESTS - TESTS/2)) + "s" + System.lineSeparator();
-         res += "Reading " + ITERATIONS + " of " + clazz.getSimpleName() + " averaged " + Conversions.nanosecondsToSeconds(readTime/(TESTS - TESTS/2)) + "s" + System.lineSeparator();
-         
+
+         res += "Writing " + ITERATIONS + " of " + clazz.getSimpleName() + " averaged " + Conversions.nanosecondsToSeconds(writeTime / (TESTS - TESTS / 2))
+               + "s" + System.lineSeparator();
+         res += "Reading " + ITERATIONS + " of " + clazz.getSimpleName() + " averaged " + Conversions.nanosecondsToSeconds(readTime / (TESTS - TESTS / 2)) + "s"
+               + System.lineSeparator();
+
       }
-      
+
       System.out.println(res);
    }
 
@@ -94,20 +95,20 @@ public class BenchmarkFieldOrArrayAccess
             throw new RuntimeException(e);
          }
          random = new Random(); // Create trash between variables
-         
+
       }
-      if(USE_COMMON_STORAGE)
+      if (USE_COMMON_STORAGE)
       {
-         
-         if(clazz == ArrayAccess.class)
+
+         if (clazz == ArrayAccess.class)
          {
             long[] backingArray = new long[randomVariables.length];
             for (int i = 0; i < randomVariables.length; i++)
             {
-               ((ArrayAccess)testLongAccess[i]).setBackingArray(backingArray, i);
+               ((ArrayAccess) testLongAccess[i]).setBackingArray(backingArray, i);
             }
          }
-         
+
       }
    }
 
@@ -175,10 +176,10 @@ public class BenchmarkFieldOrArrayAccess
       {
          return value[index];
       }
-      
+
       public void setBackingArray(long[] backingArray, int index)
       {
-         this.value = backingArray;
+         value = backingArray;
          this.index = index;
       }
    }

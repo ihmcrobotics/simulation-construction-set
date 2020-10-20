@@ -6,7 +6,6 @@ import us.ihmc.robotics.robotDescription.CollisionMaskHolder;
 
 /**
  * Object containing collision data for a specific instance of a shape.
- *
  */
 public interface CollisionShape extends CollisionMaskHolder
 {
@@ -14,9 +13,10 @@ public interface CollisionShape extends CollisionMaskHolder
     * Returns true if the shape is not mobile and part of the environment.
     */
    public abstract boolean isGround();
-   
+
    /**
     * Set whether or not this collision shape is not mobile and part of the environment.
+    * 
     * @param isGround
     */
    public abstract void setIsGround(boolean isGround);
@@ -33,7 +33,8 @@ public interface CollisionShape extends CollisionMaskHolder
    public abstract void computeTransformedCollisionShape();
 
    /**
-    * Returns a description of the shape.  Multiple {@link CollisionShape} can have the same description.
+    * Returns a description of the shape. Multiple {@link CollisionShape} can have the same
+    * description.
     */
    public abstract CollisionShapeDescription<?> getCollisionShapeDescription();
 

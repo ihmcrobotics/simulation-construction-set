@@ -1,24 +1,21 @@
 package us.ihmc.simulationconstructionset.gui;
 
-
 //import com.sun.java.swing.SwingUtilities;  //old package name
 import javax.swing.SwingUtilities;
 
 /**
- * An abstract class that you subclass to perform
- * GUI-related work in a dedicated thread.
- * For instructions on using this class, see
+ * An abstract class that you subclass to perform GUI-related work in a dedicated thread. For
+ * instructions on using this class, see
  * http://java.sun.com/products/jfc/swingdoc-current/threads2.html
  */
 public abstract class SwingWorker
 {
-   private Object value;    // see getValue(), setValue()
+   private Object value; // see getValue(), setValue()
    @SuppressWarnings("unused")
    private Thread thread;
 
    /**
-    * Class to maintain reference to current worker thread
-    * under separate synchronization control.
+    * Class to maintain reference to current worker thread under separate synchronization control.
     */
    private static class ThreadVar
    {
@@ -40,12 +37,10 @@ public abstract class SwingWorker
       }
    }
 
-
    private ThreadVar threadVar;
 
    /**
-    * Get the value produced by the worker thread, or null if it
-    * hasn't been constructed yet.
+    * Get the value produced by the worker thread, or null if it hasn't been constructed yet.
     */
    protected synchronized Object getValue()
    {
@@ -66,16 +61,16 @@ public abstract class SwingWorker
    public abstract Object construct();
 
    /**
-    * Called on the event dispatching thread (not on the worker thread)
-    * after the <code>construct</code> method has returned.
+    * Called on the event dispatching thread (not on the worker thread) after the
+    * <code>construct</code> method has returned.
     */
    public void finished()
    {
    }
 
    /**
-    * A new method that interrupts the worker thread.  Call this method
-    * to force the worker to abort what it's doing.
+    * A new method that interrupts the worker thread. Call this method to force the worker to abort
+    * what it's doing.
     */
    public void interrupt()
    {
@@ -89,9 +84,8 @@ public abstract class SwingWorker
    }
 
    /**
-    * Return the value created by the <code>construct</code> method.
-    * Returns null if either the constructing thread or
-    * the current thread was interrupted before a value was produced.
+    * Return the value created by the <code>construct</code> method. Returns null if either the
+    * constructing thread or the current thread was interrupted before a value was produced.
     *
     * @return the value created by the <code>construct</code> method
     */
@@ -111,17 +105,15 @@ public abstract class SwingWorker
          }
          catch (InterruptedException e)
          {
-            Thread.currentThread().interrupt();    // propagate
+            Thread.currentThread().interrupt(); // propagate
 
             return null;
          }
       }
    }
 
-
    /**
-    * Start a thread that will call the <code>construct</code> method
-    * and then exit.
+    * Start a thread that will call the <code>construct</code> method and then exit.
     */
    public SwingWorker()
    {
@@ -152,7 +144,7 @@ public abstract class SwingWorker
          }
       };
 
-      Thread t = new Thread(doConstruct);
+      Thread t = new Thread(doConstruct, "SCSSwingWorkerConstruct");
       threadVar = new ThreadVar(t);
       t.start();
    }

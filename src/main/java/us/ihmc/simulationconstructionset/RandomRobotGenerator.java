@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import us.ihmc.commons.RandomNumbers;
@@ -18,23 +19,23 @@ public class RandomRobotGenerator
    public static Robot generateRandomLinearChainRobot(String name, boolean startWithFloatingJoint, int numberOfPinJoints, Random random)
    {
       Robot robot = new Robot(name);
-      
+
       Joint parentJoint = null;
 
       if (startWithFloatingJoint)
       {
          String jointName = "floatingJoint";
-//         Vector3d offset = RandomTools.generateRandomVector(random, random.nextDouble() + 0.1);
+         //         Vector3d offset = RandomTools.generateRandomVector(random, random.nextDouble() + 0.1);
 
          FloatingJoint floatingJoint = new FloatingJoint(jointName, new Vector3D(), robot);
          Link link = generateRandomLink(random, jointName, null);
          floatingJoint.setLink(link);
-         
+
          robot.addRootJoint(floatingJoint);
-         
+
          parentJoint = floatingJoint;
       }
-      
+
       for (int jointNumber = 0; jointNumber < numberOfPinJoints; jointNumber++)
       {
          Vector3D offset = EuclidCoreRandomTools.nextVector3DWithFixedLength(random, random.nextDouble() + 0.1);
@@ -43,10 +44,10 @@ public class RandomRobotGenerator
 
          String jointName = "joint" + jointNumber;
          PinJoint pinJoint = new PinJoint(jointName, offset, robot, axis);
-         
+
          Link link = generateRandomLink(random, jointName, axis);
          pinJoint.setLink(link);
-         
+
          if (parentJoint == null)
          {
             robot.addRootJoint(pinJoint);
@@ -54,72 +55,72 @@ public class RandomRobotGenerator
          else
          {
             Graphics3DObject parentLinkGraphics = parentJoint.getLink().getLinkGraphics();
-            
+
             Vector3D zVector = new Vector3D(0.0, 0.0, 1.0);
             AxisAngle rotationAxisAngle = computeAxisAngleToAlignVectors(zVector, offset);
-            
+
             parentLinkGraphics.identity();
             parentLinkGraphics.rotate(rotationAxisAngle);
-            parentLinkGraphics.addCylinder(offset.length(), offset.length()/20.0, YoAppearance.randomColor(random));
-       
+            parentLinkGraphics.addCylinder(offset.length(), offset.length() / 20.0, YoAppearance.randomColor(random));
+
             parentJoint.addJoint(pinJoint);
          }
-         
+
          parentJoint = pinJoint;
       }
-      
+
       return robot;
    }
 
    public static void setRandomJointPositions(Robot robot, Random random)
    {
-      ArrayList<Joint> rootJoints = robot.getRootJoints();
-      
+      List<Joint> rootJoints = robot.getRootJoints();
+
       for (Joint rootJoint : rootJoints)
       {
          setRandomJointPosition(rootJoint, random);
-         
-         ArrayList<Joint> childrenJoints = new ArrayList<Joint>();
+
+         ArrayList<Joint> childrenJoints = new ArrayList<>();
          rootJoint.recursiveGetChildrenJoints(childrenJoints);
-         
+
          for (Joint childJoint : childrenJoints)
          {
             setRandomJointPosition(childJoint, random);
          }
       }
    }
-   
+
    public static void setRandomJointVelocities(Robot robot, Random random)
    {
-      ArrayList<Joint> rootJoints = robot.getRootJoints();
-      
+      List<Joint> rootJoints = robot.getRootJoints();
+
       for (Joint rootJoint : rootJoints)
       {
          setRandomJointVelocity(rootJoint, random);
-         
-         ArrayList<Joint> childrenJoints = new ArrayList<Joint>();
+
+         ArrayList<Joint> childrenJoints = new ArrayList<>();
          rootJoint.recursiveGetChildrenJoints(childrenJoints);
-         
+
          for (Joint childJoint : childrenJoints)
          {
             setRandomJointVelocity(childJoint, random);
          }
       }
    }
-   
+
    public static void setRandomJointPosition(Joint joint, Random random)
    {
       if (joint instanceof FloatingJoint)
       {
          FloatingJoint floatingJoint = (FloatingJoint) joint;
-       
+
          RigidBodyTransform randomTransform = EuclidCoreRandomTools.nextRigidBodyTransform(random);
          floatingJoint.setRotationAndTranslation(randomTransform);
       }
       else if (joint instanceof FloatingPlanarJoint)
       {
          FloatingPlanarJoint floatingJoint = (FloatingPlanarJoint) joint;
-         
+
          double rotation = RandomNumbers.nextDouble(random, -Math.PI, Math.PI);
          floatingJoint.setRotation(rotation);
 
@@ -136,8 +137,8 @@ public class RandomRobotGenerator
       else if (joint instanceof SliderJoint)
       {
          SliderJoint sliderJoint = (SliderJoint) joint;
-         
-         double position = RandomNumbers.nextDouble(random, -0.1, 0.1);         
+
+         double position = RandomNumbers.nextDouble(random, -0.1, 0.1);
          sliderJoint.setQ(position);
       }
       else
@@ -145,24 +146,23 @@ public class RandomRobotGenerator
          throw new RuntimeException("Joint type not supported!");
       }
    }
-   
-   
+
    public static void setRandomJointVelocity(Joint joint, Random random)
    {
       if (joint instanceof FloatingJoint)
       {
          FloatingJoint floatingJoint = (FloatingJoint) joint;
-       
+
          Tuple3DBasics velocity = EuclidCoreRandomTools.nextVector3DWithFixedLength(random, 0.5);
          floatingJoint.setVelocity(velocity);
-         
+
          Vector3D angularVelocityInBody = EuclidCoreRandomTools.nextVector3DWithFixedLength(random, 2.0);
          floatingJoint.setAngularVelocityInBody(angularVelocityInBody);
       }
       else if (joint instanceof FloatingPlanarJoint)
       {
          FloatingPlanarJoint floatingJoint = (FloatingPlanarJoint) joint;
-         
+
          double rotationalVelocity = RandomNumbers.nextDouble(random, -Math.PI, Math.PI);
          floatingJoint.setRotationalVelocity(rotationalVelocity);
 
@@ -178,7 +178,7 @@ public class RandomRobotGenerator
       else if (joint instanceof SliderJoint)
       {
          SliderJoint sliderJoint = (SliderJoint) joint;
-         
+
          double velocity = RandomNumbers.nextDouble(random, -0.1, 0.1);
          sliderJoint.setQd(velocity);
       }
@@ -187,20 +187,20 @@ public class RandomRobotGenerator
          throw new RuntimeException("Joint type not supported!");
       }
    }
-   
+
    public static AxisAngle computeAxisAngleToAlignVectors(Vector3D vectorToRotate, Vector3D vectorToAlignTo)
    {
       Vector3D crossVector = new Vector3D();
       crossVector.cross(vectorToRotate, vectorToAlignTo);
       double crossVectorLength = crossVector.length();
-      
-      double rotationAngle = Math.asin(crossVectorLength/vectorToRotate.length()/vectorToAlignTo.length());
-      
+
+      double rotationAngle = Math.asin(crossVectorLength / vectorToRotate.length() / vectorToAlignTo.length());
+
       if (vectorToRotate.dot(vectorToAlignTo) < 0.0)
       {
-         rotationAngle = Math.PI - rotationAngle; 
+         rotationAngle = Math.PI - rotationAngle;
       }
-      
+
       if (Math.abs(crossVectorLength) > 1e-10)
       {
          crossVector.scale(1.0 / crossVectorLength);
@@ -223,9 +223,9 @@ public class RandomRobotGenerator
       double radiusOfGyrationY = 0.04 + 0.1 * random.nextDouble();
       double radiusOfGyrationZ = 0.04 + 0.1 * random.nextDouble();
       link.setMassAndRadiiOfGyration(mass, radiusOfGyrationX, radiusOfGyrationY, radiusOfGyrationZ);
-      
+
       Graphics3DObject linkGraphics = new Graphics3DObject();
-      
+
       if (axis != null)
       {
          Vector3D zVector = new Vector3D(0.0, 0.0, 1.0);
@@ -235,24 +235,24 @@ public class RandomRobotGenerator
       }
       else
       {
-         linkGraphics.addSphere(0.1, YoAppearance.Red()); 
+         linkGraphics.addSphere(0.1, YoAppearance.Red());
       }
-      
+
       link.setLinkGraphics(linkGraphics);
-            
+
       return link;
    }
-   
+
    public static void main(String[] args)
    {
       Random random = new Random(1233L);
       boolean startWithFloatingJoint = true;
-      Robot robot = generateRandomLinearChainRobot("randomRobot", startWithFloatingJoint , 10, random);
+      Robot robot = generateRandomLinearChainRobot("randomRobot", startWithFloatingJoint, 10, random);
       robot.setGravity(new Vector3D(0.0, 0.0, -0.01));
-      
-//      setRandomJointPositions(robot, random);
+
+      //      setRandomJointPositions(robot, random);
       setRandomJointVelocities(robot, random);
-      
+
       SimulationConstructionSet scs = new SimulationConstructionSet(robot);
       scs.setDT(0.0001, 100);
       scs.setGroundVisible(false);

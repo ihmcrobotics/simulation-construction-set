@@ -3,10 +3,13 @@ package us.ihmc.simulationconstructionset.physics.engine.featherstone;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import us.ihmc.euclid.matrix.RotationMatrix;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.simulationconstructionset.FloatingJoint;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
@@ -29,14 +32,14 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
 
    // private Matrix3d R0_i = new Matrix3d();
    private Vector3D a_hat_world_top = new Vector3D(), a_hat_world_bot = new Vector3D();
-   private DenseMatrix64F a_hat_matrix = new DenseMatrix64F(6, 1);
-   private DenseMatrix64F Z_hat_matrix = new DenseMatrix64F(6, 1);
-   private DenseMatrix64F Y_hat_matrix = new DenseMatrix64F(6, 1);
-   private DenseMatrix64F I_hat_matrix = new DenseMatrix64F(6, 6);
+   private DMatrixRMaj a_hat_matrix = new DMatrixRMaj(6, 1);
+   private DMatrixRMaj Z_hat_matrix = new DMatrixRMaj(6, 1);
+   private DMatrixRMaj Y_hat_matrix = new DMatrixRMaj(6, 1);
+   private DMatrixRMaj I_hat_matrix = new DMatrixRMaj(6, 6);
 
    private Vector3D wdXr = new Vector3D(), wXr = new Vector3D(), wXwXr = new Vector3D();
    private Vector3D delta_qd_xyz = new Vector3D();
-   private final DenseMatrix64F I_hat_inverse = new DenseMatrix64F(6, 6);
+   private final DMatrixRMaj I_hat_inverse = new DMatrixRMaj(6, 6);
 
    private double q_x_n, q_y_n, q_z_n, qd_x_n, qd_y_n, qd_z_n, q_qs_n, q_qx_n, q_qy_n, q_qz_n, qd_wx_n, qd_wy_n, qd_wz_n;
 
@@ -53,7 +56,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
 
    // Override featherstonePassOne since don't need to do everything...
    @Override
-   public void featherstonePassOne(Vector3D w_h, Vector3D v_h, RotationMatrix Rh_0)
+   public void featherstonePassOne(Vector3DReadOnly w_h, Vector3DReadOnly v_h, RotationMatrixReadOnly Rh_0)
    {
       owner.update();
       Ri_0.set(owner.jointTransform3D.getRotation());
@@ -68,7 +71,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
 
       // r_h = null;
       // Now do the joint dependent stuff...
-      this.jointDependentFeatherstonePassOne();
+      jointDependentFeatherstonePassOne();
 
       // Now update the points attached to the joint:
       R0_i.set(Ri_0);
@@ -104,14 +107,14 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
-         Joint child = (Joint) owner.childrenJoints.get(i);
+         Joint child = owner.childrenJoints.get(i);
 
          child.physics.featherstonePassOne(w_i, v_i, Ri_0);
       }
    }
 
    @Override
-   protected void jointDependentSetAndGetRotation(RotationMatrix Rh_i)
+   protected void jointDependentSetAndGetRotation(RotationMatrixBasics Rh_i)
    {
       tempOrientation2.set(owner.q_qx.getDoubleValue(), owner.q_qy.getDoubleValue(), owner.q_qz.getDoubleValue(), owner.q_qs.getDoubleValue());
       Rh_i.set(tempOrientation2);
@@ -158,7 +161,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
    }
 
    @Override
-   protected void jointDependentFeatherstonePassTwo(Vector3D w_h)
+   protected void jointDependentFeatherstonePassTwo(Vector3DReadOnly w_h)
    {
       // Coriolis Forces:
       c_hat_i.top = null;
@@ -170,18 +173,17 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
    }
 
    /*
-    * protected void jointDependentComputeExternalForceR(Vector3d point_offset, Vector3d comOffset, Vector3d externalForceR)
-    * {
-    * externalForceR.sub(point_offset, comOffset);  // No linear motion component!!!
-    * }
+    * protected void jointDependentComputeExternalForceR(Vector3d point_offset, Vector3d comOffset,
+    * Vector3d externalForceR) { externalForceR.sub(point_offset, comOffset); // No linear motion
+    * component!!! }
     */
-    @Override
+   @Override
    public void featherstonePassThree()
    {
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
-         Joint child = (Joint) owner.childrenJoints.get(i);
+         Joint child = owner.childrenJoints.get(i);
 
          child.physics.featherstonePassThree(I_hat_i, Z_hat_i);
       }
@@ -195,12 +197,12 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
          I_hat_i.getMatrix(I_hat_matrix);
 
          // if (I_hat_inverse == null) I_hat_inverse = new Matrix(I_hat_matrix.getRowDimension(), I_hat_matrix.getColumnDimension());
-         CommonOps.invert(I_hat_matrix, I_hat_inverse);
+         CommonOps_DDRM.invert(I_hat_matrix, I_hat_inverse);
          Z_hat_i.getMatrix(Z_hat_matrix);
 
          // System.out.println(Z_hat_i);
          // a_hat_matrix = I_hat_inverse.times(Z_hat_matrix);
-         CommonOps.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
+         CommonOps_DDRM.mult(I_hat_inverse, Z_hat_matrix, a_hat_matrix);
          a_hat_i.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
          a_hat_i.bottom.set(-a_hat_matrix.get(3, 0), -a_hat_matrix.get(4, 0), -a_hat_matrix.get(5, 0));
 
@@ -253,21 +255,26 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       jointDependentRecordK(passNumber);
 
       /*
-       * k_qdd_x[passNumber] = qdd_x.getDoubleValue(); k_qdd_y[passNumber] = qdd_y.getDoubleValue(); k_qdd_z[passNumber] = qdd_z.getDoubleValue();
-       * k_qd_x[passNumber] = qd_x.getDoubleValue(); k_qd_y[passNumber] = qd_y.getDoubleValue(); k_qd_z[passNumber] = qd_z.getDoubleValue();
-       * k_qdd_wx[passNumber] = qdd_wx.getDoubleValue(); k_qdd_wy[passNumber] = qdd_wy.getDoubleValue(); k_qdd_wz[passNumber] = qdd_wz.getDoubleValue();
-       * k_qd_wx[passNumber] = qd_wx.getDoubleValue(); k_qd_wy[passNumber] = qd_wy.getDoubleValue(); k_qd_wz[passNumber] = qd_wz.getDoubleValue();
-       *
-       * k_qd_qs[passNumber] = 0.5*(-q_qx.getDoubleValue() * qd_wx.getDoubleValue() - q_qy.getDoubleValue() * qd_wy.getDoubleValue() - q_qz.getDoubleValue() * qd_wz.getDoubleValue());
-       * k_qd_qx[passNumber] = 0.5*(+q_qs.getDoubleValue() * qd_wx.getDoubleValue() - q_qz.getDoubleValue() * qd_wy.getDoubleValue() + q_qy.getDoubleValue() * qd_wz.getDoubleValue());
-       * k_qd_qy[passNumber] = 0.5*(+q_qz.getDoubleValue() * qd_wx.getDoubleValue() + q_qs.getDoubleValue() * qd_wy.getDoubleValue() - q_qx.getDoubleValue() * qd_wz.getDoubleValue());
-       * k_qd_qz[passNumber] = 0.5*(-q_qy.getDoubleValue() * qd_wx.getDoubleValue() + q_qx.getDoubleValue() * qd_wy.getDoubleValue() + q_qs.getDoubleValue() * qd_wz.getDoubleValue());
+       * k_qdd_x[passNumber] = qdd_x.getDoubleValue(); k_qdd_y[passNumber] = qdd_y.getDoubleValue();
+       * k_qdd_z[passNumber] = qdd_z.getDoubleValue(); k_qd_x[passNumber] = qd_x.getDoubleValue();
+       * k_qd_y[passNumber] = qd_y.getDoubleValue(); k_qd_z[passNumber] = qd_z.getDoubleValue();
+       * k_qdd_wx[passNumber] = qdd_wx.getDoubleValue(); k_qdd_wy[passNumber] = qdd_wy.getDoubleValue();
+       * k_qdd_wz[passNumber] = qdd_wz.getDoubleValue(); k_qd_wx[passNumber] = qd_wx.getDoubleValue();
+       * k_qd_wy[passNumber] = qd_wy.getDoubleValue(); k_qd_wz[passNumber] = qd_wz.getDoubleValue();
+       * k_qd_qs[passNumber] = 0.5*(-q_qx.getDoubleValue() * qd_wx.getDoubleValue() -
+       * q_qy.getDoubleValue() * qd_wy.getDoubleValue() - q_qz.getDoubleValue() * qd_wz.getDoubleValue());
+       * k_qd_qx[passNumber] = 0.5*(+q_qs.getDoubleValue() * qd_wx.getDoubleValue() -
+       * q_qz.getDoubleValue() * qd_wy.getDoubleValue() + q_qy.getDoubleValue() * qd_wz.getDoubleValue());
+       * k_qd_qy[passNumber] = 0.5*(+q_qz.getDoubleValue() * qd_wx.getDoubleValue() +
+       * q_qs.getDoubleValue() * qd_wy.getDoubleValue() - q_qx.getDoubleValue() * qd_wz.getDoubleValue());
+       * k_qd_qz[passNumber] = 0.5*(-q_qy.getDoubleValue() * qd_wx.getDoubleValue() +
+       * q_qx.getDoubleValue() * qd_wy.getDoubleValue() + q_qs.getDoubleValue() * qd_wz.getDoubleValue());
        */
 
       // Check for unreasonable accelerations:
       if (!jointDependentVerifyReasonableAccelerations())
       {
-         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<Joint>();
+         ArrayList<Joint> unreasonableAccelerationJoints = new ArrayList<>();
          unreasonableAccelerationJoints.add(owner);
 
          throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
@@ -275,7 +282,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
 
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
-         Joint child = (Joint) owner.childrenJoints.get(i);
+         Joint child = owner.childrenJoints.get(i);
 
          child.physics.featherstonePassFour(a_hat_i, passNumber);
       }
@@ -298,17 +305,13 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       k_qd_wx[passNumber] = owner.qd_wx.getDoubleValue();
       k_qd_wy[passNumber] = owner.qd_wy.getDoubleValue();
       k_qd_wz[passNumber] = owner.qd_wz.getDoubleValue();
-      k_qd_qs[passNumber] = 0.5
-            * (-owner.q_qx.getDoubleValue() * owner.qd_wx.getDoubleValue() - owner.q_qy.getDoubleValue() * owner.qd_wy.getDoubleValue()
+      k_qd_qs[passNumber] = 0.5 * (-owner.q_qx.getDoubleValue() * owner.qd_wx.getDoubleValue() - owner.q_qy.getDoubleValue() * owner.qd_wy.getDoubleValue()
             - owner.q_qz.getDoubleValue() * owner.qd_wz.getDoubleValue());
-      k_qd_qx[passNumber] = 0.5
-            * (+owner.q_qs.getDoubleValue() * owner.qd_wx.getDoubleValue() - owner.q_qz.getDoubleValue() * owner.qd_wy.getDoubleValue()
+      k_qd_qx[passNumber] = 0.5 * (+owner.q_qs.getDoubleValue() * owner.qd_wx.getDoubleValue() - owner.q_qz.getDoubleValue() * owner.qd_wy.getDoubleValue()
             + owner.q_qy.getDoubleValue() * owner.qd_wz.getDoubleValue());
-      k_qd_qy[passNumber] = 0.5
-            * (+owner.q_qz.getDoubleValue() * owner.qd_wx.getDoubleValue() + owner.q_qs.getDoubleValue() * owner.qd_wy.getDoubleValue()
-            -owner. q_qx.getDoubleValue() * owner.qd_wz.getDoubleValue());
-      k_qd_qz[passNumber] = 0.5
-            * (-owner.q_qy.getDoubleValue() * owner.qd_wx.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.qd_wy.getDoubleValue()
+      k_qd_qy[passNumber] = 0.5 * (+owner.q_qz.getDoubleValue() * owner.qd_wx.getDoubleValue() + owner.q_qs.getDoubleValue() * owner.qd_wy.getDoubleValue()
+            - owner.q_qx.getDoubleValue() * owner.qd_wz.getDoubleValue());
+      k_qd_qz[passNumber] = 0.5 * (-owner.q_qy.getDoubleValue() * owner.qd_wx.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.qd_wy.getDoubleValue()
             + owner.q_qs.getDoubleValue() * owner.qd_wz.getDoubleValue());
    }
 
@@ -338,7 +341,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
          owner.qd_wz.set(qd_wz_n + owner.qdd_wz.getDoubleValue() * stepSize);
 
          double q_qlength = Math.sqrt(owner.q_qs.getDoubleValue() * owner.q_qs.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.q_qx.getDoubleValue()
-                                      + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
+               + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
 
          owner.q_qs.set(owner.q_qs.getDoubleValue() / q_qlength);
          owner.q_qx.set(owner.q_qx.getDoubleValue() / q_qlength);
@@ -349,7 +352,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
-         Joint child = (Joint) owner.childrenJoints.get(i);
+         Joint child = owner.childrenJoints.get(i);
 
          child.physics.recursiveEulerIntegrate(stepSize);
       }
@@ -372,7 +375,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
          owner.q_qz.set(q_qz_n + stepSize * (k_qd_qz[0] / 6.0 + k_qd_qz[1] / 3.0 + k_qd_qz[2] / 3.0 + k_qd_qz[3] / 6.0));
 
          double q_qlength = Math.sqrt(owner.q_qs.getDoubleValue() * owner.q_qs.getDoubleValue() + owner.q_qx.getDoubleValue() * owner.q_qx.getDoubleValue()
-                                      + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
+               + owner.q_qy.getDoubleValue() * owner.q_qy.getDoubleValue() + owner.q_qz.getDoubleValue() * owner.q_qz.getDoubleValue());
 
          // Normalize the quaternion:
          owner.q_qs.set(owner.q_qs.getDoubleValue() / q_qlength);
@@ -387,7 +390,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
-         Joint child = (Joint) owner.childrenJoints.get(i);
+         Joint child = owner.childrenJoints.get(i);
 
          child.physics.recursiveRungeKuttaSum(stepSize);
       }
@@ -426,7 +429,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
-         Joint child = (Joint) owner.childrenJoints.get(i);
+         Joint child = owner.childrenJoints.get(i);
 
          child.physics.recursiveSaveTempState();
       }
@@ -452,7 +455,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       // Recurse over the children:
       for (int i = 0; i < owner.childrenJoints.size(); i++)
       {
-         Joint child = (Joint) owner.childrenJoints.get(i);
+         Joint child = owner.childrenJoints.get(i);
 
          child.physics.recursiveRestoreTempState();
       }
@@ -466,7 +469,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       Y_hat_i.getMatrix(Y_hat_matrix);
 
       // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-      CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+      CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
       delta_v_me.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));
       delta_v_me.bottom.set(-a_hat_matrix.get(3, 0), -a_hat_matrix.get(4, 0), -a_hat_matrix.get(5, 0));
    }
@@ -479,7 +482,7 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
       Y_hat_i.getMatrix(Y_hat_matrix);
 
       // a_hat_matrix = I_hat_inverse.times(Y_hat_matrix);
-      CommonOps.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
+      CommonOps_DDRM.mult(I_hat_inverse, Y_hat_matrix, a_hat_matrix);
 
       // System.out.println("Y_hat_i: " + Y_hat_i);
       delta_v_me.top.set(-a_hat_matrix.get(0, 0), -a_hat_matrix.get(1, 0), -a_hat_matrix.get(2, 0));

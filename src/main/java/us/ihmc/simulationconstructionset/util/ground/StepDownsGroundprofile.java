@@ -1,8 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
-
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 
 public class StepDownsGroundprofile extends GroundProfileFromHeightMap
 {
@@ -34,21 +33,21 @@ public class StepDownsGroundprofile extends GroundProfileFromHeightMap
       this.frequency = frequency;
       this.offset = offset;
       this.heightOffset = heightOffset;
-      
+
       double zMin = Double.NEGATIVE_INFINITY;
       double zMax = Double.POSITIVE_INFINITY;
-      this.boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
+      boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return height;
    }
-   
+
    @Override
    public double heightAt(double x, double y, double z)
    {
@@ -67,8 +66,7 @@ public class StepDownsGroundprofile extends GroundProfileFromHeightMap
       return height;
    }
 
-
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       double dzdx = 0.0;
       normal.setX(-dzdx);

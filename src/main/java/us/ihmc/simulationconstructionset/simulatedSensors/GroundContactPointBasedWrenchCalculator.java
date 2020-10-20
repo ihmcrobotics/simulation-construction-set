@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -12,8 +12,8 @@ import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.Joint;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class GroundContactPointBasedWrenchCalculator implements WrenchCalculatorInterface
 {
@@ -26,19 +26,19 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
    private final RigidBodyTransform transformToParentJoint;
 
    private boolean doWrenchCorruption = false;
-   private final DenseMatrix64F wrenchMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
-   private final DenseMatrix64F corruptionMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
+   private final DMatrixRMaj wrenchMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
+   private final DMatrixRMaj corruptionMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
    private final Map<String, YoFrameVector3D> yoContactForceInSensorFrame = new HashMap<>();
    private final ReferenceFrame sensorFrame;
 
    public GroundContactPointBasedWrenchCalculator(String forceSensorName, List<GroundContactPoint> contactPoints, Joint forceTorqueSensorJoint,
-                                                  RigidBodyTransform transformToParentJoint, YoVariableRegistry registry)
+                                                  RigidBodyTransform transformToParentJoint, YoRegistry registry)
    {
       this.forceSensorName = forceSensorName;
       this.contactPoints = contactPoints;
       this.forceTorqueSensorJoint = forceTorqueSensorJoint;
       this.transformToParentJoint = new RigidBodyTransform(transformToParentJoint);
-      this.sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
+      sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
       {
          @Override
          protected void updateTransformToParent(RigidBodyTransform transformToParent)
@@ -54,8 +54,8 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
             String contactPointName = contactPoints.get(i).getName();
             String namePrefix = contactPointName + "_ForceInSensorFrame";
             // Checking if that variable does already exist for some reason.
-            if (registry.getVariable(namePrefix + "X") == null)
-               this.yoContactForceInSensorFrame.put(contactPointName, new YoFrameVector3D(namePrefix, sensorFrame, registry));
+            if (registry.findVariable(namePrefix + "X") == null)
+               yoContactForceInSensorFrame.put(contactPointName, new YoFrameVector3D(namePrefix, sensorFrame, registry));
          }
       }
    }
@@ -128,7 +128,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
    }
 
    @Override
-   public DenseMatrix64F getWrench()
+   public DMatrixRMaj getWrench()
    {
       return wrenchMatrix;
    }
@@ -142,7 +142,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
    @Override
    public void corruptWrenchElement(int row, double value)
    {
-      this.corruptionMatrix.add(row, 0, value);
+      corruptionMatrix.add(row, 0, value);
    }
 
    @Override

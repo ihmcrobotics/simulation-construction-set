@@ -1,11 +1,14 @@
 package us.ihmc.simulationconstructionset;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * <p>Title: SimulationConstructionSet</p>
- *
- * <p>Description: </p>
+ * <p>
+ * Title: SimulationConstructionSet
+ * </p>
+ * <p>
+ * Description:
+ * </p>
  *
  * @author not attributable
  * @version 1.0
@@ -13,19 +16,19 @@ import java.util.ArrayList;
 public class UnreasonableAccelerationException extends Throwable
 {
    private static final long serialVersionUID = 3265459168572596454L;
-   private final ArrayList<Joint> unreasonableAccelerationJoints;
+   private final List<Joint> unreasonableAccelerationJoints;
 
    public UnreasonableAccelerationException()
    {
-      this.unreasonableAccelerationJoints = null;
+      unreasonableAccelerationJoints = null;
    }
 
-   public UnreasonableAccelerationException(ArrayList<Joint> unreasonableAccelerationJoints)
+   public UnreasonableAccelerationException(List<Joint> unreasonableAccelerationJoints)
    {
       this.unreasonableAccelerationJoints = unreasonableAccelerationJoints;
    }
 
-   public ArrayList<Joint> getUnreasonableAccelerationJoints()
+   public List<Joint> getUnreasonableAccelerationJoints()
    {
       return unreasonableAccelerationJoints;
    }

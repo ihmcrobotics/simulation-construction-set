@@ -31,6 +31,7 @@ public class SimulationTestingParameters extends SimulationConstructionSetParame
    /**
     * @deprecated Use {@link #createFromSystemProperties()} instead.
     */
+   @Deprecated
    public static SimulationTestingParameters createFromEnvironmentVariables()
    {
       return createFromSystemProperties();

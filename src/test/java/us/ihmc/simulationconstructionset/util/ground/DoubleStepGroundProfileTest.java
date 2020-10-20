@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import org.junit.jupiter.api.Test;
+
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 
 public class DoubleStepGroundProfileTest extends GroundProfileTest
@@ -17,9 +18,9 @@ public class DoubleStepGroundProfileTest extends GroundProfileTest
 
       return new DoubleStepGroundProfile(yMin, yMax, initialElevationChangeX, finalElevationChangeX, initialElevationDifference, finalElevationDifference);
    }
-   
+
    @Override
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
       super.testSurfaceNormalGridForSmoothTerrainUsingHeightMap();

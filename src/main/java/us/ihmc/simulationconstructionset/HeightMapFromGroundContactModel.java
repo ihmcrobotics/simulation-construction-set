@@ -14,7 +14,8 @@ public class HeightMapFromGroundContactModel
       {
          GroundProfile3D groundProfile3D = groundContactModel.getGroundProfile3D();
 
-         if (groundProfile3D != null) heightMap = groundProfile3D.getHeightMapIfAvailable();
+         if (groundProfile3D != null)
+            heightMap = groundProfile3D.getHeightMapIfAvailable();
       }
 
       return heightMap;

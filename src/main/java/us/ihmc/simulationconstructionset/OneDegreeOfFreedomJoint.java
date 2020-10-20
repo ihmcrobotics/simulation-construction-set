@@ -1,5 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.yoVariables.variable.YoDouble;
 
@@ -15,7 +16,7 @@ public abstract class OneDegreeOfFreedomJoint extends Joint
    private double qDesired = 0;
    private double qdDesired = 0;
 
-   public OneDegreeOfFreedomJoint(String jname, Vector3DReadOnly offset, Robot rob)
+   public OneDegreeOfFreedomJoint(String jname, Tuple3DReadOnly offset, Robot rob)
    {
       super(jname, offset, rob, 1);
    }

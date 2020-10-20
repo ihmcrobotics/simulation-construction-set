@@ -22,7 +22,7 @@ public class MediaCaptureAction extends AbstractAction
       int shortKey = KeyEvent.VK_M;
       String longDescription = "Capture media to a file.";
       String shortDescription = "Capture Media";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

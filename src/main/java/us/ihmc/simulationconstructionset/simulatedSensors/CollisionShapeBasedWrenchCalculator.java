@@ -2,7 +2,7 @@ package us.ihmc.simulationconstructionset.simulatedSensors;
 
 import java.util.List;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -10,7 +10,7 @@ import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.simulationconstructionset.ExternalForcePoint;
 import us.ihmc.simulationconstructionset.Joint;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInterface
 {
@@ -23,8 +23,8 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    private final RigidBodyTransform transformToParentJoint;
 
    private boolean doWrenchCorruption = false;
-   private final DenseMatrix64F wrenchMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
-   private final DenseMatrix64F corruptionMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
+   private final DMatrixRMaj wrenchMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
+   private final DMatrixRMaj corruptionMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
 
    private final ReferenceFrame sensorFrame;
 
@@ -35,14 +35,14 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    private final Vector3D tau = new Vector3D();
 
    public CollisionShapeBasedWrenchCalculator(String forceSensorName, List<ExternalForcePoint> contactPoints, Joint forceTorqueSensorJoint,
-                                              RigidBodyTransform transformToParentJoint, YoVariableRegistry registry)
+                                              RigidBodyTransform transformToParentJoint, YoRegistry registry)
    {
       this.forceSensorName = forceSensorName;
       this.contactPoints = contactPoints;
       this.forceTorqueSensorJoint = forceTorqueSensorJoint;
       this.transformToParentJoint = transformToParentJoint;
 
-      this.sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
+      sensorFrame = new ReferenceFrame(forceSensorName + "Frame", ReferenceFrame.getWorldFrame())
       {
          @Override
          protected void updateTransformToParent(RigidBodyTransform transformToParent)
@@ -109,7 +109,7 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    }
 
    @Override
-   public DenseMatrix64F getWrench()
+   public DMatrixRMaj getWrench()
    {
       return wrenchMatrix;
    }
@@ -123,7 +123,7 @@ public class CollisionShapeBasedWrenchCalculator implements WrenchCalculatorInte
    @Override
    public void corruptWrenchElement(int row, double value)
    {
-      this.corruptionMatrix.add(row, 0, value);
+      corruptionMatrix.add(row, 0, value);
    }
 
    @Override

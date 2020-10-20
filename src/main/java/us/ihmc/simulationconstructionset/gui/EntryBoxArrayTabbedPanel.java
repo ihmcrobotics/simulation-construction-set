@@ -28,8 +28,8 @@ import us.ihmc.yoVariables.variable.YoVariable;
 public class EntryBoxArrayTabbedPanel extends JTabbedPane
 {
    private static final long serialVersionUID = 5184442227844655562L;
-   
-   private ArrayList<EntryBoxArrayPanel> entryBoxArrayPanels = new ArrayList<EntryBoxArrayPanel>();
+
+   private ArrayList<EntryBoxArrayPanel> entryBoxArrayPanels = new ArrayList<>();
    private final Container parentContainer;
    private final SelectedVariableHolder selectedVariableHolder;
 
@@ -46,7 +46,7 @@ public class EntryBoxArrayTabbedPanel extends JTabbedPane
    {
       this.add(name, panelToAdd);
       entryBoxArrayPanels.add(panelToAdd);
-      this.setSelectedComponent(panelToAdd);
+      setSelectedComponent(panelToAdd);
    }
 
    public EntryBoxArrayPanel getCurrentPanel()
@@ -64,14 +64,14 @@ public class EntryBoxArrayTabbedPanel extends JTabbedPane
    }
 
    public void closeAndDispose()
-   {   
-      this.removeAll();
-//      for (int i = getTabCount() - 1; i >= 0; i--)
-//      {
-//         remove(getTabComponentAt(i));
-//      }
-      
-      for(EntryBoxArrayPanel panel : entryBoxArrayPanels)
+   {
+      removeAll();
+      //      for (int i = getTabCount() - 1; i >= 0; i--)
+      //      {
+      //         remove(getTabComponentAt(i));
+      //      }
+
+      for (EntryBoxArrayPanel panel : entryBoxArrayPanels)
       {
          panel.closeAndDispose();
       }
@@ -205,7 +205,7 @@ public class EntryBoxArrayTabbedPanel extends JTabbedPane
       return returnString;
    }
 
-   public void addEntryBox(YoVariable<?> selectedVariable)
+   public void addEntryBox(YoVariable selectedVariable)
    {
       if (getCurrentPanel() == null)
       {
@@ -217,7 +217,7 @@ public class EntryBoxArrayTabbedPanel extends JTabbedPane
    public void addEmptyTab()
    {
       EntryBoxArrayPanel tmpEntryBoxArrayPanel = new EntryBoxArrayPanel(parentContainer, selectedVariableHolder, null);
-      addEntryBoxArrayPanel("Tab"+getTabCount(), tmpEntryBoxArrayPanel);
+      addEntryBoxArrayPanel("Tab" + getTabCount(), tmpEntryBoxArrayPanel);
    }
 
 }

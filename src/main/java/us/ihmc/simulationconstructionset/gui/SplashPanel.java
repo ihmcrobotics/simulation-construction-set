@@ -31,7 +31,7 @@ public class SplashPanel extends JPanel
       tracker.addImage(splashImage, 1);
 
       waitABitForMediaToLoad(tracker);
-      
+
       if (tracker.checkAll())
          splashImageLoaded = true;
       else
@@ -41,7 +41,7 @@ public class SplashPanel extends JPanel
    private void waitABitForMediaToLoad(MediaTracker tracker)
    {
       int numberOfWaitCycles = 0;
-      while((numberOfWaitCycles < 10) && (!tracker.checkAll(true)))
+      while ((numberOfWaitCycles < 10) && (!tracker.checkAll(true)))
       {
          try
          {
@@ -54,7 +54,7 @@ public class SplashPanel extends JPanel
          numberOfWaitCycles++;
       }
    }
-   
+
    public Dimension getImageSize()
    {
       return new Dimension(splashImage.getWidth(this), splashImage.getHeight(this));
@@ -76,7 +76,7 @@ public class SplashPanel extends JPanel
    {
       // Wait until loaded:
       int numberOfAttempts = 0;
-      while ((numberOfAttempts<10) && (!this.isSplashImageLoaded()))
+      while ((numberOfAttempts < 10) && (!isSplashImageLoaded()))
       {
          try
          {
@@ -94,18 +94,17 @@ public class SplashPanel extends JPanel
       Container splashContentPane = splashWindow.getContentPane();
       splashContentPane.add(this);
 
-      Dimension imageSize = this.getImageSize();
+      Dimension imageSize = getImageSize();
 
       splashWindow.setSize(new Dimension(imageSize));
 
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
       splashWindow.setLocation((screenSize.width - imageSize.width) / 2, (screenSize.height - imageSize.height) / 2);
-      splashWindow.validate();    // pack();
+      splashWindow.validate(); // pack();
       splashWindow.setVisible(true);
 
       return splashWindow;
    }
-
 
 }

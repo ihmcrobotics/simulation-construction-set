@@ -35,7 +35,7 @@ public class SimulationOverheadPlotterFactory
 
    public SimulationOverheadPlotter createOverheadPlotter()
    {
-      if(simulationConstructionSet == null)
+      if (simulationConstructionSet == null)
       {
          throw new RuntimeException("SimulationConstructionSet not set");
       }
@@ -54,7 +54,7 @@ public class SimulationOverheadPlotterFactory
          JPanel plotterKeyJPanel = simulationOverheadPlotter.getJPanelKey();
          legendScrollPane = new JScrollPane(plotterKeyJPanel);
       }
-      
+
       if (createInSeperateWindow)
       {
          JFrame overheadWindow = new JFrame(plotterName);
@@ -123,21 +123,18 @@ public class SimulationOverheadPlotterFactory
 
          if (variableNameToTrack != null && !variableNameToTrack.isEmpty())
          {
-            YoVariable<?> trackingVariable;
-            if ((trackingVariable = simulationConstructionSet.getVariable(variableNameToTrack + "X")) != null
-                  && trackingVariable instanceof YoDouble)
+            YoVariable trackingVariable;
+            if ((trackingVariable = simulationConstructionSet.findVariable(variableNameToTrack + "X")) != null && trackingVariable instanceof YoDouble)
             {
                simulationOverheadPlotter.setXVariableToTrack((YoDouble) trackingVariable);
             }
-            if ((trackingVariable = simulationConstructionSet.getVariable(variableNameToTrack + "Y")) != null
-                  && trackingVariable instanceof YoDouble)
+            if ((trackingVariable = simulationConstructionSet.findVariable(variableNameToTrack + "Y")) != null && trackingVariable instanceof YoDouble)
             {
                simulationOverheadPlotter.setYVariableToTrack((YoDouble) trackingVariable);
             }
             if (TRACK_YAW)
             {
-               if ((trackingVariable = simulationConstructionSet.getVariable(variableNameToTrack + "Yaw")) != null
-                     && trackingVariable instanceof YoDouble)
+               if ((trackingVariable = simulationConstructionSet.findVariable(variableNameToTrack + "Yaw")) != null && trackingVariable instanceof YoDouble)
                {
                   simulationOverheadPlotter.setYawVariableToTrack((YoDouble) trackingVariable);
                }
@@ -155,19 +152,19 @@ public class SimulationOverheadPlotterFactory
 
    public void addYoGraphicsListRegistries(YoGraphicsListRegistry yoGraphicsListRegistry)
    {
-      this.yoGraphicsListRegistries.add(yoGraphicsListRegistry);
+      yoGraphicsListRegistries.add(yoGraphicsListRegistry);
    }
 
    public void setCreateInSeperateWindow(boolean createInSeperateWindow)
    {
       this.createInSeperateWindow = createInSeperateWindow;
    }
-   
+
    public void setPlotterName(String plotterName)
    {
       this.plotterName = plotterName;
    }
-   
+
    public void setShowOnStart(boolean showOnStart)
    {
       this.showOnStart = showOnStart;

@@ -1,36 +1,34 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
-
 import java.util.ArrayList;
 
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.simulationconstructionset.ExternalForcePoint;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoInteger;
 
 public class SimpleStickSlipContactModel
 {
-   private final ArrayList<ExternalForcePoint> contactPointAs = new ArrayList<ExternalForcePoint>();
-   private final ArrayList<Contactable> contactableBs = new ArrayList<Contactable>();
+   private final ArrayList<ExternalForcePoint> contactPointAs = new ArrayList<>();
+   private final ArrayList<Contactable> contactableBs = new ArrayList<>();
 
-   private final ArrayList<YoInteger> contactPointAContactingContactableIndices = new ArrayList<YoInteger>();
-   private final ArrayList<YoInteger> contactPointAContactingGroundContactIndices = new ArrayList<YoInteger>();
+   private final ArrayList<YoInteger> contactPointAContactingContactableIndices = new ArrayList<>();
+   private final ArrayList<YoInteger> contactPointAContactingGroundContactIndices = new ArrayList<>();
 
    private final Point3D contactATempPosition = new Point3D();
-
 
    private final YoDouble kContact, bContact;
    private final YoDouble alphaStick, alphaSlip;
 
    private final StickSlipContactCalculator stickSlipContactCalculator;
 
-   private final YoVariableRegistry registry;
+   private final YoRegistry registry;
 
-   public SimpleStickSlipContactModel(String namePrefix, YoVariableRegistry parentRegistry)
+   public SimpleStickSlipContactModel(String namePrefix, YoRegistry parentRegistry)
    {
-      registry = new YoVariableRegistry(namePrefix + getClass().getSimpleName());
+      registry = new YoRegistry(namePrefix + getClass().getSimpleName());
       kContact = new YoDouble(namePrefix + "KContact", registry);
       bContact = new YoDouble(namePrefix + "BContact", registry);
 
@@ -70,7 +68,7 @@ public class SimpleStickSlipContactModel
 
    public void addContactPoint(ExternalForcePoint contactPoint)
    {
-      this.contactPointAs.add(contactPoint);
+      contactPointAs.add(contactPoint);
 
       YoInteger contactableIndex = new YoInteger(contactPoint.getName() + "ContactableIndex", registry);
       contactPointAContactingContactableIndices.add(contactableIndex);
@@ -83,7 +81,7 @@ public class SimpleStickSlipContactModel
 
    public void addContactable(Contactable contactable)
    {
-      this.contactableBs.add(contactable);
+      contactableBs.add(contactable);
    }
 
    public void doContact()
@@ -134,8 +132,13 @@ public class SimpleStickSlipContactModel
 
          if (areInContact)
          {
-            stickSlipContactCalculator.doCurrentlyInContact(contactPointA, contactableB, contactPointB, kContact.getDoubleValue(), bContact.getDoubleValue(),
-                    alphaStick.getDoubleValue(), alphaSlip.getDoubleValue());
+            stickSlipContactCalculator.doCurrentlyInContact(contactPointA,
+                                                            contactableB,
+                                                            contactPointB,
+                                                            kContact.getDoubleValue(),
+                                                            bContact.getDoubleValue(),
+                                                            alphaStick.getDoubleValue(),
+                                                            alphaSlip.getDoubleValue());
          }
 
          else

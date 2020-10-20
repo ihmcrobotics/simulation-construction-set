@@ -25,6 +25,6 @@ public class CollisionDetectionResult
 
    public void addContact(Contacts contacts)
    {
-      this.results.add(contacts);
+      results.add(contacts);
    }
 }

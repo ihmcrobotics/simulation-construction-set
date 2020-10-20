@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.yoVariables.parameters.XmlParameterWriter;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class SaveParametersGenerator implements SaveParametersConstructor
 {
@@ -17,7 +17,7 @@ public class SaveParametersGenerator implements SaveParametersConstructor
    public SaveParametersGenerator(SimulationConstructionSet scs)
    {
       this.scs = scs;
-      this.fileChooser = new ParameterFileChooser();
+      fileChooser = new ParameterFileChooser();
    }
 
    @Override
@@ -27,9 +27,9 @@ public class SaveParametersGenerator implements SaveParametersConstructor
       if (fileChooser.showDialog(scs.getJFrame(), scs.getRootRegistry(), scs.getParameterRootPath(), scs.getDefaultParameterFile(), true))
       {
          XmlParameterWriter writer = new XmlParameterWriter();
-         for(YoVariableRegistry child : fileChooser.getRegistries())
+         for (YoRegistry child : fileChooser.getRegistries())
          {
-            writer.writeParametersInRegistry(child);            
+            writer.addParameters(child);
          }
          try
          {
@@ -39,7 +39,10 @@ public class SaveParametersGenerator implements SaveParametersConstructor
          }
          catch (IOException e)
          {
-            JOptionPane.showMessageDialog(scs.getJFrame(), "Cannot write to " + fileChooser.getFile() + "\n" + e.getMessage(), "Cannot write to file", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(scs.getJFrame(),
+                                          "Cannot write to " + fileChooser.getFile() + "\n" + e.getMessage(),
+                                          "Cannot write to file",
+                                          JOptionPane.ERROR_MESSAGE);
          }
       }
 
@@ -48,8 +51,8 @@ public class SaveParametersGenerator implements SaveParametersConstructor
    @Override
    public void closeAndDispose()
    {
-      this.fileChooser.closeAndDispose();
-      this.fileChooser = null;
+      fileChooser.closeAndDispose();
+      fileChooser = null;
    }
 
 }

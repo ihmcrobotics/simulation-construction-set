@@ -1,19 +1,19 @@
 package us.ihmc.simulationconstructionset.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.simulationconstructionset.GroundContactModel;
 import us.ihmc.simulationconstructionset.GroundContactPoint;
 import us.ihmc.simulationconstructionset.GroundContactPointsHolder;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.variable.YoDouble;
 
 public class BidirectionGroundContactModel implements GroundContactModel
 {
-   private final YoVariableRegistry registry = new YoVariableRegistry(getClass().getSimpleName());
+   private final YoRegistry registry = new YoRegistry(getClass().getSimpleName());
 
    private static final long serialVersionUID = -2481515446904072547L;
 
@@ -24,24 +24,24 @@ public class BidirectionGroundContactModel implements GroundContactModel
    private final YoDouble groundKz = new YoDouble("groundKz", "BidirectionalGroundContactModel z spring constant", registry);
    private final YoDouble groundBz = new YoDouble("groundBz", "BidirectionalGroundContactModel z damping constant", registry);
 
-   private ArrayList<GroundContactPoint> groundContactPoints;
+   private List<GroundContactPoint> groundContactPoints;
    private GroundProfile3D groundProfile3D;
 
-   public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoVariableRegistry parentRegistry)
+   public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, DEFAULT_K_XY, DEFAULT_B_XY, DEFAULT_K_Z, DEFAULT_B_Z, parentRegistry);
    }
 
    public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, double groundKxy, double groundBxy, double groundKz,
-         double groundBz, YoVariableRegistry parentRegistry)
+                                        double groundBz, YoRegistry parentRegistry)
    {
       this(groundContactPointsHolder, 0, groundKxy, groundBxy, groundKz, groundBz, parentRegistry);
    }
 
    public BidirectionGroundContactModel(GroundContactPointsHolder groundContactPointsHolder, int groundContactGroupIdentifier, double groundKxy,
-         double groundBxy, double groundKz, double groundBz, YoVariableRegistry parentRegistry)
+                                        double groundBxy, double groundKz, double groundBz, YoRegistry parentRegistry)
    {
-      this.groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
+      groundContactPoints = groundContactPointsHolder.getGroundContactPoints(groundContactGroupIdentifier);
 
       this.groundKxy.set(groundKxy);
       this.groundBxy.set(groundBxy);
@@ -53,28 +53,28 @@ public class BidirectionGroundContactModel implements GroundContactModel
 
    public void setXYStiffness(double xyStiffness)
    {
-      this.groundKxy.set(xyStiffness);
+      groundKxy.set(xyStiffness);
    }
 
    public void setZStiffness(double zStiffness)
    {
-      this.groundKz.set(zStiffness);
+      groundKz.set(zStiffness);
    }
 
    public void setXYDamping(double xyDamping)
    {
-      this.groundBxy.set(xyDamping);
+      groundBxy.set(xyDamping);
    }
 
    public void setZDamping(double zDamping)
    {
-      this.groundBz.set(zDamping);
+      groundBz.set(zDamping);
    }
 
    @Override
    public void setGroundProfile3D(GroundProfile3D profile3D)
    {
-      this.groundProfile3D = profile3D;
+      groundProfile3D = profile3D;
    }
 
    @Override

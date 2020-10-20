@@ -22,7 +22,7 @@ public class AddKeyPointAction extends AbstractAction
       int shortKey = KeyEvent.VK_F;
       String longDescription = "Long Description";
       String shortDescription = "Short Description";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 

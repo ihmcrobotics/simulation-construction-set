@@ -7,7 +7,8 @@ import us.ihmc.euclid.geometry.BoundingBox3D;
 import us.ihmc.euclid.shape.primitives.Sphere3D;
 import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.jMonkeyEngineToolkit.HeightMapWithNormals;
@@ -53,10 +54,10 @@ public class SphereTerrainObject implements TerrainObject3D, HeightMapWithNormal
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
-      double heightAt = this.heightAt(x, y, z);
-      this.surfaceNormalAt(x, y, z, normalToPack);
+      double heightAt = heightAt(x, y, z);
+      surfaceNormalAt(x, y, z, normalToPack);
 
       return heightAt;
    }
@@ -72,7 +73,7 @@ public class SphereTerrainObject implements TerrainObject3D, HeightMapWithNormal
       return 0.0;
    }
 
-   private void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   private void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       double threshhold = 0.015;
       normal.setX(0.0);
@@ -111,7 +112,7 @@ public class SphereTerrainObject implements TerrainObject3D, HeightMapWithNormal
       }
    }
 
-   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3D intersection, Vector3D normal)
+   public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics intersection, Vector3DBasics normal)
    {
       intersection.setX(x); // Go Straight Up for now...
       intersection.setY(y);
@@ -121,7 +122,7 @@ public class SphereTerrainObject implements TerrainObject3D, HeightMapWithNormal
    }
 
    @Override
-   public boolean checkIfInside(double x, double y, double z, Point3D intersectionToPack, Vector3D normalToPack)
+   public boolean checkIfInside(double x, double y, double z, Point3DBasics intersectionToPack, Vector3DBasics normalToPack)
    {
       intersectionToPack.setX(x); // Go Straight Up for now...
       intersectionToPack.setY(y);

@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.simulatedSensors;
 
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -15,8 +15,8 @@ public class FeatherStoneJointBasedWrenchCalculator implements WrenchCalculatorI
    private final Joint forceTorqueSensorJoint;
    private boolean doWrenchCorruption = false;
 
-   private final DenseMatrix64F wrenchMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
-   private final DenseMatrix64F corruptionMatrix = new DenseMatrix64F(WRENCH_SIZE, 1);
+   private final DMatrixRMaj wrenchMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
+   private final DMatrixRMaj corruptionMatrix = new DMatrixRMaj(WRENCH_SIZE, 1);
 
    public FeatherStoneJointBasedWrenchCalculator(String forceSensorName, Joint forceTorqueSensorJoint)
    {
@@ -67,7 +67,7 @@ public class FeatherStoneJointBasedWrenchCalculator implements WrenchCalculatorI
    }
 
    @Override
-   public DenseMatrix64F getWrench()
+   public DMatrixRMaj getWrench()
    {
       return wrenchMatrix;
    }
@@ -93,6 +93,6 @@ public class FeatherStoneJointBasedWrenchCalculator implements WrenchCalculatorI
    @Override
    public void setDoWrenchCorruption(boolean value)
    {
-      this.doWrenchCorruption = value;
+      doWrenchCorruption = value;
    }
 }

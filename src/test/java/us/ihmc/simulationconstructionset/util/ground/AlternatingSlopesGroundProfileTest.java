@@ -1,10 +1,11 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
+import static us.ihmc.robotics.Assert.assertEquals;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 
-import static us.ihmc.robotics.Assert.assertEquals;
+import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 
 public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
 {
@@ -13,11 +14,11 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
    @Override
    public GroundProfile3D getGroundProfile()
    {
-      double[][] xSlopePairs = new double[][]{{-5.0, 1.0}, {0.0, -1.0}, {5.0, 1.0}};
+      double[][] xSlopePairs = new double[][] {{-5.0, 1.0}, {0.0, -1.0}, {5.0, 1.0}};
       AlternatingSlopesGroundProfile groundProfile = new AlternatingSlopesGroundProfile(xSlopePairs);
       return groundProfile;
    }
-   
+
    @Override
    public double getMaxPercentageOfAllowableValleyPoints()
    {
@@ -29,24 +30,24 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
    {
       return 0.05;
    }
-   
+
    @Override
    public double getMaxPercentageOfAllowableDropOffs()
    {
       return 0.0;
    }
-   
+
    @Override
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSurfaceNormalGridForSmoothTerrainUsingHeightMap()
    {
       super.testSurfaceNormalGridForSmoothTerrainUsingHeightMap();
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testAllFlat()
    {
-      double[][] xSlopePairs = new double[][]{{0.0, 0.0}};
+      double[][] xSlopePairs = new double[][] {{0.0, 0.0}};
       AlternatingSlopesGroundProfile profile = new AlternatingSlopesGroundProfile(xSlopePairs);
 
       double height = profile.heightAt(-100.0, 0.0, 0.0);
@@ -59,10 +60,10 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(0.0, height, epsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testOne()
    {
-      double[][] xSlopePairs = new double[][]{{1.0, 1.0}};
+      double[][] xSlopePairs = new double[][] {{1.0, 1.0}};
       AlternatingSlopesGroundProfile profile = new AlternatingSlopesGroundProfile(xSlopePairs);
 
       double[][] xzPairs = profile.getXZPairs();
@@ -94,12 +95,11 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(0.0, height, epsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testTwo()
    {
-      double[][] xSlopePairs = new double[][]{{0.0, 0.0}, {1.0, 1.0}, {2.0, 0.0}};
+      double[][] xSlopePairs = new double[][] {{0.0, 0.0}, {1.0, 1.0}, {2.0, 0.0}};
       AlternatingSlopesGroundProfile profile = new AlternatingSlopesGroundProfile(xSlopePairs);
-
 
       double height = profile.heightAt(0.0, 0.0, 0.0);
       assertEquals(0.0, height, epsilon);
@@ -117,10 +117,10 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(1.0, height, epsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testThree()
    {
-      double[][] xSlopePairs = new double[][]{{-5.0, 1.0}, {0.0, -1.0}, {5.0, 1.0}};
+      double[][] xSlopePairs = new double[][] {{-5.0, 1.0}, {0.0, -1.0}, {5.0, 1.0}};
       AlternatingSlopesGroundProfile profile = new AlternatingSlopesGroundProfile(xSlopePairs);
 
       double height = profile.heightAt(-6.0, 0.0, 0.0);
@@ -145,12 +145,12 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(1.0, height, epsilon);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testFour()
    {
       double xMin = -100.0, xMax = 100.0, yMin = -100.0, yMax = 100.0;
 
-      double[][] xSlopePairs = new double[][]{{-5.0, 1.0}, {0.0, -1.0}, {5.0, 1.0}};
+      double[][] xSlopePairs = new double[][] {{-5.0, 1.0}, {0.0, -1.0}, {5.0, 1.0}};
       AlternatingSlopesGroundProfile profile = new AlternatingSlopesGroundProfile(xSlopePairs, xMin, xMax, yMin, yMax);
 
       double height = profile.heightAt(-6.0, 0.0, 0.0);
@@ -175,19 +175,21 @@ public class AlternatingSlopesGroundProfileTest extends GroundProfileTest
       assertEquals(1.0, height, epsilon);
    }
 
-	@Test// expected = RuntimeException.class,timeout=300000
+   @Test // expected = RuntimeException.class,timeout=300000
    public void testBadOrderingOne()
    {
-      Assertions.assertThrows(RuntimeException.class, () -> {
+      Assertions.assertThrows(RuntimeException.class, () ->
+      {
          double[][] xSlopePairs = new double[][] {{0.0, -1.0}, {1e-10, 1.0}};
          new AlternatingSlopesGroundProfile(xSlopePairs);
       });
    }
 
-	@Test// expected = RuntimeException.class, timeout=300000
+   @Test // expected = RuntimeException.class, timeout=300000
    public void testBadOrderingTwo()
    {
-      Assertions.assertThrows(RuntimeException.class, () -> {
+      Assertions.assertThrows(RuntimeException.class, () ->
+      {
          double[][] xSlopePairs = new double[][] {{0.0, -1.0}, {1.0, 1.0}, {3.5, 1.0}, {3.0, 1.0}, {4.0, 1.0}};
          new AlternatingSlopesGroundProfile(xSlopePairs);
       });

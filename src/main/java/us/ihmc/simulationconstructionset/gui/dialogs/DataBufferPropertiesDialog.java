@@ -21,17 +21,16 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.simulationconstructionset.gui.DataBufferChangeListener;
-
+import us.ihmc.yoVariables.buffer.YoBuffer;
 
 @SuppressWarnings("serial")
 public class DataBufferPropertiesDialog extends JDialog implements ActionListener
 {
-   private JTextField maxTextField, currentTextField;
-   private JRadioButton wrapButton, enlargeButton;
+   private JTextField currentTextField;
+   private JRadioButton enlargeButton;
 
-   private int newMaxVal, newCurrentVal;
+   private int newCurrentVal;
 
    // private final static java.text.NumberFormat numFormat = new java.text.DecimalFormat(" 0.00000;-0.00000");
 
@@ -39,17 +38,16 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
    private BufferPropertiesPanel bufferPropertiesPanel;
 
    private DataBufferChangeListener listener;
-   private DataBuffer dataBuffer;
+   private YoBuffer dataBuffer;
 
-
-   public DataBufferPropertiesDialog(Container parentContainer, JFrame frame, DataBuffer dataBuffer, DataBufferChangeListener listener)
+   public DataBufferPropertiesDialog(Container parentContainer, JFrame frame, YoBuffer dataBuffer, DataBufferChangeListener listener)
    {
       super(frame, "Data Buffer Properties", false);
 
       this.listener = listener;
       this.dataBuffer = dataBuffer;
 
-      Container contentPane = this.getContentPane();
+      Container contentPane = getContentPane();
       bufferPropertiesPanel = new BufferPropertiesPanel();
 
       contentPane.add(bufferPropertiesPanel);
@@ -75,23 +73,17 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
       point.translate(frameSize.width / 2, frameSize.height / 4);
       this.setLocation(point);
 
-      this.setResizable(false);
-      this.pack();
+      setResizable(false);
+      pack();
 
-      Dimension size = maxTextField.getSize();
-      size.width = size.width * 5 / 4;
-      maxTextField.setSize(size);
-      maxTextField.setPreferredSize(size);
-      maxTextField.setMinimumSize(size);
-
-      size = currentTextField.getSize();
+      Dimension size = currentTextField.getSize();
       size.width = size.width * 5 / 4;
       currentTextField.setSize(size);
       currentTextField.setPreferredSize(size);
       currentTextField.setMinimumSize(size);
 
-      this.pack();
-      this.setVisible(true);
+      pack();
+      setVisible(true);
 
       // parentFrame.repaint(); // This is a horrible way to get the graphs to repaint...
    }
@@ -100,7 +92,7 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
    public void actionPerformed(ActionEvent event)
    {
       if (event.getSource() == cancelButton)
-         this.setVisible(false);
+         setVisible(false);
 
       if (event.getSource() == applyButton)
       {
@@ -110,7 +102,7 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
       if (event.getSource() == okButton)
       {
          bufferPropertiesPanel.commitChanges();
-         this.setVisible(false);
+         setVisible(false);
       }
 
       // if (myGUI != null) myGUI.zoomFullView();
@@ -131,17 +123,16 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
       {
          super();
 
-         newMaxVal = dataBuffer.getMaxBufferSize();
          newCurrentVal = dataBuffer.getBufferSize();
          GridBagLayout gridbag = new GridBagLayout();
 
-         this.setLayout(gridbag);
+         setLayout(gridbag);
 
          Border blackLine = BorderFactory.createLineBorder(Color.black);
 
          // TitledBorder title = BorderFactory.createTitledBorder(blackLine,selectedVariable.getName());
          // this.setBorder(title);
-         this.setBorder(blackLine);
+         setBorder(blackLine);
 
          GridBagConstraints constraints = new GridBagConstraints();
 
@@ -155,26 +146,7 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
          gridbag.setConstraints(policyLabel, constraints);
          this.add(policyLabel);
 
-         wrapButton = new JRadioButton("Wrap", dataBuffer.getWrapBuffer());
-         wrapButton.addActionListener(this);
-         constraints.gridx = 1;
-         constraints.gridy = 0;
-         constraints.gridwidth = 1;
-         constraints.anchor = GridBagConstraints.WEST;
-         gridbag.setConstraints(wrapButton, constraints);
-         this.add(wrapButton);
-
-         enlargeButton = new JRadioButton("Enlarge", !dataBuffer.getWrapBuffer());
-         enlargeButton.addActionListener(this);
-         constraints.gridx = 2;
-         constraints.gridy = 0;
-         constraints.gridwidth = 1;
-         constraints.anchor = GridBagConstraints.WEST;
-         gridbag.setConstraints(enlargeButton, constraints);
-         this.add(enlargeButton);
-
          ButtonGroup group = new ButtonGroup();
-         group.add(wrapButton);
          group.add(enlargeButton);
 
          // Row 1:
@@ -187,19 +159,6 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
          gridbag.setConstraints(maxSettingsLabel, constraints);
          this.add(maxSettingsLabel);
 
-         String maxValString = String.valueOf(newMaxVal);
-         maxTextField = new JTextField(maxValString);
-         maxTextField.addActionListener(this);
-         if (dataBuffer.getWrapBuffer())
-            maxTextField.setEnabled(false);
-         constraints.gridx = 1;
-         constraints.gridy = 1;
-         constraints.gridwidth = 2;
-         constraints.anchor = GridBagConstraints.WEST;
-         gridbag.setConstraints(maxTextField, constraints);
-         this.add(maxTextField);
-
-
          // Row 2:
 
          JLabel currentSettingsLabel = new JLabel("  Current Size:  ");
@@ -209,7 +168,6 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
          constraints.anchor = GridBagConstraints.EAST;
          gridbag.setConstraints(currentSettingsLabel, constraints);
          this.add(currentSettingsLabel);
-
 
          String currentValString = String.valueOf(newCurrentVal);
          currentTextField = new JTextField(currentValString);
@@ -231,49 +189,16 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
 
       public void commitChanges()
       {
-         updateMaxTextField();
          updateCurrentTextField();
 
-         dataBuffer.setMaxBufferSize(newMaxVal);
-         dataBuffer.changeBufferSize(newCurrentVal);
-
-         dataBuffer.setWrapBuffer(wrapButton.isSelected());
+         dataBuffer.resizeBuffer(newCurrentVal);
       }
 
       @Override
       public void actionPerformed(ActionEvent event)
       {
-         if (event.getSource() == maxTextField)
-            updateMaxTextField();
          if (event.getSource() == currentTextField)
             updateCurrentTextField();
-
-         if (event.getSource() == wrapButton)
-         {
-            maxTextField.setEnabled(false);
-         }
-
-         if (event.getSource() == enlargeButton)
-         {
-            maxTextField.setEnabled(true);
-         }
-
-      }
-
-      public void updateMaxTextField()
-      {
-         String text = maxTextField.getText();
-
-         try
-         {
-            int val = Integer.parseInt(text);
-            newMaxVal = val;
-         }
-         catch (NumberFormatException e)
-         {
-            maxTextField.setText(String.valueOf(newMaxVal));
-         }
-
       }
 
       public void updateCurrentTextField()
@@ -292,6 +217,5 @@ public class DataBufferPropertiesDialog extends JDialog implements ActionListene
       }
 
    }
-
 
 }

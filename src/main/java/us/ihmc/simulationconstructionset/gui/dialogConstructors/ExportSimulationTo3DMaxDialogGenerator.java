@@ -16,9 +16,9 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
 {
    private SimulationConstructionSet sim;
    private JFileChooser fileChooser = new JFileChooser();
-   private ArrayList<String> partNamesThatExist = new ArrayList<String>();
-   private ArrayList<Object[]> angleOffsets = new ArrayList<Object[]>();
-   private ArrayList<Object[]> posOffsets = new ArrayList<Object[]>();
+   private ArrayList<String> partNamesThatExist = new ArrayList<>();
+   private ArrayList<Object[]> angleOffsets = new ArrayList<>();
+   private ArrayList<Object[]> posOffsets = new ArrayList<>();
    private int index = 0;
    private boolean rightAnklePitchSet = false;
    private boolean rightAnkleRollSet = false;
@@ -41,14 +41,14 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
    @Override
    public void constructDialog()
    {
-//    for (Robot robot : sim.getRobots())
-//    {
-//       for (Joint joint : robot.getRootJoints())
-//       {
-//          printJointsAndPositions(joint);
-//       }
-//    }
-//    System.exit(0);
+      //    for (Robot robot : sim.getRobots())
+      //    {
+      //       for (Joint joint : robot.getRootJoints())
+      //       {
+      //          printJointsAndPositions(joint);
+      //       }
+      //    }
+      //    System.exit(0);
       File home = new File(System.getProperty("user.home") + File.separator + "Documents" + File.separator);
       File[] files = home.listFiles();
       int highestIndex = 0;
@@ -109,14 +109,14 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
          {
             try
             {
-               if (index == sim.getIndex() / 30)
+               if (index == sim.getCurrentIndex() / 30)
                {
                   fileWriter.append("\tat time " + index + "\n\t(\n");
                }
                else
                {
                   fileWriter.append("\tat time " + index
-                                    + " -- transition --------------------------------------------------------------------------------------\n\t(\n");
+                        + " -- transition --------------------------------------------------------------------------------------\n\t(\n");
                }
             }
             catch (IOException e)
@@ -132,7 +132,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
                   {
                      Vector3D translation = new Vector3D();
                      joint.getTranslationToWorld(translation);
-                     fileWriter.append(getJointPositionsAndTranslations(joint, (index != sim.getIndex() / 30)));    // , translation));
+                     fileWriter.append(getJointPositionsAndTranslations(joint, (index != sim.getCurrentIndex() / 30))); // , translation));
                   }
                   catch (IOException e)
                   {
@@ -150,7 +150,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
                e.printStackTrace();
             }
 
-            if (index == sim.getIndex() / 30)
+            if (index == sim.getCurrentIndex() / 30)
             {
                done = sim.tick();
             }
@@ -176,13 +176,13 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
       System.exit(0);
    }
 
-   private String getJointPositionsAndTranslations(Joint joint, boolean transition)    // , Vector3d parentWorldPosition)
+   private String getJointPositionsAndTranslations(Joint joint, boolean transition) // , Vector3d parentWorldPosition)
    {
       String ret = "";
 
-//    Vector3d offset = new Vector3d();
-//    joint.getOffset(offset);
-//    offset.add(parentWorldPosition);
+      //    Vector3d offset = new Vector3d();
+      //    joint.getOffset(offset);
+      //    offset.add(parentWorldPosition);
       if (doesPartExist(joint.getName()))
       {
          float xAngle = 0;
@@ -203,9 +203,9 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
             y = (float) translation.getY();
             z = (float) translation.getZ();
 
-//          x = offset.x;
-//          y = offset.y;
-//          z = offset.z;
+            //          x = offset.x;
+            //          y = offset.y;
+            //          z = offset.z;
          }
          else
          {
@@ -220,11 +220,11 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
             double y1 = translation.getY();
             double z1 = translation.getZ();
 
-//          joint.getOffset(offset);
-//          offset.add(parentWorldPosition);
-//          double x1 = offset.x;
-//          double y1 = offset.y;
-//          double z1 = offset.z;
+            //          joint.getOffset(offset);
+            //          offset.add(parentWorldPosition);
+            //          double x1 = offset.x;
+            //          double y1 = offset.y;
+            //          double z1 = offset.z;
 
             sim.tick();
             rawAngle = joint.get3DRotation();
@@ -236,11 +236,11 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
             double y2 = translation.getY();
             double z2 = translation.getZ();
 
-//          joint.getOffset(offset);
-//          offset.add(parentWorldPosition);
-//          double x2 = offset.x;
-//          double y2 = offset.y;
-//          double z2 = offset.z;
+            //          joint.getOffset(offset);
+            //          offset.add(parentWorldPosition);
+            //          double x2 = offset.x;
+            //          double y2 = offset.y;
+            //          double z2 = offset.z;
 
             xAngle = (float) ((xAngle1 + xAngle2) / 2);
             yAngle = (float) ((yAngle1 + yAngle2) / 2);
@@ -254,19 +254,19 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
          ret = "\t\t" + joint.getName() + ".pos = [" + convertDoubletoMaxScriptDoubleString(x) + "," + convertDoubletoMaxScriptDoubleString(y) + ","
                + convertDoubletoMaxScriptDoubleString(z) + "]\n";
 
-//       double[] angleOffset = getAngleOffset(joint.getName());
+         //       double[] angleOffset = getAngleOffset(joint.getName());
          float[] angleOffset = getFloatAngleOffset(joint.getName());
          ret += "\t\tSetObjectRotation " + joint.getName() + " " + convertDoubletoMaxScriptDoubleString(xAngle) + " "
-                + convertDoubletoMaxScriptDoubleString(yAngle) + " " + convertDoubletoMaxScriptDoubleString(zAngle) + " "
-                + convertDoubletoMaxScriptDoubleString(angleOffset[0]) + " " + convertDoubletoMaxScriptDoubleString(angleOffset[1]) + " "
-                + convertDoubletoMaxScriptDoubleString(angleOffset[2]) + "\n";
+               + convertDoubletoMaxScriptDoubleString(yAngle) + " " + convertDoubletoMaxScriptDoubleString(zAngle) + " "
+               + convertDoubletoMaxScriptDoubleString(angleOffset[0]) + " " + convertDoubletoMaxScriptDoubleString(angleOffset[1]) + " "
+               + convertDoubletoMaxScriptDoubleString(angleOffset[2]) + "\n";
       }
       else if (joint.getName().equals("rightAnklePitch"))
       {
          rightAnklePitchSet = true;
          joint.getTranslationToWorld(rightAnklePitchTran);
 
-//       rightAnklePitchAngle = joint.get3DRotation();
+         //       rightAnklePitchAngle = joint.get3DRotation();
          double[] temprightAnklePitchAngle = joint.get3DRotation();
          for (int i = 0; i < temprightAnklePitchAngle.length; i++)
          {
@@ -283,7 +283,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
          rightAnkleRollSet = true;
          joint.getTranslationToWorld(rightAnkleRollTran);
 
-//       rightAnkleRollAngle = joint.get3DRotation();
+         //       rightAnkleRollAngle = joint.get3DRotation();
          double[] temprightAnklePitchAngle = joint.get3DRotation();
          for (int i = 0; i < temprightAnklePitchAngle.length; i++)
          {
@@ -300,7 +300,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
          leftAnklePitchSet = true;
          joint.getTranslationToWorld(leftAnklePitchTran);
 
-//       leftAnklePitchAngle = joint.get3DRotation();
+         //       leftAnklePitchAngle = joint.get3DRotation();
          double[] temprightAnklePitchAngle = joint.get3DRotation();
          for (int i = 0; i < temprightAnklePitchAngle.length; i++)
          {
@@ -317,7 +317,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
          leftAnkleRollSet = true;
          joint.getTranslationToWorld(leftAnkleRollTran);
 
-//       leftAnkleRollAngle = joint.get3DRotation();
+         //       leftAnkleRollAngle = joint.get3DRotation();
          double[] temprightAnklePitchAngle = joint.get3DRotation();
          for (int i = 0; i < temprightAnklePitchAngle.length; i++)
          {
@@ -332,7 +332,7 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
 
       for (Joint childJoint : joint.getChildrenJoints())
       {
-         ret += getJointPositionsAndTranslations(childJoint, transition);    // , offset);
+         ret += getJointPositionsAndTranslations(childJoint, transition); // , offset);
       }
 
       return ret;
@@ -341,10 +341,10 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
    private String setRightFoot()
    {
       String ret = "\t\trightFoot.pos = [" + convertDoubletoMaxScriptDoubleString((float) rightAnklePitchTran.getX()) + ","
-                   + convertDoubletoMaxScriptDoubleString((float) rightAnklePitchTran.getY()) + ","
-                   + convertDoubletoMaxScriptDoubleString((float) rightAnklePitchTran.getZ()) + "]\n" + "\t\tSetObjectRotation rightFoot "
-                   + convertDoubletoMaxScriptDoubleString(rightAnklePitchAngle[1]) + " " + convertDoubletoMaxScriptDoubleString(rightAnkleRollAngle[0])
-                   + " 0 0 0 180\n";
+            + convertDoubletoMaxScriptDoubleString((float) rightAnklePitchTran.getY()) + ","
+            + convertDoubletoMaxScriptDoubleString((float) rightAnklePitchTran.getZ()) + "]\n" + "\t\tSetObjectRotation rightFoot "
+            + convertDoubletoMaxScriptDoubleString(rightAnklePitchAngle[1]) + " " + convertDoubletoMaxScriptDoubleString(rightAnkleRollAngle[0])
+            + " 0 0 0 180\n";
       rightAnklePitchSet = false;
       rightAnkleRollSet = false;
 
@@ -354,10 +354,9 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
    private String setLeftFoot()
    {
       String ret = "\t\tleftFoot.pos = [" + convertDoubletoMaxScriptDoubleString((float) leftAnklePitchTran.getX()) + ","
-                   + convertDoubletoMaxScriptDoubleString((float) leftAnklePitchTran.getY()) + ","
-                   + convertDoubletoMaxScriptDoubleString((float) leftAnklePitchTran.getZ()) + "]\n" + "\t\tSetObjectRotation leftFoot "
-                   + convertDoubletoMaxScriptDoubleString(leftAnklePitchAngle[1]) + " " + convertDoubletoMaxScriptDoubleString(leftAnkleRollAngle[0])
-                   + " 0 0 0 180\n";
+            + convertDoubletoMaxScriptDoubleString((float) leftAnklePitchTran.getY()) + ","
+            + convertDoubletoMaxScriptDoubleString((float) leftAnklePitchTran.getZ()) + "]\n" + "\t\tSetObjectRotation leftFoot "
+            + convertDoubletoMaxScriptDoubleString(leftAnklePitchAngle[1]) + " " + convertDoubletoMaxScriptDoubleString(leftAnkleRollAngle[0]) + " 0 0 0 180\n";
       leftAnklePitchSet = false;
       leftAnkleRollSet = false;
 
@@ -367,27 +366,26 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
    private String initialScript()
    {
       String code = "resetMaxFile #noprompt\n" + "loaded = loadMaxFile \"C:\\Users\\Madison\\Documents\\R2Robot_Madison_v09.max\" useFileUnits:true\n"
-                    + "chest = $chest\n" + "leftShoulderPitch = $leftShoulderPitch\n" + "leftShoulderRoll = $leftShoulderRoll\n"
-                    + "leftShoulderYaw = $leftShoulderYaw\n" + "leftElbow = $leftElbow\n" + "rightShoulderPitch = $rightShoulderPitch\n"
-                    + "rightShoulderRoll = $rightShoulderRoll\n" + "rightShoulderYaw = $rightShoulderYaw\n" + "rightElbow = $rightElbow\n"
-                    + "lowerNeckPitch = $lowerNeckPitch\n" + "neckYaw = $neckYaw\n" + "upperNeckPitch = $head\n" + "spinePitch = $spinePitch\n"
-                    + "spineYaw = $spineYaw\n" + "spineRoll = $spineRoll\n" + "leftHipPitch = $leftHipPitch\n" + "leftHipRoll = $leftHipRoll\n"
-                    + "leftHipYaw = $leftHipYaw\n" + "leftKnee = $leftKnee\n" +
+            + "chest = $chest\n" + "leftShoulderPitch = $leftShoulderPitch\n" + "leftShoulderRoll = $leftShoulderRoll\n"
+            + "leftShoulderYaw = $leftShoulderYaw\n" + "leftElbow = $leftElbow\n" + "rightShoulderPitch = $rightShoulderPitch\n"
+            + "rightShoulderRoll = $rightShoulderRoll\n" + "rightShoulderYaw = $rightShoulderYaw\n" + "rightElbow = $rightElbow\n"
+            + "lowerNeckPitch = $lowerNeckPitch\n" + "neckYaw = $neckYaw\n" + "upperNeckPitch = $head\n" + "spinePitch = $spinePitch\n"
+            + "spineYaw = $spineYaw\n" + "spineRoll = $spineRoll\n" + "leftHipPitch = $leftHipPitch\n" + "leftHipRoll = $leftHipRoll\n"
+            + "leftHipYaw = $leftHipYaw\n" + "leftKnee = $leftKnee\n" +
 
-      // "leftAnkleRoll = $Cylinder002\n"+
-      // "leftAnklePitch = $Cylinder001\n"+
+            // "leftAnkleRoll = $Cylinder002\n"+
+            // "leftAnklePitch = $Cylinder001\n"+
 
-      "rightHipPitch = $rightHipPitch\n" + "rightHipRoll = $rightHipRoll\n" + "rightHipYaw = $rightHipYaw\n" + "rightKnee = $rightKnee\n" +
+            "rightHipPitch = $rightHipPitch\n" + "rightHipRoll = $rightHipRoll\n" + "rightHipYaw = $rightHipYaw\n" + "rightKnee = $rightKnee\n" +
 
-      // "rightAnkleRoll = $Cylinder026\n"+
-      // "rightAnklePitch = $Cylinder028\n"+
+            // "rightAnkleRoll = $Cylinder026\n"+
+            // "rightAnklePitch = $Cylinder028\n"+
 
-      "rightFoot = $rightFoot\n" + "leftFoot = $leftFoot\n" + "\n" + "fn RotatePivotOnly obj rotation =\n" + "(\n"
-                                 + "\tlocal rotValInv=inverse (rotation as quat)\n" + "\tin coordsys local obj.rotation*=RotValInv\n" + ")\n\n"
-                                 + "fn SetObjectRotation obj rx ry rz ox oy oz =\n" + "(\n" + "\tlocal translateMat = transMatrix obj.transform.pos\n"
-                                 + "\tlocal scaleMat = scaleMatrix obj.transform.scale\n" + "\tobj.transform = scaleMat * translateMat\n"
-                                 + "\trot = eulerangles rx ry rz\n" + "\tRotatePivotOnly obj rot\n" + "\trot = eulerangles ox oy oz\n"
-                                 + "\tRotatePivotOnly obj rot\n" + ")\n\n" + "animate on\n" + "(\n";
+            "rightFoot = $rightFoot\n" + "leftFoot = $leftFoot\n" + "\n" + "fn RotatePivotOnly obj rotation =\n" + "(\n"
+            + "\tlocal rotValInv=inverse (rotation as quat)\n" + "\tin coordsys local obj.rotation*=RotValInv\n" + ")\n\n"
+            + "fn SetObjectRotation obj rx ry rz ox oy oz =\n" + "(\n" + "\tlocal translateMat = transMatrix obj.transform.pos\n"
+            + "\tlocal scaleMat = scaleMatrix obj.transform.scale\n" + "\tobj.transform = scaleMat * translateMat\n" + "\trot = eulerangles rx ry rz\n"
+            + "\tRotatePivotOnly obj rot\n" + "\trot = eulerangles ox oy oz\n" + "\tRotatePivotOnly obj rot\n" + ")\n\n" + "animate on\n" + "(\n";
 
       return code;
    }
@@ -436,30 +434,30 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
       posOffsets.add(new Object[] {"spinePitch", 0.0254, 0.0, 0.03});
    }
 
-// private double[] getAngleOffset(String partName)
-// {
-//    double[] angleOffset = {0, 0, 0};
-//    for (int i = 0; i < angleOffsets.size(); i++)
-//    {
-//       if (partName.equals((String) angleOffsets.get(i)[0]))
-//       {
-//          angleOffset[0] = ((Double) angleOffsets.get(i)[1]).doubleValue();
-//          angleOffset[1] = ((Double) angleOffsets.get(i)[2]).doubleValue();
-//          angleOffset[2] = ((Double) angleOffsets.get(i)[3]).doubleValue();
-//
-//          break;
-//       }
-//    }
-//
-//    return angleOffset;
-// }
+   // private double[] getAngleOffset(String partName)
+   // {
+   //    double[] angleOffset = {0, 0, 0};
+   //    for (int i = 0; i < angleOffsets.size(); i++)
+   //    {
+   //       if (partName.equals((String) angleOffsets.get(i)[0]))
+   //       {
+   //          angleOffset[0] = ((Double) angleOffsets.get(i)[1]).doubleValue();
+   //          angleOffset[1] = ((Double) angleOffsets.get(i)[2]).doubleValue();
+   //          angleOffset[2] = ((Double) angleOffsets.get(i)[3]).doubleValue();
+   //
+   //          break;
+   //       }
+   //    }
+   //
+   //    return angleOffset;
+   // }
 
    private float[] getFloatAngleOffset(String partName)
    {
       float[] angleOffset = {0, 0, 0};
       for (int i = 0; i < angleOffsets.size(); i++)
       {
-         if (partName.equals((String) angleOffsets.get(i)[0]))
+         if (partName.equals(angleOffsets.get(i)[0]))
          {
             angleOffset[0] = (float) ((Double) angleOffsets.get(i)[1]).doubleValue();
             angleOffset[1] = (float) ((Double) angleOffsets.get(i)[2]).doubleValue();
@@ -472,29 +470,29 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
       return angleOffset;
    }
 
-// private double[] getPosOffset(String partName)
-// {
-//    double[] posOffset = { 0, 0, 0 };
-//                    for (int i = 0; i < posOffsets.size(); i++) {
-//                            if (partName.equals((String) posOffsets.get(i)[0])) {
-//                                    posOffset[0] = ((Double) posOffsets.get(i)[1]).doubleValue();
-//                                    posOffset[1] = ((Double) posOffsets.get(i)[2]).doubleValue();
-//                                    posOffset[2] = ((Double) posOffsets.get(i)[3]).doubleValue();
-//                                    break;
-//                            }
-//                    }
-//    return posOffset;
-// }
+   // private double[] getPosOffset(String partName)
+   // {
+   //    double[] posOffset = { 0, 0, 0 };
+   //                    for (int i = 0; i < posOffsets.size(); i++) {
+   //                            if (partName.equals((String) posOffsets.get(i)[0])) {
+   //                                    posOffset[0] = ((Double) posOffsets.get(i)[1]).doubleValue();
+   //                                    posOffset[1] = ((Double) posOffsets.get(i)[2]).doubleValue();
+   //                                    posOffset[2] = ((Double) posOffsets.get(i)[3]).doubleValue();
+   //                                    break;
+   //                            }
+   //                    }
+   //    return posOffset;
+   // }
 
    private String endScript()
    {
       return ")\n" + "animationrange = interval 0 " + index;
    }
 
-// private double convertMetersToInches(double meters)
-// {
-//    return meters;    // *39.3700787;
-// }
+   // private double convertMetersToInches(double meters)
+   // {
+   //    return meters;    // *39.3700787;
+   // }
 
    private boolean doesPartExist(String partName)
    {
@@ -512,22 +510,22 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
       return exists;
    }
 
-// private String space(String name, int totalSpace)
-// {
-//    int numberOfSpacesNeeded = Math.max(totalSpace - name.length(), 0);
-//    String spaces = "";
-//    for (int i = 0; i < numberOfSpacesNeeded; i++)
-//    {
-//       spaces += " ";
-//    }
-//
-//    return spaces;
-// }
+   // private String space(String name, int totalSpace)
+   // {
+   //    int numberOfSpacesNeeded = Math.max(totalSpace - name.length(), 0);
+   //    String spaces = "";
+   //    for (int i = 0; i < numberOfSpacesNeeded; i++)
+   //    {
+   //       spaces += " ";
+   //    }
+   //
+   //    return spaces;
+   // }
 
-// private String convertDoubletoMaxScriptDoubleString(double value)
-// {
-//  return replaceAll(Double.toString(value), "E", "d");
-// }
+   // private String convertDoubletoMaxScriptDoubleString(double value)
+   // {
+   //  return replaceAll(Double.toString(value), "E", "d");
+   // }
 
    private String convertDoubletoMaxScriptDoubleString(float value)
    {
@@ -572,72 +570,71 @@ public class ExportSimulationTo3DMaxDialogGenerator implements ExportSimulationT
       fileChooser = null;
    }
 
-// private void printJointsAndPositions(Joint joint)
-// {
-//    Matrix3d rotation = new Matrix3d();
-//    joint.getRotationFromWorld(rotation);
-//
-////   double xAngle = Math.toDegrees(Math.atan2(rotation.m20, rotation.m21));
-////   double yAngle = Math.toDegrees(Math.acos(rotation.m22));
-////   double zAngle = Math.toDegrees(-Math.atan2(rotation.m02, rotation.m12));
-//    Vector3d translation = new Vector3d();
-//    joint.getTranslationFromWorld(translation);
-//
-//    // for (int i = 0; i < 25; i++) {System.out.print(" ");}System.out.print("|"); for (int i = 0; i < 66; i++) {System.out.print(" ");} for (int j = 0; j < 3; j++) {System.out.print("|");   for (int i = 0; i < 24; i++) {System.out.print(" ");}}
-//    //
-//    // System.out.println("");
-//    // System.out.println(joint.getName() + space(joint.getName(), 25) + "| "+translation + space(translation.toString(), 65) + "| "+xAngle +space(xAngle, 23)+ "| "+yAngle +space(yAngle, 23)+ "| "+zAngle);
-//    System.out.print(joint.getName() + space(joint.getName(), 25));
-//
-//    if (joint instanceof FloatingJoint)
-//    {
-//       System.out.println("FloatingJoint");
-//    }
-//    else if (joint instanceof FloatingPlanarJoint)
-//    {
-//       System.out.println("FloatingPlanarJoint");
-//    }
-//    else if (joint instanceof CylinderJoint)
-//    {
-//       System.out.println("CylinderJoint");
-//    }
-//    else if (joint instanceof FreeJoint)
-//    {
-//       System.out.println("FreeJoint");
-//    }
-//    else if (joint instanceof GimbalJoint)
-//    {
-//       System.out.println("GimbalJoint");
-//    }
-//    else if (joint instanceof SliderJoint)
-//    {
-//       System.out.println("SliderJoint");
-//    }
-//    else if (joint instanceof UniversalJoint)
-//    {
-//       System.out.println("UniversalJoint");
-//    }
-//    else if (joint instanceof NullJoint)
-//    {
-//       System.out.println("NullJoint");
-//    }
-//    else if (joint instanceof PinJoint)
-//    {
-//       System.out.println("PinJoint");
-//    }
-//    else
-//    {
-//       System.out.println("None");
-//    }
-//
-//    //
-//    // for (int i = 0; i < 25; i++) {System.out.print("-");}System.out.print("+"); for (int i = 0; i < 66; i++) {System.out.print("-");} for (int j = 0; j < 3; j++) {System.out.print("+"); for (int i = 0; i < 24; i++) {System.out.print("-");}}
-//    //
-//    // System.out.println("");
-//    for (Joint childJoint : joint.getChildrenJoints())
-//    {
-//       printJointsAndPositions(childJoint);
-//    }
-// }
+   // private void printJointsAndPositions(Joint joint)
+   // {
+   //    Matrix3d rotation = new Matrix3d();
+   //    joint.getRotationFromWorld(rotation);
+   //
+   ////   double xAngle = Math.toDegrees(Math.atan2(rotation.m20, rotation.m21));
+   ////   double yAngle = Math.toDegrees(Math.acos(rotation.m22));
+   ////   double zAngle = Math.toDegrees(-Math.atan2(rotation.m02, rotation.m12));
+   //    Vector3d translation = new Vector3d();
+   //    joint.getTranslationFromWorld(translation);
+   //
+   //    // for (int i = 0; i < 25; i++) {System.out.print(" ");}System.out.print("|"); for (int i = 0; i < 66; i++) {System.out.print(" ");} for (int j = 0; j < 3; j++) {System.out.print("|");   for (int i = 0; i < 24; i++) {System.out.print(" ");}}
+   //    //
+   //    // System.out.println("");
+   //    // System.out.println(joint.getName() + space(joint.getName(), 25) + "| "+translation + space(translation.toString(), 65) + "| "+xAngle +space(xAngle, 23)+ "| "+yAngle +space(yAngle, 23)+ "| "+zAngle);
+   //    System.out.print(joint.getName() + space(joint.getName(), 25));
+   //
+   //    if (joint instanceof FloatingJoint)
+   //    {
+   //       System.out.println("FloatingJoint");
+   //    }
+   //    else if (joint instanceof FloatingPlanarJoint)
+   //    {
+   //       System.out.println("FloatingPlanarJoint");
+   //    }
+   //    else if (joint instanceof CylinderJoint)
+   //    {
+   //       System.out.println("CylinderJoint");
+   //    }
+   //    else if (joint instanceof FreeJoint)
+   //    {
+   //       System.out.println("FreeJoint");
+   //    }
+   //    else if (joint instanceof GimbalJoint)
+   //    {
+   //       System.out.println("GimbalJoint");
+   //    }
+   //    else if (joint instanceof SliderJoint)
+   //    {
+   //       System.out.println("SliderJoint");
+   //    }
+   //    else if (joint instanceof UniversalJoint)
+   //    {
+   //       System.out.println("UniversalJoint");
+   //    }
+   //    else if (joint instanceof NullJoint)
+   //    {
+   //       System.out.println("NullJoint");
+   //    }
+   //    else if (joint instanceof PinJoint)
+   //    {
+   //       System.out.println("PinJoint");
+   //    }
+   //    else
+   //    {
+   //       System.out.println("None");
+   //    }
+   //
+   //    //
+   //    // for (int i = 0; i < 25; i++) {System.out.print("-");}System.out.print("+"); for (int i = 0; i < 66; i++) {System.out.print("-");} for (int j = 0; j < 3; j++) {System.out.print("+"); for (int i = 0; i < 24; i++) {System.out.print("-");}}
+   //    //
+   //    // System.out.println("");
+   //    for (Joint childJoint : joint.getChildrenJoints())
+   //    {
+   //       printJointsAndPositions(childJoint);
+   //    }
+   // }
 }
-

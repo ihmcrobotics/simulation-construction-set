@@ -12,16 +12,16 @@ public class YoGraphicsPropertiesAction extends AbstractAction
 {
    private static final long serialVersionUID = -2806456517432086216L;
    private final YoGraphicsPropertiesDialogConstructor constructor;
-   
+
    public YoGraphicsPropertiesAction(YoGraphicsPropertiesDialogConstructor constructor)
    {
       super("YoGraphics Properties...");
-      
+
       this.constructor = constructor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_Y));
-      this.putValue(Action.LONG_DESCRIPTION, "Long Description");
-      this.putValue(Action.SHORT_DESCRIPTION, "Short Description");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_Y));
+      putValue(Action.LONG_DESCRIPTION, "Long Description");
+      putValue(Action.SHORT_DESCRIPTION, "Short Description");
    }
 
    @Override

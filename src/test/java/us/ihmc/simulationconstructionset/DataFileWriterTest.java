@@ -1,33 +1,47 @@
 package us.ihmc.simulationconstructionset;
 
-import org.junit.jupiter.api.Test;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.*;
+import static us.ihmc.robotics.Assert.assertEquals;
+import static us.ihmc.robotics.Assert.assertFalse;
+import static us.ihmc.robotics.Assert.assertTrue;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import static us.ihmc.robotics.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import us.ihmc.yoVariables.buffer.YoBuffer;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
+import us.ihmc.yoVariables.variable.YoBoolean;
+import us.ihmc.yoVariables.variable.YoDouble;
+import us.ihmc.yoVariables.variable.YoInteger;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public class DataFileWriterTest
 {
    private static final String TEST_DIRECTORY = "us/ihmc/simulationconstructionset/dataFileWriterTest/";
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testDataFileWriterAndReader() throws IOException, URISyntaxException
    {
       int numDataPoints = 10000;
 
-      DataBuffer dataBuffer = new DataBuffer(numDataPoints);
+      YoBuffer dataBuffer = new YoBuffer(numDataPoints);
 
-      YoVariableRegistry rootRegistry = new YoVariableRegistry("rootRegistry");
-      YoVariableRegistry registryOne = new YoVariableRegistry("registryOne");
-      YoVariableRegistry registryTwo = new YoVariableRegistry("registryTwo");
-      YoVariableRegistry registryThree = new YoVariableRegistry("registryThree");
+      YoRegistry rootRegistry = new YoRegistry("rootRegistry");
+      YoRegistry registryOne = new YoRegistry("registryOne");
+      YoRegistry registryTwo = new YoRegistry("registryTwo");
+      YoRegistry registryThree = new YoRegistry("registryThree");
 
       rootRegistry.addChild(registryOne);
       rootRegistry.addChild(registryTwo);
@@ -49,7 +63,7 @@ public class DataFileWriterTest
       dataBuffer.addVariable(variableSix);
       dataBuffer.addVariable(variableSeven);
 
-      for (int i = 0; i < numDataPoints; i++)
+      for (int i = 0; i < numDataPoints - 1; i++)
       {
          variableOne.set(Math.random());
          variableTwo.set(Math.random());
@@ -59,12 +73,12 @@ public class DataFileWriterTest
          variableSix.set(Math.random() > 0.5);
          variableSeven.set((int) (Math.random() * 1000.0));
 
-         dataBuffer.tickAndUpdate();
+         dataBuffer.tickAndWriteIntoBuffer();
       }
 
       Robot robot = new Robot("testRobot");
 
-      ArrayList<YoVariable<?>> allVariables = rootRegistry.getAllVariablesIncludingDescendants();
+      List<YoVariable> allVariables = rootRegistry.collectSubtreeVariables();
 
       boolean binary = false;
       boolean compress = false;
@@ -88,8 +102,9 @@ public class DataFileWriterTest
 
    }
 
-   private void testDataWriteReadIsTheSame(DataBuffer dataBuffer, ArrayList<YoVariable<?>> allVariables, boolean binary, boolean compress,
-           boolean spreadsheetFormatted, Robot robot) throws IOException, URISyntaxException
+   private void testDataWriteReadIsTheSame(YoBuffer dataBuffer, List<YoVariable> allVariables, boolean binary, boolean compress,
+                                           boolean spreadsheetFormatted, Robot robot)
+         throws IOException, URISyntaxException
    {
       String filename = TEST_DIRECTORY + "testFile.data";
       if (spreadsheetFormatted)
@@ -115,20 +130,20 @@ public class DataFileWriterTest
       }
 
       DataFileReader dataFileReader = new DataFileReader(testFile);
-      DataBuffer readBackBuffer = new DataBuffer(dataBuffer.getBufferSize());
-      YoVariableRegistry readBackRegistry = new YoVariableRegistry("rootRegistry");
+      YoBuffer readBackBuffer = new YoBuffer(dataBuffer.getBufferSize());
+      YoRegistry readBackRegistry = new YoRegistry("rootRegistry");
 
       YoVariableList newVars = new YoVariableList("newVars");
 
       dataFileReader.readData(newVars, readBackRegistry, readBackBuffer);
 
-      boolean dataIsEqual = readBackBuffer.checkIfDataIsEqual(dataBuffer, 1e-7);
+      boolean dataIsEqual = readBackBuffer.epsilonEquals(dataBuffer, 1e-7);
       assertTrue(dataIsEqual);
    }
 
    @SuppressWarnings("deprecation")
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testFileReadAndWriteWithDataOutputStreamAndDataInputStream() throws IOException, NullPointerException
    {
       Random rng = new Random();
@@ -156,7 +171,7 @@ public class DataFileWriterTest
       assertTrue(testInteger == integerReadBack);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testFileReadAndWriteBackWithDataOutputStreamAndDeferredBufferedReaderCreation() throws IOException
    {
       Random rng = new Random();
@@ -191,7 +206,7 @@ public class DataFileWriterTest
       assertTrue(testInteger == integerReadBack);
    }
 
-	@Test// timeout=300000
+   @Test // timeout=300000
    public void testFileReadAndWriteBackWithDataOutputStreamAndBufferedReaderStringsOnly() throws IOException
    {
       String string1 = "This is the first string";
@@ -228,7 +243,7 @@ public class DataFileWriterTest
       assertTrue(string3.equals(readBack3));
    }
 
-	@Test// timeout = 30000
+   @Test // timeout = 30000
    public void testWritingAndReadingALongStateFile() throws IOException
    {
       File fileOne = new File("fileOne.state");
@@ -237,11 +252,11 @@ public class DataFileWriterTest
          fileOne.delete();
 
       long seed = 1776L;
-      int numberOfVariables = 2000;    // 12000 for when testing long files for efficiency;
+      int numberOfVariables = 2000; // 12000 for when testing long files for efficiency;
       Random random = new Random(seed);
-      ArrayList<YoVariable<?>> variables = createALargeNumberOfVariables(random, numberOfVariables);
+      List<YoVariable> variables = createALargeNumberOfVariables(random, numberOfVariables);
       YoVariableList originalVarList = new YoVariableList("originalVarList");
-      originalVarList.addVariables(variables);
+      originalVarList.addAll(variables);
 
       writeALongStateFile(fileOne, variables);
 
@@ -250,7 +265,7 @@ public class DataFileWriterTest
       YoVariableList newVarList = new YoVariableList("newVarList");
       boolean createMissingVariables = true;
       boolean printErrorForMissingVariables = false;
-      YoVariableRegistry registry = new YoVariableRegistry("root");
+      YoRegistry registry = new YoRegistry("root");
 
       dataFileReader.readState(newVarList, createMissingVariables, printErrorForMissingVariables, registry);
 
@@ -258,8 +273,8 @@ public class DataFileWriterTest
 
       for (int i = 0; i < originalVarList.size(); i++)
       {
-         YoVariable<?> originalVariable = originalVarList.getVariable(i);
-         YoVariable<?> newVariable = newVarList.getVariable(originalVariable.getName());
+         YoVariable originalVariable = originalVarList.get(i);
+         YoVariable newVariable = newVarList.findVariable(originalVariable.getName());
 
          assertFalse(originalVariable == newVariable);
          assertEquals(originalVariable.getValueAsDouble(), newVariable.getValueAsDouble(), 1e-7);
@@ -269,7 +284,7 @@ public class DataFileWriterTest
       fileOne.delete();
    }
 
-	@Test// timeout = 30000
+   @Test // timeout = 30000
    public void testWritingAndReadingADataFileWithLotsOfVariables() throws IOException
    {
       File fileOne = new File("fileOne.state.gz");
@@ -278,23 +293,21 @@ public class DataFileWriterTest
          fileOne.delete();
 
       long seed = 1776L;
-      int numberOfVariables = 2000;    // 12000 for when testing long files for efficiency;
+      int numberOfVariables = 2000; // 12000 for when testing long files for efficiency;
       Random random = new Random(seed);
-      ArrayList<YoVariable<?>> variables = createALargeNumberOfVariables(random, numberOfVariables);
+      List<YoVariable> variables = createALargeNumberOfVariables(random, numberOfVariables);
       YoVariableList originalVarList = new YoVariableList("originalVarList");
-      originalVarList.addVariables(variables);
+      originalVarList.addAll(variables);
 
       int bufferSize = 50;
-      DataBuffer dataBuffer = new DataBuffer(bufferSize);
+      YoBuffer dataBuffer = new YoBuffer(bufferSize);
 
       dataBuffer.addVariables(variables);
 
-      for (int i=0; i<bufferSize/2; i++)
+      for (int i = 0; i < bufferSize / 2; i++)
       {
-         dataBuffer.setDataAtIndexToYoVariableValues();
-         dataBuffer.tick(1);
+         dataBuffer.tickAndReadFromBuffer(1);
       }
-
 
       dataBuffer.setInOutPointFullBuffer();
 
@@ -306,17 +319,17 @@ public class DataFileWriterTest
       DataFileReader dataFileReader = new DataFileReader(fileOne);
 
       YoVariableList newVarList = new YoVariableList("newVarList");
-      YoVariableRegistry registry = new YoVariableRegistry("rootRegistry");
+      YoRegistry registry = new YoRegistry("rootRegistry");
 
-      DataBuffer newDataBuffer = new DataBuffer(16384);
+      YoBuffer newDataBuffer = new YoBuffer(16384);
       dataFileReader.readData(newVarList, registry, newDataBuffer);
 
       assertEquals(originalVarList.size(), newVarList.size());
 
       for (int i = 0; i < originalVarList.size(); i++)
       {
-         YoVariable<?> originalVariable = originalVarList.getVariable(i);
-         YoVariable<?> newVariable = newVarList.getVariable(originalVariable.getName());
+         YoVariable originalVariable = originalVarList.get(i);
+         YoVariable newVariable = newVarList.findVariable(originalVariable.getName());
 
          assertFalse(originalVariable == newVariable);
          assertEquals(originalVariable.getValueAsDouble(), newVariable.getValueAsDouble(), 1e-7);
@@ -326,7 +339,7 @@ public class DataFileWriterTest
       fileOne.delete();
    }
 
-   private void writeALongStateFile(File file, ArrayList<YoVariable<?>> variables)
+   private void writeALongStateFile(File file, List<YoVariable> variables)
    {
       DataFileWriter dataFileWriter = new DataFileWriter(file);
 
@@ -336,7 +349,7 @@ public class DataFileWriterTest
       dataFileWriter.writeState("model", recordDT, variables, binary, compress);
    }
 
-   private void writeALongDataFile(File file, DataBuffer dataBuffer, ArrayList<YoVariable<?>> variables, Robot robot)
+   private void writeALongDataFile(File file, YoBuffer dataBuffer, List<YoVariable> variables, Robot robot)
    {
       DataFileWriter dataFileWriter = new DataFileWriter(file);
 
@@ -346,13 +359,12 @@ public class DataFileWriterTest
       dataFileWriter.writeData("model", recordDT, dataBuffer, variables, binary, compress, robot);
    }
 
-
-   private ArrayList<YoVariable<?>> createALargeNumberOfVariables(Random random, int numberOfVariables)
+   private List<YoVariable> createALargeNumberOfVariables(Random random, int numberOfVariables)
    {
-      YoVariableRegistry rootRegistry = new YoVariableRegistry("rootRegistry");
-      YoVariableRegistry registryOne = new YoVariableRegistry("registryOne");
-      YoVariableRegistry registryTwo = new YoVariableRegistry("registryTwo");
-      YoVariableRegistry registryThree = new YoVariableRegistry("registryThree");
+      YoRegistry rootRegistry = new YoRegistry("rootRegistry");
+      YoRegistry registryOne = new YoRegistry("registryOne");
+      YoRegistry registryTwo = new YoRegistry("registryTwo");
+      YoRegistry registryThree = new YoRegistry("registryThree");
 
       rootRegistry.addChild(registryOne);
       registryOne.addChild(registryTwo);
@@ -369,8 +381,7 @@ public class DataFileWriterTest
          variable.set(Math.random());
       }
 
-      return rootRegistry.getAllVariablesIncludingDescendants();
+      return rootRegistry.collectSubtreeVariables();
    }
-
 
 }

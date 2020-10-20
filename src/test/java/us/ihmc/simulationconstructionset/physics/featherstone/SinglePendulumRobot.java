@@ -44,9 +44,10 @@ public class SinglePendulumRobot extends RobotWithClosedFormDynamics
 
       double qddLagrangian = (mass * getGravityZ() * (0.5 * length) * Math.sin(q) - damping * qd) / (Ixx + mass * MathTools.square(0.5 * length));
 
-      if(Math.abs(qdd - qddLagrangian) > epsilon)
+      if (Math.abs(qdd - qddLagrangian) > epsilon)
       {
-         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. At t=" + getTime() + ", simulated joint acceleration = " + qdd + ", lagrangian acceleration = " + qddLagrangian);
+         throw new AssertionError("Joint accelerations from simulation and lagrangian don't match. At t=" + getTime() + ", simulated joint acceleration = "
+               + qdd + ", lagrangian acceleration = " + qddLagrangian);
       }
    }
 }

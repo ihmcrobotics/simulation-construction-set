@@ -31,7 +31,7 @@ public class Simulator implements java.io.Serializable
    {
       this.simulationSynchronizer = simulationSynchronizer;
       this.robots = robots;
-      this.DT = dt;
+      DT = dt;
 
       //    this.time = time;
    }
@@ -48,13 +48,13 @@ public class Simulator implements java.io.Serializable
 
    public double getDT()
    {
-      return this.DT;
+      return DT;
    }
 
    protected void addScript(Script script)
    {
       if (scripts == null)
-         scripts = new ArrayList<Script>();
+         scripts = new ArrayList<>();
       scripts.add(script);
    }
 
@@ -81,7 +81,6 @@ public class Simulator implements java.io.Serializable
 
             robot.updateAllGroundContactPointVelocities(); // +++JEP OPTIMIZE: Need to do this once so all point velocities get updated. Otherwise only those in contact will.
 
-
             if (robot.getGroundContactModel() != null)
             {
                robot.getGroundContactModel().doGroundContact(); // Do the ground contact model
@@ -90,6 +89,10 @@ public class Simulator implements java.io.Serializable
             // Needed to move this outside and do it even if no ground contact model, for
             // Contact models that are done outside of the robot.
             robot.decideGroundContactPointsInContact(); // +++JEP OPTIMIZE. This should be in a GroundContactDetector...
+
+            // Computes forces for closing kinematic loops.
+            // TODO Should be resolved in robot.doDynamics.
+            robot.doLoopClosure();
 
             if (scripts != null) // Run the scripts
             {
@@ -145,11 +148,12 @@ public class Simulator implements java.io.Serializable
       //
    }
 
-   public void setCollisions(ScsCollisionDetector collisionDetector, CollisionArbiter collisionArbiter, CollisionHandler collisionHandler, DefaultCollisionVisualizer visulize)
+   public void setCollisions(ScsCollisionDetector collisionDetector, CollisionArbiter collisionArbiter, CollisionHandler collisionHandler,
+                             DefaultCollisionVisualizer visulize)
    {
       this.collisionDetector = collisionDetector;
       this.collisionArbiter = collisionArbiter;
       this.collisionHandler = collisionHandler;
-      this.collisionVisualizer = visulize;
+      collisionVisualizer = visulize;
    }
 }

@@ -19,9 +19,9 @@ public class NextCameraKeyAction extends AbstractAction
 
       this.executor = executor;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
-      this.putValue(Action.LONG_DESCRIPTION, "Procedes to the next chronological CameraKey.");
-      this.putValue(Action.SHORT_DESCRIPTION, "next camera key");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
+      putValue(Action.LONG_DESCRIPTION, "Procedes to the next chronological CameraKey.");
+      putValue(Action.SHORT_DESCRIPTION, "next camera key");
    }
 
    @Override

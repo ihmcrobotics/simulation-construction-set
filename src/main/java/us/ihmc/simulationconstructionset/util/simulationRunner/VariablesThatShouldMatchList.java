@@ -4,23 +4,22 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 public class VariablesThatShouldMatchList
 {
-   private LinkedHashMap<String, YoVariable<?>> variableHashMapOne = new LinkedHashMap<String, YoVariable<?>>();    // From full name to the variable with that name.
-   private LinkedHashMap<String, YoVariable<?>> variableHashMapTwo = new LinkedHashMap<String, YoVariable<?>>();    // From full name to the variable with that name.
+   private LinkedHashMap<String, YoVariable> variableHashMapOne = new LinkedHashMap<>(); // From full name to the variable with that name.
+   private LinkedHashMap<String, YoVariable> variableHashMapTwo = new LinkedHashMap<>(); // From full name to the variable with that name.
 
-   private final List<YoVariable<?>[]> variablesThatShouldMatch = new ArrayList<YoVariable<?>[]>();
-   private final List<YoVariable<?>> variablesInOneButNotInTwo = new ArrayList<YoVariable<?>>();
-   private final List<YoVariable<?>> variablesInTwoButNotInOne = new ArrayList<YoVariable<?>>();
+   private final List<YoVariable[]> variablesThatShouldMatch = new ArrayList<>();
+   private final List<YoVariable> variablesInOneButNotInTwo = new ArrayList<>();
+   private final List<YoVariable> variablesInTwoButNotInOne = new ArrayList<>();
 
-
-   public VariablesThatShouldMatchList(YoVariableRegistry registryOne, YoVariableRegistry registryTwo, List<String> exceptions)
+   public VariablesThatShouldMatchList(YoRegistry registryOne, YoRegistry registryTwo, List<String> exceptions)
    {
-      this(registryOne.getAllVariablesIncludingDescendants(), registryTwo.getAllVariablesIncludingDescendants(), exceptions);
+      this(registryOne.collectSubtreeVariables(), registryTwo.collectSubtreeVariables(), exceptions);
    }
 
    public VariablesThatShouldMatchList(YoVariableList varListOne, YoVariableList varListTwo, List<String> exceptions)
@@ -28,8 +27,7 @@ public class VariablesThatShouldMatchList
       this(varListOne.getVariables(), varListTwo.getVariables(), exceptions);
    }
 
-
-   public VariablesThatShouldMatchList(List<YoVariable<?>> variablesOne, List<YoVariable<?>> variablesTwo, List<String> exceptions)
+   public VariablesThatShouldMatchList(List<YoVariable> variablesOne, List<YoVariable> variablesTwo, List<String> exceptions)
    {
       variablesOne = copyListButRemoveExceptions(variablesOne, exceptions);
       variablesTwo = copyListButRemoveExceptions(variablesTwo, exceptions);
@@ -43,12 +41,11 @@ public class VariablesThatShouldMatchList
 
       for (int i = 0; i < variablesOne.size(); i++)
       {
-         YoVariable<?> variableOne = variablesOne.get(i);
-         YoVariable<?> variableTwo = variablesTwo.get(i);
+         YoVariable variableOne = variablesOne.get(i);
+         YoVariable variableTwo = variablesTwo.get(i);
 
-
-         String nameOne = variableOne.getFullNameWithNameSpace();
-         String nameTwo = variableTwo.getFullNameWithNameSpace();
+         String nameOne = variableOne.getFullNameString();
+         String nameTwo = variableTwo.getFullNameString();
 
          if (!nameOne.equals(nameTwo))
          {
@@ -62,26 +59,26 @@ public class VariablesThatShouldMatchList
       }
    }
 
-   public List<YoVariable<?>[]> getVariablesThatShouldMatch()
+   public List<YoVariable[]> getVariablesThatShouldMatch()
    {
       return variablesThatShouldMatch;
    }
 
-   public YoVariable<?> getYoVariableInListOne(String fullName)
+   public YoVariable getYoVariableInListOne(String fullName)
    {
       return variableHashMapOne.get(fullName);
    }
 
-   public YoVariable<?> getYoVariableInListTwo(String fullName)
+   public YoVariable getYoVariableInListTwo(String fullName)
    {
       return variableHashMapTwo.get(fullName);
    }
 
-   private List<YoVariable<?>> copyListButRemoveExceptions(List<YoVariable<?>> variables, List<String> exceptions)
+   private List<YoVariable> copyListButRemoveExceptions(List<YoVariable> variables, List<String> exceptions)
    {
-      List<YoVariable<?>> ret = new ArrayList<YoVariable<?>>();
+      List<YoVariable> ret = new ArrayList<>();
 
-      for (YoVariable<?> variable : variables)
+      for (YoVariable variable : variables)
       {
          if (!isException(exceptions, variable))
          {
@@ -92,23 +89,23 @@ public class VariablesThatShouldMatchList
       return ret;
    }
 
-   private static void copyListAndReorder(List<YoVariable<?>> variablesOne, List<YoVariable<?>> variablesTwo,
-           List<YoVariable<?>> variablesInOneButNotInTwoToPack, List<YoVariable<?>> variablesInTwoButNotInOneToPack)
+   private static void copyListAndReorder(List<YoVariable> variablesOne, List<YoVariable> variablesTwo,
+                                          List<YoVariable> variablesInOneButNotInTwoToPack, List<YoVariable> variablesInTwoButNotInOneToPack)
    {
       variablesInOneButNotInTwoToPack.clear();
       variablesInTwoButNotInOneToPack.clear();
 
-      LinkedHashMap<String, YoVariable<?>> variablesTwoHashMap = new LinkedHashMap<String, YoVariable<?>>();
-      for (YoVariable<?> variableInTwo : variablesTwo)
+      LinkedHashMap<String, YoVariable> variablesTwoHashMap = new LinkedHashMap<>();
+      for (YoVariable variableInTwo : variablesTwo)
       {
-         variablesTwoHashMap.put(variableInTwo.getFullNameWithNameSpace(), variableInTwo);
+         variablesTwoHashMap.put(variableInTwo.getFullNameString(), variableInTwo);
       }
 
-      ArrayList<YoVariable<?>> newVariablesTwo = new ArrayList<YoVariable<?>>();
+      ArrayList<YoVariable> newVariablesTwo = new ArrayList<>();
 
-      for (YoVariable<?> variableInOne : variablesOne)
+      for (YoVariable variableInOne : variablesOne)
       {
-         YoVariable<?> variableInTwo = variablesTwoHashMap.get(variableInOne.getFullNameWithNameSpace());
+         YoVariable variableInTwo = variablesTwoHashMap.get(variableInOne.getFullNameString());
 
          if (variableInTwo == null)
          {
@@ -121,17 +118,17 @@ public class VariablesThatShouldMatchList
          }
       }
 
-      for (YoVariable<?> variableToRemoveFromOne : variablesInOneButNotInTwoToPack)
+      for (YoVariable variableToRemoveFromOne : variablesInOneButNotInTwoToPack)
       {
          variablesOne.remove(variableToRemoveFromOne);
       }
 
-      for (YoVariable<?> newVariableTwo : newVariablesTwo)
+      for (YoVariable newVariableTwo : newVariablesTwo)
       {
          variablesTwo.remove(newVariableTwo);
       }
 
-      for (YoVariable<?> extraVariablesInTwo : variablesTwo)
+      for (YoVariable extraVariablesInTwo : variablesTwo)
       {
          variablesInTwoButNotInOneToPack.add(extraVariablesInTwo);
       }
@@ -140,8 +137,7 @@ public class VariablesThatShouldMatchList
       variablesTwo.addAll(newVariablesTwo);
    }
 
-
-   private static boolean isException(List<String> exceptions, YoVariable<?> variable)
+   private static boolean isException(List<String> exceptions, YoVariable variable)
    {
       boolean isException = false;
 
@@ -163,15 +159,15 @@ public class VariablesThatShouldMatchList
       return isException;
    }
 
-
-   public boolean doVariableValuesMatch(List<VariableDifference> variableDifferences, double time, double maxDifferenceAllowed, boolean checkForPercentDifference)
+   public boolean doVariableValuesMatch(List<VariableDifference> variableDifferences, double time, double maxDifferenceAllowed,
+                                        boolean checkForPercentDifference)
    {
       boolean ret = true;
 
-      for (YoVariable<?>[] twoVariablesThatShouldMatch : variablesThatShouldMatch)
+      for (YoVariable[] twoVariablesThatShouldMatch : variablesThatShouldMatch)
       {
-         YoVariable<?> variableOne = twoVariablesThatShouldMatch[0];
-         YoVariable<?> variableTwo = twoVariablesThatShouldMatch[1];
+         YoVariable variableOne = twoVariablesThatShouldMatch[0];
+         YoVariable variableTwo = twoVariablesThatShouldMatch[1];
 
          double valueOne = variableOne.getValueAsDouble();
          double valueTwo = variableTwo.getValueAsDouble();
@@ -194,19 +190,19 @@ public class VariablesThatShouldMatchList
 
          if (variablesAreDifferent)
          {
-//          System.out.println("absoluteDifference = " + absoluteDifference + ", maxDifferenceAllowed = " + maxDifferenceAllowed);
+            //          System.out.println("absoluteDifference = " + absoluteDifference + ", maxDifferenceAllowed = " + maxDifferenceAllowed);
             variableDifferences.add(new VariableDifference(time, variableOne, variableTwo));
             ret = false;
          }
       }
 
-      for (YoVariable<?> variable : variablesInOneButNotInTwo)
+      for (YoVariable variable : variablesInOneButNotInTwo)
       {
          variableDifferences.add(new VariableDifference(time, variable, null));
          ret = false;
       }
 
-      for (YoVariable<?> variable : variablesInTwoButNotInOne)
+      for (YoVariable variable : variablesInTwoButNotInOne)
       {
          variableDifferences.add(new VariableDifference(time, null, variable));
          ret = false;
@@ -214,6 +210,5 @@ public class VariablesThatShouldMatchList
 
       return ret;
    }
-
 
 }

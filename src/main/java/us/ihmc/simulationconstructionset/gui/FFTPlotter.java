@@ -16,31 +16,33 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-
 /**
- * <p>Title: </p>
- *
- * <p>Description: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
  *
  * @author Seyed Hossein Tamaddoni
  * @see jFreeChart libraries should be added to the project library!
  */
 public class FFTPlotter extends JFrame
 {
-// public static final String POSITION = "position";
-// public static final String VELOCITY = "velocity";
-// public static final String ACCELERATION = "acceleration";
-// public static final String TIME = "time";
+   // public static final String POSITION = "position";
+   // public static final String VELOCITY = "velocity";
+   // public static final String ACCELERATION = "acceleration";
+   // public static final String TIME = "time";
 
-// public FFTPlotter(MotionGenerator profile, String xAxisTitle, String yAxisTitle)
-// {
-//     super(yAxisTitle + " -vs- " + xAxisTitle);
-//     XYDataset dataset = createDataset(profile, xAxisTitle, yAxisTitle);
-//     JFreeChart chart = createChart(yAxisTitle + "/" + xAxisTitle, dataset);
-//     ChartPanel chartPanel = new ChartPanel(chart);
-//     chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-//     setContentPane(chartPanel);
-// }
+   // public FFTPlotter(MotionGenerator profile, String xAxisTitle, String yAxisTitle)
+   // {
+   //     super(yAxisTitle + " -vs- " + xAxisTitle);
+   //     XYDataset dataset = createDataset(profile, xAxisTitle, yAxisTitle);
+   //     JFreeChart chart = createChart(yAxisTitle + "/" + xAxisTitle, dataset);
+   //     ChartPanel chartPanel = new ChartPanel(chart);
+   //     chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+   //     setContentPane(chartPanel);
+   // }
 
    /**
     *
@@ -66,7 +68,7 @@ public class FFTPlotter extends JFrame
       JFreeChart chart = createCombinedChart(title, magDataset, phaseDataset, freqUnits, magnitudeUnits, phaseUnits);
       ChartPanel chartPanel = new ChartPanel(chart);
       chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-      this.setContentPane(chartPanel);
+      setContentPane(chartPanel);
    }
 
    public void packAndDisplayFrame(int xScreen, int yScreen)
@@ -75,7 +77,6 @@ public class FFTPlotter extends JFrame
       setLocation(xScreen, yScreen);
       setVisible(true);
    }
-
 
    private double[] throwFirstPointAway(double[] data)
    {
@@ -105,7 +106,7 @@ public class FFTPlotter extends JFrame
    }
 
    private JFreeChart createCombinedChart(String title, XYDataset magDataset, XYDataset phaseDataset, String freqUnits, String magnitudeUnits,
-           String phaseUnits)
+                                          String phaseUnits)
    {
       XYItemRenderer renderer1 = new StandardXYItemRenderer();
       NumberAxis rangeAxis1 = new NumberAxis("Magnitude " + magnitudeUnits);

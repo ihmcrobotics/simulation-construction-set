@@ -10,13 +10,13 @@ public class ModularGroundContactModel implements GroundContactModel
    private static final long serialVersionUID = 6953909329765322020L;
 
    private GroundProfile3D groundProfile3D = null;
-   
+
    private final ArrayList<GroundContactModel> groundContactModels = new ArrayList<>();
 
    @Override
    public void doGroundContact()
    {
-      for(int i = 0; i < groundContactModels.size(); i++)
+      for (int i = 0; i < groundContactModels.size(); i++)
       {
          groundContactModels.get(i).doGroundContact();
       }
@@ -25,8 +25,8 @@ public class ModularGroundContactModel implements GroundContactModel
    @Override
    public void setGroundProfile3D(GroundProfile3D profile)
    {
-      this.groundProfile3D = profile;
-      for(int i = 0; i < groundContactModels.size(); i++)
+      groundProfile3D = profile;
+      for (int i = 0; i < groundContactModels.size(); i++)
       {
          groundContactModels.get(i).setGroundProfile3D(groundProfile3D);
       }
@@ -38,7 +38,6 @@ public class ModularGroundContactModel implements GroundContactModel
       return groundProfile3D;
    }
 
-   
    public void addGroundContactModel(GroundContactModel groundContactModel)
    {
       groundContactModel.setGroundProfile3D(groundProfile3D);

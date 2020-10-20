@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import us.ihmc.commons.MathTools;
 import us.ihmc.euclid.geometry.BoundingBox3D;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 
 public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
 {
@@ -20,7 +20,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
 
       if (stepRises.length != stepTreads.length + 1)
          throw new RuntimeException("stepHeights.length != stepTreads.length + 1");
-      
+
       double[] xCumulativeSum = MathTools.cumulativeSum(stepTreads);
       stepStartXValues = new double[xCumulativeSum.length + 1];
       System.arraycopy(xCumulativeSum, 0, stepStartXValues, 1, xCumulativeSum.length);
@@ -40,19 +40,19 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
 
       double yMin = -1.0;
       double yMax = 1.0;
-      
+
       double zMin = Double.NEGATIVE_INFINITY;
       double zMax = Double.POSITIVE_INFINITY;
-      
+
       boundingBox = new BoundingBox3D(xMin, yMin, zMin, xMax, yMax, zMax);
    }
 
    @Override
-   public double heightAndNormalAt(double x, double y, double z, Vector3D normalToPack)
+   public double heightAndNormalAt(double x, double y, double z, Vector3DBasics normalToPack)
    {
       double height = heightAt(x, y, z);
       surfaceNormalAt(x, y, z, normalToPack);
-      
+
       return height;
    }
 
@@ -66,7 +66,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
       return height;
    }
 
-   public void surfaceNormalAt(double x, double y, double z, Vector3D normal)
+   public void surfaceNormalAt(double x, double y, double z, Vector3DBasics normal)
    {
       normal.set(0.0, 0.0, 1.0);
    }
@@ -94,7 +94,7 @@ public class VaryingStairGroundProfile extends GroundProfileFromHeightMap
    {
       return groundHeights[index];
    }
-   
+
    @Override
    public BoundingBox3D getBoundingBox()
    {

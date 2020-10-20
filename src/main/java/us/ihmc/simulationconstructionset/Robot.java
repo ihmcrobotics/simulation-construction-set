@@ -5,11 +5,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraMountInterface;
@@ -22,20 +26,21 @@ import us.ihmc.simulationconstructionset.robotdefinition.RobotDefinitionFixedFra
 import us.ihmc.simulationconstructionset.simulatedSensors.LidarMount;
 import us.ihmc.simulationconstructionset.simulatedSensors.WrenchCalculatorInterface;
 import us.ihmc.simulationconstructionset.util.RobotController;
-import us.ihmc.yoVariables.dataBuffer.YoVariableHolder;
-import us.ihmc.yoVariables.listener.RewoundListener;
-import us.ihmc.yoVariables.registry.NameSpace;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoNamespace;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.registry.YoVariableHolder;
+import us.ihmc.yoVariables.registry.YoVariableList;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 
 /**
- * <p>Title: Robot</p>
- *
- * <p>Description: A Robot is a forest of trees of Joints, each Joint having an associated Link.
- * The Robot contains all the dynamic information, including Joint types, offsets between Joints,
- * Link masses, center of mass locations, and moments of inertia.  Each root joint has children
+ * <p>
+ * Title: Robot
+ * </p>
+ * <p>
+ * Description: A Robot is a forest of trees of Joints, each Joint having an associated Link. The
+ * Robot contains all the dynamic information, including Joint types, offsets between Joints, Link
+ * masses, center of mass locations, and moments of inertia. Each root joint has children
  * </p>
  *
  * @author Jerry Pratt
@@ -43,9 +48,9 @@ import us.ihmc.yoVariables.variable.YoVariableList;
  */
 public class Robot implements YoVariableHolder, GroundContactPointsHolder
 {
-   protected YoVariableRegistry yoVariableRegistry;
-   protected final ArrayList<YoGraphicsListRegistry> yoGraphicsListRegistries = new ArrayList<YoGraphicsListRegistry>();
-   private ArrayList<Joint> rootJoints;
+   protected YoRegistry yoRegistry;
+   protected final List<YoGraphicsListRegistry> yoGraphicsListRegistries = new ArrayList<>();
+   private List<Joint> rootJoints;
 
    private FunctionIntegrators functionIntegrators = null;
 
@@ -58,20 +63,20 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    public YoDouble gravityY;
    public YoDouble gravityZ;
 
-// protected double gX = 0.0, gY = 0.0, gZ = -9.81;
+   // protected double gX = 0.0, gY = 0.0, gZ = -9.81;
 
-   private ArrayList<RobotControllerAndParameters> controllers = new ArrayList<RobotControllerAndParameters>();
+   private List<RobotControllerAndParameters> controllers = new ArrayList<>();
 
    private GroundContactModel groundContactModel;
 
    private ExternalForcePoint kp_body;
 
    private DynamicIntegrationMethod dynamicIntegrationMethod = DynamicIntegrationMethod.RUNGE_KUTTA_FOURTH_ORDER;
-   
-   private final ArrayList<Graphics3DObject> staticLinkGraphics = new ArrayList<Graphics3DObject>();
+
+   private final List<Graphics3DObject> staticLinkGraphics = new ArrayList<>();
    // private VarList robVars;
-// private VarList groundVars;
-// private ArrayList<VarList> controllerVarLists = new ArrayList<VarList>();
+   // private VarList groundVars;
+   // private List<VarList> controllerVarLists = new ArrayList<VarList>();
 
    public Robot(RobotDefinitionFixedFrame definition, String name)
    {
@@ -112,20 +117,22 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       for (GroundContactDefinitionFixedFrame groundContactDefinitionFixedFrame : jointDefinition.getGroundContactDefinitionsFixedFrame())
       {
          GroundContactPoint groundContactPoint = new GroundContactPoint(groundContactDefinitionFixedFrame.getName(),
-                                                    groundContactDefinitionFixedFrame.getOffset(), this.getRobotsYoVariableRegistry());
+                                                                        groundContactDefinitionFixedFrame.getOffset(),
+                                                                        getRobotsYoRegistry());
          currentJoint.addGroundContactPoint(groundContactPoint);
       }
 
       for (ExternalForcePointDefinitionFixedFrame externalForcePointDefinitionFixedFrame : jointDefinition.getExternalForcePointDefinitionsFixedFrame())
       {
          ExternalForcePoint externalForcePoint = new ExternalForcePoint(externalForcePointDefinitionFixedFrame.getName(),
-                                                    externalForcePointDefinitionFixedFrame.getOffset(), this.getRobotsYoVariableRegistry());
+                                                                        externalForcePointDefinitionFixedFrame.getOffset(),
+                                                                        getRobotsYoRegistry());
          currentJoint.addExternalForcePoint(externalForcePoint);
       }
 
       currentJoint.setLink(new Link(jointDefinition.getLinkDefinition()));
       if (parent == null)
-         this.addRootJoint(currentJoint);
+         addRootJoint(currentJoint);
       else
          parent.addJoint(currentJoint);
 
@@ -136,22 +143,22 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Creates a Robot with the specified name. A Robot is a forest of trees of
-    * Joints, each Joint having an associated Link.
+    * Creates a Robot with the specified name. A Robot is a forest of trees of Joints, each Joint
+    * having an associated Link.
     *
     * @param name Name of the robot.
     */
    public Robot(String name)
    {
       this.name = name;
-      yoVariableRegistry = new YoVariableRegistry(name);
+      yoRegistry = new YoRegistry(name);
 
-      this.rootJoints = new ArrayList<Joint>();
+      rootJoints = new ArrayList<>();
 
-      t = new YoDouble("t", yoVariableRegistry);
-      gravityX = new YoDouble("gravityX", yoVariableRegistry);
-      gravityY = new YoDouble("gravityY", yoVariableRegistry);
-      gravityZ = new YoDouble("gravityZ", yoVariableRegistry);
+      t = new YoDouble("t", yoRegistry);
+      gravityX = new YoDouble("gravityX", yoRegistry);
+      gravityY = new YoDouble("gravityY", yoRegistry);
+      gravityZ = new YoDouble("gravityZ", yoRegistry);
 
       setDefaultGravityToEarthWithMetricUnits();
    }
@@ -160,7 +167,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    {
       this.dynamicIntegrationMethod = dynamicIntegrationMethod;
    }
-   
+
    private void setDefaultGravityToEarthWithMetricUnits()
    {
       gravityZ.set(-9.81);
@@ -194,6 +201,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    /**
     * Gets this robot's time
+    * 
     * @return YoVariable
     */
    public YoDouble getYoTime()
@@ -237,40 +245,39 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Adds a YoVariableRegistry to the robot. Will be added as a child registry to the robot's registry.
+    * Adds a YoRegistry to the robot. Will be added as a child registry to the robot's registry.
     *
-    * @param registry YoVariableRegistry
+    * @param registry YoRegistry
     */
-   public void addYoVariableRegistry(YoVariableRegistry registry)
+   public void addYoRegistry(YoRegistry registry)
    {
       if (registry == null)
-         throw new RuntimeException("Cannot add a null registry to " + this.name + "!!!!");
+         throw new RuntimeException("Cannot add a null registry to " + name + "!!!!");
 
-      getRobotsYoVariableRegistry().addChild(registry);
+      getRobotsYoRegistry().addChild(registry);
    }
 
    public void addYoGraphicsListRegistry(YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       if (yoGraphicsListRegistry == null)
       {
-         throw new RuntimeException("Cannot add a null yoGraphicsListRegistry to " + this.name + "!!!!");
+         throw new RuntimeException("Cannot add a null yoGraphicsListRegistry to " + name + "!!!!");
       }
 
       yoGraphicsListRegistries.add(yoGraphicsListRegistry);
    }
 
-
    /**
-    * Adds a root Joint to this robot.  This joint may have multiple child joints which also can have children.  A robot
-    * may have any number of root joints.
+    * Adds a root Joint to this robot. This joint may have multiple child joints which also can have
+    * children. A robot may have any number of root joints.
     *
-    * @param root Joint to be added as the root Joint. A robot is comprised of a forest of trees, with one root Joint per tree.
+    * @param root Joint to be added as the root Joint. A robot is comprised of a forest of trees, with
+    *             one root Joint per tree.
     */
    public void addRootJoint(Joint root)
    {
-      this.rootJoints.add(root);
+      rootJoints.add(root);
    }
-
 
    /**
     * Retrieves this robot's ground contact model.
@@ -280,7 +287,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    public GroundContactModel getGroundContactModel()
    {
-      return this.groundContactModel;
+      return groundContactModel;
    }
 
    /**
@@ -288,7 +295,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    public void decideGroundContactPointsInContact()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -297,27 +304,36 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
+   public void doLoopClosure()
+   {
+      List<Joint> children = this.getRootJoints();
+
+      for (int i = 0; i < children.size(); i++)
+      {
+         Joint rootJoint = children.get(i);
+         rootJoint.physics.doLoopClosureRecursive();
+      }
+   }
 
    /**
-    * Retrieves an ArrayList containing the rootJoints of this robot.  These joints make up the entirety of the robot's visual component as all joints and links are at some level their children.
+    * Retrieves an List containing the rootJoints of this robot. These joints make up the entirety of
+    * the robot's visual component as all joints and links are at some level their children.
     *
-    * @return ArrayList containing the root joints of the robot.
+    * @return List containing the root joints of the robot.
     */
-   public ArrayList<Joint> getRootJoints()
+   public List<Joint> getRootJoints()
    {
       return rootJoints;
    }
-   
-   public void getRootJoints(ArrayList<Joint> jointsToPack)
+
+   public void getRootJoints(List<Joint> jointsToPack)
    {
       jointsToPack.addAll(rootJoints);
    }
 
-
    /**
-    * Sets gravity to the specified values. For example, if using
-    * meter-kilogram-seconds units of measure with Earth's gravity, then use
-    * setGravity(0.0, 0.0, -9.81);
+    * Sets gravity to the specified values. For example, if using meter-kilogram-seconds units of
+    * measure with Earth's gravity, then use setGravity(0.0, 0.0, -9.81);
     *
     * @param gravityX X component of the Gravity vector.
     * @param gravityY Y component of the Gravity vector.
@@ -329,18 +345,17 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       this.gravityY.set(gravityY);
       this.gravityZ.set(gravityZ);
    }
-   
-   public void setGravity(Vector3D gravity)
+
+   public void setGravity(Vector3DReadOnly gravity)
    {
-      this.gravityX.set(gravity.getX());
-      this.gravityY.set(gravity.getY());
-      this.gravityZ.set(gravity.getZ());
+      gravityX.set(gravity.getX());
+      gravityY.set(gravity.getY());
+      gravityZ.set(gravity.getZ());
    }
-   
+
    /**
     * Sets the Z component of the gravity to the specified value. For example, if using
-    * meter-kilogram-seconds units of measure with Earth's gravity, then use
-    * setGravity(-9.81);
+    * meter-kilogram-seconds units of measure with Earth's gravity, then use setGravity(-9.81);
     *
     * @param gZ Z component of the Gravity vector. X and Y components are set to 0.0.
     */
@@ -350,7 +365,8 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Adds a FunctionToIntegrate which will be integrated each simulation step.  If no functions are present that step is skipped.
+    * Adds a FunctionToIntegrate which will be integrated each simulation step. If no functions are
+    * present that step is skipped.
     *
     * @param functionToIntegrate The function to be integrated.
     * @see FunctionToIntegrate FunctionToIntegrate
@@ -370,9 +386,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    //TODO: Refactor all setController methods to addController
 
    /**
-    * Adds a controller to use with this Robot.  A single robot can have multiple controllers,
-    * all of which execute their {@link RobotController#doControl doControl} methods when called.
-    * Controllers added with this function doControl every simulation tick.
+    * Adds a controller to use with this Robot. A single robot can have multiple controllers, all of
+    * which execute their {@link RobotController#doControl doControl} methods when called. Controllers
+    * added with this function doControl every simulation tick.
     *
     * @param controller RobotController to use with this robot.
     * @see RobotController RobotController
@@ -383,27 +399,28 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Adds a controller to use with this Robot. This method provides a method for reducing the number of control ticks
-    * per simulation tick.  In other words, the controller only executes once every x simulation ticks.
+    * Adds a controller to use with this Robot. This method provides a method for reducing the number
+    * of control ticks per simulation tick. In other words, the controller only executes once every x
+    * simulation ticks.
     *
-    * @param controller RobotController to use with this robot.
+    * @param controller                    RobotController to use with this robot.
     * @param simulationTicksPerControlTick Number of simulation ticks per control tick.
     */
    public void setController(RobotController controller, int simulationTicksPerControlTick)
    {
       setController(new RobotControllerAndParameters(controller, simulationTicksPerControlTick));
    }
-   
-   public void setController(ArrayList<RobotController> controllers, int simulationTicksPerControlTick)
+
+   public void setController(List<RobotController> controllers, int simulationTicksPerControlTick)
    {
-      for(int i = 0; i<controllers.size(); i++)
+      for (int i = 0; i < controllers.size(); i++)
       {
          RobotController controller = controllers.get(i);
-         setController(controller,simulationTicksPerControlTick);
+         setController(controller, simulationTicksPerControlTick);
       }
    }
-   
-   public void setControllersAndCallInitialization(ArrayList<RobotControllerAndParameters> robotControllersAndParameters)
+
+   public void setControllersAndCallInitialization(List<RobotControllerAndParameters> robotControllersAndParameters)
    {
       for (RobotControllerAndParameters robotControllerAndParameters : robotControllersAndParameters)
       {
@@ -411,25 +428,25 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          robotControllerAndParameters.getController().initialize();
       }
    }
-   
+
    public void setController(RobotControllerAndParameters controllerAndParameters)
    {
-      YoVariableRegistry registry = controllerAndParameters.getController().getYoVariableRegistry();
-      this.controllers.add(controllerAndParameters);
-      addYoVariableRegistry(registry);
+      YoRegistry registry = controllerAndParameters.getController().getYoRegistry();
+      controllers.add(controllerAndParameters);
+      addYoRegistry(registry);
    }
 
    /**
-    * Executes the doControl method for each controller assigned to this robot.  This method
-    * is called once per simulation tick.  If simulationTicksPerControlTick for a given controller
-    * is something other than one the function will skip that controller.
+    * Executes the doControl method for each controller assigned to this robot. This method is called
+    * once per simulation tick. If simulationTicksPerControlTick for a given controller is something
+    * other than one the function will skip that controller.
     */
    public final void doControllers()
    {
       if (controllers == null)
          return;
 
-//    for(RobotControllerAndParameters controller : controllers)
+      //    for(RobotControllerAndParameters controller : controllers)
       for (int i = 0; i < controllers.size(); i++)
       {
          RobotControllerAndParameters controller = controllers.get(i);
@@ -444,31 +461,30 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-
    // public RobotController getController(){return this.controller;}
 
    /**
-    * Sets the ground contact model for this robot.  This allow the robot to interact with
-    * its surroundings based on their characteristics.
+    * Sets the ground contact model for this robot. This allow the robot to interact with its
+    * surroundings based on their characteristics.
     *
     * @param gcModel GroundContactModel to be used with this robot.
     * @see GroundContactModel GroundContactModel
     */
    public void setGroundContactModel(GroundContactModel gcModel)
    {
-      this.groundContactModel = gcModel;
+      groundContactModel = gcModel;
    }
 
    /**
-    * Retrieves the VarList associated with this robot's GroundContactModel.  Will return null if
-    * a model was not added.
+    * Retrieves the VarList associated with this robot's GroundContactModel. Will return null if a
+    * model was not added.
     *
     * @return VarList associated with the GroundContactModel
     */
 
-// protected VarList getGroundContactVarList(){return this.groundVars;}
-// protected ArrayList<VarList> getControllerVarLists(){return this.controllerVarLists;}
-// protected VarList getExternalForceVarList(){return this.groundVars;}
+   // protected VarList getGroundContactVarList(){return this.groundVars;}
+   // protected List<VarList> getControllerVarLists(){return this.controllerVarLists;}
+   // protected VarList getExternalForceVarList(){return this.groundVars;}
 
    /**
     * Gets the name of this Robot.
@@ -477,12 +493,12 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     */
    public String getName()
    {
-      return this.name;
+      return name;
    }
 
    /**
-    * Returns a list of the YoVariables associated with this robot.  This list does
-    * not include variables belonging to its GroundContactModel or controllers.
+    * Returns a list of the YoVariables associated with this robot. This list does not include
+    * variables belonging to its GroundContactModel or controllers.
     *
     * @return VarList of the Robot's variables.
     */
@@ -501,13 +517,13 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       boolean updatePoints = false;
       boolean updateCameraMounts = true;
       boolean updateIMUMounts = false;
-      
+
       update(updatePoints, updateCameraMounts, updateIMUMounts);
    }
 
    /**
-    * Updates all joint data without updating graphics.
-    * TODO: Not sure if this needs to be synchronized anymore.
+    * Updates all joint data without updating graphics. TODO: Not sure if this needs to be synchronized
+    * anymore.
     */
    protected synchronized void update(boolean updatePoints, boolean updateCameraMounts, boolean updateIMUMounts)
    {
@@ -517,7 +533,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          rootJoint.recursiveUpdateJoints(null, updatePoints, updateCameraMounts, updateIMUMounts, t.getDoubleValue());
       }
    }
-   
+
    public void updateIMUMountAccelerations()
    {
       for (int i = 0; i < rootJoints.size(); i++)
@@ -528,8 +544,8 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Updates the velocities for all ground contact points.  This is called once
-    * per simulation tick to ensure all ground contact point velocities are updated.
+    * Updates the velocities for all ground contact points. This is called once per simulation tick to
+    * ensure all ground contact point velocities are updated.
     */
    public void updateAllGroundContactPointVelocities()
    {
@@ -549,17 +565,17 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    private RotationMatrix R_0_i = new RotationMatrix();
 
    /**
-    * Steps through every joint adding each camera mount to the provided list.  This function is called
-    * by the GUI on one of two occasions.  When the GUI is created and when a robot is set.  In both cases
-    * the method is not called in the null robot case.
+    * Steps through every joint adding each camera mount to the provided list. This function is called
+    * by the GUI on one of two occasions. When the GUI is created and when a robot is set. In both
+    * cases the method is not called in the null robot case.
     *
     * @param cameraMountList CameraMountList to which all mount points are added.
     */
    public void getCameraMountList(CameraMountList cameraMountList)
    {
-      ArrayList<CameraMountInterface> mountArrayList = new ArrayList<CameraMountInterface>();
+      List<CameraMountInterface> mountArrayList = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -569,34 +585,35 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          cameraMountList.addCameraMounts(mountArrayList);
       }
    }
-   
-   public ArrayList<SimulatedSensor> getSensors()
+
+   public List<SimulatedSensor> getSensors()
    {
-      ArrayList<SimulatedSensor> ret = new ArrayList<SimulatedSensor>();
-      
-      ArrayList<Joint> children = this.getRootJoints();
+      List<SimulatedSensor> ret = new ArrayList<>();
+
+      List<Joint> children = this.getRootJoints();
       for (int i = 0; i < children.size(); i++)
       {
          Joint rootJoint = children.get(i);
          rootJoint.recursiveGetSensors(ret);
       }
-      
+
       return ret;
    }
-   
+
    /**
-    * Returns an ArrayList appropriate to the type of sensor being queried containing all the sensors of that type for each joint. 
+    * Returns an List appropriate to the type of sensor being queried containing all the sensors of
+    * that type for each joint.
     */
    @SuppressWarnings("unchecked")
-   public <T extends SimulatedSensor> ArrayList<T> getSensors(Class<T> sensorType)
+   public <T extends SimulatedSensor> List<T> getSensors(Class<T> sensorType)
    {
-      ArrayList<SimulatedSensor> allSensors = getSensors();
-      
-      ArrayList<T> specificSensors = new ArrayList<T>();
-      
-      for(SimulatedSensor sensor : allSensors)
+      List<SimulatedSensor> allSensors = getSensors();
+
+      List<T> specificSensors = new ArrayList<>();
+
+      for (SimulatedSensor sensor : allSensors)
       {
-         if(sensorType.isAssignableFrom(sensor.getClass()))
+         if (sensorType.isAssignableFrom(sensor.getClass()))
          {
             specificSensors.add((T) sensor);
          }
@@ -604,44 +621,54 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       return specificSensors;
    }
-   
-   
-   public void getAllOneDegreeOfFreedomJoints(ArrayList<OneDegreeOfFreedomJoint> oneDegreeOfFreedomJoints)
+
+   public void getAllOneDegreeOfFreedomJoints(List<OneDegreeOfFreedomJoint> oneDegreeOfFreedomJoints)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
          Joint rootJoint = children.get(i);
          rootJoint.recursiveGetOneDegreeOfFreedomJoints(oneDegreeOfFreedomJoints);
-      }    
+      }
    }
 
-   public void getLidarMounts(ArrayList<LidarMount> lidarMountsToPack)
+   public void getAllLoopClosureSoftConstraints(List<LoopClosureSoftConstraint> constraintsToPack)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
+
+      for (int i = 0; i < children.size(); i++)
+      {
+         Joint rootJoint = children.get(i);
+         rootJoint.recursiveGetChildrenConstraints(constraintsToPack);
+      }
+   }
+
+   public void getLidarMounts(List<LidarMount> lidarMountsToPack)
+   {
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
          Joint rootJoint = children.get(i);
          rootJoint.recursiveGetLidarMounts(lidarMountsToPack);
-      }    
+      }
    }
-   
-   public void getIMUMounts(ArrayList<IMUMount> imuMountsToPack)
+
+   public void getIMUMounts(List<IMUMount> imuMountsToPack)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
          Joint rootJoint = children.get(i);
          rootJoint.recursiveGetIMUMounts(imuMountsToPack);
-      }    
+      }
    }
-   
-   public void getForceSensors(ArrayList<WrenchCalculatorInterface> forceSensors)
+
+   public void getForceSensors(List<WrenchCalculatorInterface> forceSensors)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -651,16 +678,17 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Retrieves a list of all ground contact points associated with this robot and the groundContactGroupIdentifier.
+    * Retrieves a list of all ground contact points associated with this robot and the
+    * groundContactGroupIdentifier.
     *
-    * @return ArrayList containing the GroundContactPoints, if none exist the list will be empty.
+    * @return List containing the GroundContactPoints, if none exist the list will be empty.
     */
    @Override
-   public ArrayList<GroundContactPoint> getGroundContactPoints(int groundContactGroupIdentifier)
+   public List<GroundContactPoint> getGroundContactPoints(int groundContactGroupIdentifier)
    {
-      ArrayList<GroundContactPoint> ret = new ArrayList<GroundContactPoint>();
+      List<GroundContactPoint> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -671,11 +699,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return ret;
    }
 
-   public ArrayList<ArrayList<GroundContactPoint>> getAllGroundContactPointsGroupedByJoint()
+   public List<List<GroundContactPoint>> getAllGroundContactPointsGroupedByJoint()
    {
-      ArrayList<ArrayList<GroundContactPoint>> ret = new ArrayList<ArrayList<GroundContactPoint>>();
+      List<List<GroundContactPoint>> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -686,11 +714,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return ret;
    }
 
-   public ArrayList<GroundContactPoint> getAllGroundContactPoints()
+   public List<GroundContactPoint> getAllGroundContactPoints()
    {
-      ArrayList<GroundContactPoint> ret = new ArrayList<GroundContactPoint>();
+      List<GroundContactPoint> ret = new ArrayList<>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -700,12 +728,12 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       return ret;
    }
-   
-   public ArrayList<ExternalForcePoint> getAllExternalForcePoints()
-   {
-      ArrayList<ExternalForcePoint> ret = new ArrayList<ExternalForcePoint>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+   public List<ExternalForcePoint> getAllExternalForcePoints()
+   {
+      List<ExternalForcePoint> ret = new ArrayList<>();
+
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -715,12 +743,12 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       return ret;
    }
-   
-   public ArrayList<KinematicPoint> getAllKinematicPoints()
-   {
-      ArrayList<KinematicPoint> ret = new ArrayList<KinematicPoint>();
 
-      ArrayList<Joint> children = this.getRootJoints();
+   public List<KinematicPoint> getAllKinematicPoints()
+   {
+      List<KinematicPoint> ret = new ArrayList<>();
+
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -733,13 +761,13 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    public ExternalForcePoint getExternalForcePoint(String name)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
          Joint rootJoint = children.get(i);
          ExternalForcePoint externalForcePoint = rootJoint.recursiveGetExternalForcePoint(name);
-         if (externalForcePoint != null) 
+         if (externalForcePoint != null)
             return externalForcePoint;
       }
 
@@ -747,7 +775,8 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Adds the specified link to the robot.  Static links have no effect on the simulation, they are purely cosmetic.
+    * Adds the specified link to the robot. Static links have no effect on the simulation, they are
+    * purely cosmetic.
     *
     * @param staticLink Link to be added.
     */
@@ -757,18 +786,19 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Adds the specified LinkGraphics to the robot.  Static LinkGraphics have no effect on the simulation, they are purely cosmetic.
+    * Adds the specified LinkGraphics to the robot. Static LinkGraphics have no effect on the
+    * simulation, they are purely cosmetic.
     *
     * @param linkGraphics LinkGraphics to be added.
     */
    public void addStaticLinkGraphics(Graphics3DObject linkGraphics)
-   {      
-      
+   {
+
       staticLinkGraphics.add(linkGraphics);
-      
+
    }
-   
-   public void addStaticLinkGraphics(ArrayList<Graphics3DObject> linkGraphicsArray)
+
+   public void addStaticLinkGraphics(List<Graphics3DObject> linkGraphicsArray)
    {
       for (Graphics3DObject linkGraphics : linkGraphicsArray)
       {
@@ -776,15 +806,15 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-
    /**
-    * Updates the velocities and positions at each joint as well as the rotation matrices from and to the base coordinate system.  Each joint stores
-    * both its rotational and translational velocities.  The updated velocities are based on those of the previous joint in the chain.
-    * This also updates all kinetic and ground contact points.
+    * Updates the velocities and positions at each joint as well as the rotation matrices from and to
+    * the base coordinate system. Each joint stores both its rotational and translational velocities.
+    * The updated velocities are based on those of the previous joint in the chain. This also updates
+    * all kinetic and ground contact points.
     */
    public void updateVelocities()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -802,31 +832,31 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * This function handles the dynamics of the robot.  While simulating, each simulation "tick" triggers this function four times
-    * allowing the calculation of the four Runge-Kutta coefficients.  These coefficients are calculated by executing the four Featherstone
-    * passes on each joint tree.
+    * This function handles the dynamics of the robot. While simulating, each simulation "tick"
+    * triggers this function four times allowing the calculation of the four Runge-Kutta coefficients.
+    * These coefficients are calculated by executing the four Featherstone passes on each joint tree.
+    * The first pass recurses down the tree, calculating the linear and angular velocities for each
+    * link. In the process the rotation matrices and radius vectors are recalculated. The coordinate
+    * system of each joint/link space is centered on the current link's center of mass. Each joint
+    * contains a rotation matrix and corresponding radius vector to translate information to and from
+    * the previous link's coordinate system. These functions must be updated before the velocities may
+    * be calculated. The kinematic and ground contact points for each joint are also updated. Pass two
+    * recurses down the tree again, calculating the isolated components of the spatial articulated
+    * inertia and spatial isolated zero-acceleration force for each link. Coriolis forces and forces
+    * from ground contact and kinetic points are included in these calculations. In the third pass the
+    * completed articulated inertia and articulated z.a. forces are calculated for each link by
+    * recursing up the tree. These values are based on the positions, velocities and torques of each
+    * link. The final pass recurses down the tree calculating the joint accelerations based on the
+    * information generated by the previous three passes. During this pass the joint positions,
+    * velocities and accelerations are stored for use in the Runge-Kutta calculations.
     *
-    * The first pass recurses down the tree, calculating the linear and angular velocities for each link.  In the process the rotation
-    * matrices and radius vectors are recalculated.  The coordinate system of each joint/link space is centered on the current link's
-    * center of mass.  Each joint contains a rotation matrix and corresponding radius vector to translate information to and from the previous
-    * link's coordinate system. These functions must be updated before the velocities may be calculated.  The kinematic and ground contact points
-    * for each joint are also updated.
-    *
-    * Pass two recurses down the tree again, calculating the isolated components of the spatial articulated inertia and spatial isolated
-    * zero-acceleration force for each link.  Coriolis forces and forces from ground contact and kinetic points are included in these calculations.
-    *
-    * In the third pass the completed articulated inertia and articulated z.a. forces are calculated for each link by recursing up the tree.  These
-    * values are based on the positions, velocities and torques of each link.
-    *
-    * The final pass recurses down the tree calculating the joint accelerations based on the information generated by the previous three
-    * passes.  During this pass the joint positions, velocities and accelerations are stored for use in the Runge-Kutta calculations.
-    *
-    * @param passNumber Current pass, this is used in featherstonePassFour when saving the current values of k_q, k_qd, and k_qdd
+    * @param passNumber Current pass, this is used in featherstonePassFour when saving the current
+    *                   values of k_q, k_qd, and k_qdd
     * @throws UnreasonableAccelerationException
     */
    private void doDynamics(int passNumber) throws UnreasonableAccelerationException
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -864,24 +894,24 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
    }
 
-   public YoVariableRegistry getRobotsYoVariableRegistry()
+   public YoRegistry getRobotsYoRegistry()
    {
-      return yoVariableRegistry;
+      return yoRegistry;
    }
-   
-   public void setRobotsYoVariableRegistry(YoVariableRegistry registry)
+
+   public void setRobotsYoRegistry(YoRegistry registry)
    {
-     this.yoVariableRegistry = registry;
+      yoRegistry = registry;
    }
 
    /**
-    * Saves the current state of each joint.  Different joint types have different relevant values, pin and slider joints
-    * store only position and velocity.  These values are restored prior to each Euler integration in order to properly
-    * calculate the Runge-Kutta slope.
+    * Saves the current state of each joint. Different joint types have different relevant values, pin
+    * and slider joints store only position and velocity. These values are restored prior to each Euler
+    * integration in order to properly calculate the Runge-Kutta slope.
     */
    private void rootJointsRecursiveSaveTempState()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -893,15 +923,15 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Calculates the position and velocity for each joint using euler integration.
-    * y_(n+1) = y_n + h*f(t_n, y_n)  where h is the step size.
-    * This function used in the calculation of the Runge-Kutta slope.
+    * Calculates the position and velocity for each joint using euler integration. y_(n+1) = y_n +
+    * h*f(t_n, y_n) where h is the step size. This function used in the calculation of the Runge-Kutta
+    * slope.
     *
     * @param dt Time step size for Euler integration
     */
    public void rootJointsRecursiveEulerIntegrate(double dt)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -912,12 +942,11 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Steps through evey joint restoring the saved values for use
-    * in the next Euler integration.
+    * Steps through evey joint restoring the saved values for use in the next Euler integration.
     */
    private void rootJointsRecursiveRestoreTempState()
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -928,26 +957,20 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Steps through each joint updating data using the Runge-Kutta method
-    * The next value in a Runge-Kutta series is described by the following formulas:
-    * y_(n+1) = y_n + (1/6) * h * (k_1 + 2k_2 + 2 k_3 + k_4)
-    * t_(n+1) = t_n + h
-    *
-    * Where:
-    * h is the step size (dt)
-    * k_1 is the slope at the beginning of the interval
-    * k_2 is the slope at the midpoint of the interval calcuated by using k_1 to predict the value of y at point t_n + h/2 using Euler's method
-    * k_3 is the slope at the midpoint recalculated using k_2
-    * k_4 is the slope at the end of the interval determined via k_3
-    *
-    * These coefficents are calculated by the doDynamics function and stored.  That function is called four times, once per k after a Euler integration
-    * steps the values.
+    * Steps through each joint updating data using the Runge-Kutta method The next value in a
+    * Runge-Kutta series is described by the following formulas: y_(n+1) = y_n + (1/6) * h * (k_1 +
+    * 2k_2 + 2 k_3 + k_4) t_(n+1) = t_n + h Where: h is the step size (dt) k_1 is the slope at the
+    * beginning of the interval k_2 is the slope at the midpoint of the interval calcuated by using k_1
+    * to predict the value of y at point t_n + h/2 using Euler's method k_3 is the slope at the
+    * midpoint recalculated using k_2 k_4 is the slope at the end of the interval determined via k_3
+    * These coefficents are calculated by the doDynamics function and stored. That function is called
+    * four times, once per k after a Euler integration steps the values.
     *
     * @param dt Step size to be used.
     */
    private void rootJointsRecursiveRungeKuttaSum(double dt)
    {
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       for (int i = 0; i < children.size(); i++)
       {
@@ -964,7 +987,6 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    {
    }
 
-
    /**
     * Will update the qdd values of the joints, but not integrate the velocities or anything like that.
     * Good for testing inverse dynamics routines and things like that.
@@ -976,37 +998,47 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * <p>Calculates the robot dynamics and integrates to the next step.  This integration is accomplished via the Runge-Kutta method
-    * which approximates the next point in the series by calculating four intermediary slopes.  The robot dynamics are calculated four times
-    * using the following method to generate these Runge-Kutta slopes.</p>
-    *
-    * <p>Robot dynamics are calculated via the Featherstone algorithm as discussed by Brian Mirtich in his Thesis, <i>Impule-based Dynamic Simulation of Rigid Body Systems</i>.
-    * This algorithm is implemented in four distinct passes as follows:</p>
-    *
+    * <p>
+    * Calculates the robot dynamics and integrates to the next step. This integration is accomplished
+    * via the Runge-Kutta method which approximates the next point in the series by calculating four
+    * intermediary slopes. The robot dynamics are calculated four times using the following method to
+    * generate these Runge-Kutta slopes.
+    * </p>
+    * <p>
+    * Robot dynamics are calculated via the Featherstone algorithm as discussed by Brian Mirtich in his
+    * Thesis, <i>Impule-based Dynamic Simulation of Rigid Body Systems</i>. This algorithm is
+    * implemented in four distinct passes as follows:
+    * </p>
     * <OL>
-    * <LI>The first pass recurses down the tree, calculating the linear and angular velocities for each link.  In the process the rotation
-    * matricies and radius vectors are recalculated.  The coordinate system of each joint/link space is centered on the current link's
-    * center of mass.  Each joint contains a rotation matrix and corresponding radius vector to translate information to and from the previous
-    * link's coordinate system. These functions must be updated before the velocities may be calculated.  The kinematic and ground contact points
-    * as well as torque for each joint are also updated.</LI>
-    *
-    * <LI>Pass two recurses down the tree again, calculating the isolated components of the spatial articulated inertia and spatial isolated
-    * zero-acceleration force for each link.  Coriolis forces and forces from ground contact and kinetic points are included in these calculations.</LI>
-    *
-    * <LI>In the third pass the completed articulated inertia and articulated z.a. forces are calculated for each link by recursing up the tree.  These
-    * values are based on the positions, velocities and torques of each link.</LI>
-    *
-    * <LI>The final pass recurses down the tree calculating the joint accelerations based on the information generated by the previous three
-    * passes.  During this pass the joint positions, velocities and accelerations are stored for use in the Runge-Kutta calculations.</LI>
+    * <LI>The first pass recurses down the tree, calculating the linear and angular velocities for each
+    * link. In the process the rotation matricies and radius vectors are recalculated. The coordinate
+    * system of each joint/link space is centered on the current link's center of mass. Each joint
+    * contains a rotation matrix and corresponding radius vector to translate information to and from
+    * the previous link's coordinate system. These functions must be updated before the velocities may
+    * be calculated. The kinematic and ground contact points as well as torque for each joint are also
+    * updated.</LI>
+    * <LI>Pass two recurses down the tree again, calculating the isolated components of the spatial
+    * articulated inertia and spatial isolated zero-acceleration force for each link. Coriolis forces
+    * and forces from ground contact and kinetic points are included in these calculations.</LI>
+    * <LI>In the third pass the completed articulated inertia and articulated z.a. forces are
+    * calculated for each link by recursing up the tree. These values are based on the positions,
+    * velocities and torques of each link.</LI>
+    * <LI>The final pass recurses down the tree calculating the joint accelerations based on the
+    * information generated by the previous three passes. During this pass the joint positions,
+    * velocities and accelerations are stored for use in the Runge-Kutta calculations.</LI>
     * </OL>
-    *
-    * <p>Between each run of the dynamics Euler Integration is used to shift the values in preparation for the next step.  However, the values are returned
-    * to their original states before each integration.  Each pass of the dynamics stores the Runge-Kutta slope for each parameter.  Once the dynamics have
-    * been calculated the joints are checked for unreasonable accelerations.  If none are present, Runge-Kutta is executed for each joint and the current time
-    * is updated.
+    * <p>
+    * Between each run of the dynamics Euler Integration is used to shift the values in preparation for
+    * the next step. However, the values are returned to their original states before each integration.
+    * Each pass of the dynamics stores the Runge-Kutta slope for each parameter. Once the dynamics have
+    * been calculated the joints are checked for unreasonable accelerations. If none are present,
+    * Runge-Kutta is executed for each joint and the current time is updated.
     *
     * @param DT Step time for the integration.
-    * @throws UnreasonableAccelerationException This exception indicates that at least one joint underwent an unreasonable acceleration as defined by its joint type.  This is often caused by overly large step times (DT).
+    * @throws UnreasonableAccelerationException This exception indicates that at least one joint
+    *                                           underwent an unreasonable acceleration as defined by
+    *                                           its joint type. This is often caused by overly large
+    *                                           step times (DT).
     */
    public void doDynamicsAndIntegrate(double DT) throws UnreasonableAccelerationException
    {
@@ -1020,66 +1052,63 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
 
       double temp_time = t.getDoubleValue();
-      
+
       switch (dynamicIntegrationMethod)
       {
-      case RUNGE_KUTTA_FOURTH_ORDER:
-      {
-         rootJointsRecursiveSaveTempState();
+         case RUNGE_KUTTA_FOURTH_ORDER:
+         {
+            rootJointsRecursiveSaveTempState();
 
-         doDynamics(0);
-         rootJointsRecursiveEulerIntegrate(DT / 2.0);
-         doDynamics(1);
+            doDynamics(0);
+            rootJointsRecursiveEulerIntegrate(DT / 2.0);
+            doDynamics(1);
 
-         rootJointsRecursiveRestoreTempState();
-         rootJointsRecursiveEulerIntegrate(DT / 2.0);
-         doDynamics(2);
+            rootJointsRecursiveRestoreTempState();
+            rootJointsRecursiveEulerIntegrate(DT / 2.0);
+            doDynamics(2);
 
-         rootJointsRecursiveRestoreTempState();
-         rootJointsRecursiveEulerIntegrate(DT);
-         doDynamics(3);
+            rootJointsRecursiveRestoreTempState();
+            rootJointsRecursiveEulerIntegrate(DT);
+            doDynamics(3);
 
-         rootJointsRecursiveRungeKuttaSum(DT);
+            rootJointsRecursiveRungeKuttaSum(DT);
 
-         t.set(temp_time + DT);
+            t.set(temp_time + DT);
 
-         break;
+            break;
+         }
+
+         case EULER_DOUBLE_STEPS:
+         {
+            rootJointsRecursiveSaveTempState();
+
+            doDynamics(0);
+            rootJointsRecursiveEulerIntegrate(DT / 2.0);
+            t.set(temp_time + DT / 2.0);
+
+            rootJointsRecursiveSaveTempState();
+
+            doDynamics(1);
+            rootJointsRecursiveEulerIntegrate(DT / 2.0);
+            t.set(temp_time + DT);
+
+            break;
+         }
+
+         default:
+            throw new RuntimeException("Should not get here");
       }
 
-      case EULER_DOUBLE_STEPS:
-      {
-         rootJointsRecursiveSaveTempState();
+      //    }
 
-         doDynamics(0);
-         rootJointsRecursiveEulerIntegrate(DT / 2.0);
-         t.set(temp_time + DT/2.0);
-
-         rootJointsRecursiveSaveTempState();
-
-         doDynamics(1);
-         rootJointsRecursiveEulerIntegrate(DT / 2.0);
-         t.set(temp_time + DT);
-         
-         break;
-      }
-
-      default:
-         throw new RuntimeException("Should not get here");
-      }
-
-      
-
-//    }
-
-//    else
-//    {
-//       ArrayList<Joint> unreasonableAccelerationJoints = getUnreasonableAccelerationJoints();
-//       throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
-//
-//       // System.err.println("Unreasonable Accelerations!");
-//    }
+      //    else
+      //    {
+      //       List<Joint> unreasonableAccelerationJoints = getUnreasonableAccelerationJoints();
+      //       throw new UnreasonableAccelerationException(unreasonableAccelerationJoints);
+      //
+      //       // System.err.println("Unreasonable Accelerations!");
+      //    }
    }
-
 
    private void doDynamicsAndIntegrateWithFunction(double DT) throws UnreasonableAccelerationException
    {
@@ -1124,8 +1153,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the total translational kinetic energy of this Robot. This is the sum over i of 1/2 m_i v_i*v_i,
-    * where m_i is the mass of link i, and v_i is the translational velocity of the center of mass of link i.
+    * Computes the total translational kinetic energy of this Robot. This is the sum over i of 1/2 m_i
+    * v_i*v_i, where m_i is the mass of link i, and v_i is the translational velocity of the center of
+    * mass of link i.
     *
     * @return Total translational kinetic energy.
     */
@@ -1144,14 +1174,12 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the total translational kinetic energy of the subtree rooted at
-    * the specified root Joint. This is the sum over i of 1/2 m_i v_i*v_i, where
-    * m_i is the mass of link i, and v_i is the translational velocity of the
-    * center of mass of link i, and i includes all decendents of the specified
-    * root Joint.
+    * Computes the total translational kinetic energy of the subtree rooted at the specified root
+    * Joint. This is the sum over i of 1/2 m_i v_i*v_i, where m_i is the mass of link i, and v_i is the
+    * translational velocity of the center of mass of link i, and i includes all decendents of the
+    * specified root Joint.
     *
-    * @return Total translational kinetic energy of the subtree rooted at the
-    *   specified root Joint.
+    * @return Total translational kinetic energy of the subtree rooted at the specified root Joint.
     * @param rootJoint Root Joint to compute energy from.
     */
    public double computeTranslationalKineticEnergy(Joint rootJoint)
@@ -1160,8 +1188,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the total rotational kinetic energy of this Robot. This is the sum over i of 1/2 w_i^T*J_i*w_i,
-    * where J_i is the ineria matrix of link i, and w_i is the rotational velocity vector of the center of mass of link i.
+    * Computes the total rotational kinetic energy of this Robot. This is the sum over i of 1/2
+    * w_i^T*J_i*w_i, where J_i is the ineria matrix of link i, and w_i is the rotational velocity
+    * vector of the center of mass of link i.
     *
     * @return Total rotational kinetic energy.
     */
@@ -1179,16 +1208,13 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return rotationalKineticEnergy;
    }
 
-
    /**
-    * Computes the total rotational kinetic energy of the subtree rooted at
-    * the specified root Joint. This is the sum over i of 1/2 w_i^T*J_i*w_i, where
-    * J_i is the inertia matrix of link i, and w_i is the rotational velocity vector of the
-    * center of mass of link i, and i consisting of all the decendents of the specified
-    * root Joint.
+    * Computes the total rotational kinetic energy of the subtree rooted at the specified root Joint.
+    * This is the sum over i of 1/2 w_i^T*J_i*w_i, where J_i is the inertia matrix of link i, and w_i
+    * is the rotational velocity vector of the center of mass of link i, and i consisting of all the
+    * decendents of the specified root Joint.
     *
-    * @return Total rotational kinetic energy of the subtree rooted at the
-    * specified root Joint.
+    * @return Total rotational kinetic energy of the subtree rooted at the specified root Joint.
     * @param rootJoint Root Joint to compute energy from.
     */
    public double computeRotationalKineticEnergy(Joint rootJoint)
@@ -1197,8 +1223,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the total gravitational potential energy of this Robot. This is the sum over i of m_i*g*h_i,
-    * where m_i is the mass of link i, g is the gravitational constant, and h_i is the height above 0 of link i.
+    * Computes the total gravitational potential energy of this Robot. This is the sum over i of
+    * m_i*g*h_i, where m_i is the mass of link i, g is the gravitational constant, and h_i is the
+    * height above 0 of link i.
     *
     * @return Total gravitational potential energy.
     */
@@ -1217,9 +1244,10 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the total gravitational potential energy of the subtree rooted at the specified root Joint. This is the sum over i of m_i*g*h_i,
-    * where m_i is the mass of link i, g is the gravitational constant, and h_i is the height above 0 of link i,
-    * with i consisting of all the decendents of the specified root Joint.
+    * Computes the total gravitational potential energy of the subtree rooted at the specified root
+    * Joint. This is the sum over i of m_i*g*h_i, where m_i is the mass of link i, g is the
+    * gravitational constant, and h_i is the height above 0 of link i, with i consisting of all the
+    * decendents of the specified root Joint.
     *
     * @return Total gravitational potential energy.
     */
@@ -1228,18 +1256,17 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return rootJoint.physics.recursiveComputeGravitationalPotentialEnergy();
    }
 
-
-   private Point3D tempCOMPoint = new Point3D();    // Temporary point storing the robot's center of mass
+   private Point3D tempCOMPoint = new Point3D(); // Temporary point storing the robot's center of mass
 
    /**
-    * Computes the center of mass of this Robot.  This center of mass position is returned
-    * by altering the provided Point3D.  If the robot has no mass, it also has no
-    * center of mass point.  This value is used in the calculation of center of momentum.
+    * Computes the center of mass of this Robot. This center of mass position is returned by altering
+    * the provided Point3D. If the robot has no mass, it also has no center of mass point. This value
+    * is used in the calculation of center of momentum.
     *
     * @param comPoint Center of Mass point, in World Coordinates, that is computed.
     * @return The total mass of the robot.
     */
-   public double computeCenterOfMass(Point3D comPoint)
+   public double computeCenterOfMass(Point3DBasics comPoint)
    {
       double totalMass = 0.0;
       comPoint.set(0.0, 0.0, 0.0);
@@ -1265,14 +1292,14 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the Center of Mass of the subtree rooted at the specified root Joint.
-    * This center of mass position is returned by altering the provided Point3D.
-    * If the robot has no mass, it also has no center of mass point.
+    * Computes the Center of Mass of the subtree rooted at the specified root Joint. This center of
+    * mass position is returned by altering the provided Point3D. If the robot has no mass, it also has
+    * no center of mass point.
     *
     * @param comPoint Center of Mass point, in World Coordinates, that is computed.
     * @return The total mass of the robot.
     */
-   public double computeCenterOfMass(Joint rootJoint, Point3D comPoint)
+   public double computeCenterOfMass(Joint rootJoint, Point3DBasics comPoint)
    {
       double totalMass = 0.0;
       comPoint.set(0.0, 0.0, 0.0);
@@ -1295,13 +1322,13 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    private Vector3D tempLinearMomentum = new Vector3D();
 
    /**
-    * Computes the total linear momentum of the center of mass for
-    * this Robot.  The total mass of the robot is also computed and returned.
+    * Computes the total linear momentum of the center of mass for this Robot. The total mass of the
+    * robot is also computed and returned.
     *
     * @param linearMomentum Total linear momentum vector that is computed.
     * @return The total mass of the robot.
     */
-   public double computeLinearMomentum(Vector3D linearMomentum)
+   public double computeLinearMomentum(Vector3DBasics linearMomentum)
    {
       double totalMass = 0.0;
       linearMomentum.set(0.0, 0.0, 0.0);
@@ -1319,15 +1346,14 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the total linear momentum of the center of mass for the
-    * subtree rooted at the specified root Joint.  The total mass of the
-    * robot is also computed and returned.
+    * Computes the total linear momentum of the center of mass for the subtree rooted at the specified
+    * root Joint. The total mass of the robot is also computed and returned.
     *
-    * @param rootJoint Root Joint for which linear momentum is computed.
+    * @param rootJoint      Root Joint for which linear momentum is computed.
     * @param linearMomentum Total linear momentum vector that is computed.
     * @return The total mass of the robot.
     */
-   public double computeLinearMomentum(Joint rootJoint, Vector3D linearMomentum)
+   public double computeLinearMomentum(Joint rootJoint, Vector3DBasics linearMomentum)
    {
       double totalMass = 0.0;
       linearMomentum.set(0.0, 0.0, 0.0);
@@ -1339,16 +1365,14 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return totalMass;
    }
 
-
    private Vector3D tempAngularMomentum = new Vector3D();
 
    /**
-    * Computes the total angular momentum about the center of mass for
-    * this Robot.
+    * Computes the total angular momentum about the center of mass for this Robot.
     *
     * @param angularMomentum Total angular momentum vector that is computed.
     */
-   public void computeAngularMomentum(Vector3D angularMomentum)
+   public void computeAngularMomentum(Vector3DBasics angularMomentum)
    {
       angularMomentum.set(0.0, 0.0, 0.0);
 
@@ -1362,13 +1386,13 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the total angular momentum about the center of mass for the
-    * subtree rooted at the specified root Joint.
+    * Computes the total angular momentum about the center of mass for the subtree rooted at the
+    * specified root Joint.
     *
-    * @param rootJoint Root Joint for which linear momentum is computed.
+    * @param rootJoint       Root Joint for which linear momentum is computed.
     * @param angularMomentum Total angular momentum vector that is computed.
     */
-   public void computeAngularMomentum(Joint rootJoint, Vector3D angularMomentum)
+   public void computeAngularMomentum(Joint rootJoint, Vector3DBasics angularMomentum)
    {
       angularMomentum.set(0.0, 0.0, 0.0);
 
@@ -1376,19 +1400,18 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       angularMomentum.add(tempAngularMomentum);
    }
 
-
    private Vector3D tempCOMVector = new Vector3D();
 
    /**
-    * Computes the Center of Mass location and total linear and angular momentum
-    * about the Center of Mass for this Robot.
+    * Computes the Center of Mass location and total linear and angular momentum about the Center of
+    * Mass for this Robot.
     *
-    * @param comPoint Center of Mass point that is computed.
-    * @param linearMomentum Total linear momentum vector that is computed.
+    * @param comPoint        Center of Mass point that is computed.
+    * @param linearMomentum  Total linear momentum vector that is computed.
     * @param angularMomentum Total angular momentum vector that is computed.
     * @return Total mass of the robot.
     */
-   public double computeCOMMomentum(Point3D comPoint, Vector3D linearMomentum, Vector3D angularMomentum)
+   public double computeCOMMomentum(Point3DBasics comPoint, Vector3DBasics linearMomentum, Vector3DBasics angularMomentum)
    {
       double mass = computeCenterOfMass(comPoint);
       computeLinearMomentum(linearMomentum);
@@ -1408,17 +1431,16 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * Computes the Center of Mass location and total linear and angular momentum
-    * about the center of mass for the subtree rooted at the specified root
-    * Joint.
+    * Computes the Center of Mass location and total linear and angular momentum about the center of
+    * mass for the subtree rooted at the specified root Joint.
     *
-    * @param rootJoint Root Joint to computed momentum from.
-    * @param comPoint Center of Mass point that is computed.
-    * @param linearMomentum Total linear momentum vector that is computed.
+    * @param rootJoint       Root Joint to computed momentum from.
+    * @param comPoint        Center of Mass point that is computed.
+    * @param linearMomentum  Total linear momentum vector that is computed.
     * @param angularMomentum Total angular momentum vector that is computed.
     * @return Total mass of the robot.
     */
-   public double computeCOMMomentum(Joint rootJoint, Point3D comPoint, Vector3D linearMomentum, Vector3D angularMomentum)
+   public double computeCOMMomentum(Joint rootJoint, Point3DBasics comPoint, Vector3DBasics linearMomentum, Vector3DBasics angularMomentum)
    {
       double mass = computeCenterOfMass(rootJoint, comPoint);
       computeLinearMomentum(rootJoint, linearMomentum);
@@ -1437,25 +1459,24 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       return mass;
    }
 
-
    private final Vector3D tempRVector = new Vector3D();
    private final Vector3D tempRCrossF = new Vector3D(), tempForce = new Vector3D();
 
    /**
-    * Computes the Center of Pressure of the GroundContactPoints attached to this
-    * Robot.
+    * Computes the Center of Pressure of the GroundContactPoints attached to this Robot.
     *
-    * @param copPoint Center of Pressure point that is computed.
-    * @param copForce Center of Pressure total force vector that is computed.
-    * @param copMoment Total moment generated about the Center of Pressure from all the GroundContactPoints.
+    * @param copPoint  Center of Pressure point that is computed.
+    * @param copForce  Center of Pressure total force vector that is computed.
+    * @param copMoment Total moment generated about the Center of Pressure from all the
+    *                  GroundContactPoints.
     */
-   public void computeCenterOfPressure(Point3D copPoint, Vector3D copForce, Vector3D copMoment)
+   public void computeCenterOfPressure(Point3DBasics copPoint, Vector3DBasics copForce, Vector3DBasics copMoment)
    {
       copPoint.set(0.0, 0.0, 0.0);
       copForce.set(0.0, 0.0, 0.0);
       copMoment.set(0.0, 0.0, 0.0);
 
-      ArrayList<GroundContactPoint> gcPoints = this.getAllGroundContactPoints();
+      List<GroundContactPoint> gcPoints = getAllGroundContactPoints();
 
       for (int i = 0; i < gcPoints.size(); i++)
       {
@@ -1475,7 +1496,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          copMoment.set(0.0, 0.0, 0.0);
          return;
       }
-        
+
       copPoint.scale(1.0 / copForce.getZ());
 
       for (int i = 0; i < gcPoints.size(); i++)
@@ -1494,8 +1515,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    }
 
    /**
-    * This method returns the display name of the robot followed
-    * by the names of each joint.
+    * This method returns the display name of the robot followed by the names of each joint.
     *
     * @return String, display name of the robot
     */
@@ -1504,40 +1524,40 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
    {
       StringBuffer retBuffer = new StringBuffer();
 
-      Queue<Joint> queue = new LinkedList<Joint>();
-      
+      Queue<Joint> queue = new LinkedList<>();
+
       retBuffer.append("Robot: " + name + "\n\n");
 
-      ArrayList<Joint> children = this.getRootJoints();
+      List<Joint> children = this.getRootJoints();
 
       queue.addAll(children);
-      
-      while(!queue.isEmpty())
-      {
-        Joint joint = queue.poll();
-            
-        retBuffer.append("\n"+joint.toString());
-        ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
 
-        queue.addAll(childrenJoints);
+      while (!queue.isEmpty())
+      {
+         Joint joint = queue.poll();
+
+         retBuffer.append("\n" + joint.toString());
+         List<Joint> childrenJoints = joint.getChildrenJoints();
+
+         queue.addAll(childrenJoints);
       }
 
       return retBuffer.toString();
    }
-   
+
    public void printRobotJointsAndMasses(StringBuffer stringBuffer)
    {
-      Queue<Joint> queue = new LinkedList<Joint>();
-      ArrayList<Joint> children = this.getRootJoints();
+      Queue<Joint> queue = new LinkedList<>();
+      List<Joint> children = this.getRootJoints();
 
       queue.addAll(children);
 
-      while(!queue.isEmpty())
+      while (!queue.isEmpty())
       {
          Joint joint = queue.poll();
 
          stringBuffer.append("\n" + joint.getName() + ": mass = " + joint.getLink().getMass());
-         ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
+         List<Joint> childrenJoints = joint.getChildrenJoints();
 
          queue.addAll(childrenJoints);
       }
@@ -1556,126 +1576,125 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * @param stream PrintStream to output the class to. Use System.out to output to the screen.
     */
 
-// public void createControllerBase(PrintStream stream)
-// {
-//   // Retrieve the class and package names
-//   String name = this.getClass().getSimpleName();  // Robot Class
-//   String baseName; // Name of ControllerBase
-//   // Lets remove any Robot endings from the ControllerBase name
-//   if (name.endsWith("Robot"))
-//     baseName = name.substring(0, name.length() - "Robot".length());
-//   else
-//     baseName = name;
-//
-//   String packageName = this.getClass().getPackage().getName(); // Robot Package
-//
-//   stream.println("package " + packageName + ";");
-//   stream.println("");
-//   stream.println("import us.ihmc.simulationconstructionset.*;");
-//   stream.println("import java.util.*;");
-//   stream.println("");
-//   stream.println("public class " + baseName + "ControllerBase implements YoVariableRegistry");
-//   stream.println("{");
-//   println(stream, 3, "protected " + name + " rob;");
-//   stream.println("");
-//   println(stream, 3, "// These are the variables that are automatically created when the robot is created:");
-//   //println(stream, 3, "YoVariable t;");
-//
-//   //VarList robVariables = new VarList("Robot Variables");
-//   // Print the joint variables:
-//   this.printVarBase(stream, robVars);
-//   stream.println("");
-//   this.printVarBase(stream, groundVars);
-//
-//   //for(int jointNum = 0; jointNum < rootJoints.size(); jointNum++)
-//   //{
-//    // Joint rootJoint = (Joint) rootJoints.get(jointNum);
-//    // recursivelyPrintJointBase(rootJoint, stream, robVariables);
-//   //}
-//
-//   stream.println("");
-//   println(stream, 3, "// User defined control variables will be placed in this ArrayList when they are registered:");
-//   println(stream, 3, "ArrayList controlVars = new ArrayList();");
-//   println(stream, 3, "LinkedHashMap controlVarsHashMap = new LinkedHashMap();");
-//   stream.println("");
-//   println(stream, 3, "public " + baseName + "ControllerBase(" + name + " rob)");
-//   println(stream, 3, "{");
-//   println(stream, 5, "this.rob = rob;");
-//   stream.println("");
-//   println(stream, 5, "// Get the variables that are stored with the robot:");
-//   stream.println("");
-//
-//   //println(stream, 5, "t = rob.getVar(\"t\");");
-//   stream.println("");
-//
-//   //
-//   for(int varNum=0; varNum<robVars.size(); varNum++)
-//   {
-//     YoVariable var = robVars.get(varNum);
-//
-//     if(varNum % 3 == 0) {stream.print("     ");}
-//     stream.print(var.getName() + " = rob.getVariable(\"" + var.getName() + "\"); ");
-//     if(varNum % 3 == 2) {stream.println("");}
-//   }
-//
-//   stream.println("");
-//   for(int varNum=0; varNum<groundVars.size(); varNum++)
-//   {
-//     YoVariable var = groundVars.get(varNum);
-//
-//     if(varNum % 3 == 0) {stream.print("     ");}
-//     stream.print(var.getName() + " = rob.getVariable(\"" + var.getName() + "\"); ");
-//     if(varNum % 3 == 2) {stream.println("");}
-//   }
-//
-//
-//   stream.println("");
-//   println(stream, 3, "}");
-//   stream.println("");
-//   println(stream, 3, "public void registerVariable(YoVariable var)");
-//   println(stream, 3, "{");
-//   println(stream, 5, "if (controlVarsHashMap.containsKey(var.getName())) System.err.println(\"Warning:  \" + var.getName() + \" has already been registered\");");
-//   println(stream, 5, "controlVarsHashMap.put(var.getName(), var);");
-//   println(stream, 5, "controlVars.add(var);");
-//   println(stream, 3, "}");
-//   stream.println("");
-//   println(stream, 3, "public YoVariable[] getControlVars()");
-//   println(stream, 3, "{");
-//   println(stream, 5, "YoVariable[] ret = new YoVariable[controlVars.size()];");
-//   println(stream, 5, "controlVars.toArray(ret);");
-//   println(stream, 5, "return ret;");
-//   println(stream, 3, "}");
-//
-//   stream.println("");
-//   println(stream, 3, "public YoVariable getVariable(String name)");
-//   println(stream, 3, "{");
-//   println(stream, 5, "YoVariable ret = null;");
-//   println(stream, 5, "ret = (YoVariable) controlVarsHashMap.get(name);");
-//   println(stream, 5, "if (ret != null) return ret;");
-//   stream.println("");
-//   println(stream, 5, "if (rob.hasVar(name)) return rob.getVariable(name);");
-//   stream.println("");
-//   println(stream, 5, "System.err.println(\"Variable \" + name + \" not found in " + name + "ControllerBase.getVariable()\");");
-//   println(stream, 5, "return null;");
-//   println(stream, 3, "}");
-//
-//
-//   stream.println("");
-//   println(stream, 3, "public boolean hasVar(String name)");
-//   println(stream, 3, "{");
-//   println(stream, 5, "YoVariable ret = null;");
-//   println(stream, 5, "ret = (YoVariable) controlVarsHashMap.get(name);");
-//   println(stream, 5, "if (ret != null) return true;");
-//   stream.println("");
-//   println(stream, 5, "if (rob.hasVar(name)) return true;");
-//   stream.println("");
-//   println(stream, 5, "return false;");
-//   println(stream, 3, "}");
-//
-//
-//   stream.println("}");
-// }
-
+   // public void createControllerBase(PrintStream stream)
+   // {
+   //   // Retrieve the class and package names
+   //   String name = this.getClass().getSimpleName();  // Robot Class
+   //   String baseName; // Name of ControllerBase
+   //   // Lets remove any Robot endings from the ControllerBase name
+   //   if (name.endsWith("Robot"))
+   //     baseName = name.substring(0, name.length() - "Robot".length());
+   //   else
+   //     baseName = name;
+   //
+   //   String packageName = this.getClass().getPackage().getName(); // Robot Package
+   //
+   //   stream.println("package " + packageName + ";");
+   //   stream.println("");
+   //   stream.println("import us.ihmc.simulationconstructionset.*;");
+   //   stream.println("import java.util.*;");
+   //   stream.println("");
+   //   stream.println("public class " + baseName + "ControllerBase implements YoRegistry");
+   //   stream.println("{");
+   //   println(stream, 3, "protected " + name + " rob;");
+   //   stream.println("");
+   //   println(stream, 3, "// These are the variables that are automatically created when the robot is created:");
+   //   //println(stream, 3, "YoVariable t;");
+   //
+   //   //VarList robVariables = new VarList("Robot Variables");
+   //   // Print the joint variables:
+   //   this.printVarBase(stream, robVars);
+   //   stream.println("");
+   //   this.printVarBase(stream, groundVars);
+   //
+   //   //for(int jointNum = 0; jointNum < rootJoints.size(); jointNum++)
+   //   //{
+   //    // Joint rootJoint = (Joint) rootJoints.get(jointNum);
+   //    // recursivelyPrintJointBase(rootJoint, stream, robVariables);
+   //   //}
+   //
+   //   stream.println("");
+   //   println(stream, 3, "// User defined control variables will be placed in this ArrayList when they are registered:");
+   //   println(stream, 3, "ArrayList controlVars = new ArrayList();");
+   //   println(stream, 3, "LinkedHashMap controlVarsHashMap = new LinkedHashMap();");
+   //   stream.println("");
+   //   println(stream, 3, "public " + baseName + "ControllerBase(" + name + " rob)");
+   //   println(stream, 3, "{");
+   //   println(stream, 5, "this.rob = rob;");
+   //   stream.println("");
+   //   println(stream, 5, "// Get the variables that are stored with the robot:");
+   //   stream.println("");
+   //
+   //   //println(stream, 5, "t = rob.getVar(\"t\");");
+   //   stream.println("");
+   //
+   //   //
+   //   for(int varNum=0; varNum<robVars.size(); varNum++)
+   //   {
+   //     YoVariable var = robVars.get(varNum);
+   //
+   //     if(varNum % 3 == 0) {stream.print("     ");}
+   //     stream.print(var.getName() + " = rob.getVariable(\"" + var.getName() + "\"); ");
+   //     if(varNum % 3 == 2) {stream.println("");}
+   //   }
+   //
+   //   stream.println("");
+   //   for(int varNum=0; varNum<groundVars.size(); varNum++)
+   //   {
+   //     YoVariable var = groundVars.get(varNum);
+   //
+   //     if(varNum % 3 == 0) {stream.print("     ");}
+   //     stream.print(var.getName() + " = rob.getVariable(\"" + var.getName() + "\"); ");
+   //     if(varNum % 3 == 2) {stream.println("");}
+   //   }
+   //
+   //
+   //   stream.println("");
+   //   println(stream, 3, "}");
+   //   stream.println("");
+   //   println(stream, 3, "public void registerVariable(YoVariable var)");
+   //   println(stream, 3, "{");
+   //   println(stream, 5, "if (controlVarsHashMap.containsKey(var.getName())) System.err.println(\"Warning:  \" + var.getName() + \" has already been registered\");");
+   //   println(stream, 5, "controlVarsHashMap.put(var.getName(), var);");
+   //   println(stream, 5, "controlVars.add(var);");
+   //   println(stream, 3, "}");
+   //   stream.println("");
+   //   println(stream, 3, "public YoVariable[] getControlVars()");
+   //   println(stream, 3, "{");
+   //   println(stream, 5, "YoVariable[] ret = new YoVariable[controlVars.size()];");
+   //   println(stream, 5, "controlVars.toArray(ret);");
+   //   println(stream, 5, "return ret;");
+   //   println(stream, 3, "}");
+   //
+   //   stream.println("");
+   //   println(stream, 3, "public YoVariable getVariable(String name)");
+   //   println(stream, 3, "{");
+   //   println(stream, 5, "YoVariable ret = null;");
+   //   println(stream, 5, "ret = (YoVariable) controlVarsHashMap.get(name);");
+   //   println(stream, 5, "if (ret != null) return ret;");
+   //   stream.println("");
+   //   println(stream, 5, "if (rob.hasVar(name)) return rob.getVariable(name);");
+   //   stream.println("");
+   //   println(stream, 5, "System.err.println(\"Variable \" + name + \" not found in " + name + "ControllerBase.getVariable()\");");
+   //   println(stream, 5, "return null;");
+   //   println(stream, 3, "}");
+   //
+   //
+   //   stream.println("");
+   //   println(stream, 3, "public boolean hasVar(String name)");
+   //   println(stream, 3, "{");
+   //   println(stream, 5, "YoVariable ret = null;");
+   //   println(stream, 5, "ret = (YoVariable) controlVarsHashMap.get(name);");
+   //   println(stream, 5, "if (ret != null) return true;");
+   //   stream.println("");
+   //   println(stream, 5, "if (rob.hasVar(name)) return true;");
+   //   stream.println("");
+   //   println(stream, 5, "return false;");
+   //   println(stream, 3, "}");
+   //
+   //
+   //   stream.println("}");
+   // }
 
    /**
     * {@literal Outputs a Java class which can be used as a base for this Robot's RobotController.  This
@@ -1686,21 +1705,21 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * Any names not ending in robot are left untouched, therefore a robot named SpringRobotFlamingo would result in
     * a controller base named SpringRobotFlamingoControllerBase.}
     *
-    * @param file File where the code will be stored.  Ensure that the name of this file corresponds to the
-    * name of the class it contains.
+    * @param file File where the code will be stored. Ensure that the name of this file corresponds to
+    *             the name of the class it contains.
     */
-// public void createControllerBase(File file)
-// {
-//   try
-//   {
-//     PrintStream stream = new PrintStream(file);
-//     createControllerBase(stream);
-//   }
-//   catch (FileNotFoundException missing)
-//   {
-//       System.out.println("The file could not be written for this reason:\n\t" + missing.getMessage());
-//   }
-// }
+   // public void createControllerBase(File file)
+   // {
+   //   try
+   //   {
+   //     PrintStream stream = new PrintStream(file);
+   //     createControllerBase(stream);
+   //   }
+   //   catch (FileNotFoundException missing)
+   //   {
+   //       System.out.println("The file could not be written for this reason:\n\t" + missing.getMessage());
+   //   }
+   // }
 
    /**
     * {@literal Outputs a Java class which can be used as a base for this Robot's RobotController.  This
@@ -1709,25 +1728,25 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     * without 'Robot'&gtControllerBase.java and stored in the same directory as the class file
     * that created it.}
     */
-// public void createControllerBase()
-// {
-//   File controllerBase;
-//   try
-//   {
-//     controllerBase = new File(getPath().toURI());
-//     PrintStream stream = new PrintStream(controllerBase);
-//     createControllerBase(stream);
-//   }
-//   catch (FileNotFoundException missing)
-//   {
-//     System.out.println("The specified file could not be created and generated the following error message:\n\t" + missing.getMessage());
-//   }
-//   catch (URISyntaxException badFormat)
-//   {
-//     System.out.println("Path to " + this.getClass().getName() + " could not be calculated and the following error was observed:\n\t" + badFormat.getMessage());
-//   }
-//
-// }
+   // public void createControllerBase()
+   // {
+   //   File controllerBase;
+   //   try
+   //   {
+   //     controllerBase = new File(getPath().toURI());
+   //     PrintStream stream = new PrintStream(controllerBase);
+   //     createControllerBase(stream);
+   //   }
+   //   catch (FileNotFoundException missing)
+   //   {
+   //     System.out.println("The specified file could not be created and generated the following error message:\n\t" + missing.getMessage());
+   //   }
+   //   catch (URISyntaxException badFormat)
+   //   {
+   //     System.out.println("Path to " + this.getClass().getName() + " could not be calculated and the following error was observed:\n\t" + badFormat.getMessage());
+   //   }
+   //
+   // }
 
    /**
     * Build a path to a new ControllerBase file in the same directory as the robot's .class file.
@@ -1797,8 +1816,8 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       catch (MalformedURLException broken)
       {
          // Something is wrong with the path, tell the user
-         System.err.println("Path to " + c.getName() + " could not be calculated and the following error was observed:\n\t" + broken.getMessage()
-                            + "\n\tPath: " + temp);
+         System.err.println("Path to " + c.getName() + " could not be calculated and the following error was observed:\n\t" + broken.getMessage() + "\n\tPath: "
+               + temp);
 
          return null;
       }
@@ -1809,7 +1828,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
     *
     * @param stream PrintStream to output on.
     * @param indent Number of spaces to indent.
-    * @param line Text to output.
+    * @param line   Text to output.
     */
    @SuppressWarnings("unused")
    private void println(PrintStream stream, int indent, String line)
@@ -1822,13 +1841,12 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       stream.println(line);
    }
 
-
    /**
     * This method provides a convienent means to print out VarLists in a pretty class friendly form.
     * All variants of CreateControllerBase use this function during generation.
     *
     * @param stream PrintStream to output with.
-    * @param list VarList to print.
+    * @param list   VarList to print.
     */
    @SuppressWarnings("unused")
    private void printVarBase(PrintStream stream, YoVariableList list)
@@ -1841,7 +1859,7 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
       for (int varNum = 0; varNum < list.size(); varNum++)
       {
-         YoVariable<?> var = list.getVariable(varNum);
+         YoVariable var = list.get(varNum);
 
          if (varNum != 0)
          {
@@ -1861,19 +1879,9 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
 
    }
 
-   public ArrayList<YoVariableList> createAllVarLists()
+   public List<RobotControllerAndParameters> getControllers()
    {
-      return getRobotsYoVariableRegistry().createVarListsIncludingChildren();
-   }
-
-   public ArrayList<RewoundListener> getSimulationRewoundListeners()
-   {
-      return getRobotsYoVariableRegistry().getAllSimulationRewoundListeners();
-   }
-
-   public ArrayList<RobotControllerAndParameters> getControllers()
-   {
-      return this.controllers;
+      return controllers;
    }
 
    public void setBodyExternalForcePoint(double fx, double fy, double fz)
@@ -1881,77 +1889,71 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       kp_body.setForce(fx, fy, fz);
    }
 
-
    @Override
-   public YoVariable<?> getVariable(String variableName)
+   public YoVariable findVariable(String variableName)
    {
-      return getRobotsYoVariableRegistry().getVariable(variableName);
+      return getRobotsYoRegistry().findVariable(variableName);
    }
 
    @Override
    public boolean hasUniqueVariable(String variableName)
    {
-      return getRobotsYoVariableRegistry().hasUniqueVariable(variableName);
+      return getRobotsYoRegistry().hasUniqueVariable(variableName);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getAllVariables()
+   public List<YoVariable> getVariables()
    {
-      return getRobotsYoVariableRegistry().getAllVariablesIncludingDescendants();
+      return getRobotsYoRegistry().collectSubtreeVariables();
    }
 
    @Override
-   public YoVariable<?>[] getAllVariablesArray()
+   public YoVariable findVariable(String namespaceEnding, String name)
    {
-      return getRobotsYoVariableRegistry().getAllVariablesArray();
+      return getRobotsYoRegistry().findVariable(namespaceEnding, name);
    }
 
    @Override
-   public YoVariable<?> getVariable(String nameSpaceEnding, String name)
+   public boolean hasUniqueVariable(String namespaceEnding, String name)
    {
-      return getRobotsYoVariableRegistry().getVariable(nameSpaceEnding, name);
+      return getRobotsYoRegistry().hasUniqueVariable(namespaceEnding, name);
    }
 
    @Override
-   public boolean hasUniqueVariable(String nameSpaceEnding, String name)
+   public List<YoVariable> findVariables(String namespaceEnding, String name)
    {
-      return getRobotsYoVariableRegistry().hasUniqueVariable(nameSpaceEnding, name);
+      return getRobotsYoRegistry().findVariables(namespaceEnding, name);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String nameSpaceEnding, String name)
+   public List<YoVariable> findVariables(String name)
    {
-      return getRobotsYoVariableRegistry().getVariables(nameSpaceEnding, name);
+      return getRobotsYoRegistry().findVariables(name);
    }
 
    @Override
-   public ArrayList<YoVariable<?>> getVariables(String name)
+   public List<YoVariable> findVariables(YoNamespace namespace)
    {
-      return getRobotsYoVariableRegistry().getVariables(name);
+      return getRobotsYoRegistry().findVariables(namespace);
    }
 
-   @Override
-   public ArrayList<YoVariable<?>> getVariables(NameSpace nameSpace)
-   {
-      return getRobotsYoVariableRegistry().getVariables(nameSpace);
-   }
-   
-   public ArrayList<Graphics3DObject> getStaticLinkGraphics()
+   public List<Graphics3DObject> getStaticLinkGraphics()
    {
       return staticLinkGraphics;
    }
-   
+
    public Link getLink(String linkName)
    {
-      for(Joint rootJoint : rootJoints)
+      for (Joint rootJoint : rootJoints)
       {
          Link link = rootJoint.getLink(linkName);
-         if (link != null) return link;
+         if (link != null)
+            return link;
       }
-      
+
       return null;
    }
-   
+
    public void freezeJointAtZero(Joint jointToFreeze)
    {
       Vector3D jointToFreezeOffset = new Vector3D();
@@ -1963,10 +1965,10 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       Link parentLink = parentJoint.getLink();
       parentLink = Link.combineLinks(parentLink.getName(), parentLink, jointToFreeze.getLink(), jointToFreezeOffset);
       parentJoint.setLink(parentLink);
-      
-      ArrayList<Joint> jointsToMove = new ArrayList<Joint>();
-      
-      ArrayList<Joint> childrenJoints = jointToFreeze.getChildrenJoints();
+
+      List<Joint> jointsToMove = new ArrayList<>();
+
+      List<Joint> childrenJoints = jointToFreeze.getChildrenJoints();
       for (Joint childJoint : childrenJoints)
       {
          jointsToMove.add(childJoint);
@@ -1974,30 +1976,31 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
          Vector3D childOffset = new Vector3D();
          childJoint.getOffset(childOffset);
          childOffset.add(jointToFreezeOffset);
-         childJoint.changeOffsetVector(childOffset);
+         childJoint.setOffset(childOffset);
       }
-      
+
       for (Joint jointToMove : jointsToMove)
       {
          jointToFreeze.removeChildJoint(jointToMove);
          parentJoint.addJoint(jointToMove);
       }
    }
-   
+
    public boolean verifySetupProperly(double epsilon)
    {
       for (Joint rootJoint : rootJoints)
       {
          boolean rootJointSetupProperly = rootJoint.physics.verifySetupProperly(epsilon);
-         if (!rootJointSetupProperly) return false;
+         if (!rootJointSetupProperly)
+            return false;
       }
-      
+
       return true;
    }
 
    public Joint getJoint(String name)
    {
-      for (int i=0; i<rootJoints.size(); i++)
+      for (int i = 0; i < rootJoints.size(); i++)
       {
          Joint rootJoint = rootJoints.get(i);
          Joint joint = rootJoint.recursivelyGetJoint(name);
@@ -2006,12 +2009,4 @@ public class Robot implements YoVariableHolder, GroundContactPointsHolder
       }
       return null;
    }
-   
-//   public void resetup()
-//   {
-//      for (Joint rootJoint : rootJoints)
-//      {
-//         rootJoint.resetup();
-//      }
-//   }
 }

@@ -6,8 +6,18 @@ import static us.ihmc.robotics.Assert.assertTrue;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -18,7 +28,32 @@ import com.google.common.base.Defaults;
 
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraPropertiesHolder;
 import us.ihmc.simulationconstructionset.ExtraPanelConfiguration;
-import us.ihmc.simulationconstructionset.commands.*;
+import us.ihmc.simulationconstructionset.GotoInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.GotoOutPointCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.AddCameraKeyCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.AddKeyPointCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.CreateNewGraphWindowCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.CreateNewViewportWindowCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.CropBufferCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.CutBufferCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.NextCameraKeyCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.PackBufferCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.PlayCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.PreviousCameraKeyCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.RemoveCameraKeyCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.SelectGUIConfigFromFileCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.SelectGraphConfigurationCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.SetInPointCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.SetOutPointCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.SimulateCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.StepBackwardCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.StepForwardCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.StopCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.ThinBufferCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.ToggleCameraKeyModeCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.ViewportSelectorCommandExecutor;
+import us.ihmc.simulationconstructionset.commands.ViewportSelectorCommandListener;
+import us.ihmc.simulationconstructionset.commands.ZoomGraphCommandExecutor;
 import us.ihmc.simulationconstructionset.gui.ActiveCameraHolder;
 import us.ihmc.simulationconstructionset.gui.DollyCheckBox;
 import us.ihmc.simulationconstructionset.gui.TrackCheckBox;
@@ -26,14 +61,51 @@ import us.ihmc.simulationconstructionset.gui.actions.configActions.SelectGraphCo
 import us.ihmc.simulationconstructionset.gui.actions.configActions.SelectGraphGroupAction;
 import us.ihmc.simulationconstructionset.gui.actions.configActions.SelectVarGroupAction;
 import us.ihmc.simulationconstructionset.gui.actions.configActions.SelectViewportAction;
-import us.ihmc.simulationconstructionset.gui.actions.dialogActions.*;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.AboutAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.CameraPropertiesAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.DataBufferPropertiesAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.ExportDataAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.ExportSimulationTo3DMaxAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.ExportSnapshotAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.ImportDataAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.LoadConfigurationAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.LoadGraphGroupAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.LoadRobotConfigurationAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.MediaCaptureAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.PlaybackPropertiesAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.PrintGraphsAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.ResizeViewportAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.SaveConfigurationAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.SaveGraphConfigurationAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.SaveRobotConfigurationAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.SelectEntryBoxGroupAction;
+import us.ihmc.simulationconstructionset.gui.actions.dialogActions.SelectExtraPanelAction;
 import us.ihmc.simulationconstructionset.gui.camera.AbstractCameraPropertiesHolder;
-import us.ihmc.simulationconstructionset.gui.config.*;
-import us.ihmc.simulationconstructionset.gui.dialogConstructors.*;
-import us.ihmc.yoVariables.dataBuffer.GotoInPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.GotoOutPointCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandExecutor;
-import us.ihmc.yoVariables.dataBuffer.ToggleKeyPointModeCommandListener;
+import us.ihmc.simulationconstructionset.gui.config.CameraSelector;
+import us.ihmc.simulationconstructionset.gui.config.EntryBoxGroupSelector;
+import us.ihmc.simulationconstructionset.gui.config.ExtraPanelSelector;
+import us.ihmc.simulationconstructionset.gui.config.GraphGroupSelector;
+import us.ihmc.simulationconstructionset.gui.config.VarGroupSelector;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.AboutDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.CameraPropertiesDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.DataBufferPropertiesDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.ExportDataDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.ExportSimulationTo3DMaxDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.ExportSnapshotDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.ImportDataDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.LoadConfigurationDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.LoadGraphGroupDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.LoadRobotConfigurationDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.MediaCaptureDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.PlaybackPropertiesDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.PrintGraphsDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.ResizeViewportDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveConfigurationDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogConstructor;
+import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveRobotConfigurationDialogConstructor;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsHolder;
+import us.ihmc.yoVariables.buffer.interfaces.KeyPointsChangedListener.Change;
 
 public class ActionsTest
 {
@@ -80,7 +152,7 @@ public class ActionsTest
       }
    };
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSimpleActions()
    {
       for (Map.Entry<Class<?>, Class<?>> actionToTest : SIMPLE_ACTIONS.entrySet())
@@ -89,43 +161,42 @@ public class ActionsTest
       }
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testCreateNewGraphWindowAction()
    {
-      createMethodTesterForInterface(CreateNewGraphWindowCommandExecutor.class)
-              .testWithMock(new TestWithMock<CreateNewGraphWindowCommandExecutor>()
-              {
-                 @Override
-                 public void test(CreateNewGraphWindowCommandExecutor mock)
-                 {
-                    new CreateNewGraphWindowAction(mock).actionPerformed(null);
-                 }
-              })
-              .assertMethodCalled("createNewGraphWindow")
-              .assertMethodNotCalled("createNewGraphWindow", String.class)
-              .assertMethodNotCalled("createNewGraphWindow", String.class, int.class, Point.class, Dimension.class, boolean.class)
-              .assertMethodNotCalled("getGraphArrayWindow", String.class);
+      createMethodTesterForInterface(CreateNewGraphWindowCommandExecutor.class).testWithMock(new TestWithMock<CreateNewGraphWindowCommandExecutor>()
+      {
+         @Override
+         public void test(CreateNewGraphWindowCommandExecutor mock)
+         {
+            new CreateNewGraphWindowAction(mock).actionPerformed(null);
+         }
+      }).assertMethodCalled("createNewGraphWindow").assertMethodNotCalled("createNewGraphWindow", String.class)
+                                                                               .assertMethodNotCalled("createNewGraphWindow",
+                                                                                                      String.class,
+                                                                                                      int.class,
+                                                                                                      Point.class,
+                                                                                                      Dimension.class,
+                                                                                                      boolean.class)
+                                                                               .assertMethodNotCalled("getGraphArrayWindow", String.class);
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testCreateNewViewportWindowAction()
    {
-      createMethodTesterForInterface(CreateNewViewportWindowCommandExecutor.class)
-              .testWithMock(new TestWithMock<CreateNewViewportWindowCommandExecutor>()
-              {
-                 @Override
-                 public void test(CreateNewViewportWindowCommandExecutor mock)
-                 {
-                    new CreateNewViewportWindowAction(mock).actionPerformed(null);
-                 }
-              })
-              .assertMethodCalled("createNewViewportWindow")
-              .assertMethodNotCalled("createNewViewportWindow", String.class, int.class, boolean.class)
-              .assertMethodNotCalled("createNewViewportWindow", String.class)
-              .assertMethodNotCalled("getViewportWindow", String.class);
+      createMethodTesterForInterface(CreateNewViewportWindowCommandExecutor.class).testWithMock(new TestWithMock<CreateNewViewportWindowCommandExecutor>()
+      {
+         @Override
+         public void test(CreateNewViewportWindowCommandExecutor mock)
+         {
+            new CreateNewViewportWindowAction(mock).actionPerformed(null);
+         }
+      }).assertMethodCalled("createNewViewportWindow").assertMethodNotCalled("createNewViewportWindow", String.class, int.class, boolean.class)
+                                                                                  .assertMethodNotCalled("createNewViewportWindow", String.class)
+                                                                                  .assertMethodNotCalled("getViewportWindow", String.class);
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testHideShowViewportAction()
    {
       final ViewportSelectorCommandExecutor dummyExecutor = new ViewportSelectorCommandExecutor()
@@ -133,7 +204,9 @@ public class ActionsTest
          boolean visible = true;
 
          @Override
-         public void selectViewport(String name) {}
+         public void selectViewport(String name)
+         {
+         }
 
          @Override
          public void hideViewport()
@@ -154,209 +227,236 @@ public class ActionsTest
          }
 
          @Override
-         public void registerViewportSelectorCommandListener(ViewportSelectorCommandListener commandListener) {}
+         public void registerViewportSelectorCommandListener(ViewportSelectorCommandListener commandListener)
+         {
+         }
 
          @Override
-         public void closeAndDispose() {}
+         public void closeAndDispose()
+         {
+         }
       };
 
-      createMethodTesterForInterface(ViewportSelectorCommandExecutor.class, dummyExecutor)
-              .testWithMock(new TestWithMock<ViewportSelectorCommandExecutor>()
-              {
-                 @Override
-                 public void test(ViewportSelectorCommandExecutor mock)
-                 {
-                    HideShowViewportAction action = new HideShowViewportAction(mock);
-                    assertFalse(dummyExecutor.isViewportHidden());
+      createMethodTesterForInterface(ViewportSelectorCommandExecutor.class, dummyExecutor).testWithMock(new TestWithMock<ViewportSelectorCommandExecutor>()
+      {
+         @Override
+         public void test(ViewportSelectorCommandExecutor mock)
+         {
+            HideShowViewportAction action = new HideShowViewportAction(mock);
+            assertFalse(dummyExecutor.isViewportHidden());
 
-                    action.actionPerformed(null);
-                    action.updateViewportStatus();
-                    assertTrue(dummyExecutor.isViewportHidden());
-                    assertTrue("Show Viewport".equals(action.getValue(HideShowViewportAction.NAME)));
+            action.actionPerformed(null);
+            action.updateViewportStatus();
+            assertTrue(dummyExecutor.isViewportHidden());
+            assertTrue("Show Viewport".equals(action.getValue(javax.swing.Action.NAME)));
 
-                    action.actionPerformed(null);
-                    action.updateViewportStatus();
-                    assertTrue("Hide Viewport".equals(action.getValue(HideShowViewportAction.NAME)));
-                    assertFalse(dummyExecutor.isViewportHidden());
+            action.actionPerformed(null);
+            action.updateViewportStatus();
+            assertTrue("Hide Viewport".equals(action.getValue(javax.swing.Action.NAME)));
+            assertFalse(dummyExecutor.isViewportHidden());
 
-                    action.closeAndDispose();
-                 }
-              })
-              .assertMethodsCalledInOrder(
-                      new MethodInvocation("hideViewport"),
-                      new MethodInvocation("showViewport"),
-                      new MethodInvocation("closeAndDispose")
-              );
+            action.closeAndDispose();
+         }
+      }).assertMethodsCalledInOrder(new MethodInvocation("hideViewport"), new MethodInvocation("showViewport"), new MethodInvocation("closeAndDispose"));
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSimulateAction()
    {
-      createMethodTesterForInterface(SimulateCommandExecutor.class)
-              .testWithMock(new TestWithMock<SimulateCommandExecutor>()
-              {
-                 @Override
-                 public void test(SimulateCommandExecutor mock)
-                 {
-                    new SimulateAction(mock).actionPerformed(null);
-                 }
-              })
-              .assertMethodCalled("simulate");
+      createMethodTesterForInterface(SimulateCommandExecutor.class).testWithMock(new TestWithMock<SimulateCommandExecutor>()
+      {
+         @Override
+         public void test(SimulateCommandExecutor mock)
+         {
+            new SimulateAction(mock).actionPerformed(null);
+         }
+      }).assertMethodCalled("simulate");
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testToggleKeyPointModeAction()
    {
       final ToggleKeyPointModeAction[] actionHolder = new ToggleKeyPointModeAction[1];
 
-      final ToggleKeyPointModeCommandExecutor dummyExecutor = new ToggleKeyPointModeCommandExecutor()
+      final KeyPointsHolder dummyExecutor = new KeyPointsHolder()
       {
          boolean toggled = false;
 
          @Override
-         public boolean isKeyPointModeToggled()
+         public boolean areKeyPointsEnabled()
          {
             return toggled;
          }
 
          @Override
-         public void toggleKeyPointMode()
+         public void toggleKeyPoints()
          {
             toggled = !toggled;
          }
 
          @Override
-         public void registerToggleKeyPointModeCommandListener(ToggleKeyPointModeCommandListener commandListener) {}
-
-         @Override
-         public void closeAndDispose() {}
+         public void addListener(KeyPointsChangedListener listener)
+         {
+         }
       };
 
-      createMethodTesterForInterface(ToggleKeyPointModeCommandExecutor.class, dummyExecutor)
-              .testWithMock(new TestWithMock<ToggleKeyPointModeCommandExecutor>()
-              {
-                 @Override
-                 public void test(ToggleKeyPointModeCommandExecutor executor)
-                 {
-                    ToggleKeyPointModeAction action = new ToggleKeyPointModeAction(executor);
-                    assertFalse(dummyExecutor.isKeyPointModeToggled());
-                    action.actionPerformed(null);
-                    action.updateKeyPointModeStatus();
-                    assertTrue(dummyExecutor.isKeyPointModeToggled());
+      createMethodTesterForInterface(KeyPointsHolder.class, dummyExecutor).testWithMock(new TestWithMock<KeyPointsHolder>()
+      {
+         @Override
+         public void test(KeyPointsHolder executor)
+         {
+            ToggleKeyPointModeAction action = new ToggleKeyPointModeAction(executor);
+            assertFalse(dummyExecutor.areKeyPointsEnabled());
+            action.actionPerformed(null);
+            action.changed(new Change()
+            {
+               @Override
+               public boolean wasToggled()
+               {
+                  return true;
+               }
 
-                    action.actionPerformed(null);
-                    action.updateKeyPointModeStatus();
-                    assertFalse(dummyExecutor.isKeyPointModeToggled());
+               @Override
+               public boolean areKeyPointsEnabled()
+               {
+                  return false;
+               }
 
-                    action.closeAndDispose();
-                    actionHolder[0] = action;
-                 }
-              })
-              .assertMethodsCalledInOrder(
-                      new MethodInvocation("registerToggleKeyPointModeCommandListener", actionHolder[0]),
-                      new MethodInvocation("toggleKeyPointMode"),
-                      new MethodInvocation("toggleKeyPointMode"),
-                      new MethodInvocation("closeAndDispose")
-              );
+               @Override
+               public List<Integer> getRemovedKeyPoints()
+               {
+                  return null;
+               }
+
+               @Override
+               public List<Integer> getAddedKeyPoints()
+               {
+                  return null;
+               }
+            });
+            assertTrue(dummyExecutor.areKeyPointsEnabled());
+
+            action.actionPerformed(null);
+            action.changed(new Change()
+            {
+               @Override
+               public boolean wasToggled()
+               {
+                  return true;
+               }
+
+               @Override
+               public boolean areKeyPointsEnabled()
+               {
+                  return false;
+               }
+
+               @Override
+               public List<Integer> getRemovedKeyPoints()
+               {
+                  return null;
+               }
+
+               @Override
+               public List<Integer> getAddedKeyPoints()
+               {
+                  return null;
+               }
+            });
+            assertFalse(dummyExecutor.areKeyPointsEnabled());
+
+            action.closeAndDispose();
+            actionHolder[0] = action;
+         }
+      }).assertMethodsCalledInOrder(new MethodInvocation("addListener", actionHolder[0]),
+                                    new MethodInvocation("toggleKeyPoints"),
+                                    new MethodInvocation("toggleKeyPoints"));
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testZoomInAction()
    {
-      createMethodTesterForInterface(ZoomGraphCommandExecutor.class)
-              .testWithMock(new TestWithMock<ZoomGraphCommandExecutor>()
-              {
-                 @Override
-                 public void test(ZoomGraphCommandExecutor mock)
-                 {
-                    callPublicMethods(new ZoomInAction(mock));
-                 }
-              })
-              .assertMethodCalled("zoomIn")
-              .assertMethodNotCalled("zoomOut");
+      createMethodTesterForInterface(ZoomGraphCommandExecutor.class).testWithMock(new TestWithMock<ZoomGraphCommandExecutor>()
+      {
+         @Override
+         public void test(ZoomGraphCommandExecutor mock)
+         {
+            callPublicMethods(new ZoomInAction(mock));
+         }
+      }).assertMethodCalled("zoomIn").assertMethodNotCalled("zoomOut");
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testZoomOutAction()
    {
-      createMethodTesterForInterface(ZoomGraphCommandExecutor.class)
-              .testWithMock(new TestWithMock<ZoomGraphCommandExecutor>()
-              {
-                 @Override
-                 public void test(ZoomGraphCommandExecutor mock)
-                 {
-                    callPublicMethods(new ZoomOutAction(mock));
-                 }
-              })
-              .assertMethodCalled("zoomOut")
-              .assertMethodNotCalled("zoomIn");
+      createMethodTesterForInterface(ZoomGraphCommandExecutor.class).testWithMock(new TestWithMock<ZoomGraphCommandExecutor>()
+      {
+         @Override
+         public void test(ZoomGraphCommandExecutor mock)
+         {
+            callPublicMethods(new ZoomOutAction(mock));
+         }
+      }).assertMethodCalled("zoomOut").assertMethodNotCalled("zoomIn");
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSelectGraphConfigurationAction()
    {
-      createMethodTesterForInterface(SelectGraphConfigurationCommandExecutor.class)
-              .testWithMock(new TestWithMock<SelectGraphConfigurationCommandExecutor>()
-              {
-                 @Override
-                 public void test(SelectGraphConfigurationCommandExecutor mock)
-                 {
-                    new SelectGraphConfigurationAction(mock, "Test").actionPerformed(null);
-                 }
-              })
-              .assertMethodCalled("selectGraphConfiguration", "Test");
+      createMethodTesterForInterface(SelectGraphConfigurationCommandExecutor.class).testWithMock(new TestWithMock<SelectGraphConfigurationCommandExecutor>()
+      {
+         @Override
+         public void test(SelectGraphConfigurationCommandExecutor mock)
+         {
+            new SelectGraphConfigurationAction(mock, "Test").actionPerformed(null);
+         }
+      }).assertMethodCalled("selectGraphConfiguration", "Test");
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSelectGraphGroupAction()
    {
-      createMethodTesterForInterface(GraphGroupSelector.class)
-              .testWithMock(new TestWithMock<GraphGroupSelector>()
-              {
-                 @Override
-                 public void test(GraphGroupSelector mock)
-                 {
-                    new SelectGraphGroupAction(mock, "Test").actionPerformed(null);
-                 }
-              })
-              .assertMethodCalled("selectGraphGroup", "Test");
+      createMethodTesterForInterface(GraphGroupSelector.class).testWithMock(new TestWithMock<GraphGroupSelector>()
+      {
+         @Override
+         public void test(GraphGroupSelector mock)
+         {
+            new SelectGraphGroupAction(mock, "Test").actionPerformed(null);
+         }
+      }).assertMethodCalled("selectGraphGroup", "Test");
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSelectVarGroupAction()
    {
-      createMethodTesterForInterface(VarGroupSelector.class)
-              .testWithMock(new TestWithMock<VarGroupSelector>()
-              {
-                 @Override
-                 public void test(VarGroupSelector mock)
-                 {
-                    callPublicMethods(new SelectVarGroupAction(mock, "Test"));
-                 }
-              })
-              .assertMethodCalled("selectVarGroup", "Test");
+      createMethodTesterForInterface(VarGroupSelector.class).testWithMock(new TestWithMock<VarGroupSelector>()
+      {
+         @Override
+         public void test(VarGroupSelector mock)
+         {
+            callPublicMethods(new SelectVarGroupAction(mock, "Test"));
+         }
+      }).assertMethodCalled("selectVarGroup", "Test");
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSelectViewportAction()
    {
-      createMethodTesterForInterface(ViewportSelectorCommandExecutor.class)
-              .testWithMock(new TestWithMock<ViewportSelectorCommandExecutor>()
-              {
-                 @Override
-                 public void test(ViewportSelectorCommandExecutor mock)
-                 {
-                    callPublicMethods(new SelectViewportAction(mock, "Test"));
-                 }
-              })
-              .assertMethodCalled("selectViewport", "Test");
+      createMethodTesterForInterface(ViewportSelectorCommandExecutor.class).testWithMock(new TestWithMock<ViewportSelectorCommandExecutor>()
+      {
+         @Override
+         public void test(ViewportSelectorCommandExecutor mock)
+         {
+            callPublicMethods(new SelectViewportAction(mock, "Test"));
+         }
+      }).assertMethodCalled("selectViewport", "Test");
    }
 
    @Disabled // Throws an EdtViolationException at runtime.
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testCameraPropertiesAction()
    {
-      final ActiveCameraHolder holder = new ActiveCameraHolder() {
+      final ActiveCameraHolder holder = new ActiveCameraHolder()
+      {
 
          @Override
          public CameraPropertiesHolder getCameraPropertiesForActiveCamera()
@@ -367,121 +467,110 @@ public class ActionsTest
       final TrackCheckBox originalTrackCheckBox = new TrackCheckBox(holder);
       final DollyCheckBox originalDollyCheckBox = new DollyCheckBox(holder);
 
-      createMethodTesterForInterface(CameraPropertiesDialogConstructor.class)
-              .testWithMock(new TestWithMock<CameraPropertiesDialogConstructor>()
-              {
-                 @Override
-                 public void test(CameraPropertiesDialogConstructor mock)
-                 {
-                    callPublicMethods(new CameraPropertiesAction(mock, originalTrackCheckBox, originalDollyCheckBox));
-                 }
-              })
-              .assertAllInterfaceMethodsCalled();
+      createMethodTesterForInterface(CameraPropertiesDialogConstructor.class).testWithMock(new TestWithMock<CameraPropertiesDialogConstructor>()
+      {
+         @Override
+         public void test(CameraPropertiesDialogConstructor mock)
+         {
+            callPublicMethods(new CameraPropertiesAction(mock, originalTrackCheckBox, originalDollyCheckBox));
+         }
+      }).assertAllInterfaceMethodsCalled();
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSelectEntryBoxGroupAction()
    {
-      createMethodTesterForInterface(EntryBoxGroupSelector.class)
-              .testWithMock(new TestWithMock<EntryBoxGroupSelector>()
-              {
-                 @Override
-                 public void test(EntryBoxGroupSelector mock)
-                 {
-                    callPublicMethods(new SelectEntryBoxGroupAction(mock, "Test"));
-                 }
-              })
-              .assertMethodCalled("selectEntryBoxGroup", "Test")
-              .assertAllInterfaceMethodsCalled();
-   }
-   @Disabled // Throws an EdtViolationException at Runtime
-   @Test// timeout=300000
-   public void testSelectExtraPanelAction()
-   {
-      createMethodTesterForInterface(ExtraPanelSelector.class)
-              .testWithMock(new TestWithMock<ExtraPanelSelector>()
-              {
-                 @Override
-                 public void test(ExtraPanelSelector mock)
-                 {
-                    callPublicMethods(new SelectExtraPanelAction(mock, new ExtraPanelConfiguration("Test", new JPanel(), false)));
-                 }
-              })
-              .assertMethodCalled("selectPanel", "Test")
-              .assertAllInterfaceMethodsCalled();
+      createMethodTesterForInterface(EntryBoxGroupSelector.class).testWithMock(new TestWithMock<EntryBoxGroupSelector>()
+      {
+         @Override
+         public void test(EntryBoxGroupSelector mock)
+         {
+            callPublicMethods(new SelectEntryBoxGroupAction(mock, "Test"));
+         }
+      }).assertMethodCalled("selectEntryBoxGroup", "Test").assertAllInterfaceMethodsCalled();
    }
 
-   @Test// timeout=300000
+   @Disabled // Throws an EdtViolationException at Runtime
+   @Test // timeout=300000
+   public void testSelectExtraPanelAction()
+   {
+      createMethodTesterForInterface(ExtraPanelSelector.class).testWithMock(new TestWithMock<ExtraPanelSelector>()
+      {
+         @Override
+         public void test(ExtraPanelSelector mock)
+         {
+            callPublicMethods(new SelectExtraPanelAction(mock, new ExtraPanelConfiguration("Test", new JPanel(), false)));
+         }
+      }).assertMethodCalled("selectPanel", "Test").assertAllInterfaceMethodsCalled();
+   }
+
+   @Test // timeout=300000
    public void testThinBufferAction()
    {
       testActionCallingAllInterfaceMethods(ThinBufferCommandExecutor.class, ThinBufferAction.class);
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSelectCameraAction()
    {
-      createMethodTesterForInterface(CameraSelector.class)
-              .testWithMock(new TestWithMock<CameraSelector>()
-              {
-                 @Override
-                 public void test(CameraSelector mock)
-                 {
-                    new SelectCameraAction(mock, "Test").actionPerformed(null);
-                 }
-              })
-              .assertMethodCalled("selectCamera", "Test");
+      createMethodTesterForInterface(CameraSelector.class).testWithMock(new TestWithMock<CameraSelector>()
+      {
+         @Override
+         public void test(CameraSelector mock)
+         {
+            new SelectCameraAction(mock, "Test").actionPerformed(null);
+         }
+      }).assertMethodCalled("selectCamera", "Test");
    }
 
-   @Test// timeout=300000
+   @Test // timeout=300000
    public void testSelectGUIConfigFromFileAction()
    {
       final String testPath = "TestPath";
-      createMethodTesterForInterface(SelectGUIConfigFromFileCommandExecutor.class)
-              .testWithMock(new TestWithMock<SelectGUIConfigFromFileCommandExecutor>()
-              {
-                 @Override
-                 public void test(SelectGUIConfigFromFileCommandExecutor mock)
-                 {
-                    new SelectGUIConfigFromFileAction(testPath, "Test", mock).actionPerformed(null);
-                 }
-              })
-              .assertMethodCalled("selectGUIConfigFromFile", testPath);
+      createMethodTesterForInterface(SelectGUIConfigFromFileCommandExecutor.class).testWithMock(new TestWithMock<SelectGUIConfigFromFileCommandExecutor>()
+      {
+         @Override
+         public void test(SelectGUIConfigFromFileCommandExecutor mock)
+         {
+            new SelectGUIConfigFromFileAction(testPath, "Test", mock).actionPerformed(null);
+         }
+      }).assertMethodCalled("selectGUIConfigFromFile", testPath);
    }
 
    /**
-    * Test that calling all available public methods on the action invokes all available methods in the given interface.
-    * @param iface interface
+    * Test that calling all available public methods on the action invokes all available methods in the
+    * given interface.
+    * 
+    * @param iface       interface
     * @param actionClass action to test
     * @param <Interface> interface type
-    * @param <Action> action type
+    * @param <Action>    action type
     */
    private static <Interface, Action> void testActionCallingAllInterfaceMethods(final Class<Interface> iface, final Class<Action> actionClass)
    {
-      createMethodTesterForInterface(iface)
-              .testWithMock(new TestWithMock<Interface>()
-              {
-                 @Override
-                 public void test(Interface mock)
-                 {
-                    try
-                    {
-                       Action action = actionClass.getConstructor(iface).newInstance(mock);
-                       callPublicMethodsInOrder(action, DISPOSE_LAST);
-                    } catch (Exception e)
-                    {
-                       e.printStackTrace();
-                       assertTrue(e.getMessage(), false);
-                    }
+      createMethodTesterForInterface(iface).testWithMock(new TestWithMock<Interface>()
+      {
+         @Override
+         public void test(Interface mock)
+         {
+            try
+            {
+               Action action = actionClass.getConstructor(iface).newInstance(mock);
+               callPublicMethodsInOrder(action, DISPOSE_LAST);
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+               assertTrue(e.getMessage(), false);
+            }
 
-                 }
-              })
-              .assertAllInterfaceMethodsCalled();
+         }
+      }).assertAllInterfaceMethodsCalled();
    }
 
-
    /**
-    * Helper class holding info about a method invocation on a proxy object.
-    * Used to test whether given methods were called during the test.
+    * Helper class holding info about a method invocation on a proxy object. Used to test whether given
+    * methods were called during the test.
     */
    public static class MethodInvocation
    {
@@ -496,6 +585,7 @@ public class ActionsTest
 
       /**
        * Check whether the captured parameters correspond to the given types
+       * 
        * @param types parameter types
        * @return true if the parameters correspond
        */
@@ -524,6 +614,7 @@ public class ActionsTest
 
       /**
        * Check that the two parameter sets are equal
+       * 
        * @param params1 first parameter set
        * @param params2 second parameter set
        * @return true if the two parameter sets are equal - all the objects' equals() returns true
@@ -540,8 +631,10 @@ public class ActionsTest
       @Override
       public boolean equals(Object o)
       {
-         if (this == o) return true;
-         if (o == null || getClass() != o.getClass()) return false;
+         if (this == o)
+            return true;
+         if (o == null || getClass() != o.getClass())
+            return false;
 
          MethodInvocation that = (MethodInvocation) o;
 
@@ -559,11 +652,13 @@ public class ActionsTest
    }
 
    /**
-    * Holds a proxy instance of the given tested class or interface and logs all
-    * method calls. Has a fluent API to make tests that are using it more readable.
+    * Holds a proxy instance of the given tested class or interface and logs all method calls. Has a
+    * fluent API to make tests that are using it more readable.
+    * 
     * @param <MonitoredClass> class whose method calls are monitored
     */
-   public static class MethodCallTester<MonitoredClass> {
+   public static class MethodCallTester<MonitoredClass>
+   {
       private final MonitoredClass mock;
       private final Class<MonitoredClass> mockClass;
       private final List<MethodInvocation> invocations;
@@ -577,7 +672,8 @@ public class ActionsTest
 
       /**
        * Checks whether the given method was called with the arguments given in expectedParamValues.
-       * @param name method name
+       * 
+       * @param name                method name
        * @param expectedParamValues parameter values
        * @return true if the method was called with these parameters, false otherwise
        */
@@ -597,7 +693,8 @@ public class ActionsTest
       /**
        * Checks whether the given method was called - allows distinguishing between overloads by
        * specifying the parameter types.
-       * @param name method name
+       * 
+       * @param name       method name
        * @param paramTypes method parameters
        * @return true if the method with the given parameters was called, false otherwise
        */
@@ -613,6 +710,7 @@ public class ActionsTest
 
       /**
        * Checks whether the given methods were called in the given order.
+       * 
        * @param methodInvocations methods that should have been called
        * @return true if the method with the given parameters was called, false otherwise
        */
@@ -634,28 +732,31 @@ public class ActionsTest
          return false;
       }
 
-
       public MethodCallTester<MonitoredClass> assertMethodCalled(String name, Object... expectedParamValues)
       {
-         assertTrue("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(expectedParamValues) + ") was not called", wasMethodCalled(name, expectedParamValues));
+         assertTrue("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(expectedParamValues) + ") was not called",
+                    wasMethodCalled(name, expectedParamValues));
          return this;
       }
 
       public MethodCallTester<MonitoredClass> assertMethodNotCalled(String name, Object... expectedParamValues)
       {
-         assertFalse("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(expectedParamValues) + ") was called but no call was expected", wasMethodCalled(name, expectedParamValues));
+         assertFalse("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(expectedParamValues) + ") was called but no call was expected",
+                     wasMethodCalled(name, expectedParamValues));
          return this;
       }
 
       public MethodCallTester<MonitoredClass> assertMethodCalled(String name, Class<?>... paramTypes)
       {
-         assertTrue("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(paramTypes) + ") was not called", wasMethodCalled(name, paramTypes));
+         assertTrue("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(paramTypes) + ") was not called",
+                    wasMethodCalled(name, paramTypes));
          return this;
       }
 
       public MethodCallTester<MonitoredClass> assertMethodNotCalled(String name, Class<?>... paramTypes)
       {
-         assertFalse("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(paramTypes) + ") was called but no call was expected", wasMethodCalled(name, paramTypes));
+         assertFalse("Method " + mockClass.getSimpleName() + "." + name + "(" + Arrays.toString(paramTypes) + ") was called but no call was expected",
+                     wasMethodCalled(name, paramTypes));
          return this;
       }
 
@@ -667,6 +768,7 @@ public class ActionsTest
       /**
        * Check that all methods declared in the given interface were called. Does *not* include methods
        * from super interfaces.
+       * 
        * @return this for fluent api
        */
       public MethodCallTester<MonitoredClass> assertAllInterfaceMethodsCalled()
@@ -694,6 +796,7 @@ public class ActionsTest
 
       /**
        * Run custom test code with the proxy instance of the monitored class.
+       * 
        * @param test test code
        * @return this for fluent api
        */
@@ -724,9 +827,10 @@ public class ActionsTest
    }
 
    /**
-    * Calls all public methods declared in the class corresponding to the given object.
-    * Does not include methods from superclasses.
-    * @param object object to call the public methods on
+    * Calls all public methods declared in the class corresponding to the given object. Does not
+    * include methods from superclasses.
+    * 
+    * @param object     object to call the public methods on
     * @param comparator method comparator, allows running the methods in a specific order
     * @return list of methods invoked, including the parameters used for calling them
     */
@@ -753,7 +857,8 @@ public class ActionsTest
             invocations.add(new MethodInvocation(method.getName(), params));
          }
          return invocations;
-      } catch (Exception ex)
+      }
+      catch (Exception ex)
       {
          ex.printStackTrace();
          assertTrue("Error calling public methods on object " + object + " (" + object.getClass().getSimpleName() + ")", false);
@@ -762,8 +867,9 @@ public class ActionsTest
    }
 
    /**
-    * Create a default object of the given type. Prefers constructors with as few
-    * arguments as possible. Creates an empty proxy for interfaces.
+    * Create a default object of the given type. Prefers constructors with as few arguments as
+    * possible. Creates an empty proxy for interfaces.
+    * 
     * @param type type to instantiate
     * @return default instance
     * @throws Exception if the default instance could not be created
@@ -779,7 +885,7 @@ public class ActionsTest
       else if (type.isArray())
          return Array.newInstance(type, 0);
       else if (type.isInterface())
-         return Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, new InvocationHandler()
+         return Proxy.newProxyInstance(type.getClassLoader(), new Class[] {type}, new InvocationHandler()
          {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
@@ -796,7 +902,6 @@ public class ActionsTest
             constructor = c;
       }
 
-
       Object[] params = new Object[constructor.getParameterTypes().length];
 
       for (int i = 0; i < constructor.getParameterTypes().length; i++)
@@ -807,10 +912,11 @@ public class ActionsTest
    }
 
    /**
-    * Create {@link us.ihmc.simulationconstructionset.gui.actions.ActionsTest.MethodCallTester} with a proxy
-    * object for the given interface that logs all method calls.
+    * Create {@link us.ihmc.simulationconstructionset.gui.actions.ActionsTest.MethodCallTester} with a
+    * proxy object for the given interface that logs all method calls.
+    * 
     * @param interfaceClass interface to proxy
-    * @param <T> interface type
+    * @param <T>            interface type
     * @return method tester instance
     */
    private static <T> MethodCallTester<T> createMethodTesterForInterface(Class<T> interfaceClass)
@@ -819,11 +925,13 @@ public class ActionsTest
    }
 
    /**
-    * Create {@link us.ihmc.simulationconstructionset.gui.actions.ActionsTest.MethodCallTester} with a proxy
-    * object for the given interface that logs all method calls.
-    * @param interfaceClass interface to proxy
-    * @param forwardInstance interface implementation that will be called when a call is logged (can be null)
-    * @param <T> interface type
+    * Create {@link us.ihmc.simulationconstructionset.gui.actions.ActionsTest.MethodCallTester} with a
+    * proxy object for the given interface that logs all method calls.
+    * 
+    * @param interfaceClass  interface to proxy
+    * @param forwardInstance interface implementation that will be called when a call is logged (can be
+    *                        null)
+    * @param <T>             interface type
     * @return method tester instance
     */
    @SuppressWarnings("unchecked")
@@ -832,7 +940,7 @@ public class ActionsTest
       final List<MethodInvocation> invocations = new ArrayList<>();
 
       //noinspection unchecked
-      T mock = (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, new InvocationHandler()
+      T mock = (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[] {interfaceClass}, new InvocationHandler()
       {
          @Override
          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable

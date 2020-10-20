@@ -23,7 +23,7 @@ public class RegularExpression
          regex = builtNewDelimitedString(checkString, regex, "|");
       }
 
-      if (!regex.contains("*") &&!(regex.startsWith("\"") && regex.endsWith("\"")))
+      if (!regex.contains("*") && !(regex.startsWith("\"") && regex.endsWith("\"")))
       {
          regex = addStars(regex);
       }
@@ -35,15 +35,12 @@ public class RegularExpression
          return checkString.equals(regex);
       }
 
-
-
-
-      if (!regex.startsWith("*")&& !regex.contains("*"))
+      if (!regex.startsWith("*") && !regex.contains("*"))
       {
          regex = "*" + regex;
       }
 
-      if (!regex.endsWith("*")&& !regex.contains("*"))
+      if (!regex.endsWith("*") && !regex.contains("*"))
       {
          regex = regex + "*";
       }
@@ -80,7 +77,7 @@ public class RegularExpression
       {
          String nextToken = tok.nextToken();
 
-         if (!nextToken.contains("*") &&!(nextToken.startsWith("\"") && nextToken.endsWith("\"")))
+         if (!nextToken.contains("*") && !(nextToken.startsWith("\"") && nextToken.endsWith("\"")))
          {
             nextToken = addStars(nextToken);
          }

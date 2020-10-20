@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.util;
 
-
 /*
  *
  * Is copyrighted, but can be used in any project, non-commercial and commercial.
@@ -43,7 +42,6 @@ public class QuarticRootFinder implements java.io.Serializable
    {
    }
 
-
    private static final double ONE_THIRD = 1.0 / 3.0;
 
    private double cubeRoot(double x)
@@ -59,8 +57,7 @@ public class QuarticRootFinder implements java.io.Serializable
       return ((x > -EQN_EPS) && (x < EQN_EPS));
    }
 
-
-   public int SolveQuadric(double[] c, double[] s)    // c[3], s[2]
+   public int SolveQuadric(double[] c, double[] s) // c[3], s[2]
    {
       double p, q, D;
 
@@ -81,7 +78,7 @@ public class QuarticRootFinder implements java.io.Serializable
       {
          return 0;
       }
-      else    // if (D > 0.0)  Don't need this, it has to be D > 0.0
+      else // if (D > 0.0)  Don't need this, it has to be D > 0.0
       {
          double sqrt_D = Math.sqrt(D);
 
@@ -94,7 +91,7 @@ public class QuarticRootFinder implements java.io.Serializable
 
    private double[] cubic_overflow_coeffs = new double[3];
 
-   public int SolveCubic(double[] c, double[] s)    // c[4], s[3]
+   public int SolveCubic(double[] c, double[] s) // c[4], s[3]
    {
       int i, num;
       double sub;
@@ -104,7 +101,7 @@ public class QuarticRootFinder implements java.io.Serializable
 
       /* normal form: x^3 + Ax^2 + Bx + C = 0 */
 
-      if (IsZero(c[3]))    // +++JEP if c[3] is zero, then just a quadratic equation:
+      if (IsZero(c[3])) // +++JEP if c[3] is zero, then just a quadratic equation:
       {
          cubic_overflow_coeffs[0] = c[0];
          cubic_overflow_coeffs[1] = c[1];
@@ -118,8 +115,7 @@ public class QuarticRootFinder implements java.io.Serializable
       C = c[0] / c[3];
 
       /*
-       *   substitute x = y - A/3 to eliminate quadric term:
-       *   x^3 +px + q = 0
+       * substitute x = y - A/3 to eliminate quadric term: x^3 +px + q = 0
        */
 
       sq_A = A * A;
@@ -133,12 +129,12 @@ public class QuarticRootFinder implements java.io.Serializable
 
       if (IsZero(D))
       {
-         if (IsZero(q))    /* one triple solution */
+         if (IsZero(q)) /* one triple solution */
          {
             s[0] = 0.0;
             num = 1;
          }
-         else    /* one single and one double solution */
+         else /* one single and one double solution */
          {
             double u = cubeRoot(-q);
             s[0] = 2.0 * u;
@@ -146,7 +142,7 @@ public class QuarticRootFinder implements java.io.Serializable
             num = 2;
          }
       }
-      else if (D < 0.0)    /* Casus irreducibilis: three real solutions */
+      else if (D < 0.0) /* Casus irreducibilis: three real solutions */
       {
          double phi = 1.0 / 3.0 * Math.acos(-q / Math.sqrt(-cb_p));
          double t = 2.0 * Math.sqrt(-p);
@@ -156,7 +152,7 @@ public class QuarticRootFinder implements java.io.Serializable
          s[2] = -t * Math.cos(phi - Math.PI / 3.0);
          num = 3;
       }
-      else    /* one real solution */
+      else /* one real solution */
       {
          double sqrt_D = Math.sqrt(D);
          double u = cubeRoot(sqrt_D - q);
@@ -178,11 +174,10 @@ public class QuarticRootFinder implements java.io.Serializable
       return num;
    }
 
-
    private double[] coeffs = new double[4], s_temp = new double[2];
    private double[] quartic_overflow_coeffs = new double[4];
 
-   public int SolveQuartic(double[] c, double[] s)    // c[5], s[4]
+   public int SolveQuartic(double[] c, double[] s) // c[5], s[4]
    {
       // double  coeffs[ 4 ];
       double z, u, v, sub;
@@ -192,7 +187,7 @@ public class QuarticRootFinder implements java.io.Serializable
 
       /* normal form: x^4 + Ax^3 + Bx^2 + Cx + D = 0 */
 
-      if (IsZero(c[4]))    // +++ JEP.  If c[4] is zero, then zero is the root you're looking for!
+      if (IsZero(c[4])) // +++ JEP.  If c[4] is zero, then zero is the root you're looking for!
       {
          quartic_overflow_coeffs[0] = c[0];
          quartic_overflow_coeffs[1] = c[1];
@@ -208,8 +203,7 @@ public class QuarticRootFinder implements java.io.Serializable
       D = c[0] / c[4];
 
       /*
-       *   substitute x = y - A/4 to eliminate cubic term:
-       *   x^4 + px^2 + qx + r = 0
+       * substitute x = y - A/4 to eliminate cubic term: x^4 + px^2 + qx + r = 0
        */
 
       sq_A = A * A;
@@ -300,4 +294,3 @@ public class QuarticRootFinder implements java.io.Serializable
    }
 
 }
-

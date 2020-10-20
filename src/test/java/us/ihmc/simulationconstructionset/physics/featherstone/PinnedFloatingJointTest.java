@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset.physics.featherstone;
 
-import static us.ihmc.robotics.Assert.*;
+import static us.ihmc.robotics.Assert.assertEquals;
 
 import java.util.Random;
 
@@ -27,7 +27,7 @@ public class PinnedFloatingJointTest
 {
    private static final double EPSILON = 1.0e-12;
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testPinnedFloatingJoint() throws Exception, UnreasonableAccelerationException
    {
       Random random = new Random(39847534);
@@ -74,7 +74,7 @@ public class PinnedFloatingJointTest
 
          for (int i = 0; i < 100; i++)
          {
-            // Make sure that the joint velocity and acceleration are both 
+            // Make sure that the joint velocity and acceleration are both
             pinnedJointA.setVelocity(EuclidCoreRandomTools.nextVector3D(random));
             pinnedJointA.setAngularVelocityInBody(EuclidCoreRandomTools.nextVector3D(random));
             pinnedJointA.setAcceleration(EuclidCoreRandomTools.nextVector3D(random));
@@ -119,7 +119,7 @@ public class PinnedFloatingJointTest
       }
    }
 
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testUnpinningFloatingJoint() throws Exception, UnreasonableAccelerationException
    {
       Random random = new Random(39847534);
@@ -246,7 +246,9 @@ public class PinnedFloatingJointTest
       Link link = new Link("randomLink" + random.nextInt());
       link.setMass(random.nextDouble());
       link.setComOffset(RandomNumbers.nextDouble(random, 1.0), RandomNumbers.nextDouble(random, 1.0), RandomNumbers.nextDouble(random, 1.0));
-      link.setMomentOfInertia(RobotTest.getRotationalInertiaMatrixOfSolidEllipsoid(link.getMass(), random.nextDouble(), random.nextDouble(),
+      link.setMomentOfInertia(RobotTest.getRotationalInertiaMatrixOfSolidEllipsoid(link.getMass(),
+                                                                                   random.nextDouble(),
+                                                                                   random.nextDouble(),
                                                                                    random.nextDouble()));
       return link;
    }

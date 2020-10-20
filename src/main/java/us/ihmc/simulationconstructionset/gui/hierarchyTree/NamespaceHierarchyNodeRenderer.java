@@ -15,16 +15,16 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
-public class NameSpaceHierarchyNodeRenderer extends JPanel implements TreeCellRenderer
+public class NamespaceHierarchyNodeRenderer extends JPanel implements TreeCellRenderer
 {
    private static final long serialVersionUID = -6793795042915360102L;
 
    protected TreeLabel label;
-   private final HashMap<DefaultMutableTreeNode, YoVariableRegistry> treeNodeRegistryMap;
+   private final HashMap<DefaultMutableTreeNode, YoRegistry> treeNodeRegistryMap;
 
-   public NameSpaceHierarchyNodeRenderer(HashMap<DefaultMutableTreeNode, YoVariableRegistry> treeNodeRegistryMap)
+   public NamespaceHierarchyNodeRenderer(HashMap<DefaultMutableTreeNode, YoRegistry> treeNodeRegistryMap)
    {
       setLayout(null);
       add(label = new TreeLabel());
@@ -39,7 +39,6 @@ public class NameSpaceHierarchyNodeRenderer extends JPanel implements TreeCellRe
       {
          String stringValue = tree.convertValueToText(value, isSelected, expanded, leaf, row, hasFocus);
          setEnabled(tree.isEnabled());
-
 
          // check.setSelected(((CheckNode) value).isSelected());
          label.setFont(tree.getFont());

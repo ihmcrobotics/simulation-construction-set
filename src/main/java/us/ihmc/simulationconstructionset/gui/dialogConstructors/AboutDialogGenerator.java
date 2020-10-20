@@ -1,6 +1,11 @@
 package us.ihmc.simulationconstructionset.gui.dialogConstructors;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -10,14 +15,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 
 public class AboutDialogGenerator implements AboutDialogConstructor
 {
    private JFrame parentJFrame;
-   
+
    private final String aboutLink = "https://ihmcrobotics.github.io/";
    private URI aboutURI = null;
 
@@ -32,59 +43,75 @@ public class AboutDialogGenerator implements AboutDialogConstructor
       try
       {
          aboutURI = new URI(aboutLink);
-      } catch (URISyntaxException e) {
+      }
+      catch (URISyntaxException e)
+      {
          System.err.println("Warning: About dialog URI is malformed.");
       }
-      
+
       String scsVersionNumber = SimulationConstructionSet.getVersion();
-      
+
       JDialog aboutDialog = new JDialog(parentJFrame, "Simulation Construction Set Version: " + scsVersionNumber, false);
-      
+
       aboutDialog.getContentPane().setLayout(new BoxLayout(aboutDialog.getContentPane(), BoxLayout.Y_AXIS));
-      
+
       InputStream imageStream = getClass().getClassLoader().getResourceAsStream("Banner-v1-Transparent-Inverted.png");
       if (imageStream == null)
       {
          System.err.println("Warning: About dialog image cannot be loaded.");
-      } else {
+      }
+      else
+      {
          try
          {
             BufferedImage bufferedImage = ImageIO.read(imageStream);
             int desiredWidth = 450;
             int desiredHeight = 300;
-            
+
             int currentWidth = bufferedImage.getWidth();
             int currentHeight = bufferedImage.getHeight();
-            
+
             if (currentWidth > desiredWidth)
             {
-               if (currentHeight * ((double)desiredWidth / currentWidth) > desiredHeight) {
-                  desiredWidth = (int)(currentWidth * ((double)desiredHeight / currentHeight));
-               } else {
-                  desiredHeight = (int)(currentHeight * ((double)desiredWidth / currentWidth));
+               if (currentHeight * ((double) desiredWidth / currentWidth) > desiredHeight)
+               {
+                  desiredWidth = (int) (currentWidth * ((double) desiredHeight / currentHeight));
                }
-            } else if (currentWidth < desiredWidth) {
-               if (currentHeight * ((double)desiredWidth / currentWidth) < desiredHeight) {
-                  desiredWidth = (int)(currentWidth * ((double)desiredHeight / currentHeight));
-               } else {
-                  desiredHeight = (int)(currentWidth * ((double)desiredHeight / currentHeight));
+               else
+               {
+                  desiredHeight = (int) (currentHeight * ((double) desiredWidth / currentWidth));
                }
-            } else if (currentHeight != 300) {
-               desiredWidth = (int)(currentWidth * ((double)desiredHeight / currentHeight));
             }
-            
+            else if (currentWidth < desiredWidth)
+            {
+               if (currentHeight * ((double) desiredWidth / currentWidth) < desiredHeight)
+               {
+                  desiredWidth = (int) (currentWidth * ((double) desiredHeight / currentHeight));
+               }
+               else
+               {
+                  desiredHeight = (int) (currentWidth * ((double) desiredHeight / currentHeight));
+               }
+            }
+            else if (currentHeight != 300)
+            {
+               desiredWidth = (int) (currentWidth * ((double) desiredHeight / currentHeight));
+            }
+
             Image finalImage = bufferedImage.getScaledInstance(desiredWidth, desiredHeight, Image.SCALE_DEFAULT);
             ImageIcon imageIcon = new ImageIcon(finalImage);
             JLabel imageLabel = new JLabel(imageIcon);
             imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            
+
             aboutDialog.getContentPane().add(imageLabel);
-         } catch (IOException e) {
+         }
+         catch (IOException e)
+         {
             System.err.println("Warning: About dialog image not properly added.");
          }
       }
 
-      JLabel version = new JLabel("Version "+scsVersionNumber);
+      JLabel version = new JLabel("Version " + scsVersionNumber);
       version.setFont(new Font("DTL Nobel", Font.PLAIN, 32));
       version.setAlignmentX(Component.CENTER_ALIGNMENT);
       aboutDialog.getContentPane().add(version);
@@ -110,7 +137,9 @@ public class AboutDialogGenerator implements AboutDialogConstructor
                   try
                   {
                      Desktop.getDesktop().browse(aboutURI);
-                  } catch (IOException e) {
+                  }
+                  catch (IOException e)
+                  {
                      System.err.println("Warning: could not open About URI.");
                   }
                }
@@ -121,7 +150,7 @@ public class AboutDialogGenerator implements AboutDialogConstructor
             }
          }
       });
-      
+
       aboutDialog.getContentPane().add(github);
 
       JLabel yobotics = new JLabel("Originally developed at Yobotics, Inc. from 2000-2010.");
@@ -134,7 +163,7 @@ public class AboutDialogGenerator implements AboutDialogConstructor
       ihmc.setFont(new Font("DTL Nobel", Font.PLAIN, 20));
       ihmc.setAlignmentX(Component.CENTER_ALIGNMENT);
       aboutDialog.getContentPane().add(ihmc);
-      
+
       aboutDialog.setSize(new Dimension(600, 375));
       aboutDialog.validate();
       aboutDialog.setResizable(false);

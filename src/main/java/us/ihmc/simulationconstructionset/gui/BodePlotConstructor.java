@@ -26,15 +26,11 @@ public class BodePlotConstructor
          phase[i] = Conversions.amplitudeToDecibels(freqMagPhase[2][i]);
       }
 
-      double[][] bodeData = new double[][]
-      {
-         frequency, magnitude, phase
-      };
+      double[][] bodeData = new double[][] {frequency, magnitude, phase};
 
       FFTPlotter plot = new FFTPlotter(bodeData, variableName + " FFT Plot", "(Hz)", "(dB)", "(deg)");
       plot.packAndDisplayFrame(0, 0);
    }
-
 
    public static void plotBodeFromInputToOutput(String inputName, String outputName, double[] time, double[] input, double[] output)
    {
@@ -44,10 +40,7 @@ public class BodePlotConstructor
       double[] bodeMagnitude = bodeFreqMagPhase[1];
       double[] bodePhase = bodeFreqMagPhase[2];
 
-      double[][] bodeData = new double[][]
-      {
-         bodeFrequency, bodeMagnitude, bodePhase
-      };
+      double[][] bodeData = new double[][] {bodeFrequency, bodeMagnitude, bodePhase};
 
       FFTPlotter plot = new FFTPlotter(bodeData, outputName + "/" + inputName + " Bode Plot", "(Hz)", "(dB)", "(deg)");
       plot.packAndDisplayFrame(0, 0);
@@ -83,10 +76,7 @@ public class BodePlotConstructor
          bodePhase[i] = Math.toDegrees(bodePhase[i]);
       }
 
-      return new double[][]
-      {
-         frequency, bodeMagnitude, bodePhase
-      };
+      return new double[][] {frequency, bodeMagnitude, bodePhase};
    }
 
    public static double[][] computeFreqMagPhase(double[][] timeAndData)
@@ -116,10 +106,7 @@ public class BodePlotConstructor
          frequency[i] = (i) / T;
       }
 
-      return new double[][]
-      {
-         frequency, magnitude, phase
-      };
+      return new double[][] {frequency, magnitude, phase};
    }
 
    @SuppressWarnings("unused")
@@ -161,7 +148,7 @@ public class BodePlotConstructor
       {
          ret[i] = computeAngleDifferenceMinusTwoPiToZero(a[i], b[i]);
 
-//       ret[i] = MathTools.computeAngleDifferenceMinusPiToPi(a[i], b[i]);
+         //       ret[i] = MathTools.computeAngleDifferenceMinusPiToPi(a[i], b[i]);
          // ret[i] = a[i] - b[i];
       }
 
@@ -195,13 +182,12 @@ public class BodePlotConstructor
       return ret;
    }
 
-
    private static double[] extractMagnitude(double[] fftInput)
    {
       int n = fftInput.length;
 
-//    if (n % 2 != 0)
-//        throw new RuntimeException("Must be even length!");
+      //    if (n % 2 != 0)
+      //        throw new RuntimeException("Must be even length!");
 
       double[] magnitude = new double[n / 2];
 
@@ -211,12 +197,12 @@ public class BodePlotConstructor
          double imag = fftInput[2 * k + 1];
 
          if (k == 0)
-            imag = 0;    // This is due to storing a[1] = Re[n/2] when n is even and = Im[n/2-1] when n is odd, as per the fft specs. Just ignore that term for now...
+            imag = 0; // This is due to storing a[1] = Re[n/2] when n is even and = Im[n/2-1] when n is odd, as per the fft specs. Just ignore that term for now...
 
          double mag = Math.sqrt(real * real + imag * imag);
          magnitude[k] = mag;
 
-//       magnitude[k] = 20.0 * Math.log10(mag);
+         //       magnitude[k] = 20.0 * Math.log10(mag);
       }
 
       return magnitude;
@@ -226,8 +212,8 @@ public class BodePlotConstructor
    {
       int n = fftInput.length;
 
-//    if (n % 2 != 0)
-//        throw new RuntimeException("Must be even length!");
+      //    if (n % 2 != 0)
+      //        throw new RuntimeException("Must be even length!");
 
       double[] phase = new double[n / 2];
 
@@ -237,7 +223,7 @@ public class BodePlotConstructor
          double imag = fftInput[2 * k + 1];
 
          if (k == 0)
-            imag = 0;    // This is due to storing a[1] = Re[n/2] when n is even and = Im[n/2-1] when n is odd, as per the fft specs. Just ignore that term for now...
+            imag = 0; // This is due to storing a[1] = Re[n/2] when n is even and = Im[n/2-1] when n is odd, as per the fft specs. Just ignore that term for now...
 
          phase[k] = Math.atan2(imag, real);
       }
@@ -256,7 +242,5 @@ public class BodePlotConstructor
 
       return ret;
    }
-
-
 
 }

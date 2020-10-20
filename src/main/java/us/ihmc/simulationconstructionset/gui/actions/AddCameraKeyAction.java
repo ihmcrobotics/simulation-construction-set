@@ -16,13 +16,12 @@ public class AddCameraKeyAction extends AbstractAction
    public AddCameraKeyAction(AddCameraKeyCommandExecutor listener)
    {
       super("Add Camera Key");
-      this.executor = listener;
+      executor = listener;
 
-      this.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
-      this.putValue(
-          Action.LONG_DESCRIPTION,
-          "Adds a camera key so that the camera will automatically transition to the position it is in and at the time indicated on the graph when this button is pressed.");
-      this.putValue(Action.SHORT_DESCRIPTION, "Adds camera key.");
+      putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
+      putValue(Action.LONG_DESCRIPTION,
+               "Adds a camera key so that the camera will automatically transition to the position it is in and at the time indicated on the graph when this button is pressed.");
+      putValue(Action.SHORT_DESCRIPTION, "Adds camera key.");
    }
 
    @Override

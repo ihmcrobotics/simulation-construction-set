@@ -7,117 +7,113 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import us.ihmc.yoVariables.dataBuffer.DataEntry;
 import us.ihmc.simulationconstructionset.gui.GraphPropertiesPanel;
 import us.ihmc.simulationconstructionset.gui.VarPropertiesPanel;
 import us.ihmc.simulationconstructionset.gui.YoGraph;
-
+import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryReader;
 
 @SuppressWarnings("serial")
 public class GraphPropertiesDialog extends JDialog implements ActionListener
 {
-    // private final static java.text.NumberFormat numFormat = new java.text.DecimalFormat(" 0.00000;-0.00000");
+   // private final static java.text.NumberFormat numFormat = new java.text.DecimalFormat(" 0.00000;-0.00000");
 
-    private final JButton okButton, applyButton, cancelButton;
-    private final GraphPropertiesPanel graphPropertiesPanel;
-    private final VarPropertiesPanel[] varPropertiesPanels;
-    private final JFrame parentFrame;
-    private final YoGraph graph;
+   private final JButton okButton, applyButton, cancelButton;
+   private final GraphPropertiesPanel graphPropertiesPanel;
+   private final VarPropertiesPanel[] varPropertiesPanels;
+   private final JFrame parentFrame;
+   private final YoGraph graph;
 
-    public GraphPropertiesDialog(JFrame frame, YoGraph graph)
-    {
-        super(frame, "Graph Properties", false);
-        this.parentFrame = frame;
-        this.graph = graph;
+   public GraphPropertiesDialog(JFrame frame, YoGraph graph)
+   {
+      super(frame, "Graph Properties", false);
+      parentFrame = frame;
+      this.graph = graph;
 
-        Container contentPane = this.getContentPane();
+      Container contentPane = getContentPane();
 
-        ArrayList<DataEntry> entries = graph.getEntriesOnThisGraph();
+      List<YoBufferVariableEntryReader> entries = graph.getEntriesOnThisGraph();
 
-        JPanel panels = new JPanel(new GridLayout(entries.size() + 1, 1));
-        graphPropertiesPanel = new GraphPropertiesPanel(graph);
-        panels.add(graphPropertiesPanel);
+      JPanel panels = new JPanel(new GridLayout(entries.size() + 1, 1));
+      graphPropertiesPanel = new GraphPropertiesPanel(graph);
+      panels.add(graphPropertiesPanel);
 
-        varPropertiesPanels = new VarPropertiesPanel[entries.size()];
+      varPropertiesPanels = new VarPropertiesPanel[entries.size()];
 
-        for (int i = 0; i < entries.size(); i++)
-        {
-            varPropertiesPanels[i] = new VarPropertiesPanel(entries.get(i));
-            panels.add(varPropertiesPanels[i]);
-        }
+      for (int i = 0; i < entries.size(); i++)
+      {
+         varPropertiesPanels[i] = new VarPropertiesPanel(entries.get(i));
+         panels.add(varPropertiesPanels[i]);
+      }
 
-        contentPane.add(panels);
+      contentPane.add(panels);
 
-        // Buttons:
+      // Buttons:
 
-        okButton = new JButton("OK");
-        okButton.addActionListener(this);
-        applyButton = new JButton("Apply");
-        applyButton.addActionListener(this);
-        cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(this);
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(okButton);
-        buttonPanel.add(applyButton);
-        buttonPanel.add(cancelButton);
+      okButton = new JButton("OK");
+      okButton.addActionListener(this);
+      applyButton = new JButton("Apply");
+      applyButton.addActionListener(this);
+      cancelButton = new JButton("Cancel");
+      cancelButton.addActionListener(this);
+      JPanel buttonPanel = new JPanel();
+      buttonPanel.add(okButton);
+      buttonPanel.add(applyButton);
+      buttonPanel.add(cancelButton);
 
-        contentPane.add(buttonPanel, BorderLayout.SOUTH);
+      contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
-        Point point = frame.getLocation();
-        Dimension frameSize = frame.getSize();
+      Point point = frame.getLocation();
+      Dimension frameSize = frame.getSize();
 
-        point.translate(frameSize.width / 4, frameSize.height / 2);
-        this.setLocation(point);
+      point.translate(frameSize.width / 4, frameSize.height / 2);
+      this.setLocation(point);
 
+      setResizable(false);
+      setVisible(true);
+      pack();
 
-        this.setResizable(false);
-        this.setVisible(true);
-        this.pack();
+      //      parentFrame.repaint();    // This is a horrible way to get the graphs to repaint...
+   }
 
-        //      parentFrame.repaint();    // This is a horrible way to get the graphs to repaint...
-    }
+   @Override
+   public void actionPerformed(ActionEvent event)
+   {
+      if (event.getSource() == cancelButton)
+         setVisible(false);
 
-    @Override
-    public void actionPerformed(ActionEvent event)
-    {
-        if (event.getSource() == cancelButton)
-            this.setVisible(false);
+      if (event.getSource() == applyButton)
+      {
+         graphPropertiesPanel.commitChanges();
 
-        if (event.getSource() == applyButton)
-        {
-            graphPropertiesPanel.commitChanges();
+         for (int i = 0; i < varPropertiesPanels.length; i++)
+         {
+            varPropertiesPanels[i].commitChanges();
+         }
 
-            for (int i = 0; i < varPropertiesPanels.length; i++)
-            {
-                varPropertiesPanels[i].commitChanges();
-            }
+         graph.repaint();
+      }
 
-            graph.repaint();
-        }
+      if (event.getSource() == okButton)
+      {
+         graphPropertiesPanel.commitChanges();
 
-        if (event.getSource() == okButton)
-        {
-            graphPropertiesPanel.commitChanges();
+         for (int i = 0; i < varPropertiesPanels.length; i++)
+         {
+            varPropertiesPanels[i].commitChanges();
+         }
 
-            for (int i = 0; i < varPropertiesPanels.length; i++)
-            {
-                varPropertiesPanels[i].commitChanges();
-            }
+         graph.repaint();
+         setVisible(false);
+      }
 
-            graph.repaint();
-            this.setVisible(false);
-        }
-
-        parentFrame.repaint();    // This is a horrible way to get the graphs to repaint...
-    }
-
-
+      parentFrame.repaint(); // This is a horrible way to get the graphs to repaint...
+   }
 
 }

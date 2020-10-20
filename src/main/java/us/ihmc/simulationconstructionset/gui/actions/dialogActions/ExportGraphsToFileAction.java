@@ -10,7 +10,7 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.ExportGraphsToFi
 public class ExportGraphsToFileAction extends AbstractAction
 {
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 7076583053729816960L;
    private ExportGraphsToFileConstructor constructor;
@@ -24,7 +24,7 @@ public class ExportGraphsToFileAction extends AbstractAction
       int shortKey = KeyEvent.VK_UNDEFINED;
       String longDescription = "Export Graphs To File";
       String shortDescription = "Export Graphs To File";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 
@@ -39,5 +39,5 @@ public class ExportGraphsToFileAction extends AbstractAction
    {
       constructor.constructDialog();
    }
-   
+
 }

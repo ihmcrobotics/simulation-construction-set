@@ -4,5 +4,5 @@ import us.ihmc.yoVariables.variable.YoVariable;
 
 public interface BookmarkedVariableRemovedListener
 {
-   public abstract void bookmarkRemoved(YoVariable<?> variable);
+   public abstract void bookmarkRemoved(YoVariable variable);
 }

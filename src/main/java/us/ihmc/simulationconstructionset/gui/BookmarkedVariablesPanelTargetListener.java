@@ -13,8 +13,8 @@ import us.ihmc.yoVariables.variable.YoVariable;
 public class BookmarkedVariablesPanelTargetListener implements DropTargetListener
 {
    private BookmarkedVariablesPanel bookmarkedVariablesPanel;
-   private static final Cursor
-      droppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR), notDroppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+   private static final Cursor droppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR),
+         notDroppableCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 
    public BookmarkedVariablesPanelTargetListener(BookmarkedVariablesPanel bookmarkedVariablesPanel)
    {
@@ -29,7 +29,7 @@ public class BookmarkedVariablesPanelTargetListener implements DropTargetListene
    @Override
    public void dragExit(DropTargetEvent dte)
    {
-      this.bookmarkedVariablesPanel.setCursor(notDroppableCursor);
+      bookmarkedVariablesPanel.setCursor(notDroppableCursor);
    }
 
    @Override
@@ -37,14 +37,14 @@ public class BookmarkedVariablesPanelTargetListener implements DropTargetListene
    {
       YoGraph.setRecipientOfDrag(bookmarkedVariablesPanel);
 
-      if (!this.bookmarkedVariablesPanel.getCursor().equals(droppableCursor)
-              && ((YoGraph.getSourceOfDrag() == null) ||!YoGraph.getSourceOfDrag().equals(bookmarkedVariablesPanel)))
+      if (!bookmarkedVariablesPanel.getCursor().equals(droppableCursor)
+            && ((YoGraph.getSourceOfDrag() == null) || !YoGraph.getSourceOfDrag().equals(bookmarkedVariablesPanel)))
       {
-         this.bookmarkedVariablesPanel.setCursor(droppableCursor);
+         bookmarkedVariablesPanel.setCursor(droppableCursor);
       }
       else if ( /* !this.yoGraph.getCursor().equals(notDroppableCursor) && */dtde.getSource().equals(bookmarkedVariablesPanel))
       {
-//       this.yoGraph.setCursor(notDroppableCursor);
+         //       this.yoGraph.setCursor(notDroppableCursor);
          dtde.rejectDrag();
       }
    }
@@ -54,9 +54,9 @@ public class BookmarkedVariablesPanelTargetListener implements DropTargetListene
    {
       YoGraph.setRecipientOfDrag(bookmarkedVariablesPanel);
 
-      if ((YoGraph.getSourceOfDrag() == null) ||!YoGraph.getSourceOfDrag().equals(bookmarkedVariablesPanel))
+      if ((YoGraph.getSourceOfDrag() == null) || !YoGraph.getSourceOfDrag().equals(bookmarkedVariablesPanel))
       {
-         YoVariable<?> v = bookmarkedVariablesPanel.getSelectedVariableHolder().getSelectedVariable();
+         YoVariable v = bookmarkedVariablesPanel.getSelectedVariableHolder().getSelectedVariable();
          if (v != null)
             bookmarkedVariablesPanel.bookmarkVariable(v);
       }

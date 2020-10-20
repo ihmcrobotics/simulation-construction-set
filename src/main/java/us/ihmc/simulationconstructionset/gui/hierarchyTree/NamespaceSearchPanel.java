@@ -10,44 +10,44 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class NameSpaceSearchPanel extends JPanel
+public class NamespaceSearchPanel extends JPanel
 {
    private static final long serialVersionUID = 2531114756584430672L;
-   private NameSpaceHierarchyTree nameSpaceHierarchyTree;
-   
-   public NameSpaceSearchPanel(NameSpaceHierarchyTree nameSpaceHierarchyTree)
+   private NamespaceHierarchyTree namespaceHierarchyTree;
+
+   public NamespaceSearchPanel(NamespaceHierarchyTree namespaceHierarchyTree)
    {
       super(new BorderLayout());
-      
-      this.setName("NameSpaceSearchPanel");
-      this.add(new NameSpaceSearchField(), BorderLayout.NORTH);
-      this.nameSpaceHierarchyTree = nameSpaceHierarchyTree;
-      this.add(nameSpaceHierarchyTree);
+
+      setName("NamespaceSearchPanel");
+      this.add(new NamespaceSearchField(), BorderLayout.NORTH);
+      this.namespaceHierarchyTree = namespaceHierarchyTree;
+      this.add(namespaceHierarchyTree);
    }
-   
-   public class NameSpaceSearchField extends JPanel implements ActionListener
+
+   public class NamespaceSearchField extends JPanel implements ActionListener
    {
       private static final long serialVersionUID = 8594680043494017825L;
       private final JTextField searchTextField;
-      
-      public NameSpaceSearchField()
+
+      public NamespaceSearchField()
       {
-         this.setLayout(new GridLayout(1, 1));
+         setLayout(new GridLayout(1, 1));
          searchTextField = new JTextField();
          searchTextField.addActionListener(this);
-         
+
          DocumentListener documentListener = new DocumentListener()
          {
             @Override
             public void insertUpdate(DocumentEvent e)
             {
-               filterNameSpaceTree();
+               filterNamespaceTree();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e)
             {
-               filterNameSpaceTree();
+               filterNamespaceTree();
             }
 
             @Override
@@ -57,19 +57,19 @@ public class NameSpaceSearchPanel extends JPanel
          };
 
          searchTextField.getDocument().addDocumentListener(documentListener);
-         
+
          this.add(searchTextField);
       }
-      
+
       @Override
       public void actionPerformed(ActionEvent arg0)
       {
-         filterNameSpaceTree();
+         filterNamespaceTree();
       }
-      
-      private void filterNameSpaceTree()
+
+      private void filterNamespaceTree()
       {
-         nameSpaceHierarchyTree.filter(searchTextField.getText().toString());
+         namespaceHierarchyTree.filter(searchTextField.getText().toString());
       }
    }
 }

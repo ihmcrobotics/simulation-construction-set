@@ -23,7 +23,7 @@ public class ImportDataAction extends AbstractAction
       int shortKey = KeyEvent.VK_I;
       String longDescription = "Import simulation data to a file.";
       String shortDescription = "Import Data";
-      
+
       AbstractActionTools.setupIconButton(this, iconFilename, shortKey, longDescription, shortDescription);
    }
 
@@ -36,7 +36,6 @@ public class ImportDataAction extends AbstractAction
    {
       constructor.setCurrentDirectory(directory);
    }
-
 
    @Override
    public void actionPerformed(ActionEvent e)

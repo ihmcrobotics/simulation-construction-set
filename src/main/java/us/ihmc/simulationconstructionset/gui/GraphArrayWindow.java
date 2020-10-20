@@ -13,7 +13,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.yoVariables.dataBuffer.DataBuffer;
 import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.commands.AllCommandsExecutor;
 import us.ihmc.simulationconstructionset.commands.SelectGraphConfigurationCommandExecutor;
@@ -32,6 +31,7 @@ import us.ihmc.simulationconstructionset.gui.dialogConstructors.PrintGraphsDialo
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.PrintGraphsDialogGenerator;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogConstructor;
 import us.ihmc.simulationconstructionset.gui.dialogConstructors.SaveGraphConfigurationDialogGenerator;
+import us.ihmc.yoVariables.buffer.YoBuffer;
 
 public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor, GraphGroupSelector
 {
@@ -45,11 +45,10 @@ public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor
 
    private StandardGUIActions windowGUIActions;
 
-   public GraphArrayWindow(AllCommandsExecutor allCommandsExecutor, SimulationConstructionSet sim, GUIEnablerAndDisabler guiEnablerAndDisabler, ConfigurationList configurationList,
-                           GraphGroupList graphGroupList, String graphGroupName, GraphConfigurationList graphConfigurationList,
-                           SelectedVariableHolder selectedVariableHolder, DataBuffer dataBuffer, StandardGUIActions mainGUIActions, int screenID, Point windowLocation,
-                           Dimension windowSize,
-                           boolean maximizeWindow)
+   public GraphArrayWindow(AllCommandsExecutor allCommandsExecutor, SimulationConstructionSet sim, GUIEnablerAndDisabler guiEnablerAndDisabler,
+                           ConfigurationList configurationList, GraphGroupList graphGroupList, String graphGroupName,
+                           GraphConfigurationList graphConfigurationList, SelectedVariableHolder selectedVariableHolder, YoBuffer dataBuffer,
+                           StandardGUIActions mainGUIActions, int screenID, Point windowLocation, Dimension windowSize, boolean maximizeWindow)
    {
       this.configurationList = configurationList;
       this.graphGroupList = graphGroupList;
@@ -66,34 +65,47 @@ public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor
       }
 
       String windowName;
-      
-      if (graphGroupName != null) 
+
+      if (graphGroupName != null)
       {
          windowName = "Graph Window: " + graphGroupName;
-         this.name = graphGroupName;
+         name = graphGroupName;
       }
-      else 
+      else
       {
          windowName = "Graph Window";
-         this.name = "Unnamed";
+         name = "Unnamed";
       }
-      
+
       frame = new JFrame(windowName, configurationToUse);
       frame.setName(windowName);
       myGraphArrayPanel = new GraphArrayPanel(selectedVariableHolder, dataBuffer, frame, sim.getGUI());
 
       windowGUIActions = new StandardGUIActions();
 
-      SaveGraphConfigurationDialogConstructor saveGraphConfigurationDialogConstructor = new SaveGraphConfigurationDialogGenerator(guiEnablerAndDisabler, frame,
-                                                                                           myGraphArrayPanel);
-      
-     LoadGraphGroupDialogConstructor loadGraphGroupDialogConstructor = new LoadGraphGroupDialogGenerator(sim, sim.getStandardSimulationGUI(), this, frame, myGraphArrayPanel);
-      
+      SaveGraphConfigurationDialogConstructor saveGraphConfigurationDialogConstructor = new SaveGraphConfigurationDialogGenerator(guiEnablerAndDisabler,
+                                                                                                                                  frame,
+                                                                                                                                  myGraphArrayPanel);
+
+      LoadGraphGroupDialogConstructor loadGraphGroupDialogConstructor = new LoadGraphGroupDialogGenerator(sim,
+                                                                                                          sim.getStandardSimulationGUI(),
+                                                                                                          this,
+                                                                                                          frame,
+                                                                                                          myGraphArrayPanel);
+
       PrintGraphsDialogConstructor printGraphsDialogConstructor = new PrintGraphsDialogGenerator(myGraphArrayPanel);
 
-      ExportGraphsToFileConstructor exportGraphsToFileConstructor = new ExportGraphsToFileGenerator(sim, frame, myGraphArrayPanel, sim.getStandardSimulationGUI());
-      
-      windowGUIActions.createGraphWindowActions(mainGUIActions, myGraphArrayPanel, saveGraphConfigurationDialogConstructor,loadGraphGroupDialogConstructor, printGraphsDialogConstructor, exportGraphsToFileConstructor);
+      ExportGraphsToFileConstructor exportGraphsToFileConstructor = new ExportGraphsToFileGenerator(sim,
+                                                                                                    frame,
+                                                                                                    myGraphArrayPanel,
+                                                                                                    sim.getStandardSimulationGUI());
+
+      windowGUIActions.createGraphWindowActions(mainGUIActions,
+                                                myGraphArrayPanel,
+                                                saveGraphConfigurationDialogConstructor,
+                                                loadGraphGroupDialogConstructor,
+                                                printGraphsDialogConstructor,
+                                                exportGraphsToFileConstructor);
       JPanel buttonPanel = windowGUIActions.createGraphWindowButtons();
       JMenuBar menuBar = windowGUIActions.createGraphWindowMenus();
 
@@ -109,53 +121,53 @@ public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor
 
       frame.getContentPane().add(graphArrayAndButtonPanel);
 
-      this.selectGraphGroup(graphGroupName);
-      
-      if (windowLocation != null) frame.setLocation(windowLocation);
-      
+      selectGraphGroup(graphGroupName);
+
+      if (windowLocation != null)
+         frame.setLocation(windowLocation);
+
       frame.pack();
 
       if (maximizeWindow)
       {
          frame.setExtendedState(Frame.MAXIMIZED_BOTH);
       }
-      else if (windowSize != null) frame.setSize(windowSize);
-         
+      else if (windowSize != null)
+         frame.setSize(windowSize);
 
       frame.setVisible(true);
    }
-   
+
    public int getScreenID()
    {
       String idString = frame.getGraphicsConfiguration().getDevice().getIDstring();
-      return Integer.parseInt(idString.substring(idString.length()-1, idString.length()));
+      return Integer.parseInt(idString.substring(idString.length() - 1, idString.length()));
    }
-   
+
    public Dimension getWindowSize()
    {
       return frame.getSize();
    }
-   
+
    public Point getWindowLocationOnScreen()
    {
       Point locationOnScreen = frame.getLocationOnScreen();
       return locationOnScreen;
    }
 
-
    public String getName()
    {
       return name;
    }
-   
+
    public JFrame getJFrame()
    {
       return frame;
    }
-   
+
    public StandardGUIActions getGUIActions()
    {
-      return this.windowGUIActions;
+      return windowGUIActions;
    }
 
    public void updateGraphs()
@@ -188,33 +200,19 @@ public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor
       return myGraphArrayPanel.isPaintingPanel();
    }
 
-
    public void updateGUI()
    {
       myGraphArrayPanel.repaint(); //updateUI();
 
    }
 
-
    /*
-    * private void setupConfigurationMenu()
-    * {
-    * configurationMenu.removeAll();
-    * String[] names = configurationList.getConfigurationNames();
-    *
-    * for (int i=0; i<names.length; i++)
-    * {
-    *   configurationMenu.add(new SelectConfigurationAction(this, i, names[i]));
-    * }
-    *
-    * //configurationMenu.addSeparator();
-    * //configurationMenu.add(varGroupsMenu);
-    * //configurationMenu.add(graphGroupsMenu);
-    * //configurationMenu.add(entryBoxGroupsMenu);
-    * }
+    * private void setupConfigurationMenu() { configurationMenu.removeAll(); String[] names =
+    * configurationList.getConfigurationNames(); for (int i=0; i<names.length; i++) {
+    * configurationMenu.add(new SelectConfigurationAction(this, i, names[i])); }
+    * //configurationMenu.addSeparator(); //configurationMenu.add(varGroupsMenu);
+    * //configurationMenu.add(graphGroupsMenu); //configurationMenu.add(entryBoxGroupsMenu); }
     */
-
-
 
    @SuppressWarnings("unused")
    private String selectedConfigurationName, selectedGraphGroupName;
@@ -270,10 +268,9 @@ public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor
          myGraphArrayPanel.setupGraph(varnames[0]);
    }
 
-
    public void zoomFullView()
    {
-      this.myGraphArrayPanel.zoomFullView();
+      myGraphArrayPanel.zoomFullView();
    }
 
    public boolean allowTickUpdatesNow()
@@ -295,5 +292,4 @@ public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor
       frame.dispose();
    }
 
-  
 }

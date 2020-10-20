@@ -7,10 +7,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
-import us.ihmc.yoVariables.variable.YoVariable;
-import us.ihmc.yoVariables.variable.YoVariableList;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableListPanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
+import us.ihmc.yoVariables.registry.YoVariableList;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public class BookmarkedVariablesPanel extends YoVariableListPanel
 {
@@ -31,8 +31,9 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
       initBookMarks();
    }
 
-   public BookmarkedVariablesPanel(YoVariableList list, SelectedVariableHolder holder, GraphArrayPanel graphArrayPanel, EntryBoxArrayTabbedPanel entryBoxArrayPanel,
-                                   BookmarkedVariablesHolder bookmarkedVariablesHolder, YoVariableExplorerTabbedPane combinedVarPanel)
+   public BookmarkedVariablesPanel(YoVariableList list, SelectedVariableHolder holder, GraphArrayPanel graphArrayPanel,
+                                   EntryBoxArrayTabbedPanel entryBoxArrayPanel, BookmarkedVariablesHolder bookmarkedVariablesHolder,
+                                   YoVariableExplorerTabbedPane combinedVarPanel)
    {
       super(list, holder, new YoVariablePanelJPopupMenu(graphArrayPanel, entryBoxArrayPanel, holder, combinedVarPanel, bookmarkedVariablesHolder));
       this.bookmarkedVariablesHolder = bookmarkedVariablesHolder;
@@ -42,18 +43,19 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
    public BookmarkedVariablesPanel(String name, SelectedVariableHolder holder, GraphArrayPanel graphArrayPanel, EntryBoxArrayTabbedPanel entryBoxArrayPanel,
                                    BookmarkedVariablesHolder bookmarkedVariablesHolder, YoVariableExplorerTabbedPane combinedVarPanel)
    {
-      super(new YoVariableList(name), holder, new YoVariablePanelJPopupMenu(graphArrayPanel, entryBoxArrayPanel, holder, combinedVarPanel, bookmarkedVariablesHolder));
+      super(new YoVariableList(name), holder,
+            new YoVariablePanelJPopupMenu(graphArrayPanel, entryBoxArrayPanel, holder, combinedVarPanel, bookmarkedVariablesHolder));
       this.bookmarkedVariablesHolder = bookmarkedVariablesHolder;
       initBookMarks();
    }
 
    private void initBookMarks()
    {
-      this.setDropTarget(new DropTarget(this, new BookmarkedVariablesPanelTargetListener(this)));
+      setDropTarget(new DropTarget(this, new BookmarkedVariablesPanelTargetListener(this)));
       bookmarkedVariablesHolder.addBookmarkedVariableAddedListener(new BookmarkedVariableAddedListener()
       {
          @Override
-         public void bookmarkAdded(YoVariable<?> variable)
+         public void bookmarkAdded(YoVariable variable)
          {
             addVariable(variable);
          }
@@ -61,7 +63,7 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
       bookmarkedVariablesHolder.addBookmarkedVariableRemovedListener(new BookmarkedVariableRemovedListener()
       {
          @Override
-         public void bookmarkRemoved(YoVariable<?> variable)
+         public void bookmarkRemoved(YoVariable variable)
          {
             removeVariable(variable);
          }
@@ -101,7 +103,7 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
       return selectedVariableHolder;
    }
 
-   public void bookmarkVariable(YoVariable<?> variable)
+   public void bookmarkVariable(YoVariable variable)
    {
       bookmarkedVariablesHolder.addBookmark(variable);
    }

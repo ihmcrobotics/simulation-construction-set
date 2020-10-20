@@ -1,6 +1,5 @@
 package us.ihmc.simulationconstructionset.physics.collision.simple;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
@@ -24,7 +23,7 @@ import us.ihmc.simulationconstructionset.physics.CollisionShapeFactory;
 import us.ihmc.simulationconstructionset.physics.ScsCollisionDetector;
 import us.ihmc.simulationconstructionset.physics.collision.DefaultCollisionVisualizer;
 import us.ihmc.simulationconstructionset.util.ground.TerrainObject3D;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class CollisionManager
 {
@@ -54,7 +53,7 @@ public class CollisionManager
 
    public void setUpCollisionVisualizer(SimulationConstructionSet scs)
    {
-      this.collisionVisualizer = new DefaultCollisionVisualizer(forceScale, impulseScale, collisionBallRadius, scs, numberOfVectorsToCreate);
+      collisionVisualizer = new DefaultCollisionVisualizer(forceScale, impulseScale, collisionBallRadius, scs, numberOfVectorsToCreate);
 
       if (collisionHandler != null)
          addListener();
@@ -97,7 +96,7 @@ public class CollisionManager
          }
       }
 
-      environmentStaticLink.enableCollisions(10, getCollisionHandler(), environmentRobot.getRobotsYoVariableRegistry());
+      environmentStaticLink.enableCollisions(10, getCollisionHandler(), environmentRobot.getRobotsYoRegistry());
    }
 
    public void createCollisionShapesFromRobots(Robot[] robots)
@@ -112,7 +111,7 @@ public class CollisionManager
       for (int i = 0; i < robots.length; i++)
       {
          Robot robot = robots[i];
-         createCollisionShapesFromLinks(robot, collisionShapeFactory, collisionHandler, robot.getRobotsYoVariableRegistry());
+         createCollisionShapesFromLinks(robot, collisionShapeFactory, collisionHandler, robot.getRobotsYoRegistry());
       }
 
       this.collisionDetector = collisionDetector;
@@ -134,9 +133,9 @@ public class CollisionManager
    }
 
    private static void createCollisionShapesFromLinks(Robot robot, CollisionShapeFactory collisionShapeFactory, CollisionHandler collisionHandler,
-                                                      YoVariableRegistry registry)
+                                                      YoRegistry registry)
    {
-      ArrayList<Joint> rootJoints = robot.getRootJoints();
+      List<Joint> rootJoints = robot.getRootJoints();
       for (int i = 0; i < rootJoints.size(); i++)
       {
          Joint rootJoint = rootJoints.get(i);
@@ -145,10 +144,10 @@ public class CollisionManager
    }
 
    private static void createCollisionShapesFromLinksRecursively(Joint joint, CollisionShapeFactory collisionShapeFactory, CollisionHandler collisionHandler,
-                                                                 YoVariableRegistry registry)
+                                                                 YoRegistry registry)
    {
       Link link = joint.getLink();
-      ArrayList<CollisionMeshDescription> collisionMeshDescriptions = link.getCollisionMeshDescriptions();
+      List<CollisionMeshDescription> collisionMeshDescriptions = link.getCollisionMeshDescriptions();
 
       if (collisionMeshDescriptions != null)
       {
@@ -161,7 +160,7 @@ public class CollisionManager
          link.enableCollisions(collisionHandler);
       }
 
-      ArrayList<Joint> childrenJoints = joint.getChildrenJoints();
+      List<Joint> childrenJoints = joint.getChildrenJoints();
       for (int i = 0; i < childrenJoints.size(); i++)
       {
          Joint childJoint = childrenJoints.get(i);
