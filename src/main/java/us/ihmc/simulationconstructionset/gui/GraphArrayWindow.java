@@ -255,7 +255,7 @@ public class GraphArrayWindow implements SelectGraphConfigurationCommandExecutor
       }
    }
 
-   public void setupGraph(String[] varnames)
+   public void setupGraph(String... varnames)
    {
       myGraphArrayPanel.setupGraph(varnames);
    }
