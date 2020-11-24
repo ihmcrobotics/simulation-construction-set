@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "us.ihmc"
-version = "0.4"
+version = "0.5"
 
 repositories {
    mavenCentral()
@@ -15,31 +15,36 @@ repositories {
 }
 
 dependencies {
-   compile(gradleApi())
-   compile(kotlin("stdlib"))
+   api(gradleApi())
+   api(kotlin("stdlib"))
 }
 
+val pluginDisplayName = "SCS Gradle Plugin"
+val pluginDescription = "Runtime configuration for IHMC's Simulation Construction Set."
+val pluginVcsUrl = "https://github.com/ihmcrobotics/simulation-construction-set"
+val pluginTags = listOf("scs", "property", "initialization", "ihmc", "robotics", "simulation")
+
 gradlePlugin {
-   plugins {
-      register("scsGradlePlugin") {
-         id = project.group as String + "." + project.name
-         displayName = "SCS Gradle Plugin"
-         implementationClass = "us.ihmc.scs.SCSPlugin"
-         description = "Property initialization for IHMC's Simulation Construction Set."
-      }
+   plugins.register(project.name) {
+      id = project.group as String + "." + project.name
+      implementationClass = "us.ihmc.scs.SCSPlugin"
+      displayName = pluginDisplayName
+      description = pluginDescription
    }
 }
 
 pluginBundle {
-   website = "https://github.com/ihmcrobotics/simulation-construction-set"
-   vcsUrl = "https://github.com/ihmcrobotics/simulation-construction-set"
-   description = "Runtime configuration for IHMC's Simulation Construction Set."
-   tags = listOf("scs", "property", "initialization", "ihmc", "robotics", "simulation")
+   website = pluginVcsUrl
+   vcsUrl = pluginVcsUrl
+   description = pluginDescription
+   tags = pluginTags
 
-   plugins.getByName("scsGradlePlugin") {
+   plugins.getByName(project.name) {
       id = project.group as String + "." + project.name
       version = project.version as String
-      displayName = "SCS Gradle Plugin"
+      displayName = pluginDisplayName
+      description = pluginDescription
+      tags = pluginTags
    }
 
    mavenCoordinates(closureOf<MavenCoordinates> {
