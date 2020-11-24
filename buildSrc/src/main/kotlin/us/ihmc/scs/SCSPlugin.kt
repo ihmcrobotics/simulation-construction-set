@@ -42,10 +42,7 @@ class SCSPlugin : Plugin<Project>
             javaProperties["show.splash.screen"] = "true"
             javaProperties["show.scs.yographics"] = "false"
             javaProperties["create.scs.videos"] = "true"
-            if (scsPlugin.runningOnCIServer)
-               javaProperties["create.videos.dir"] = "/opt/ihmc/bamboo-videos"
-            else
-               javaProperties["create.videos.dir"] = System.getProperty("user.home") + "/bamboo-videos"
+            javaProperties["create.videos.dir"] = System.getProperty("user.home") + "/.ihmc/bamboo-logs"
 
             scsPlugin.putProperties()
          }
@@ -86,10 +83,7 @@ class SCSPlugin : Plugin<Project>
       {
          javaProperties["show.scs.yographics"] = "false"
          javaProperties["create.scs.videos"] = "true"
-         if (runningOnCIServer)
-            javaProperties["create.videos.dir"] = "/opt/ihmc/bamboo-videos"
-         else
-            javaProperties["create.videos.dir"] = System.getProperty("user.home") + "/bamboo-videos"
+         javaProperties["create.videos.dir"] = System.getProperty("user.home") + "/.ihmc/bamboo-logs"
       }
 
       project.extensions.create("scs", SCSExtension::class.java, javaProperties, this)
