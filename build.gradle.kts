@@ -46,7 +46,7 @@ mainDependencies {
       exclude(group = "org.easytesting", module = "fest")
    }
 
-   api("us.ihmc.thirdparty.jinput:jinput:200128")
+   api("us.ihmc.thirdparty.jinput:jinput:201202")
    api("us.ihmc:ihmc-yovariables:0.9.7")
    api("us.ihmc:ihmc-video-codecs:2.1.5")
    api("us.ihmc:euclid:0.15.2")
