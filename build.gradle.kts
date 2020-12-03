@@ -48,7 +48,7 @@ mainDependencies {
 
    api("us.ihmc.thirdparty.jinput:jinput:201202")
    api("us.ihmc:ihmc-yovariables:0.9.7")
-   api("us.ihmc:ihmc-video-codecs:2.1.5")
+   api("us.ihmc:ihmc-video-codecs:2.1.6")
    api("us.ihmc:euclid:0.15.2")
    api("us.ihmc:euclid-frame:0.15.2")
    api("us.ihmc:euclid-shape:0.15.2")
