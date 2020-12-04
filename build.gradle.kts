@@ -46,7 +46,6 @@ mainDependencies {
       exclude(group = "org.easytesting", module = "fest")
    }
 
-   api("us.ihmc.thirdparty.jinput:jinput:201202")
    api("us.ihmc:ihmc-yovariables:0.9.7")
    api("us.ihmc:ihmc-video-codecs:2.1.6")
    api("us.ihmc:euclid:0.15.2")
@@ -54,7 +53,9 @@ mainDependencies {
    api("us.ihmc:euclid-shape:0.15.2")
    api("us.ihmc:euclid-geometry:0.15.2")
    api("us.ihmc:ihmc-commons:0.30.4")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.19.2")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.19.2") {
+      exclude("net.java.jinput")
+   }
    api("us.ihmc:ihmc-robot-description:0.20.2")
    api("us.ihmc:ihmc-graphics-description:0.19.2")
    api("us.ihmc:ihmc-swing-plotting:0.19.2")
