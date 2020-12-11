@@ -81,20 +81,20 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
 
          ViewportAdapter standard3DView = graphics3DAdapter.createNewViewport(graphicsDevice, false, false);
 
-         ClassicCameraController classicCameraController;
+         TrackingDollyCameraController trackingDollyCameraController;
          if (jFrame != null)
-            classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
+            trackingDollyCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
                                                                                                            cameraTrackAndDollyYoVariablesHolder,
                                                                                                            graphics3DAdapter,
                                                                                                            jFrame);
          else
-            classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
+            trackingDollyCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
                                                                                                            cameraTrackAndDollyYoVariablesHolder,
                                                                                                            graphics3DAdapter);
 
          ViewportAdapterAndCameraControllerHolder viewportAdapterAndCameraControllerHolder = new ViewportAdapterAndCameraControllerHolder(standard3DView,
-                                                                                                                                          classicCameraController);
-         standard3DView.setCameraController(classicCameraController);
+                                                                                                                                          trackingDollyCameraController);
+         standard3DView.setCameraController(trackingDollyCameraController);
 
          standard3DViews.add(viewportAdapterAndCameraControllerHolder);
          activeView = viewportAdapterAndCameraControllerHolder;
@@ -121,12 +121,12 @@ public class ViewportPanel extends JPanel implements CameraSelector, ActiveCamer
          CameraTrackAndDollyYoVariablesHolder cameraTrackAndDollyYoVariablesHolder = new CameraTrackAndDollyYoVariablesHolder(yoVariableHolder);
 
          ViewportAdapter standard3DView = graphics3DAdapter.createNewViewport(graphicsDevice, false, false);
-         ClassicCameraController classicCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
+         TrackingDollyCameraController trackingDollyCameraController = ClassicCameraController.createClassicCameraControllerAndAddListeners(standard3DView,
                                                                                                                                 cameraTrackAndDollyYoVariablesHolder,
                                                                                                                                 graphics3DAdapter);
          ViewportAdapterAndCameraControllerHolder viewportAdapterAndCameraControllerHolder = new ViewportAdapterAndCameraControllerHolder(standard3DView,
-                                                                                                                                          classicCameraController);
-         standard3DView.setCameraController(classicCameraController);
+                                                                                                                                          trackingDollyCameraController);
+         standard3DView.setCameraController(trackingDollyCameraController);
 
          standard3DViews.add(viewportAdapterAndCameraControllerHolder);
 

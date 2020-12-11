@@ -1434,7 +1434,7 @@ public class StandardSimulationGUI implements SelectGraphConfigurationCommandExe
 
    public List<Integer> getCameraKeyPoints()
    {
-      ClassicCameraController classicCameraController = (ClassicCameraController) viewportPanel.getCamera();
+      TrackingDollyCameraController classicCameraController = viewportPanel.getCamera();
 
       return classicCameraController.getCameraKeyPoints();
    }

@@ -45,6 +45,7 @@ import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraConfiguration;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
 import us.ihmc.jMonkeyEngineToolkit.camera.ClassicCameraController;
+import us.ihmc.jMonkeyEngineToolkit.camera.TrackingDollyCameraController;
 import us.ihmc.jMonkeyEngineToolkit.jme.JMEGraphics3DAdapter;
 import us.ihmc.simulationconstructionset.examples.FallingBrickRobot;
 import us.ihmc.simulationconstructionset.graphics.GraphicsDynamicGraphicsObject;
@@ -1887,13 +1888,13 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private boolean getCameraKeyMode(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       return classicCameraController.getCameraKeyMode();
    }
 
    private double getCameraFieldOfView(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       return classicCameraController.getHorizontalFieldOfViewInRadians();
    }
 
@@ -1917,7 +1918,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private double[] getCameraTrackingOffsetXYZValues(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       double dx = classicCameraController.getTrackingXOffset();
       double dy = classicCameraController.getTrackingYOffset();
       double dz = classicCameraController.getTrackingZOffset();
@@ -1926,7 +1927,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private double[] getCameraDollyOffsetXYZValues(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       double dx = classicCameraController.getDollyXOffset();
       double dy = classicCameraController.getDollyYOffset();
       double dz = classicCameraController.getDollyZOffset();
@@ -1935,7 +1936,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private double[] getCameraFixXYZValues(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       double x = classicCameraController.getFixX();
       double y = classicCameraController.getFixY();
       double z = classicCameraController.getFixZ();
@@ -1944,7 +1945,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private double[] getCameraNearFarValues(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       double near = classicCameraController.getClipNear();
       double far = classicCameraController.getClipFar();
       return new double[] {near, far};
@@ -1952,7 +1953,7 @@ public class SimulationConstructionSetUsingDirectCallsTest
 
    private double[] getCameraPositionXYZValues(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       double x = classicCameraController.getCamX();
       double y = classicCameraController.getCamY();
       double z = classicCameraController.getCamZ();
@@ -1964,14 +1965,14 @@ public class SimulationConstructionSetUsingDirectCallsTest
       return scs.getGUI().getGraphGroupList();
    }
 
-   private ClassicCameraController getClassicCameraController(SimulationConstructionSet scs)
+   private TrackingDollyCameraController getClassicCameraController(SimulationConstructionSet scs)
    {
-      return (ClassicCameraController) scs.getGUI().getViewportPanel().getActiveView().getCameraController();
+      return (TrackingDollyCameraController) scs.getGUI().getViewportPanel().getActiveView().getCameraController();
    }
 
    private CameraTrackAndDollyYoVariablesHolder getCameraTrackAndDollyVariablesHolder(SimulationConstructionSet scs)
    {
-      ClassicCameraController classicCameraController = getClassicCameraController(scs);
+      TrackingDollyCameraController classicCameraController = getClassicCameraController(scs);
       return (CameraTrackAndDollyYoVariablesHolder) classicCameraController.getCameraTrackAndDollyVariablesHolder();
    }
 
