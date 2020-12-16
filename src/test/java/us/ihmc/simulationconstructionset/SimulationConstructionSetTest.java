@@ -1,6 +1,6 @@
 package us.ihmc.simulationconstructionset;
 
-import java.awt.AWTException;
+import java.awt.*;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
@@ -23,6 +23,25 @@ public class SimulationConstructionSetTest
       }
 
       return false;
+   }
+
+   @Disabled("For manually testing basic GUI functionality")
+   @Test
+   public void testSimulationConstructionSetNewViewportWindow()
+   {
+      FallingBrickRobot robot = new FallingBrickRobot();
+
+      SimulationConstructionSet scs = new SimulationConstructionSet(robot, parameters);
+      scs.setDT(0.0001, 100);
+      scs.skipLoadingDefaultConfiguration();
+      scs.setupGraph("t");
+      scs.changeBufferSize(200);
+      scs.setFrameSize(new Dimension(1200, 900));
+      scs.startOnAThread();
+      scs.setSimulateDuration(2.0);
+      scs.simulate();
+
+      ThreadTools.sleepForever();
    }
 
    @Disabled //org.junit.runners.model.TestTimedOutException: test timed out after 300000 milliseconds
