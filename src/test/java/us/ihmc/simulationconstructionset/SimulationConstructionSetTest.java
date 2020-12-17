@@ -103,4 +103,9 @@ public class SimulationConstructionSetTest
       scs = null;
       testFixture = null;
    }
+
+   public static void main(String[] args)
+   {
+      new SimulationConstructionSetTest().testSimulationConstructionSetNewViewportWindow();
+   }
 }
