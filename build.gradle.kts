@@ -48,10 +48,10 @@ mainDependencies {
 
    api("us.ihmc:ihmc-yovariables:0.9.8")
    api("us.ihmc:ihmc-video-codecs:2.1.6")
-   api("us.ihmc:euclid:0.16.0")
-   api("us.ihmc:euclid-frame:0.16.0")
-   api("us.ihmc:euclid-shape:0.16.0")
-   api("us.ihmc:euclid-geometry:0.16.0")
+   api("us.ihmc:euclid:0.16.1")
+   api("us.ihmc:euclid-frame:0.16.1")
+   api("us.ihmc:euclid-shape:0.16.1")
+   api("us.ihmc:euclid-geometry:0.16.1")
    api("us.ihmc:ihmc-commons:0.30.4")
    api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.19.5")
    api("us.ihmc:ihmc-robot-description:0.21.1")
@@ -65,6 +65,6 @@ testDependencies {
 }
 
 utilitiesDependencies {
-   api("us.ihmc:euclid:0.16.0")
+   api("us.ihmc:euclid:0.16.1")
    api("us.ihmc:ihmc-yovariables:0.9.8")
 }
