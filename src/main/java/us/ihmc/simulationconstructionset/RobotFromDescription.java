@@ -27,6 +27,7 @@ import us.ihmc.robotics.robotDescription.LoopClosureConstraintDescription;
 import us.ihmc.robotics.robotDescription.PinJointDescription;
 import us.ihmc.robotics.robotDescription.RobotDescription;
 import us.ihmc.robotics.robotDescription.SliderJointDescription;
+import us.ihmc.robotics.robotDescription.BallAndSocketJointDescription;
 import us.ihmc.simulationconstructionset.simulatedSensors.CollisionShapeBasedWrenchCalculator;
 import us.ihmc.simulationconstructionset.simulatedSensors.FeatherStoneJointBasedWrenchCalculator;
 import us.ihmc.simulationconstructionset.simulatedSensors.GroundContactPointBasedWrenchCalculator;
@@ -450,6 +451,16 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
          FloatingPlanarJointDescription floatingPlanarJointDescription = (FloatingPlanarJointDescription) jointDescription;
 
          joint = new FloatingPlanarJoint(jointDescription.getName(), this, floatingPlanarJointDescription.getPlane());
+      }
+
+      else if (jointDescription instanceof BallAndSocketJointDescription)
+      {
+         BallAndSocketJointDescription sphericalJointDescription = (BallAndSocketJointDescription) jointDescription;
+
+         Vector3D offset = new Vector3D();
+         sphericalJointDescription.getOffsetFromParentJoint(offset);
+
+         joint = new BallAndSocketJoint(jointDescription.getName(), offset, this, true);
       }
 
       else if (jointDescription instanceof PinJointDescription)
