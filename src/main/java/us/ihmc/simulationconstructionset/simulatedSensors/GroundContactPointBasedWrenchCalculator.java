@@ -68,6 +68,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
 
    private final RigidBodyTransform transformToOriginFrame = new RigidBodyTransform();
    private final Vector3D force = new Vector3D();
+   private final Vector3D contactPointMoment = new Vector3D();
    private final Point3D contactPointOriginFrame = new Point3D();
    private final Vector3D contactVectorOriginFrame = new Vector3D();
    private final Vector3D tau = new Vector3D();
@@ -88,8 +89,10 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
       {
          GroundContactPoint contactPoint = contactPoints.get(i);
          contactPoint.getForce(force);
+         contactPoint.getMoment(contactPointMoment);
 
          transformToOriginFrame.transform(force);
+         transformToOriginFrame.transform(contactPointMoment);
 
          contactPointOriginFrame.set(0.0, 0.0, 0.0);
 
@@ -97,6 +100,7 @@ public class GroundContactPointBasedWrenchCalculator implements WrenchCalculator
          transformToOriginFrame.transform(tempContactPoint, contactPointOriginFrame);
          contactVectorOriginFrame.set(contactPointOriginFrame);
          tau.cross(contactVectorOriginFrame, force);
+         tau.add(contactPointMoment);
 
          wrenchMatrix.set(0, 0, wrenchMatrix.get(0, 0) + tau.getX());
          wrenchMatrix.set(1, 0, wrenchMatrix.get(1, 0) + tau.getY());
