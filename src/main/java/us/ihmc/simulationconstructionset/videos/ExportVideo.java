@@ -43,9 +43,14 @@ public class ExportVideo implements ExportVideoCommandExecutor
    private final GotoInPointCommandExecutor gotoInPointCommandExecutor;
    private final GotoOutPointCommandExecutor gotoOutPointCommandExecutor;
 
-   public ExportVideo(TimeHolder timeHolder, StandardSimulationGUI standardSimulationGUI, YoBufferReader dataBufferCommandsExecutor,
-                      GotoInPointCommandExecutor gotoInPointCommandExecutor, GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
-                      RunCommandsExecutor runCommandsExecutor, GUIEnablerAndDisabler guiEnablerAndDisabler, ActiveCanvas3DHolder activeCanvas3DHolder,
+   public ExportVideo(TimeHolder timeHolder,
+                      StandardSimulationGUI standardSimulationGUI,
+                      YoBufferReader dataBufferCommandsExecutor,
+                      GotoInPointCommandExecutor gotoInPointCommandExecutor,
+                      GotoOutPointCommandExecutor gotoOutPointCommandExecutor,
+                      RunCommandsExecutor runCommandsExecutor,
+                      GUIEnablerAndDisabler guiEnablerAndDisabler,
+                      ActiveCanvas3DHolder activeCanvas3DHolder,
                       SimulationSynchronizer simulationSynchronizer)
    {
       this.timeHolder = timeHolder;
@@ -75,7 +80,11 @@ public class ExportVideo implements ExportVideoCommandExecutor
    }
 
    @Override
-   public void createVideo(CameraController cameraController, File selectedFile, Dimension dimension, Boolean isSequanceSelected, double playBackRate,
+   public void createVideo(CameraController cameraController,
+                           File selectedFile,
+                           Dimension dimension,
+                           Boolean isSequanceSelected,
+                           double playBackRate,
                            double frameRate)
    {
       Graphics3DAdapter graphics3dAdapter = standardSimulationGUI.getGraphics3dAdapter();
@@ -97,7 +106,6 @@ public class ExportVideo implements ExportVideoCommandExecutor
    {
       printIfDebug("Creating Video. File = " + selected);
 
-      Vector<BufferedImage> imageVector = new Vector<>();
       int currentTick = 1;
       File selectedFile = selected;
 
@@ -155,23 +163,17 @@ public class ExportVideo implements ExportVideoCommandExecutor
       Graphics3DAdapter graphics3dAdapter = standardSimulationGUI.getGraphics3dAdapter();
       graphics3dAdapter.play();
 
-      //      BufferedImage buffer = canvas3D.getBufferedImage();
-
       if (isSequenceSelected)
       {
-         //         buffer = canvas3D.getBufferedImage();
          saveSimulationAsSequenceOfImages(selectedFile.getParent(), fileNameNoExtension, captureDevice);
          guiEnablerAndDisabler.enableGUIComponents();
          System.out.println("Finished making saving sequence of Images.");
-         imageVector.clear();
 
          return;
       }
       else
       {
          videoPlaybackAsBufferedImage(selectedFile.getAbsolutePath(), captureDevice, playBackRate, frameRate);
-
-         //         buffer = canvas3D.getBufferedImage();
       }
 
       graphics3dAdapter.pause();
@@ -205,6 +207,17 @@ public class ExportVideo implements ExportVideoCommandExecutor
       }
 
       gotoInPointCommandExecutor.gotoInPoint();
+      // Compute the DT at which the data is recorded in the buffer. That'll allow us to navigate the buffer more quickly.
+      double recordDT = timeHolder.getTime();
+      dataBufferCommandsExecutor.tickAndReadFromBuffer(1);
+      recordDT = timeHolder.getTime() - recordDT;
+      gotoInPointCommandExecutor.gotoInPoint();
+
+      double lastFrameTime = timeHolder.getTime(); // That's the time of the first frame that'll be exported. 
+      if (DEBUG)
+         System.out.println("Start time: " + lastFrameTime);
+
+      double videoDT = playBackRate / frameRate;
       BufferedImage bufferedImage = captureDevice.exportSnapshotAsBufferedImage();
 
       MP4H264MovieBuilder movieBuilder = null;
@@ -216,8 +229,6 @@ public class ExportVideo implements ExportVideoCommandExecutor
          settings.setProfileIdc(EProfileIdc.PRO_HIGH);
 
          movieBuilder = new MP4H264MovieBuilder(new File(file), bufferedImage.getWidth(), bufferedImage.getHeight(), (int) frameRate, settings);
-
-         movieBuilder.encodeFrame(bufferedImage);
 
          boolean reachedEndPoint = false; // This keeps track of what the previous index was to stop the playback when it starts to loop back.
 
@@ -232,14 +243,19 @@ public class ExportVideo implements ExportVideoCommandExecutor
             {
                printIfDebug("Done Waiting For simulationSynchronizer 1");
 
-               double currentTime = timeHolder.getTime();
-               while (timeHolder.getTime() < currentTime + playBackRate / frameRate && !reachedEndPoint)
-               {
-                  reachedEndPoint = dataBufferCommandsExecutor.tickAndReadFromBuffer(1);
-               }
+               double nextFrameTime = lastFrameTime + videoDT;
+               int stepSize = (int) Math.round((nextFrameTime - timeHolder.getTime()) / recordDT);
+               reachedEndPoint = dataBufferCommandsExecutor.tickAndReadFromBuffer(stepSize);
+
+               if (reachedEndPoint)
+                  break;
+
                standardSimulationGUI.updateRobots();
                standardSimulationGUI.updateGraphs();
                standardSimulationGUI.allowTickUpdatesNow();
+               if (DEBUG)
+                  System.out.println("ExportVideo: Capturing Frame at t=" + timeHolder.getTime() + ", dt=" + (timeHolder.getTime() - lastFrameTime));
+               lastFrameTime = nextFrameTime;
             }
 
             //         if (sim.isGraphsUpdatedDuringPlayback())
@@ -263,6 +279,9 @@ public class ExportVideo implements ExportVideoCommandExecutor
             }
          }
       }
+
+      if (DEBUG)
+         LogTools.info("Done with video");
    }
 
    public Vector<File> saveSimulationAsSequenceOfImages(String path, String NameNoExtension, CaptureDevice captureDevice)
