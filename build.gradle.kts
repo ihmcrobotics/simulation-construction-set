@@ -53,7 +53,7 @@ mainDependencies {
    api("us.ihmc:euclid-shape:0.16.2")
    api("us.ihmc:euclid-geometry:0.16.2")
    api("us.ihmc:ihmc-commons:0.30.4")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.19.5")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.19.7")
    api("us.ihmc:ihmc-robot-description:0.21.2")
    api("us.ihmc:ihmc-graphics-description:0.19.3")
    api("us.ihmc:ihmc-swing-plotting:0.19.3")
