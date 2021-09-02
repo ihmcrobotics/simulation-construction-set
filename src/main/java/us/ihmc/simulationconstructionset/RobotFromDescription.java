@@ -497,6 +497,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
             if (enableJointTorqueAndVelocityLimits)
             {
                pinJoint.setVelocityLimits(pinJointDescription.getVelocityLimit(), pinJointDescription.getVelocityDamping());
+               pinJoint.setTorqueLimits(pinJointDescription.getEffortLimit());
             }
          }
          else
@@ -529,6 +530,13 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
             sliderJoint.setLimitStops(qMin, qMax, kLimit, bLimit);
          }
+
+         if (enableDamping)
+         {
+            sliderJoint.setDamping(sliderJointDescription.getDamping());
+            sliderJoint.setStiction(sliderJointDescription.getStiction());
+         }
+
       }
 
       else
