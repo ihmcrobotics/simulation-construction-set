@@ -13,6 +13,7 @@ import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionBasics;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.robotics.robotDescription.RobotDescription;
+import us.ihmc.scs2.definition.robot.RobotDefinition;
 
 public class FloatingRootJointRobot extends RobotFromDescription
 {
@@ -34,6 +35,17 @@ public class FloatingRootJointRobot extends RobotFromDescription
       double totalMass = computeCenterOfMass(centerOfMass);
       if (DEBUG)
          System.out.println("SDFRobot: Total robot mass: " + FormattingTools.getFormattedDecimal3D(totalMass) + " (kg)");
+   }
+
+   public FloatingRootJointRobot(RobotDefinition robotDefinition)
+   {
+      this(robotDefinition, true, true);
+   }
+
+   public FloatingRootJointRobot(RobotDefinition robotDefinition, boolean enableDamping, boolean enableJointTorqueAndVelocityLimits)
+   {
+      super(robotDefinition, enableDamping, enableJointTorqueAndVelocityLimits);
+      rootJoint = (FloatingJoint) this.getRootJoints().get(0);
    }
 
    public Quaternion getRootJointToWorldRotationQuaternion()
@@ -58,7 +70,7 @@ public class FloatingRootJointRobot extends RobotFromDescription
 
    public void setOrientation(QuaternionReadOnly quaternion)
    {
-      rootJoint.setQuaternion(quaternion);
+      rootJoint.setOrientation(quaternion);
    }
 
    public void setAngularVelocity(Vector3DReadOnly velocity)

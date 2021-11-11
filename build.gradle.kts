@@ -57,6 +57,7 @@ mainDependencies {
    api("us.ihmc:ihmc-robot-description:0.21.2")
    api("us.ihmc:ihmc-graphics-description:0.19.4")
    api("us.ihmc:ihmc-swing-plotting:0.19.3")
+   api("us.ihmc:scs2-definition:0.0.4")
    api(ihmc.sourceSetProject("utilities"))
 }
 
