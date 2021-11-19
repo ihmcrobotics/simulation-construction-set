@@ -1,7 +1,6 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
@@ -20,19 +19,20 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
 {
    private final double xMin, xMax, yMin, yMax;
    private final double xStart, xEnd;
-   private final double height;
+   private final double zStart, zEnd;
 
    private final BoundingBox3D boundingBox;
-
+   
    private Graphics3DObject linkGraphics;
-
+   
    private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
-   public RampTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height, AppearanceDefinition appearance)
+   public RampTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd, AppearanceDefinition appearance)
    {
       this.xStart = xStart;
       this.xEnd = xEnd;
-      this.height = height;
+      this.zStart = zStart;
+      this.zEnd = zEnd;
 
       xMin = Math.min(xStart, xEnd);
       xMax = Math.max(xStart, xEnd);
@@ -41,30 +41,35 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
       yMax = Math.max(yStart, yEnd);
 
       linkGraphics = new Graphics3DObject();
-      linkGraphics.translate((xStart + xEnd) / 2.0, (yStart + yEnd) / 2.0, 0.0);
+      linkGraphics.translate((xStart + xEnd) / 2.0, (yStart + yEnd) / 2.0, zStart);
 
       if (xStart > xEnd)
          linkGraphics.rotate(Math.PI, Axis3D.Z);
-      linkGraphics.addWedge(Math.abs(xEnd - xStart), Math.abs(yEnd - yStart), height, appearance);
-
+      linkGraphics.addWedge(Math.abs(xEnd - xStart), Math.abs(yEnd - yStart), zEnd-zStart, appearance);
+      
       Point3D minPoint = new Point3D(xMin, yMin, Double.NEGATIVE_INFINITY);
-      Point3D maxPoint = new Point3D(xMax, yMax, height);
-
+      Point3D maxPoint = new Point3D(xMax, yMax, zEnd);
+      
       boundingBox = new BoundingBox3D(minPoint, maxPoint);
 
       RigidBodyTransform transform = new RigidBodyTransform();
-      transform.appendTranslation((xStart + xEnd) / 2.0, (yStart + yEnd) / 2.0, 0.0);
+      transform.appendTranslation((xStart + xEnd) / 2.0, (yStart + yEnd) / 2.0, zStart);
 
       if (xStart > xEnd)
          transform.appendYawRotation(Math.PI);
 
-      Ramp3D ramp3DShape = new Ramp3D(transform, Math.abs(xEnd - xStart), Math.abs(yEnd - yStart), height);
+      Ramp3D ramp3DShape = new Ramp3D(transform, Math.abs(xEnd - xStart), Math.abs(yEnd - yStart), Math.abs(zEnd - zStart));
       terrainCollisionShapes.add(ramp3DShape);
    }
 
    public RampTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height)
    {
-      this(xStart, yStart, xEnd, yEnd, height, YoAppearance.Black());
+      this(xStart, yStart, xEnd, yEnd, 0.0, height, YoAppearance.Black());
+   }
+
+   public RampTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd)
+   {
+      this(xStart, yStart, xEnd, yEnd, zStart, zEnd, YoAppearance.Black());
    }
 
    @Override
@@ -86,7 +91,7 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
    {
       if ((x > xMin) && (x < xMax) && (y > yMin) && (y < yMax))
       {
-         return (x - xStart) / (xEnd - xStart) * height;
+         return zStart + (x - xStart) / (xEnd - xStart) * (zEnd - zStart);
       }
 
       return 0.0;
@@ -99,16 +104,16 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
       normal.setY(0.0);
       normal.setZ(1.0);
 
-      if ((x < xMin) || (x > xMax) || (y < yMin) || (y > yMax) || (z > height))
+      if ((x < xMin) || (x > xMax) || (y < yMin) || (y > yMax) || (z > zEnd))
          return;
 
-      /*
+         /*
        * if (Math.abs(x-xMin) < threshhold) { normal.x = -1.0;normal.y = 0.0;normal.z = 0.0; }
-       */
+          */
 
       else if (z > heightAt(x, y, z) - threshhold)
       {
-         normal.setX(height);
+         normal.setX(zEnd - zStart);
          normal.setY(0.0);
          normal.setZ(xStart - xEnd);
 
@@ -144,14 +149,14 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
 
    public void closestIntersectionTo(double x, double y, double z, Point3DBasics intersection)
    {
-      intersection.setX(x); // Go Straight Up for now...
+      intersection.setX(x);    // Go Straight Up for now...
       intersection.setY(y);
       intersection.setZ(heightAt(x, y, z));
    }
 
    public void closestIntersectionAndNormalAt(double x, double y, double z, Point3DBasics intersection, Vector3DBasics normal)
    {
-      intersection.setX(x); // Go Straight Up for now...
+      intersection.setX(x);    // Go Straight Up for now...
       intersection.setY(y);
       intersection.setZ(heightAt(x, y, z));
 
@@ -165,12 +170,12 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
       if (z > heightAt)
          return false;
 
-      intersectionToPack.set(x, y, heightAt);
+      intersectionToPack.set(x, y, heightAt); 
       surfaceNormalAt(x, y, z, normalToPack);
-
+      
       return true;
    }
-
+   
    @Override
    public boolean isClose(double x, double y, double z)
    {
@@ -202,16 +207,11 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
    {
       return boundingBox;
    }
-
+   
    @Override
    public HeightMapWithNormals getHeightMapIfAvailable()
    {
       return this;
    }
 
-   @Override
-   public List<Shape3DReadOnly> getTerrainCollisionShapes()
-   {
-      return terrainCollisionShapes;
-   }
 }
