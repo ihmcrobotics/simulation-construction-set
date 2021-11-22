@@ -27,6 +27,11 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
    
    private final ArrayList<Shape3DReadOnly> terrainCollisionShapes = new ArrayList<>();
 
+   public RampTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double height, AppearanceDefinition appearance)
+   {
+      this(xStart, yStart, xEnd, yEnd, 0, height, appearance);
+   }
+
    public RampTerrainObject(double xStart, double yStart, double xEnd, double yEnd, double zStart, double zEnd, AppearanceDefinition appearance)
    {
       this.xStart = xStart;
