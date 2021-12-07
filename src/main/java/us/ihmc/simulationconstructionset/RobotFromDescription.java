@@ -682,8 +682,10 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
             if (enableDamping)
             {
-               pinJoint.setDamping(revoluteJointDefinition.getDamping());
-               pinJoint.setStiction(revoluteJointDefinition.getStiction());
+               if (revoluteJointDefinition.getDamping() >= 0.0)
+                  pinJoint.setDamping(revoluteJointDefinition.getDamping());
+               if (revoluteJointDefinition.getStiction() >= 0.0)
+                  pinJoint.setStiction(revoluteJointDefinition.getStiction());
             }
             if (enableJointTorqueAndVelocityLimits)
             {
@@ -717,8 +719,10 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
          if (enableDamping)
          {
-            sliderJoint.setDamping(prismaticJointDefinition.getDamping());
-            sliderJoint.setStiction(prismaticJointDefinition.getStiction());
+            if (prismaticJointDefinition.getDamping() >= 0.0)
+               sliderJoint.setDamping(prismaticJointDefinition.getDamping());
+            if (prismaticJointDefinition.getStiction() >= 0.0)
+               sliderJoint.setStiction(prismaticJointDefinition.getStiction());
          }
       }
       else
