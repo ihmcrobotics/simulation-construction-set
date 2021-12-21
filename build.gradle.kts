@@ -8,7 +8,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.21.12"
+   version = "0.21.13"
    vcsUrl = "https://github.com/ihmcrobotics/simulation-construction-set"
    openSource = true
    
@@ -33,8 +33,11 @@ mainDependencies {
    api("org.apache.xmlgraphics:batik-svggen:1.7")
    api("org.apache.xmlgraphics:batik-dom:1.7")
    api("net.sourceforge.jexcelapi:jxl:2.6.12")
+   {
+      exclude(group = "log4j", module = "log4j")
+   }
    api("com.github.wendykierp:JTransforms:3.1")
-   api("org.apache.commons:commons-math3:3.3")
+   api("org.apache.commons:commons-math3:3.6.1")
    api("org.apache.commons:commons-lang3:3.12.0")
    api("org.apache.pdfbox:pdfbox:1.8.4")
    api("net.sourceforge.jmatio:jmatio:1.0")
