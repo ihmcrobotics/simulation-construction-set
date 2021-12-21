@@ -35,7 +35,7 @@ mainDependencies {
    api("net.sourceforge.jexcelapi:jxl:2.6.12")
    api("com.github.wendykierp:JTransforms:3.1")
    api("org.apache.commons:commons-math3:3.3")
-   api("org.apache.commons:commons-lang3:3.11")
+   api("org.apache.commons:commons-lang3:3.12.0")
    api("org.apache.pdfbox:pdfbox:1.8.4")
    api("net.sourceforge.jmatio:jmatio:1.0")
    api("xml-apis:xml-apis:2.0.2")
