@@ -11,7 +11,6 @@ version = "0.5"
 
 repositories {
    mavenCentral()
-   jcenter()
 }
 
 dependencies {
