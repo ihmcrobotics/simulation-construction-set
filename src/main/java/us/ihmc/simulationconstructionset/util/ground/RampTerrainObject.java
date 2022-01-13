@@ -1,6 +1,7 @@
 package us.ihmc.simulationconstructionset.util.ground;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.geometry.BoundingBox3D;
@@ -219,4 +220,9 @@ public class RampTerrainObject implements TerrainObject3D, HeightMapWithNormals
       return this;
    }
 
+   @Override
+   public List<? extends Shape3DReadOnly> getTerrainCollisionShapes()
+   {
+      return terrainCollisionShapes;
+   }
 }
