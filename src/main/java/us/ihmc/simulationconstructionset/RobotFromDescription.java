@@ -578,6 +578,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
    private void constructRobotFromDefinition(RobotDefinition definition, boolean enableDamping, boolean enableJointTorqueAndVelocityLimits)
    {
+      ClassLoader resourceClassLoader = definition.getResourceClassLoader();
       List<JointDefinition> rootJointDefinitions = definition.getRootJointDefinitions();
 
       for (JointDefinition rootJointDefinition : rootJointDefinitions)
@@ -585,7 +586,8 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
          Joint rootJoint = constructJointRecursively(rootJointDefinition,
                                                      definition.getNameOfJointsToIgnore(),
                                                      enableDamping,
-                                                     enableJointTorqueAndVelocityLimits);
+                                                     enableJointTorqueAndVelocityLimits,
+                                                     resourceClassLoader);
          addRootJoint(rootJoint);
       }
 
@@ -598,9 +600,10 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
    private Joint constructJointRecursively(JointDefinition jointDefinition,
                                            Collection<String> jointsToIgnore,
                                            boolean enableDamping,
-                                           boolean enableJointTorqueAndVelocityLimits)
+                                           boolean enableJointTorqueAndVelocityLimits,
+                                           ClassLoader resourceClassLoader)
    {
-      Joint joint = createSingleJoint(jointDefinition, jointsToIgnore, enableDamping, enableJointTorqueAndVelocityLimits);
+      Joint joint = createSingleJoint(jointDefinition, jointsToIgnore, enableDamping, enableJointTorqueAndVelocityLimits, resourceClassLoader);
 
       addGroundContactPoints(jointDefinition, joint);
       addExternalForcePoints(jointDefinition, joint);
@@ -617,7 +620,11 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
       {
          if (childJointDefinition.isLoopClosure())
             continue; // Loop closures are added afterward.
-         Joint childJoint = constructJointRecursively(childJointDefinition, jointsToIgnore, enableDamping, enableJointTorqueAndVelocityLimits);
+         Joint childJoint = constructJointRecursively(childJointDefinition,
+                                                      jointsToIgnore,
+                                                      enableDamping,
+                                                      enableJointTorqueAndVelocityLimits,
+                                                      resourceClassLoader);
          joint.addJoint(childJoint);
       }
 
@@ -634,7 +641,8 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
    private Joint createSingleJoint(JointDefinition jointDefinition,
                                    Collection<String> jointsToIgnore,
                                    boolean enableDamping,
-                                   boolean enableJointTorqueAndVelocityLimits)
+                                   boolean enableJointTorqueAndVelocityLimits,
+                                   ClassLoader resourceClassLoader)
    {
       Joint joint;
 
@@ -741,19 +749,19 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
       {
          throw new RuntimeException("RigidBodyDefinition is null for joint " + jointDefinition.getName());
       }
-      Link link = createLink(rigidBodyDefinition);
+      Link link = createLink(rigidBodyDefinition, resourceClassLoader);
       joint.setLink(link);
       return joint;
    }
 
-   private Link createLink(RigidBodyDefinition rigidBodyDefinition)
+   private Link createLink(RigidBodyDefinition rigidBodyDefinition, ClassLoader resourceClassLoader)
    {
       Link link = new Link(rigidBodyDefinition.getName());
 
       link.setMass(rigidBodyDefinition.getMass());
       link.setComOffset(rigidBodyDefinition.getCenterOfMassOffset());
       link.setMomentOfInertia(rigidBodyDefinition.getMomentOfInertia());
-      link.setLinkGraphics(VisualDefinitionConverter.toGraphics3DObject(rigidBodyDefinition.getVisualDefinitions()));
+      link.setLinkGraphics(VisualDefinitionConverter.toGraphics3DObject(rigidBodyDefinition.getVisualDefinitions(), resourceClassLoader));
 
       return link;
    }
