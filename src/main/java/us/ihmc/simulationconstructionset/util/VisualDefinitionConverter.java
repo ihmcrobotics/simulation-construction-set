@@ -57,15 +57,15 @@ import us.ihmc.scs2.definition.visual.VisualDefinition;
 
 public class VisualDefinitionConverter
 {
-   public static Graphics3DObject toGraphics3DObject(Collection<? extends VisualDefinition> source)
+   public static Graphics3DObject toGraphics3DObject(Collection<? extends VisualDefinition> source, ClassLoader defaultResourceClassLoader)
    {
       Graphics3DObject output = new Graphics3DObject();
       for (VisualDefinition visualDefinition : source)
-         output.combine(toGraphics3DObject(visualDefinition));
+         output.combine(toGraphics3DObject(visualDefinition, defaultResourceClassLoader));
       return output;
    }
 
-   public static Graphics3DObject toGraphics3DObject(VisualDefinition source)
+   public static Graphics3DObject toGraphics3DObject(VisualDefinition source, ClassLoader defaultResourceClassLoader)
    {
       if (source == null)
          return null;
@@ -96,7 +96,7 @@ public class VisualDefinitionConverter
          }
       }
 
-      List<Graphics3DPrimitiveInstruction> instructions = toGraphics3DPrimitiveInstruction(source.getGeometryDefinition());
+      List<Graphics3DPrimitiveInstruction> instructions = toGraphics3DPrimitiveInstruction(source.getGeometryDefinition(), defaultResourceClassLoader);
       if (instructions == null || instructions.isEmpty())
          return null;
 
@@ -109,7 +109,7 @@ public class VisualDefinitionConverter
       return output;
    }
 
-   public static List<Graphics3DPrimitiveInstruction> toGraphics3DPrimitiveInstruction(GeometryDefinition source)
+   public static List<Graphics3DPrimitiveInstruction> toGraphics3DPrimitiveInstruction(GeometryDefinition source, ClassLoader defaultResourceClassLoader)
    {
       if (source == null)
          return null;
@@ -179,18 +179,22 @@ public class VisualDefinitionConverter
       else if (source instanceof ModelFileGeometryDefinition)
       {
          ModelFileGeometryDefinition model = (ModelFileGeometryDefinition) source;
+         ClassLoader resourceClassLoader = model.getResourceClassLoader();
+         if (resourceClassLoader == null)
+            resourceClassLoader = defaultResourceClassLoader;
+
          List<Graphics3DPrimitiveInstruction> output = new ArrayList<>();
          if (model.getScale() != null)
             output.add(new Graphics3DScaleInstruction(model.getScale()));
          if (model.getSubmeshes() == null || model.getSubmeshes().isEmpty())
-            output.add(new Graphics3DAddModelFileInstruction(model.getFileName(), null, model.getResourceDirectories(), model.getResourceClassLoader()));
+            output.add(new Graphics3DAddModelFileInstruction(model.getFileName(), null, model.getResourceDirectories(), resourceClassLoader));
          else
             output.add(new Graphics3DAddModelFileInstruction(model.getFileName(),
                                                              model.getSubmeshes().get(0).getName(),
                                                              model.getSubmeshes().get(0).getCenter(),
                                                              null,
                                                              model.getResourceDirectories(),
-                                                             model.getResourceClassLoader()));
+                                                             resourceClassLoader));
          return output;
       }
       else if (source instanceof PyramidBox3DDefinition)
