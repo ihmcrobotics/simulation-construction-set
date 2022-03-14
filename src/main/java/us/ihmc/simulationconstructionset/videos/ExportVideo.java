@@ -10,6 +10,7 @@ import us.ihmc.codecs.builder.H264Settings;
 import us.ihmc.codecs.builder.MP4H264MovieBuilder;
 import us.ihmc.codecs.generated.EProfileIdc;
 import us.ihmc.codecs.generated.EUsageType;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.jMonkeyEngineToolkit.Graphics3DAdapter;
 import us.ihmc.jMonkeyEngineToolkit.camera.CameraController;
 import us.ihmc.jMonkeyEngineToolkit.camera.CaptureDevice;
@@ -129,20 +130,15 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
       // stop the simulation
       runCommandsExecutor.stop();
+      ThreadTools.sleep(200);
       gotoOutPointCommandExecutor.gotoOutPoint();
+      ThreadTools.sleep(200);
 
       // go to the start
       gotoInPointCommandExecutor.gotoInPoint();
 
       // sleep for a little
-      try
-      {
-         Thread.sleep(500);
-      }
-      catch (InterruptedException e1)
-      {
-         e1.printStackTrace();
-      }
+      ThreadTools.sleep(700);
 
       // record the start tick
       currentTick = dataBufferCommandsExecutor.getInPoint();
@@ -154,7 +150,7 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
       try
       {
-         Thread.sleep(10);
+         Thread.sleep(200);
       }
       catch (InterruptedException e)
       {
@@ -197,21 +193,25 @@ public class ExportVideo implements ExportVideoCommandExecutor
       // long currentTime;
 
       standardSimulationGUI.updateGraphs();
-
-      try
-      {
-         Thread.sleep(125);
-      }
-      catch (InterruptedException e)
-      {
-      }
+      ThreadTools.sleep(100);
 
       gotoInPointCommandExecutor.gotoInPoint();
-      // Compute the DT at which the data is recorded in the buffer. That'll allow us to navigate the buffer more quickly.
-      double recordDT = timeHolder.getTime();
+      ThreadTools.sleep(100);
+      
+      double startTime = timeHolder.getTime();
       dataBufferCommandsExecutor.tickAndReadFromBuffer(1);
-      recordDT = timeHolder.getTime() - recordDT;
+      ThreadTools.sleep(100);
+
+      // Compute the DT at which the data is recorded in the buffer. That'll allow us to navigate the buffer more quickly.
+      double recordDT = timeHolder.getTime() - startTime;
+      
+      gotoOutPointCommandExecutor.gotoOutPoint();
+      ThreadTools.sleep(100);
+      
+      double endTime = timeHolder.getTime();
+      
       gotoInPointCommandExecutor.gotoInPoint();
+      ThreadTools.sleep(100);
 
       double lastFrameTime = timeHolder.getTime(); // That's the time of the first frame that'll be exported. 
       if (DEBUG)
@@ -232,11 +232,14 @@ public class ExportVideo implements ExportVideoCommandExecutor
 
          boolean reachedEndPoint = false; // This keeps track of what the previous index was to stop the playback when it starts to loop back.
 
+         
+         int frameIndex = 0;
          while (!reachedEndPoint)
          {
             printIfDebug("ExportVideo: Capturing Frame");
 
             movieBuilder.encodeFrame(captureDevice.exportSnapshotAsBufferedImage());
+            frameIndex++;
 
             printIfDebug("Waiting For simulationSynchronizer 1");
             synchronized (simulationSynchronizer) // Synched so we don't update during a graphics redraw...
@@ -248,7 +251,14 @@ public class ExportVideo implements ExportVideoCommandExecutor
                reachedEndPoint = dataBufferCommandsExecutor.tickAndReadFromBuffer(stepSize);
 
                if (reachedEndPoint)
+               {
+                  if(frameIndex < 100)
+                  {
+                     System.out.println("reachedEndPoint: t=" + timeHolder.getTime() + ", dt=" + (timeHolder.getTime() - lastFrameTime) + " stepSize: " + stepSize);
+                     LogTools.warn("Something is probably wrong with the exported video!");
+                  }
                   break;
+               }
 
                standardSimulationGUI.updateRobots();
                standardSimulationGUI.updateGraphs();
