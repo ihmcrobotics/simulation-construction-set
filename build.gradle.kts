@@ -58,7 +58,6 @@ mainDependencies {
    api("us.ihmc:ihmc-commons:0.30.6")
    api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.20.0")
    api("us.ihmc:ihmc-robot-description:0.21.3")
-   api("us.ihmc:ihmc-graphics-description:0.19.4")
    api("us.ihmc:ihmc-swing-plotting:0.19.3")
    api("us.ihmc:scs2-definition:0.7.0")
    api(ihmc.sourceSetProject("utilities"))
