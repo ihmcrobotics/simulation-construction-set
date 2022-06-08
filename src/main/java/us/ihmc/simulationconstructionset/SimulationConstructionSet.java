@@ -315,6 +315,17 @@ public class SimulationConstructionSet
       SetInPointCommandExecutor, SetOutPointCommandExecutor, StepBackwardCommandExecutor, StepForwardCommandExecutor, ToggleCameraKeyModeCommandExecutor,
       KeyPointsHolder, GUIEnablerAndDisabler, WriteDataCommandExecutor, TimeHolder, ParameterRootNamespaceHolder, YoBufferReader, TickAndUpdatable
 {
+   public static final boolean DISABLE_DnD;
+   static
+   {
+      boolean defaultValue = System.getProperty("os.name").toLowerCase().contains("inux");
+      String disableDnDProperty = System.getProperty("scs.disablednd");
+      if (disableDnDProperty == null || disableDnDProperty.isEmpty())
+         DISABLE_DnD = defaultValue;
+      else
+         DISABLE_DnD = Boolean.parseBoolean(disableDnDProperty);
+   }
+
    private static final boolean TESTING_LOAD_STUFF = false;
 
    /**
