@@ -29,9 +29,9 @@ gui.doFirst = { scs.captureVideo() }
 mainDependencies {
    api("org.ejml:ejml-core:0.39")
    api("net.jafama:jafama:2.1.0")
-   api("org.jfree:jfreechart:1.0.17")
-   api("org.apache.xmlgraphics:batik-svggen:1.7")
-   api("org.apache.xmlgraphics:batik-dom:1.7")
+   api("org.jfree:jfreechart:1.0.19")
+   api("org.apache.xmlgraphics:batik-svggen:1.14")
+   api("org.apache.xmlgraphics:batik-dom:1.14")
    api("net.sourceforge.jexcelapi:jxl:2.6.12")
    {
       exclude(group = "log4j", module = "log4j")
