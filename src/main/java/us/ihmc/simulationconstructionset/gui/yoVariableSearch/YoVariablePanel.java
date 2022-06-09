@@ -30,6 +30,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
+import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.gui.DoubleClickListener;
 import us.ihmc.simulationconstructionset.gui.EventDispatchThreadHelper;
 import us.ihmc.simulationconstructionset.gui.HorizontalSpinnerUI;
@@ -402,10 +403,13 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
          if (selectedVariable != null)
          {
             selectedVariableHolder.setSelectedVariable(selectedVariable);
-            JComponent c = (JComponent) event.getSource();
-            TransferHandler handler = c.getTransferHandler();
-            handler.exportAsDrag(c, event, TransferHandler.COPY);
-            YoGraph.setSourceOfDrag(this);
+            if (!SimulationConstructionSet.DISABLE_DnD)
+            {
+               JComponent c = (JComponent) event.getSource();
+               TransferHandler handler = c.getTransferHandler();
+               handler.exportAsDrag(c, event, TransferHandler.COPY);
+               YoGraph.setSourceOfDrag(this);
+            }
             repaint();
          }
       }

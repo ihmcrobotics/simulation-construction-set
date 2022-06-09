@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
+import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariableListPanel;
 import us.ihmc.simulationconstructionset.gui.yoVariableSearch.YoVariablePanelJPopupMenu;
 import us.ihmc.yoVariables.registry.YoVariableList;
@@ -51,7 +52,8 @@ public class BookmarkedVariablesPanel extends YoVariableListPanel
 
    private void initBookMarks()
    {
-      setDropTarget(new DropTarget(this, new BookmarkedVariablesPanelTargetListener(this)));
+      if (!SimulationConstructionSet.DISABLE_DnD)
+         setDropTarget(new DropTarget(this, new BookmarkedVariablesPanelTargetListener(this)));
       bookmarkedVariablesHolder.addBookmarkedVariableAddedListener(new BookmarkedVariableAddedListener()
       {
          @Override

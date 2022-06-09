@@ -35,6 +35,7 @@ import us.ihmc.euclid.tools.EuclidCoreIOTools;
 import us.ihmc.graphicsDescription.graphInterfaces.GraphIndicesHolder;
 import us.ihmc.graphicsDescription.graphInterfaces.SelectedVariableHolder;
 import us.ihmc.simulationconstructionset.GraphConfiguration;
+import us.ihmc.simulationconstructionset.SimulationConstructionSet;
 import us.ihmc.simulationconstructionset.gui.dialogs.GraphPropertiesDialog;
 import us.ihmc.yoVariables.buffer.YoBufferBounds;
 import us.ihmc.yoVariables.buffer.interfaces.YoBufferVariableEntryHolder;
@@ -136,7 +137,8 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       addMouseListener(this);
       addMouseMotionListener(this);
       addKeyListener(this);
-      setDropTarget(new DropTarget(this, new YoGraphTargetListener(this)));
+      if (!SimulationConstructionSet.DISABLE_DnD)
+         setDropTarget(new DropTarget(this, new YoGraphTargetListener(this)));
 
       popupMenu = new ForcedRepaintPopupMenu();
       delete = new JMenuItem("Delete Graph");
@@ -1368,18 +1370,21 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
                YoBufferVariableEntryReader entry = entriesOnThisGraph.get(index);
                selectedVariableHolder.setSelectedVariable(entry.getVariable());
 
-               if (!evt.isControlDown())
+               if (!SimulationConstructionSet.DISABLE_DnD)
                {
-                  getTransferHandler().exportAsDrag(this, evt, TransferHandler.MOVE);
-                  actionPerformedByDragAndDrop = TransferHandler.MOVE;
+                  if (!evt.isControlDown())
+                  {
+                     getTransferHandler().exportAsDrag(this, evt, TransferHandler.MOVE);
+                     actionPerformedByDragAndDrop = TransferHandler.MOVE;
+                  }
+                  else if (evt.isControlDown())
+                  {
+                     getTransferHandler().exportAsDrag(this, evt, TransferHandler.COPY);
+                     actionPerformedByDragAndDrop = TransferHandler.COPY;
+                  }
+                  
+                  sourceOfDrag = this;
                }
-               else if (evt.isControlDown())
-               {
-                  getTransferHandler().exportAsDrag(this, evt, TransferHandler.COPY);
-                  actionPerformedByDragAndDrop = TransferHandler.COPY;
-               }
-
-               sourceOfDrag = this;
 
                repaint();
             }
