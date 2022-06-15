@@ -55,7 +55,7 @@ mainDependencies {
    api("us.ihmc:euclid-frame:0.17.2")
    api("us.ihmc:euclid-shape:0.17.2")
    api("us.ihmc:euclid-geometry:0.17.2")
-   api("us.ihmc:ihmc-commons:0.30.6")
+   api("us.ihmc:ihmc-commons:0.31.0")
    api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.21.0")
    api("us.ihmc:ihmc-robot-description:0.21.4")
    api("us.ihmc:ihmc-swing-plotting:0.19.5")
@@ -64,7 +64,7 @@ mainDependencies {
 }
 
 testDependencies {
-   api("us.ihmc:ihmc-commons-testing:0.30.6")
+   api("us.ihmc:ihmc-commons-testing:0.31.0")
 }
 
 utilitiesDependencies {
