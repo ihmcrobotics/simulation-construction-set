@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -205,7 +206,7 @@ public class YoEntryBox extends JPanel implements MouseListener, ActionListener,
    {
       this.requestFocus();
 
-      if (evt.isMetaDown() && !(evt.isAltDown()))
+      if (SwingUtilities.isRightMouseButton(evt))
       {
          popupMenu.setLocation(evt.getXOnScreen(), evt.getYOnScreen());
          popupMenu.setVisible(true);

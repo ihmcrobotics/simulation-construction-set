@@ -27,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -1303,7 +1304,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       clickedRightIndex = graphIndicesHolder.getRightPlotIndex();
 
       // Double click brings up var properties dialog box.
-      if ((evt.getClickCount() == 2) && (!entriesOnThisGraph.isEmpty()))
+      if (SwingUtilities.isLeftMouseButton(evt) && (evt.getClickCount() == 2) && (!entriesOnThisGraph.isEmpty()))
       {
          // System.out.println("Double Clicked!!!");
          if (parentFrame != null)
@@ -1321,7 +1322,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       // if (evt.isMetaDown() && evt.isAltDown())
       // if (evt.isMetaDown() && evt.isControlDown())
       // if (evt.isShiftDown())
-      if (!(evt.isMetaDown()) && (evt.isAltDown()))
+      if (SwingUtilities.isMiddleMouseButton(evt))
       { // Middle Click
         // If mouse was pressed in a label, remove that variable:
 
@@ -1343,7 +1344,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
 
       // Left click places index:
 
-      else if (!evt.isMetaDown() && !evt.isAltDown())
+      else if (SwingUtilities.isLeftMouseButton(evt))
       {
          if ((entriesOnThisGraph == null) || (entriesOnThisGraph.size() < 1) || (getPlotType() == PHASE_PLOT))
          {
@@ -1391,7 +1392,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          }
 
       }
-      else if (evt.isMetaDown() && !evt.isAltDown())
+      else if (SwingUtilities.isRightMouseButton(evt))
       {
          popupMenu.remove(delete);
          Component[] components = popupMenu.getComponents();
@@ -1500,7 +1501,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
       if (clickedY > h - DONT_PLOT_TIMELINE_BOTTOM_PIXELS)
          return;
 
-      if (!evt.isMetaDown() && (!evt.isAltDown()) && (getPlotType() != PHASE_PLOT))
+      if (SwingUtilities.isLeftMouseButton(evt) && getPlotType() != PHASE_PLOT)
       { // Left Click n Drag
          int index = clickIndex(draggedX, w, clickedLeftIndex, clickedRightIndex);
          graphIndicesHolder.setIndexLater(index); // +++JEP setIndex or setIndexLater??
@@ -1512,7 +1513,7 @@ public class YoGraph extends JPanel implements MouseListener, MouseMotionListene
          // System.out.println("x: " + draggedX + "index: " + index);
       }
 
-      if (evt.isMetaDown() && (!evt.isAltDown()))
+      if (SwingUtilities.isRightMouseButton(evt))
       { // Right Click n Drag
         // draggedX = evt.getX();
 

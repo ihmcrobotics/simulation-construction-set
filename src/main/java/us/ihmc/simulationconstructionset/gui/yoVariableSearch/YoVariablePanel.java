@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -390,7 +391,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
 
       varPanelJPopupMenu.setVisible(false);
 
-      if (!event.isMetaDown() && !event.isAltDown())
+      if (SwingUtilities.isLeftMouseButton(event))
       {
          int indexOfSelectedVariable = getIndexOfClickedVariable(event.getY());
          if ((indexOfSelectedVariable >= 0) && (indexOfSelectedVariable < yoVariableSpinners.size()))
@@ -413,7 +414,7 @@ public abstract class YoVariablePanel extends JPanel implements KeyListener, Mou
             repaint();
          }
       }
-      else if (event.isMetaDown() && !event.isAltDown())
+      else if (SwingUtilities.isRightMouseButton(event))
       {
          YoVariable selectedVariable = getClickedYoVariable(event.getY());
 
