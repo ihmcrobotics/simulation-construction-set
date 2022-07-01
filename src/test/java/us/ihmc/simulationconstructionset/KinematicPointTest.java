@@ -178,7 +178,7 @@ public class KinematicPointTest
 
       Vector3D offsetCopy = kinematicPoint.getOffsetCopy();
 
-      EuclidCoreTestTools.assertTuple3DEquals(offset, offsetCopy, 1e-14);
+      EuclidCoreTestTools.assertEquals(offset, offsetCopy, 1e-14);
    }
 
 }

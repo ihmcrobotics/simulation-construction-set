@@ -177,8 +177,8 @@ public class JointWrenchSensorTest
       jointWrenchSensor.getJointForce(jointForce);
       jointWrenchSensor.getJointTorque(jointTorque);
 
-      EuclidCoreTestTools.assertTuple3DEquals(expectedJointForce, jointForce, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(expectedJointTorque, jointTorque, 1e-7);
+      EuclidCoreTestTools.assertEquals(expectedJointForce, jointForce, 1e-7);
+      EuclidCoreTestTools.assertEquals(expectedJointTorque, jointTorque, 1e-7);
    }
 
    private PinJoint createPinJointWithHangingMass(String name, double mass, Axis3D axis, Robot robot)

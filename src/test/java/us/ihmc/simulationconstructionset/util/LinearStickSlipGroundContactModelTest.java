@@ -113,7 +113,7 @@ public class LinearStickSlipGroundContactModelTest
       Point3D touchdownPosition = new Point3D();
       groundContactPoint.getTouchdownLocation(touchdownPosition);
 
-      EuclidCoreTestTools.assertTuple3DEquals(touchdownPosition, position, 1e-7);
+      EuclidCoreTestTools.assertEquals(touchdownPosition, position, 1e-7);
 
       groundContactModel.disableSurfaceNormal();
       groundContactModel.doGroundContact();
@@ -121,7 +121,7 @@ public class LinearStickSlipGroundContactModelTest
       Vector3D forceWithNormalsDisabled = new Vector3D();
       groundContactPoint.getForce(forceWithNormalsDisabled);
 
-      EuclidCoreTestTools.assertTuple3DEquals(force, forceWithNormalsDisabled, 1e-7);
+      EuclidCoreTestTools.assertEquals(force, forceWithNormalsDisabled, 1e-7);
 
       int numberOfTests = 1000;
 
@@ -157,12 +157,12 @@ public class LinearStickSlipGroundContactModelTest
          assertTrue(groundContactPoint.isInContact());
          groundContactPoint.getForce(forceWithNormalsDisabled);
 
-         EuclidCoreTestTools.assertTuple3DEquals(force, forceWithNormalsDisabled, 1e-7);
+         EuclidCoreTestTools.assertEquals(force, forceWithNormalsDisabled, 1e-7);
 
          Point3D touchdownTest = new Point3D();
          groundContactPoint.getTouchdownLocation(touchdownTest);
 
-         EuclidCoreTestTools.assertTuple3DEquals(touchdownPosition, touchdownTest, 1e-7);
+         EuclidCoreTestTools.assertEquals(touchdownPosition, touchdownTest, 1e-7);
       }
 
       // Test one above ground:
@@ -177,7 +177,7 @@ public class LinearStickSlipGroundContactModelTest
       assertFalse(groundContactPoint.isInContact());
       groundContactPoint.getForce(force);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 0.0), force, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, 0.0), force, 1e-7);
    }
 
    @Test // timeout=300000
@@ -250,7 +250,7 @@ public class LinearStickSlipGroundContactModelTest
 
          inverseTransform3D.transform(forceOnSlope);
 
-         EuclidCoreTestTools.assertTuple3DEquals(forceOnFlat, forceOnSlope, 1e-7);
+         EuclidCoreTestTools.assertEquals(forceOnFlat, forceOnSlope, 1e-7);
 
          assertTrue(groundContactPointOnFlat.isInContact() == groundContactPointOnSlope.isInContact());
          assertTrue(groundContactPointOnFlat.isSlipping() == groundContactPointOnSlope.isSlipping());

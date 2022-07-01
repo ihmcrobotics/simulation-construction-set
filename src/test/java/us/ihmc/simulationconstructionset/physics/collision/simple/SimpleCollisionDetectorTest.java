@@ -94,9 +94,9 @@ public class SimpleCollisionDetectorTest
       assertTrue(shapeA == collideableObjectOne);
       assertTrue(shapeB == collideableObjectTwo);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(-1.0, 0.0, 0.0), normal, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.49, 0.0, 0.0), locationA, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.5, 0.0, 0.0), locationB, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(-1.0, 0.0, 0.0), normal, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.49, 0.0, 0.0), locationA, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.5, 0.0, 0.0), locationB, 1e-7);
       assertEquals(-delta, distance, 1e-7);
 
       // Another sphere to sphere test
@@ -137,9 +137,9 @@ public class SimpleCollisionDetectorTest
       assertTrue(shapeA == collideableObjectOne);
       assertTrue(shapeB == collideableObjectTwo);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.40561610125071507, -0.8619342151577695, -0.3042120759380363), normal, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(-0.1971919493746425, 0.41903289242111524, 0.14789396203098185), locationA, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(-0.20280805062535753, 0.43096710757888473, 0.15210603796901814), locationB, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.40561610125071507, -0.8619342151577695, -0.3042120759380363), normal, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(-0.1971919493746425, 0.41903289242111524, 0.14789396203098185), locationA, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(-0.20280805062535753, 0.43096710757888473, 0.15210603796901814), locationB, 1e-7);
       assertEquals(-0.013845853834199007, distance, 1e-7);
    }
 
@@ -221,9 +221,9 @@ public class SimpleCollisionDetectorTest
       assertTrue(shapeA == collideableObjectOne);
       assertTrue(shapeB == collideableObjectTwo);
 
-      //      EuclidCoreTestTools.assertTuple3DEquals(new Vector3d(-1.0, 0.0, 0.0), normal, 1e-7);
-      //      EuclidCoreTestTools.assertTuple3DEquals(new Vector3d(0.49, 0.0, 0.0), locationA, 1e-7);
-      //      EuclidCoreTestTools.assertTuple3DEquals(new Vector3d(0.5, 0.0, 0.0), locationB, 1e-7);
+      //      EuclidCoreTestTools.assertEquals(new Vector3d(-1.0, 0.0, 0.0), normal, 1e-7);
+      //      EuclidCoreTestTools.assertEquals(new Vector3d(0.49, 0.0, 0.0), locationA, 1e-7);
+      //      EuclidCoreTestTools.assertEquals(new Vector3d(0.5, 0.0, 0.0), locationB, 1e-7);
       assertEquals(-delta, distance, 1e-7);
 
       // Another sphere to sphere test
@@ -264,9 +264,9 @@ public class SimpleCollisionDetectorTest
       assertTrue(shapeA == collideableObjectOne);
       assertTrue(shapeB == collideableObjectTwo);
 
-      //      EuclidCoreTestTools.assertTuple3DEquals(new Vector3d(0.40561610125071507, -0.8619342151577695, -0.3042120759380363), normal, 1e-7);
-      //      EuclidCoreTestTools.assertTuple3DEquals(new Vector3d(-0.1971919493746425, 0.41903289242111524, 0.14789396203098185), locationA, 1e-7);
-      //      EuclidCoreTestTools.assertTuple3DEquals(new Vector3d(-0.20280805062535753, 0.43096710757888473, 0.15210603796901814), locationB, 1e-7);
+      //      EuclidCoreTestTools.assertEquals(new Vector3d(0.40561610125071507, -0.8619342151577695, -0.3042120759380363), normal, 1e-7);
+      //      EuclidCoreTestTools.assertEquals(new Vector3d(-0.1971919493746425, 0.41903289242111524, 0.14789396203098185), locationA, 1e-7);
+      //      EuclidCoreTestTools.assertEquals(new Vector3d(-0.20280805062535753, 0.43096710757888473, 0.15210603796901814), locationB, 1e-7);
       assertEquals(-0.25, distance, 1e-7);
    }
 

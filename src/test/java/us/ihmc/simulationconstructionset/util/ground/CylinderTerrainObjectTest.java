@@ -30,7 +30,7 @@ public class CylinderTerrainObjectTest
       Vector3D surfaceNormal = new Vector3D();
       double heightAt = cylinderTerrainObject.heightAndNormalAt(0.0, 0.0, 0.0, surfaceNormal);
       assertEquals(height, heightAt, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 1.0), surfaceNormal, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, 1.0), surfaceNormal, 1e-7);
 
       heightAt = cylinderTerrainObject.heightAndNormalAt(0.0, radius - 1e-7, 0.0, surfaceNormal);
       assertEquals(height, heightAt, 1e-7);
@@ -47,8 +47,8 @@ public class CylinderTerrainObjectTest
       assertTrue(isInside);
 
       //TODO: FIXME!!!
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 1.0), surfaceNormal, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, height), intersection, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, 1.0), surfaceNormal, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, height), intersection, 1e-7);
 
    }
 

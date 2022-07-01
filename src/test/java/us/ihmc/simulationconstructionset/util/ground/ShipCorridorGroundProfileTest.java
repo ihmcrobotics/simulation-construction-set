@@ -77,7 +77,7 @@ public class ShipCorridorGroundProfileTest
                System.out.println("\n\n");
             }
 
-            EuclidCoreTestTools.assertTuple3DEquals(numericalSurfaceNormal, surfaceNormalFromGroundProfile, epsilon);
+            EuclidCoreTestTools.assertEquals(numericalSurfaceNormal, surfaceNormalFromGroundProfile, epsilon);
          }
       }
    }

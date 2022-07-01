@@ -155,7 +155,7 @@ public abstract class GroundProfileTest
                assertTrue(groundProfile.isClose(queryPointALittleInside.getX(), queryPointALittleInside.getY(), queryPointALittleInside.getZ()));
             }
 
-            EuclidCoreTestTools.assertTuple3DEquals(intersectionCheck, queryPoint, 0.002);
+            EuclidCoreTestTools.assertEquals(intersectionCheck, queryPoint, 0.002);
 
             boolean outsideShouldBeFalse = groundProfile.checkIfInside(queryPointALittleOutside.getX(),
                                                                        queryPointALittleOutside.getY(),
@@ -173,7 +173,7 @@ public abstract class GroundProfileTest
             else
                assertFalse(outsideShouldBeFalse);
 
-            EuclidCoreTestTools.assertTuple3DEquals(intersectionCheck, queryPoint, 0.002);
+            EuclidCoreTestTools.assertEquals(intersectionCheck, queryPoint, 0.002);
 
             if (VISUALIZE)
             {

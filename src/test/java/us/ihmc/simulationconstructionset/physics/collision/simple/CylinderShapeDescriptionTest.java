@@ -26,23 +26,23 @@ public class CylinderShapeDescriptionTest
       Point3D pointToProject = new Point3D(0.0, 0.0, 100.0);
       Point3D closestPointOnCylinder = new Point3D();
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.0, 0.0, height / 2.0), closestPointOnCylinder, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Point3D(0.0, 0.0, height / 2.0), closestPointOnCylinder, 1e-7);
 
       pointToProject = new Point3D(0.0, 0.0, -100.0);
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.0, 0.0, -height / 2.0), closestPointOnCylinder, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Point3D(0.0, 0.0, -height / 2.0), closestPointOnCylinder, 1e-7);
 
       pointToProject = new Point3D(100.0, 0.0, 10.0);
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(radius, 0.0, height / 2.0), closestPointOnCylinder, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Point3D(radius, 0.0, height / 2.0), closestPointOnCylinder, 1e-7);
 
       pointToProject = new Point3D(0.0, -20.0, 10.0);
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.0, -radius, height / 2.0), closestPointOnCylinder, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Point3D(0.0, -radius, height / 2.0), closestPointOnCylinder, 1e-7);
 
       pointToProject = new Point3D(10.0, 10.0, height * 0.1);
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(radius * Math.sqrt(2.0) / 2.0, radius * Math.sqrt(2.0) / 2.0, height * 0.1),
+      EuclidCoreTestTools.assertEquals(new Point3D(radius * Math.sqrt(2.0) / 2.0, radius * Math.sqrt(2.0) / 2.0, height * 0.1),
                                               closestPointOnCylinder,
                                               1e-7);
    }
@@ -65,19 +65,19 @@ public class CylinderShapeDescriptionTest
       Point3D pointToProject = new Point3D(0.0, 0.0, 100.0);
       Point3D closestPointOnCylinder = new Point3D();
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(expectedPoint, closestPointOnCylinder, 1e-7);
+      EuclidCoreTestTools.assertEquals(expectedPoint, closestPointOnCylinder, 1e-7);
 
       pointToProject = new Point3D(0.0, 0.0, -100.0);
       expectedPoint = new Point3D(radius, 0.0, -height / 2.0);
       transform.transform(expectedPoint);
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(expectedPoint, closestPointOnCylinder, 1e-7);
+      EuclidCoreTestTools.assertEquals(expectedPoint, closestPointOnCylinder, 1e-7);
 
       pointToProject = new Point3D(100.0, 0.0, 10.0);
       expectedPoint = new Point3D(radius, 0.0, height / 2.0);
       transform.transform(expectedPoint);
       cylinder.getProjection(pointToProject, closestPointOnCylinder);
-      EuclidCoreTestTools.assertTuple3DEquals(expectedPoint, closestPointOnCylinder, 1e-7);
+      EuclidCoreTestTools.assertEquals(expectedPoint, closestPointOnCylinder, 1e-7);
    }
 
    @Test // timeout = 30000
@@ -89,8 +89,8 @@ public class CylinderShapeDescriptionTest
       BoundingBox3D boundingBox = new BoundingBox3D(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       cylinder.getBoundingBox(boundingBox);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(-0.5, -0.5, -0.05), boundingBox.getMinPoint(), 1e-10);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.5, 0.5, 0.05), boundingBox.getMaxPoint(), 1e-10);
+      EuclidCoreTestTools.assertEquals(new Point3D(-0.5, -0.5, -0.05), boundingBox.getMinPoint(), 1e-10);
+      EuclidCoreTestTools.assertEquals(new Point3D(0.5, 0.5, 0.05), boundingBox.getMaxPoint(), 1e-10);
 
       RigidBodyTransform transform = new RigidBodyTransform();
       transform.setRotationEulerAndZeroTranslation(Math.PI / 4.0, 0.0, 0.0);
@@ -98,8 +98,8 @@ public class CylinderShapeDescriptionTest
 
       cylinder.getBoundingBox(boundingBox);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(-0.5, -0.38890872965260115, -0.3889087296526011), boundingBox.getMinPoint(), 1e-10);
-      EuclidCoreTestTools.assertTuple3DEquals(new Point3D(0.5, 0.38890872965260115, 0.3889087296526011), boundingBox.getMaxPoint(), 1e-10);
+      EuclidCoreTestTools.assertEquals(new Point3D(-0.5, -0.38890872965260115, -0.3889087296526011), boundingBox.getMinPoint(), 1e-10);
+      EuclidCoreTestTools.assertEquals(new Point3D(0.5, 0.38890872965260115, 0.3889087296526011), boundingBox.getMaxPoint(), 1e-10);
    }
 
    public static void main(String[] args)

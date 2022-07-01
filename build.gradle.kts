@@ -49,16 +49,16 @@ mainDependencies {
       exclude(group = "org.easytesting", module = "fest")
    }
 
-   api("us.ihmc:ihmc-yovariables:0.9.13")
+   api("us.ihmc:ihmc-yovariables:0.9.15")
    api("us.ihmc:ihmc-video-codecs:2.1.6")
-   api("us.ihmc:euclid:0.17.2")
-   api("us.ihmc:euclid-frame:0.17.2")
-   api("us.ihmc:euclid-shape:0.17.2")
-   api("us.ihmc:euclid-geometry:0.17.2")
+   api("us.ihmc:euclid:0.18.1")
+   api("us.ihmc:euclid-frame:0.18.1")
+   api("us.ihmc:euclid-shape:0.18.1")
+   api("us.ihmc:euclid-geometry:0.18.1")
    api("us.ihmc:ihmc-commons:0.31.0")
-   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.21.1")
-   api("us.ihmc:ihmc-robot-description:0.21.4")
-   api("us.ihmc:ihmc-swing-plotting:0.19.5")
+   api("us.ihmc:ihmc-jmonkey-engine-toolkit:0.21.2")
+   api("us.ihmc:ihmc-robot-description:0.21.5")
+   api("us.ihmc:ihmc-swing-plotting:0.19.6")
    api("us.ihmc:scs2-definition:0.8.5")
    api(ihmc.sourceSetProject("utilities"))
 }
@@ -68,6 +68,6 @@ testDependencies {
 }
 
 utilitiesDependencies {
-   api("us.ihmc:euclid:0.17.2")
-   api("us.ihmc:ihmc-yovariables:0.9.13")
+   api("us.ihmc:euclid:0.18.1")
+   api("us.ihmc:ihmc-yovariables:0.9.15")
 }

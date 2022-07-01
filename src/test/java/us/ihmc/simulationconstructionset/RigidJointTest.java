@@ -40,7 +40,7 @@ public class RigidJointTest
       double totalMass = robot.computeCenterOfMass(centerOfMass);
 
       assertEquals(massOne, totalMass, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(centerOfMassOffset, centerOfMass, 1e-10);
+      EuclidCoreTestTools.assertEquals(centerOfMassOffset, centerOfMass, 1e-10);
    }
 
    @Test // timeout = 30000
@@ -74,7 +74,7 @@ public class RigidJointTest
       Point3D expectedCenterOfMass = new Point3D(centerOfMassOffset);
       expectedCenterOfMass.add(translation);
 
-      EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
+      EuclidCoreTestTools.assertEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
    @Test // timeout = 30000
@@ -107,7 +107,7 @@ public class RigidJointTest
       Point3D expectedCenterOfMass = new Point3D(centerOfMassOffset);
       rotation.transform(expectedCenterOfMass);
 
-      EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
+      EuclidCoreTestTools.assertEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
    @Test // timeout = 30000
@@ -147,7 +147,7 @@ public class RigidJointTest
       Point3D expectedCenterOfMass = new Point3D(centerOfMassOffset);
       transform.transform(expectedCenterOfMass);
 
-      EuclidCoreTestTools.assertTuple3DEquals(expectedCenterOfMass, centerOfMass, 1e-10);
+      EuclidCoreTestTools.assertEquals(expectedCenterOfMass, centerOfMass, 1e-10);
    }
 
    @Test // timeout = 30000
@@ -552,9 +552,9 @@ public class RigidJointTest
       robotB.computeLinearMomentum(linearMomentumB);
 
       assertEquals(totalMassA, totalMassB, 1e-7);
-      EuclidCoreTestTools.assertTuple3DEquals(centerOfMassA, centerOfMassB, 1e-10);
-      EuclidCoreTestTools.assertTuple3DEquals(linearMomentumA, linearMomentumB, 1e-10);
-      EuclidCoreTestTools.assertTuple3DEquals(angularMomentumA, angularMomentumB, 1e-9);
+      EuclidCoreTestTools.assertEquals(centerOfMassA, centerOfMassB, 1e-10);
+      EuclidCoreTestTools.assertEquals(linearMomentumA, linearMomentumB, 1e-10);
+      EuclidCoreTestTools.assertEquals(angularMomentumA, angularMomentumB, 1e-9);
 
       List<Joint> jointsA = robotA.getRootJoints();
       List<Joint> jointsB = robotB.getRootJoints();

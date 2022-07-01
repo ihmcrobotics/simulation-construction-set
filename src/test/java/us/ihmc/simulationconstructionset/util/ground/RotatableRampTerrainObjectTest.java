@@ -165,7 +165,7 @@ public class RotatableRampTerrainObjectTest
          Vector3D normal = new Vector3D();
          ramp.surfaceNormalAt(pointsOnRamp[i].getX(), pointsOnRamp[i].getY(), pointsOnRamp[i].getZ(), normal);
          String message = "Normal for point " + pointsOnRamp[i].getX() + " " + pointsOnRamp[i].getY() + " " + pointsOnRamp[i].getZ();
-         EuclidCoreTestTools.assertTuple3DEquals(message, expectedRampSurfaceNormal, normal, epsilon);
+         EuclidCoreTestTools.assertEquals(message, expectedRampSurfaceNormal, normal, epsilon);
       }
    }
 
@@ -179,7 +179,7 @@ public class RotatableRampTerrainObjectTest
          ramp.surfaceNormalAt(pointsOnOtherRampFaces[i].getX(), pointsOnOtherRampFaces[i].getY(), pointsOnOtherRampFaces[i].getZ(), normal);
          String message = "Normal for point " + pointsOnOtherRampFaces[i].getX() + " " + pointsOnOtherRampFaces[i].getY() + " "
                + pointsOnOtherRampFaces[i].getZ();
-         EuclidCoreTestTools.assertTuple3DEquals(message, expectedSurfaceNormalOnOtherFaces[i], normal, epsilon);
+         EuclidCoreTestTools.assertEquals(message, expectedSurfaceNormalOnOtherFaces[i], normal, epsilon);
       }
    }
 

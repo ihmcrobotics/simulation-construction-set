@@ -122,9 +122,9 @@ public class RobotTest
       //    System.out.println("scalar inertia 22: " + computeScalarInertiaAroundJointAxis(link22, pin2));
 
       double epsilonBefore = 1e-8;
-      EuclidCoreTestTools.assertTuple3DEquals(computeCoM(robot1), computeCoM(robot2), epsilonBefore);
-      EuclidCoreTestTools.assertTuple3DEquals(computeLinearMomentum(robot1), computeLinearMomentum(robot2), epsilonBefore);
-      EuclidCoreTestTools.assertTuple3DEquals(computeAngularMomentum(robot1), computeAngularMomentum(robot2), epsilonBefore);
+      EuclidCoreTestTools.assertEquals(computeCoM(robot1), computeCoM(robot2), epsilonBefore);
+      EuclidCoreTestTools.assertEquals(computeLinearMomentum(robot1), computeLinearMomentum(robot2), epsilonBefore);
+      EuclidCoreTestTools.assertEquals(computeAngularMomentum(robot1), computeAngularMomentum(robot2), epsilonBefore);
       assertEquals(computeScalarInertiaAroundJointAxis(link11, pin1), computeScalarInertiaAroundJointAxis(link12, pin2), epsilonBefore);
       assertEquals(computeScalarInertiaAroundJointAxis(link21, pin1), computeScalarInertiaAroundJointAxis(link22, pin2), epsilonBefore);
 
@@ -147,9 +147,9 @@ public class RobotTest
       sleepIfShowingGUI();
 
       double epsilonAfter = 1e-4;
-      EuclidCoreTestTools.assertTuple3DEquals(computeCoM(robot1), computeCoM(robot2), epsilonAfter);
-      EuclidCoreTestTools.assertTuple3DEquals(computeLinearMomentum(robot1), computeLinearMomentum(robot2), epsilonAfter);
-      EuclidCoreTestTools.assertTuple3DEquals(computeAngularMomentum(robot1), computeAngularMomentum(robot2), epsilonAfter);
+      EuclidCoreTestTools.assertEquals(computeCoM(robot1), computeCoM(robot2), epsilonAfter);
+      EuclidCoreTestTools.assertEquals(computeLinearMomentum(robot1), computeLinearMomentum(robot2), epsilonAfter);
+      EuclidCoreTestTools.assertEquals(computeAngularMomentum(robot1), computeAngularMomentum(robot2), epsilonAfter);
       assertEquals(computeScalarInertiaAroundJointAxis(link11, pin1), computeScalarInertiaAroundJointAxis(link12, pin2), epsilonAfter);
       assertEquals(computeScalarInertiaAroundJointAxis(link21, pin1), computeScalarInertiaAroundJointAxis(link22, pin2), epsilonAfter);
       scs.closeAndDispose();
@@ -204,7 +204,7 @@ public class RobotTest
 
       Vector3D angularMomentumDerivative = new Vector3D();
       angularMomentumDerivative.add(temp1, temp2); // J omegad + omega x J omega
-      EuclidCoreTestTools.assertTuple3DEquals(angularMomentumDerivative, moment, 1e-10);
+      EuclidCoreTestTools.assertEquals(angularMomentumDerivative, moment, 1e-10);
 
       // NEWTON
       Vector3D linearMomentum0 = computeLinearMomentum(robot);
@@ -224,7 +224,7 @@ public class RobotTest
       Vector3D linearMomentumDerivativeNumerical = new Vector3D();
       linearMomentumDerivativeNumerical.sub(linearMomentumDT, linearMomentum0);
       linearMomentumDerivativeNumerical.scale(1.0 / dt);
-      EuclidCoreTestTools.assertTuple3DEquals(linearMomentumDerivativeNumerical, force, 1e-10);
+      EuclidCoreTestTools.assertEquals(linearMomentumDerivativeNumerical, force, 1e-10);
       scs.closeAndDispose();
 
       //    sleepIfShowingGUI();
@@ -281,14 +281,14 @@ public class RobotTest
       floatingJoint1.setVelocity(-1.0, 0.0, 0.0);
       Vector3D angularMomentumReturned = new Vector3D();
       robot1.computeAngularMomentum(angularMomentumReturned);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 0.0), angularMomentumReturned, epsilon);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, 0.0), angularMomentumReturned, epsilon);
       robot1.update();
       robot1.computeAngularMomentum(angularMomentumReturned);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, 0.0), angularMomentumReturned, epsilon);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, 0.0), angularMomentumReturned, epsilon);
       robot1.updateVelocities();
       robot1.computeAngularMomentum(angularMomentumReturned);
       //System.out.printf("Momentum <%+3.4f,%+3.4f,%+3.4f>", angularMomentumReturned.x,angularMomentumReturned.y,angularMomentumReturned.z);
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(1.0, -1.0, 1.0), angularMomentumReturned, epsilon);
+      EuclidCoreTestTools.assertEquals(new Vector3D(1.0, -1.0, 1.0), angularMomentumReturned, epsilon);
       floatingJoint1.setPosition(new Vector3D());
 
    }
@@ -599,7 +599,7 @@ public class RobotTest
 
       Vector3D jointOffset = new Vector3D();
       joint1.getOffset(jointOffset);
-      EuclidCoreTestTools.assertTuple3DEquals(jointOffset1, jointOffset, epsilon);
+      EuclidCoreTestTools.assertEquals(jointOffset1, jointOffset, epsilon);
 
       Link link = joint1.getLink();
       Vector3D comOffset = new Vector3D();
@@ -613,7 +613,7 @@ public class RobotTest
       temp.scale(mass2);
       expectedCoMOffset.add(temp);
       expectedCoMOffset.scale(1.0 / (mass1 + mass2));
-      EuclidCoreTestTools.assertTuple3DEquals(expectedCoMOffset, comOffset, epsilon);
+      EuclidCoreTestTools.assertEquals(expectedCoMOffset, comOffset, epsilon);
 
       Matrix3D momentOfInertia = new Matrix3D();
       link.getMomentOfInertia(momentOfInertia);
@@ -707,8 +707,8 @@ public class RobotTest
 
       assertFalse(Double.isNaN(positionOne.getX()));
 
-      EuclidCoreTestTools.assertTuple3DEquals(positionOne, positionTwo, epsilon);
-      EuclidCoreTestTools.assertTuple3DEquals(velocityOne, velocityTwo, epsilon);
+      EuclidCoreTestTools.assertEquals(positionOne, positionTwo, epsilon);
+      EuclidCoreTestTools.assertEquals(velocityOne, velocityTwo, epsilon);
    }
 
    private Robot createTestRobot()
@@ -1033,8 +1033,8 @@ public class RobotTest
       assertEquals("Total energy must be conserved", totalEnergyStart, totalEnergyEnd, epsilon);
 
       epsilon = 6e-5;
-      EuclidCoreTestTools.assertTuple3DEquals("Angular momentum should be conserved", angularMomentumStart, angularMomentumEnd, epsilon);
-      EuclidCoreTestTools.assertTuple3DEquals("Linear momentum should be conserved", linearMomentumStart, linearMomentumEnd, epsilon);
+      EuclidCoreTestTools.assertEquals("Angular momentum should be conserved", angularMomentumStart, angularMomentumEnd, epsilon);
+      EuclidCoreTestTools.assertEquals("Linear momentum should be conserved", linearMomentumStart, linearMomentumEnd, epsilon);
 
       if (SHOW_GUI)
          ThreadTools.sleepForever();

@@ -93,7 +93,7 @@ public class PinnedFloatingJointTest
             assertEquals(0.0, pinnedJointA.getQx().getValue(), EPSILON);
             assertEquals(0.0, pinnedJointA.getQy().getValue(), EPSILON);
             assertEquals(0.0, pinnedJointA.getQz().getValue(), EPSILON);
-            EuclidCoreTestTools.assertQuaternionEquals(new Quaternion(), pinnedJointA.getQuaternion(), EPSILON);
+            EuclidCoreTestTools.assertEquals(new Quaternion(), pinnedJointA.getQuaternion(), EPSILON);
 
             assertEquals(0.0, pinnedJointA.getQdx().getValue(), EPSILON);
             assertEquals(0.0, pinnedJointA.getQdy().getValue(), EPSILON);
@@ -214,7 +214,7 @@ public class PinnedFloatingJointTest
             assertEquals(floatingJointB.getQx().getValue(), floatingJointA.getQx().getValue(), EPSILON);
             assertEquals(floatingJointB.getQy().getValue(), floatingJointA.getQy().getValue(), EPSILON);
             assertEquals(floatingJointB.getQz().getValue(), floatingJointA.getQz().getValue(), EPSILON);
-            EuclidCoreTestTools.assertQuaternionEquals(floatingJointB.getQuaternion(), floatingJointA.getQuaternion(), EPSILON);
+            EuclidCoreTestTools.assertEquals(floatingJointB.getQuaternion(), floatingJointA.getQuaternion(), EPSILON);
 
             assertEquals(floatingJointB.getQdx().getValue(), floatingJointA.getQdx().getValue(), EPSILON);
             assertEquals(floatingJointB.getQdy().getValue(), floatingJointA.getQdy().getValue(), EPSILON);

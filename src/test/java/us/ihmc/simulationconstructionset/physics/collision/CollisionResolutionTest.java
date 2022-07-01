@@ -69,11 +69,11 @@ public class CollisionResolutionTest
 
       double upwardVelocity = epsilon * downwardVelocity;
       double deltaVelocity = downwardVelocity + upwardVelocity;
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, mass * deltaVelocity), impulseInWorldToPack, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, mass * deltaVelocity), impulseInWorldToPack, 1e-7);
       Vector3D velocity = new Vector3D();
       floatingJoint.getVelocity(velocity);
 
-      EuclidCoreTestTools.assertTuple3DEquals(new Vector3D(0.0, 0.0, upwardVelocity), velocity, 1e-7);
+      EuclidCoreTestTools.assertEquals(new Vector3D(0.0, 0.0, upwardVelocity), velocity, 1e-7);
 
       // When collision is offset from the center of mass:
       offsetFromCenterOfMass = new Vector3D(0.1, 0.04, -0.02);
@@ -135,7 +135,7 @@ public class CollisionResolutionTest
       Vector3D finalVelocityAtImpactPoint = new Vector3D();
       externalForcePoint.getVelocity(finalVelocityAtImpactPoint);
 
-      EuclidCoreTestTools.assertTuple3DEquals(expectedFinalVelocity, finalVelocityAtImpactPoint, 1e-7);
+      EuclidCoreTestTools.assertEquals(expectedFinalVelocity, finalVelocityAtImpactPoint, 1e-7);
       double finalEnergy = computeEnergy(robot);
 
       //      System.out.println("initialEnergy = " + initialEnergy);
