@@ -3,22 +3,16 @@ package us.ihmc.simulationconstructionset.dataBuffer;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
 import us.ihmc.yoVariables.listener.YoVariableChangedListener;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class MirroredYoVariableRegistry extends YoRegistry
 {
-   private final BiMap<YoVariable, YoVariable> variableMap = HashBiMap.create();
-   private final ConcurrentLinkedQueue<YoVariable> changedVariablesInMirror = new ConcurrentLinkedQueue<>();
-   private final ConcurrentLinkedQueue<YoVariable> changedVariablesInOriginal = new ConcurrentLinkedQueue<>();
+   private final ConcurrentLinkedQueue<Runnable> mirrorPendingActions = new ConcurrentLinkedQueue<>();
+   private final ConcurrentLinkedQueue<Runnable> originalPendingActions = new ConcurrentLinkedQueue<>();
 
    private boolean enableChangedListener = true;
-   private final YoRegistryChangedListener mirroredChangeListener = new YoRegistryChangedListener(changedVariablesInMirror);
-   private final YoRegistryChangedListener originalChangeListener = new YoRegistryChangedListener(changedVariablesInOriginal);
 
    public MirroredYoVariableRegistry(YoRegistry original)
    {
@@ -27,29 +21,23 @@ public class MirroredYoVariableRegistry extends YoRegistry
       copyRegistry(original, this);
    }
 
-   private void copyRegistry(YoRegistry original, YoRegistry target)
+   private void copyRegistry(YoRegistry original, YoRegistry mirror)
    {
-      List<YoVariable> vars = original.getVariables();
+      List<YoVariable> originalVariables = original.getVariables();
 
-      for (YoVariable var : vars)
+      for (YoVariable originalVariable : originalVariables)
       {
-         YoVariable newVar = var.duplicate(target);
-         variableMap.put(var, newVar);
-         addVariableListener(newVar, var);
+         YoVariable mirrorVariable = originalVariable.duplicate(mirror);
+         mirrorVariable.addListener(new YoVariableChangeForwarder(mirrorVariable, originalVariable, mirrorPendingActions));
+         originalVariable.addListener(new YoVariableChangeForwarder(originalVariable, mirrorVariable, originalPendingActions));
       }
 
-      for (YoRegistry child : original.getChildren())
+      for (YoRegistry childMirror : original.getChildren())
       {
-         YoRegistry newRegistry = new YoRegistry(child.getName());
-         target.addChild(newRegistry);
-         copyRegistry(child, newRegistry);
+         YoRegistry newRegistry = new YoRegistry(childMirror.getName());
+         mirror.addChild(newRegistry);
+         copyRegistry(childMirror, newRegistry);
       }
-   }
-
-   private void addVariableListener(YoVariable newVar, YoVariable var)
-   {
-      newVar.addListener(mirroredChangeListener);
-      var.addListener(originalChangeListener);
    }
 
    /**
@@ -67,12 +55,8 @@ public class MirroredYoVariableRegistry extends YoRegistry
     */
    public void updateChangedValues()
    {
-      for (YoVariable changed = changedVariablesInMirror.poll(); changed != null; changed = changedVariablesInMirror.poll())
-      {
-         YoVariable originalVar = variableMap.inverse().get(changed);
-         originalVar.setValue(changed, false);
-         callListenersForVariable(originalVar);
-      }
+      while (!mirrorPendingActions.isEmpty())
+         mirrorPendingActions.poll().run();
    }
 
    /**
@@ -80,35 +64,32 @@ public class MirroredYoVariableRegistry extends YoRegistry
     */
    public void updateValuesFromOriginal()
    {
-      for (YoVariable changed = changedVariablesInOriginal.poll(); changed != null; changed = changedVariablesInOriginal.poll())
-      {
-         YoVariable mirroredVar = variableMap.get(changed);
-         mirroredVar.setValue(changed, false);
-         callListenersForVariable(mirroredVar);
-      }
+      while (!originalPendingActions.isEmpty())
+         originalPendingActions.poll().run();
    }
 
-   private void callListenersForVariable(YoVariable variable)
+   private class YoVariableChangeForwarder implements YoVariableChangedListener
    {
-      enableChangedListener = false;
-      variable.notifyListeners();
-      enableChangedListener = true;
-   }
+      private final Runnable forwardAction;
+      private final ConcurrentLinkedQueue<Runnable> forwardActionQueue;
 
-   private class YoRegistryChangedListener implements YoVariableChangedListener
-   {
-      final ConcurrentLinkedQueue<YoVariable> queue;
-
-      private YoRegistryChangedListener(ConcurrentLinkedQueue<YoVariable> queue)
+      public YoVariableChangeForwarder(YoVariable source, YoVariable target, ConcurrentLinkedQueue<Runnable> forwardActionQueue)
       {
-         this.queue = queue;
+         this.forwardActionQueue = forwardActionQueue;
+
+         forwardAction = () ->
+         {
+            enableChangedListener = false;
+            target.setValue(source, true);
+            enableChangedListener = true;
+         };
       }
 
       @Override
-      public void changed(YoVariable v)
+      public void changed(YoVariable source)
       {
          if (enableChangedListener)
-            queue.add(v);
+            forwardActionQueue.add(forwardAction);
       }
    }
 }
