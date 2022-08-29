@@ -75,9 +75,6 @@ public class MirroredYoVariableRegistry extends YoRegistry
 
       Runnable actionA = () ->
       {
-         if (updating.isTrue())
-            return;
-
          updating.setTrue();
          try
          {
@@ -91,9 +88,6 @@ public class MirroredYoVariableRegistry extends YoRegistry
 
       Runnable actionB = () ->
       {
-         if (updating.isTrue())
-            return;
-
          updating.setTrue();
          try
          {
@@ -105,7 +99,25 @@ public class MirroredYoVariableRegistry extends YoRegistry
          }
       };
 
-      variableA.addListener(v -> actionQueueA.add(actionA));
-      variableB.addListener(v -> actionQueueB.add(actionB));
+      variableA.addListener(v ->
+      {
+         if (updating.isFalse())
+            actionQueueA.add(actionA);
+      });
+      variableB.addListener(v ->
+      {
+         if (updating.isFalse())
+            actionQueueB.add(actionB);
+      });
+   }
+
+   ConcurrentLinkedQueue<Runnable> getMirrorPendingActions()
+   {
+      return mirrorPendingActions;
+   }
+
+   ConcurrentLinkedQueue<Runnable> getOriginalPendingActions()
+   {
+      return originalPendingActions;
    }
 }

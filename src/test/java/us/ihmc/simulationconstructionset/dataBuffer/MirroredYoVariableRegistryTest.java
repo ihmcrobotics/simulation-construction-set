@@ -115,8 +115,13 @@ public class MirroredYoVariableRegistryTest
       // The bug was causing to ignore that originalV1 changed and thus essentially skip step 3.
       mirroredRegistry.updateMirror();
 
+
       assertTrue(areYoVariablesEqual(originalV0, mirroredV0));
       assertTrue(areYoVariablesEqual(originalV1, mirroredV1));
+
+      // Asserts that after 1 update we are done, i.e. there is no more pending actions
+      assertTrue(mirroredRegistry.getMirrorPendingActions().isEmpty());
+      assertTrue(mirroredRegistry.getOriginalPendingActions().isEmpty());
 
       assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
    }
