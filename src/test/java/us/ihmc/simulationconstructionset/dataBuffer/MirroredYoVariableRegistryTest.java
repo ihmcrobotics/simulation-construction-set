@@ -4,6 +4,8 @@ import static us.ihmc.robotics.Assert.assertEquals;
 import static us.ihmc.robotics.Assert.assertFalse;
 import static us.ihmc.robotics.Assert.assertTrue;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -79,6 +81,44 @@ public class MirroredYoVariableRegistryTest
       mirroredYoRegistry.updateChangedValues();
 
       assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredYoRegistry));
+   }
+
+   @Test
+   public void testListenerBug20220829()
+   {
+      /*
+       * The bug was essentially ignoring changes in the original variables when they were applied from
+       * inside a YoVariableChangedListener.
+       */
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      MirroredYoVariableRegistry mirroredRegistry = new MirroredYoVariableRegistry(originalRegistry);
+
+      List<YoVariable> originalVariables = originalRegistry.collectSubtreeVariables();
+      YoVariable originalV0 = originalVariables.get(0);
+      YoVariable originalV1 = originalVariables.get(1);
+
+      List<YoVariable> mirroredVariables = mirroredRegistry.collectSubtreeVariables();
+      YoVariable mirroredV0 = mirroredVariables.get(0);
+      YoVariable mirroredV1 = mirroredVariables.get(1);
+
+      // Linking originalV1 to originalV0
+      originalV0.addListener(v -> originalV1.setValueFromDouble(3.0));
+
+      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
+
+      mirroredV0.setValueFromDouble(1.0);
+
+      // This should cause the following actions:
+      // 1- originalV0 is set to mirroredV0 value (1.0)
+      // 2- originalV0's changes triggers its own listener and update originalV1
+      // 3- mirroredV1 is set to originalV1 value (3.0)
+      // The bug was causing to ignore that originalV1 changed and thus essentially skip step 3.
+      mirroredRegistry.updateMirror();
+
+      assertTrue(areYoVariablesEqual(originalV0, mirroredV0));
+      assertTrue(areYoVariablesEqual(originalV1, mirroredV1));
+
+      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
    }
 
    @Test // timeout = 30000

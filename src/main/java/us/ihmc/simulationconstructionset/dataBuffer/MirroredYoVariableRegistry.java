@@ -3,7 +3,8 @@ package us.ihmc.simulationconstructionset.dataBuffer;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import us.ihmc.yoVariables.listener.YoVariableChangedListener;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -11,8 +12,6 @@ public class MirroredYoVariableRegistry extends YoRegistry
 {
    private final ConcurrentLinkedQueue<Runnable> mirrorPendingActions = new ConcurrentLinkedQueue<>();
    private final ConcurrentLinkedQueue<Runnable> originalPendingActions = new ConcurrentLinkedQueue<>();
-
-   private boolean enableChangedListener = true;
 
    public MirroredYoVariableRegistry(YoRegistry original)
    {
@@ -28,8 +27,7 @@ public class MirroredYoVariableRegistry extends YoRegistry
       for (YoVariable originalVariable : originalVariables)
       {
          YoVariable mirrorVariable = originalVariable.duplicate(mirror);
-         mirrorVariable.addListener(new YoVariableChangeForwarder(mirrorVariable, originalVariable, mirrorPendingActions));
-         originalVariable.addListener(new YoVariableChangeForwarder(originalVariable, mirrorVariable, originalPendingActions));
+         bindVariables(originalVariable, mirrorVariable, originalPendingActions, mirrorPendingActions);
       }
 
       for (YoRegistry childMirror : original.getChildren())
@@ -68,28 +66,46 @@ public class MirroredYoVariableRegistry extends YoRegistry
          originalPendingActions.poll().run();
    }
 
-   private class YoVariableChangeForwarder implements YoVariableChangedListener
+   private static void bindVariables(YoVariable variableA,
+                                     YoVariable variableB,
+                                     ConcurrentLinkedQueue<Runnable> actionQueueA,
+                                     ConcurrentLinkedQueue<Runnable> actionQueueB)
    {
-      private final Runnable forwardAction;
-      private final ConcurrentLinkedQueue<Runnable> forwardActionQueue;
+      MutableBoolean updating = new MutableBoolean(false);
 
-      public YoVariableChangeForwarder(YoVariable source, YoVariable target, ConcurrentLinkedQueue<Runnable> forwardActionQueue)
+      Runnable actionA = () ->
       {
-         this.forwardActionQueue = forwardActionQueue;
+         if (updating.isTrue())
+            return;
 
-         forwardAction = () ->
+         updating.setTrue();
+         try
          {
-            enableChangedListener = false;
-            target.setValue(source, true);
-            enableChangedListener = true;
-         };
-      }
+            variableB.setValue(variableA, true);
+         }
+         finally
+         {
+            updating.setFalse();
+         }
+      };
 
-      @Override
-      public void changed(YoVariable source)
+      Runnable actionB = () ->
       {
-         if (enableChangedListener)
-            forwardActionQueue.add(forwardAction);
-      }
+         if (updating.isTrue())
+            return;
+
+         updating.setTrue();
+         try
+         {
+            variableA.setValue(variableB, true);
+         }
+         finally
+         {
+            updating.setFalse();
+         }
+      };
+
+      variableA.addListener(v -> actionQueueA.add(actionA));
+      variableB.addListener(v -> actionQueueB.add(actionB));
    }
 }
