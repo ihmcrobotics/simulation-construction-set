@@ -115,7 +115,6 @@ public class MirroredYoVariableRegistryTest
       // The bug was causing to ignore that originalV1 changed and thus essentially skip step 3.
       mirroredRegistry.updateMirror();
 
-
       assertTrue(areYoVariablesEqual(originalV0, mirroredV0));
       assertTrue(areYoVariablesEqual(originalV1, mirroredV1));
 
@@ -200,6 +199,58 @@ public class MirroredYoVariableRegistryTest
       mirroredYoRegistry.updateMirror();
 
       assertEquals(listenerCounter.callCount, mirroredYoRegistry.collectSubtreeVariables().size());
+   }
+
+   @Test
+   public void testListenerBug20220921()
+   {
+      YoRegistry originalRegistry = createTestRegistry("OriginalRegistry", TEST_VARIABLE_COUNT);
+      MirroredYoVariableRegistry mirroredRegistry = new MirroredYoVariableRegistry(originalRegistry);
+      List<YoVariable> mirroredVariables = mirroredRegistry.collectSubtreeVariables();
+      List<YoVariable> originalVariables = originalRegistry.collectSubtreeVariables();
+
+      for (YoVariable mirroredVariable : mirroredVariables)
+      {
+         mirroredVariable.setValueFromDouble(2.0);
+      }
+
+      YoVariable aOriginalVariable = originalVariables.get(originalVariables.size() / 2);
+      aOriginalVariable.setValueFromDouble(5.0);
+      YoVariableChangedListener aOriginalVariableListener = v ->
+      {
+         if (aOriginalVariable.getValueAsDouble() != 5.0)
+            aOriginalVariable.setValueFromDouble(5.0);
+      };
+      aOriginalVariable.addListener(aOriginalVariableListener);
+      YoVariable aMirroredVariable = mirroredRegistry.findVariable(aOriginalVariable.getFullNameString());
+
+      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
+
+      mirroredRegistry.updateChangedValues();
+
+      // The aOriginalVariable's value should remain 5.0
+      assertEquals(5.0, aOriginalVariable.getValueAsDouble());
+      assertEquals(2.0, aMirroredVariable.getValueAsDouble()); // The original value has not been back propagated yet
+      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
+
+      mirroredRegistry.updateValuesFromOriginal();
+      assertEquals(5.0, aOriginalVariable.getValueAsDouble());
+      assertEquals(5.0, aMirroredVariable.getValueAsDouble());
+      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
+
+      aMirroredVariable.setValueFromDouble(2.0);
+
+      mirroredRegistry.updateChangedValues();
+
+      // The aOriginalVariable's value should remain 5.0
+      assertEquals(5.0, aOriginalVariable.getValueAsDouble());
+      assertEquals(2.0, aMirroredVariable.getValueAsDouble()); // The original value has not been back propagated yet
+      assertFalse(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
+
+      mirroredRegistry.updateValuesFromOriginal();
+      assertEquals(5.0, aOriginalVariable.getValueAsDouble());
+      assertEquals(5.0, aMirroredVariable.getValueAsDouble()); // The bug would show up now, the mirrored value would still be 2, and the original value 5
+      assertTrue(areRegistryVariablesAreEqual(originalRegistry, mirroredRegistry));
    }
 
    private static YoRegistry createTestRegistry(String name, int variableCount)
