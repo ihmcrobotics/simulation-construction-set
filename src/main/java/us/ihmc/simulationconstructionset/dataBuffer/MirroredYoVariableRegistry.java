@@ -3,8 +3,6 @@ package us.ihmc.simulationconstructionset.dataBuffer;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -71,42 +69,18 @@ public class MirroredYoVariableRegistry extends YoRegistry
                                      ConcurrentLinkedQueue<Runnable> actionQueueA,
                                      ConcurrentLinkedQueue<Runnable> actionQueueB)
    {
-      MutableBoolean updating = new MutableBoolean(false);
 
-      Runnable actionA = () ->
-      {
-         updating.setTrue();
-         try
-         {
-            variableB.setValue(variableA, true);
-         }
-         finally
-         {
-            updating.setFalse();
-         }
-      };
-
-      Runnable actionB = () ->
-      {
-         updating.setTrue();
-         try
-         {
-            variableA.setValue(variableB, true);
-         }
-         finally
-         {
-            updating.setFalse();
-         }
-      };
+      Runnable actionA = () -> variableB.setValue(variableA, true);
+      Runnable actionB = () -> variableA.setValue(variableB, true);
 
       variableA.addListener(v ->
       {
-         if (updating.isFalse())
+         if (variableA.getValueAsLongBits() != variableB.getValueAsLongBits())
             actionQueueA.add(actionA);
       });
       variableB.addListener(v ->
       {
-         if (updating.isFalse())
+         if (variableA.getValueAsLongBits() != variableB.getValueAsLongBits())
             actionQueueB.add(actionB);
       });
    }
