@@ -11,6 +11,7 @@ import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
+import us.ihmc.graphicsDescription.conversion.VisualsConversionTools;
 import us.ihmc.robotics.robotDescription.BallAndSocketJointDescription;
 import us.ihmc.robotics.robotDescription.CameraSensorDescription;
 import us.ihmc.robotics.robotDescription.CollisionMeshDescription;
@@ -51,7 +52,6 @@ import us.ihmc.simulationconstructionset.simulatedSensors.FeatherStoneJointBased
 import us.ihmc.simulationconstructionset.simulatedSensors.GroundContactPointBasedWrenchCalculator;
 import us.ihmc.simulationconstructionset.simulatedSensors.LidarMount;
 import us.ihmc.simulationconstructionset.simulatedSensors.WrenchCalculatorInterface;
-import us.ihmc.simulationconstructionset.util.VisualDefinitionConverter;
 
 public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJointHolder
 {
@@ -761,7 +761,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
       link.setMass(rigidBodyDefinition.getMass());
       link.setComOffset(rigidBodyDefinition.getCenterOfMassOffset());
       link.setMomentOfInertia(rigidBodyDefinition.getMomentOfInertia());
-      link.setLinkGraphics(VisualDefinitionConverter.toGraphics3DObject(rigidBodyDefinition.getVisualDefinitions(), resourceClassLoader));
+      link.setLinkGraphics(VisualsConversionTools.toGraphics3DObject(rigidBodyDefinition.getVisualDefinitions()));
 
       return link;
    }
