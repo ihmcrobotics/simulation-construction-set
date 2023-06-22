@@ -54,6 +54,7 @@ public class RigidJointPhysics extends JointPhysics<RigidJoint>
       }
 
       jointDependentSetAndGetRotation(Rh_i);
+      Rh_i.prepend(owner.getOffsetTransform3D().getRotation());
 
       // R.setTranslation(new Vector3d());
       Ri_h.set(Rh_i);

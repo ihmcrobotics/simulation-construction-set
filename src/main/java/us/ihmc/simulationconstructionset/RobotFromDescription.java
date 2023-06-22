@@ -740,7 +740,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
       }
       else if (jointDefinition instanceof FixedJointDefinition)
       {
-         joint = new RigidJoint(jointDefinition.getName(), jointDefinition.getTransformToParent().getTranslation(), this);
+         joint = new RigidJoint(jointDefinition.getName(), new Vector3D(), this);
          joint.getOffsetTransform3D().set(jointDefinition.getTransformToParent());
       }
       else

@@ -4,6 +4,7 @@ import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple4D.Quaternion;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameQuaternion;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
 import us.ihmc.yoVariables.registry.YoRegistry;
@@ -29,6 +30,8 @@ public class IMUMount
 
    private final YoFrameQuaternion orientation;
 
+   private final YoFramePoseUsingYawPitchRoll imuYoPose;
+
    private double accelerationGaussianNoiseMean = 0.0, accelerationGaussianNoiseStdDev = 0.0;
    private double accelerationGaussianBiasMean = 0.0, accelerationGaussianBiasStdDev = 0.0;
 
@@ -45,6 +48,8 @@ public class IMUMount
       YoRegistry registry = robot.getRobotsYoRegistry();
 
       orientation = new YoFrameQuaternion(name + "Orientation", null, registry);
+
+      imuYoPose = new YoFramePoseUsingYawPitchRoll(name + "Bloppy", null, registry);
 
       linearVelocityInBody = new YoFrameVector3D(name + "LinearVelocity", null, registry);
       linearVelocityInWorld = new YoFrameVector3D(name + "LinearVelocityWorld", null, registry);
@@ -71,83 +76,61 @@ public class IMUMount
       return parentJoint;
    }
 
-   private final Vector3D tempLinearVelocity = new Vector3D();
-   private final Vector3D tempAngularVelocityInBody = new Vector3D();
-
-   private final RotationMatrix tempRotationToWorld = new RotationMatrix();
-   private final Vector3D tempIMUOffset = new Vector3D();
-   private final RotationMatrix tempIMURotation = new RotationMatrix();
+   private final RigidBodyTransform imuTransformToWorld = new RigidBodyTransform();
 
    protected void updateIMUMountPositionAndVelocity()
    {
-      // Offsets of IMUMount:
-      tempIMUOffset.set(transformFromMountToJoint.getTranslation());
-      tempIMURotation.set(transformFromMountToJoint.getRotation());
+      parentJoint.getTransformToWorld(imuTransformToWorld);
+      imuTransformToWorld.multiply(transformFromMountToJoint);
 
       // Orientation:
-      parentJoint.getRotationToWorld(tempRotationToWorld);
-      tempRotationToWorld.multiply(tempIMURotation);
-      orientation.set(tempRotationToWorld);
-
-      tempIMURotation.transpose();
+      orientation.set(imuTransformToWorld.getRotation());
+      imuYoPose.set(imuTransformToWorld);
 
       // TODO: These are the values stored from whatever the last stage of the integrator did.
       // They do not get averaged with the RungeKutta (or other integrator) averager.
 
       // Linear Velocity
-      parentJoint.physics.getLinearVelocityInBody(tempLinearVelocity, tempIMUOffset);
-      tempIMURotation.transform(tempLinearVelocity);
-      linearVelocityInBody.set(tempLinearVelocity);
-      parentJoint.physics.getLinearVelocityInWorld(tempLinearVelocity, tempIMUOffset);
-      linearVelocityInWorld.set(tempLinearVelocity);
+      parentJoint.physics.getLinearVelocityInBody(linearVelocityInBody, transformFromMountToJoint.getTranslation());
+      transformFromMountToJoint.inverseTransform(linearVelocityInBody); // Joint frame => IMU frame.
+      imuTransformToWorld.transform(linearVelocityInBody, linearVelocityInWorld); // IMU frame => world
 
       // Angular Velocity
-      parentJoint.physics.getAngularVelocityInBody(tempAngularVelocityInBody);
-      tempIMURotation.transform(tempAngularVelocityInBody);
-      angularVelocityInBody.set(tempAngularVelocityInBody);
+      parentJoint.physics.getAngularVelocityInBody(angularVelocityInBody);
+      transformFromMountToJoint.inverseTransform(angularVelocityInBody); // Joint frame => IMU frame
    }
 
    private final Vector3D tempGravity = new Vector3D();
-   private final Vector3D tempLinearAcceleration = new Vector3D();
-   private final Vector3D tempAngularAccelerationInBody = new Vector3D();
 
    protected void updateIMUMountAcceleration()
    {
+      if (name.contains("pelvisMiddleImu"))
+      {
+         System.out.print("");
+      }
       // We redo some of the things that are already done in updateIMUMountPositionAndVelocity,
       // but it is safer that way since updateIMUMountAcceleration might be called by itself sometimes.
-
-      // Offsets of IMUMount:
-      tempIMUOffset.set(transformFromMountToJoint.getTranslation());
-      tempIMURotation.set(transformFromMountToJoint.getRotation());
-
-      // Orientation:
-      parentJoint.getRotationToWorld(tempRotationToWorld);
-      tempRotationToWorld.multiply(tempIMURotation);
-      tempIMURotation.transpose();
+      parentJoint.getTransformToWorld(imuTransformToWorld);
+      imuTransformToWorld.multiply(transformFromMountToJoint);
 
       // Linear Acceleration
-      parentJoint.physics.getLinearAccelerationInBody(tempLinearAcceleration, tempIMUOffset);
-      tempIMURotation.transform(tempLinearAcceleration);
+      parentJoint.physics.getLinearAccelerationInBody(linearAccelerationInBody, transformFromMountToJoint.getTranslation());
+      transformFromMountToJoint.inverseTransform(linearAccelerationInBody); // Joint frame => IMU frame
 
       robot.getGravity(tempGravity);
       tempGravity.scale(-1.0);
 
-      tempRotationToWorld.transpose();
-      tempRotationToWorld.transform(tempGravity);
-      tempLinearAcceleration.add(tempGravity);
-      linearAccelerationInBody.set(tempLinearAcceleration);
+      imuTransformToWorld.inverseTransform(tempGravity); // World => IMU frame
+      linearAccelerationInBody.add(tempGravity);
 
-      parentJoint.physics.getLinearAccelerationInWorld(tempLinearAcceleration, tempIMUOffset);
+      parentJoint.physics.getLinearAccelerationInWorld(linearAccelerationInWorld, transformFromMountToJoint.getTranslation());
       robot.getGravity(tempGravity);
       tempGravity.scale(-1.0);
-
-      tempLinearAcceleration.add(tempGravity);
-      linearAccelerationInWorld.set(tempLinearAcceleration);
+      linearAccelerationInWorld.add(tempGravity);
 
       // Angular Acceleration
-      parentJoint.physics.getAngularAccelerationsInBodyFrame(tempAngularAccelerationInBody);
-      tempIMURotation.transform(tempAngularAccelerationInBody);
-      angularAccelerationInBody.set(tempAngularAccelerationInBody);
+      parentJoint.physics.getAngularAccelerationsInBodyFrame(angularAccelerationInBody);
+      transformFromMountToJoint.inverseTransform(angularAccelerationInBody); // Joint frame => IMU frame
    }
 
    public void setOrientation(Quaternion orientation)

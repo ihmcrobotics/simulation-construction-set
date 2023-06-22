@@ -2,6 +2,7 @@ package us.ihmc.simulationconstructionset;
 
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
+import us.ihmc.euclid.orientation.interfaces.Orientation3DReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.simulationconstructionset.physics.engine.featherstone.RigidJointPhysics;
@@ -40,7 +41,7 @@ public class RigidJoint extends Joint
       rigidTranslation.set(jointTranslation);
    }
 
-   public void setRigidRotation(RotationMatrixReadOnly jointRotation)
+   public void setRigidRotation(Orientation3DReadOnly jointRotation)
    {
       rigidRotation.set(jointRotation);
    }
