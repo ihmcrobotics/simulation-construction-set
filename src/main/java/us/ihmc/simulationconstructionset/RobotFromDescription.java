@@ -34,6 +34,7 @@ import us.ihmc.robotics.robotDescription.RobotDescription;
 import us.ihmc.robotics.robotDescription.SliderJointDescription;
 import us.ihmc.scs2.definition.robot.CameraSensorDefinition;
 import us.ihmc.scs2.definition.robot.ExternalWrenchPointDefinition;
+import us.ihmc.scs2.definition.robot.FixedJointDefinition;
 import us.ihmc.scs2.definition.robot.GroundContactPointDefinition;
 import us.ihmc.scs2.definition.robot.IMUSensorDefinition;
 import us.ihmc.scs2.definition.robot.JointDefinition;
@@ -652,12 +653,14 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
 
          Vector3D offset = new Vector3D(sixDoFJointDefinition.getTransformToParent().getTranslation());
          joint = new FloatingJoint(jointDefinition.getName(), sixDoFJointDefinition.getVariableName(), offset, this, true);
+         joint.getOffsetTransform3D().set(jointDefinition.getTransformToParent());
       }
       else if (jointDefinition instanceof PlanarJointDefinition)
       {
          PlanarJointDefinition planarJointDefinition = (PlanarJointDefinition) jointDefinition;
 
          joint = new FloatingPlanarJoint(planarJointDefinition.getName(), this, Plane.XZ);
+         joint.getOffsetTransform3D().set(jointDefinition.getTransformToParent());
       }
       else if (jointDefinition instanceof RevoluteJointDefinition)
       {
@@ -701,6 +704,7 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
                pinJoint.setTorqueLimits(revoluteJointDefinition.getEffortUpperLimit());
             }
          }
+         joint.getOffsetTransform3D().set(jointDefinition.getTransformToParent());
       }
       else if (jointDefinition instanceof PrismaticJointDefinition)
       {
@@ -732,6 +736,12 @@ public class RobotFromDescription extends Robot implements OneDegreeOfFreedomJoi
             if (prismaticJointDefinition.getStiction() >= 0.0)
                sliderJoint.setStiction(prismaticJointDefinition.getStiction());
          }
+         joint.getOffsetTransform3D().set(jointDefinition.getTransformToParent());
+      }
+      else if (jointDefinition instanceof FixedJointDefinition)
+      {
+         joint = new RigidJoint(jointDefinition.getName(), jointDefinition.getTransformToParent().getTranslation(), this);
+         joint.getOffsetTransform3D().set(jointDefinition.getTransformToParent());
       }
       else
       {
