@@ -98,10 +98,6 @@ public class IMUMount
 
    protected void updateIMUMountAcceleration()
    {
-      if (name.contains("pelvisMiddleImu"))
-      {
-         System.out.print("");
-      }
       // We redo some of the things that are already done in updateIMUMountPositionAndVelocity,
       // but it is safer that way since updateIMUMountAcceleration might be called by itself sometimes.
       parentJoint.getTransformToWorld(imuTransformToWorld);
