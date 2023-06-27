@@ -4,7 +4,6 @@ import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple4D.Quaternion;
-import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameQuaternion;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
 import us.ihmc.yoVariables.registry.YoRegistry;
@@ -30,8 +29,6 @@ public class IMUMount
 
    private final YoFrameQuaternion orientation;
 
-   private final YoFramePoseUsingYawPitchRoll imuYoPose;
-
    private double accelerationGaussianNoiseMean = 0.0, accelerationGaussianNoiseStdDev = 0.0;
    private double accelerationGaussianBiasMean = 0.0, accelerationGaussianBiasStdDev = 0.0;
 
@@ -48,8 +45,6 @@ public class IMUMount
       YoRegistry registry = robot.getRobotsYoRegistry();
 
       orientation = new YoFrameQuaternion(name + "Orientation", null, registry);
-
-      imuYoPose = new YoFramePoseUsingYawPitchRoll(name + "Bloppy", null, registry);
 
       linearVelocityInBody = new YoFrameVector3D(name + "LinearVelocity", null, registry);
       linearVelocityInWorld = new YoFrameVector3D(name + "LinearVelocityWorld", null, registry);
@@ -85,7 +80,6 @@ public class IMUMount
 
       // Orientation:
       orientation.set(imuTransformToWorld.getRotation());
-      imuYoPose.set(imuTransformToWorld);
 
       // TODO: These are the values stored from whatever the last stage of the integrator did.
       // They do not get averaged with the RungeKutta (or other integrator) averager.
