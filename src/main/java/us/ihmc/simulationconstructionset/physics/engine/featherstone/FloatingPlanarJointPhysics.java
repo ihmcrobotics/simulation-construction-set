@@ -47,6 +47,7 @@ public class FloatingPlanarJointPhysics extends JointPhysics<FloatingPlanarJoint
       // this.update(false);
       // this.jointTransform3D.get(Ri_0);
       jointDependentSetAndGetRotation(Ri_0);
+      Ri_0.prepend(owner.getOffsetTransform3D().getRotation());
 
       Ri_0.transpose();
 

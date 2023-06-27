@@ -59,7 +59,8 @@ public class FloatingJointPhysics extends JointPhysics<FloatingJoint>
    public void featherstonePassOne(Vector3DReadOnly w_h, Vector3DReadOnly v_h, RotationMatrixReadOnly Rh_0)
    {
       owner.update();
-      Ri_0.set(owner.jointTransform3D.getRotation());
+      Ri_0.set(owner.getOffsetTransform3D().getRotation());
+      Ri_0.append(owner.jointTransform3D.getRotation());
 
       // this.jointDependentSetAndGetRotation(Ri_0);
       Ri_0.transpose();
